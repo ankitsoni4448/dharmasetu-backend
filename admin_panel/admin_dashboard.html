@@ -138,6 +138,7 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
     <div class="ni" onclick="show('features')"><span class="ni-icon">⚙️</span>Feature Flags</div>
     <div class="ni" onclick="show('content')"><span class="ni-icon">📚</span>Content Upload</div>
     <div class="ni" onclick="show('ai')"><span class="ni-icon">🤖</span>AI Monitoring</div>
+    <div class="ni" onclick="show('katha')"><span class="ni-icon">📖</span>Katha Generator</div>
     <div class="ni" onclick="show('transactions')"><span class="ni-icon">💳</span>Transactions</div>
     <div class="ni" onclick="show('users')"><span class="ni-icon">👥</span>Users</div>
     <div class="ni" onclick="show('notifications')"><span class="ni-icon">🔔</span>Notifications</div>
@@ -367,6 +368,76 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
       </div>
       <div id="ul-list"><p style="color:var(--muted);font-size:13px;">Loading...</p></div>
     </div>
+  </div>
+</div>
+
+<!-- ── KATHA GENERATOR ── -->
+<div id="sec-katha" class="sec">
+  <h2>📖 Katha Vault Generator</h2>
+  <p class="psub">Generate scripture content using Gemini AI. Content is saved to backend and served to all app users. Never generate from the mobile app — do it here.</p>
+
+  <div class="alert-o">📌 How it works: Select chapter → Click Generate → AI creates Divine JSON (5 verses/batch, 20s gap) → Auto-saves to backend → All users get it instantly without any API calls.</div>
+
+  <div class="g2">
+    <div class="card">
+      <h3>⚙️ Generator Settings</h3>
+      <label>API Key (Gemini or Groq)</label>
+      <input type="password" id="kg-apikey" placeholder="Paste your Gemini or Groq API key" style="margin-bottom:10px;"/>
+      <label>Select Scripture</label>
+      <select id="kg-scripture" style="margin-bottom:10px;" onchange="updateChapterList()">
+        <option value="bhagavad_gita">Bhagavad Gita</option>
+        <option value="valmiki_ramayana">Valmiki Ramayana</option>
+        <option value="ramcharitmanas">Ramcharitmanas</option>
+        <option value="mahabharata">Mahabharata</option>
+        <option value="srimad_bhagavatam">Srimad Bhagavatam</option>
+        <option value="upanishads">Upanishads</option>
+        <option value="vishnu_purana">Vishnu Purana</option>
+        <option value="shiva_purana">Shiva Purana</option>
+        <option value="devi_bhagavata">Devi Bhagavata Purana</option>
+        <option value="garuda_purana">Garuda Purana</option>
+      </select>
+      <label>Select Chapter / Unit</label>
+      <select id="kg-chapter" style="margin-bottom:10px;"></select>
+      <label>Language</label>
+      <select id="kg-lang" style="margin-bottom:14px;">
+        <option value="hindi">Hindi</option>
+        <option value="english">English</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn btn-p" onclick="kgGenerate('generate')">🕉 Generate</button>
+        <button class="btn btn-gold" onclick="kgGenerate('repair')">🔧 Repair Incomplete</button>
+        <button class="btn btn-r" onclick="kgDeleteChapter()">🗑 Delete Chapter</button>
+      </div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-o btn-sm" onclick="kgCheckStatus()">📊 Check Status</button>
+        <button class="btn btn-o btn-sm" onclick="kgListAll()">📋 List All Generated</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📊 Chapter Status</h3>
+      <div id="kg-status-display" style="font-size:13px;color:var(--muted);line-height:2;">
+        Select a chapter and click "Check Status" to see what's been generated.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🖥️ Live Generation Log</h3>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div id="kg-progress-label" style="font-size:13px;color:var(--orange);font-weight:700;">Ready</div>
+      <button class="btn btn-o btn-sm" onclick="document.getElementById('kg-log').innerHTML='';document.getElementById('kg-progress').style.width='0%'">Clear</button>
+    </div>
+    <div class="progress-track" style="margin-bottom:12px;"><div class="progress-fill" id="kg-progress" style="width:0%;background:var(--orange);transition:width 0.5s;"></div></div>
+    <div id="kg-log" style="background:#0A0300;border-radius:10px;padding:14px;height:240px;overflow-y:auto;font-size:12px;font-family:monospace;border:1px solid var(--border);"></div>
+  </div>
+
+  <div class="card">
+    <h3>📋 All Generated Content</h3>
+    <div class="btn-row" style="margin-bottom:14px;">
+      <button class="btn btn-o btn-sm" onclick="kgListAll()">🔄 Refresh</button>
+    </div>
+    <div id="kg-all-list" style="font-size:13px;color:var(--muted);">Click "List All Generated" to see what's on the backend.</div>
   </div>
 </div>
 
@@ -912,7 +983,249 @@ async function saveVersion() {
 }
 
 // ── START ──────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', init);
+
+// ═══════════════════════════════════════════════════════════════
+// KATHA GENERATOR
+// ═══════════════════════════════════════════════════════════════
+
+const CHAPTER_MAP = {
+  bhagavad_gita:    [{n:1,t:'Arjuna Vishada Yoga',s:47},{n:2,t:'Sankhya Yoga',s:72},{n:3,t:'Karma Yoga',s:43},{n:4,t:'Jnana Karma Sanyasa Yoga',s:42},{n:5,t:'Karma Sanyasa Yoga',s:29},{n:6,t:'Atmasanyama Yoga',s:47},{n:7,t:'Jnana Vijnana Yoga',s:30},{n:8,t:'Aksara Brahma Yoga',s:28},{n:9,t:'Raja Vidya Yoga',s:34},{n:10,t:'Vibhuti Yoga',s:42},{n:11,t:'Vishwarupa Darshana Yoga',s:55},{n:12,t:'Bhakti Yoga',s:20},{n:13,t:'Kshetra Yoga',s:34},{n:14,t:'Gunatraya Yoga',s:27},{n:15,t:'Purushottama Yoga',s:20},{n:16,t:'Daivasura Sampad Yoga',s:24},{n:17,t:'Sraddhatraya Yoga',s:28},{n:18,t:'Moksha Sanyasa Yoga',s:78}],
+  valmiki_ramayana: [{n:1,t:'Bala Kanda',s:77},{n:2,t:'Ayodhya Kanda',s:119},{n:3,t:'Aranya Kanda',s:75},{n:4,t:'Kishkindha Kanda',s:67},{n:5,t:'Sundara Kanda',s:68},{n:6,t:'Yuddha Kanda',s:131},{n:7,t:'Uttara Kanda',s:111}],
+  ramcharitmanas:   [{n:1,t:'Bal Kand',s:360},{n:2,t:'Ayodhya Kand',s:326},{n:3,t:'Aranya Kand',s:46},{n:4,t:'Kishkindha Kand',s:30},{n:5,t:'Sundar Kand',s:60},{n:6,t:'Lanka Kand',s:117},{n:7,t:'Uttar Kand',s:130}],
+  mahabharata:      [{n:1,t:'Adi Parva',s:227},{n:2,t:'Sabha Parva',s:79},{n:3,t:'Vana Parva',s:317},{n:5,t:'Udyoga Parva',s:199},{n:6,t:'Bhishma Parva',s:122},{n:12,t:'Shanti Parva',s:365},{n:18,t:'Svargarohana Parva',s:5}],
+  srimad_bhagavatam:[{n:1,t:'Skandha 1',s:19},{n:7,t:'Skandha 7',s:15},{n:10,t:'Skandha 10',s:90}],
+  upanishads:       [{n:1,t:'Isha Upanishad',s:18},{n:3,t:'Katha Upanishad',s:119},{n:5,t:'Mundaka Upanishad',s:64},{n:9,t:'Chandogya Upanishad',s:154}],
+  vishnu_purana:    [{n:1,t:'Amsha 1',s:22},{n:2,t:'Amsha 2',s:16},{n:3,t:'Amsha 3',s:18},{n:4,t:'Amsha 4',s:24},{n:5,t:'Amsha 5 Krishna',s:38},{n:6,t:'Amsha 6',s:8}],
+  shiva_purana:     [{n:1,t:'Vidyeshvara Samhita',s:25},{n:2,t:'Rudra Samhita',s:43},{n:3,t:'Shatarudra Samhita',s:42},{n:4,t:'Kotirudra Samhita',s:43},{n:5,t:'Uma Samhita',s:59},{n:6,t:'Kailasa Samhita',s:23},{n:7,t:'Vayaviya Samhita',s:41}],
+  devi_bhagavata:   [{n:1,t:'Skandha 1',s:20},{n:3,t:'Skandha 3',s:30},{n:5,t:'Skandha 5',s:35},{n:7,t:'Skandha 7',s:40},{n:9,t:'Skandha 9',s:50}],
+  garuda_purana:    [{n:1,t:'Acharakanda',s:229},{n:2,t:'Preta Kalpa',s:49}],
+};
+
+function updateChapterList() {
+  const sc = document.getElementById('kg-scripture').value;
+  const sel = document.getElementById('kg-chapter');
+  sel.innerHTML = '';
+  (CHAPTER_MAP[sc] || []).forEach(function(ch) {
+    const opt = document.createElement('option');
+    opt.value = ch.n;
+    opt.textContent = 'Ch ' + ch.n + ': ' + ch.t + ' (' + ch.s + ' verses)';
+    sel.appendChild(opt);
+  });
+}
+
+function kgLog(msg, type) {
+  const t2 = type || 'info';
+  const log = document.getElementById('kg-log');
+  const color = t2==='ok'?'#27AE60':t2==='err'?'#E74C3C':t2==='wait'?'#C9830A':'#5DADE2';
+  const ts = new Date().toLocaleTimeString();
+  log.innerHTML += '<span style="color:' + color + '">[' + ts + '] ' + msg + '</span>\n';
+  log.scrollTop = log.scrollHeight;
+}
+
+function kgSetProgress(pct, label) {
+  document.getElementById('kg-progress').style.width = pct + '%';
+  document.getElementById('kg-progress-label').textContent = label;
+}
+
+function kgSleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
+
+async function kgCheckStatus() {
+  const sc = document.getElementById('kg-scripture').value;
+  const ch = document.getElementById('kg-chapter').value;
+  const lang = document.getElementById('kg-lang').value;
+  const el = document.getElementById('kg-status-display');
+  el.innerHTML = '<span style="color:var(--muted)">Checking...</span>';
+  try {
+    const r = await fetch(BACKEND + '/katha/' + sc + '/' + ch + '/' + lang);
+    if (r.status === 404) {
+      el.innerHTML = '<span style="color:var(--red)">Not generated yet</span>';
+    } else if (r.ok) {
+      const d = await r.json();
+      let count = 0;
+      try { const p = JSON.parse(d.content); count = Array.isArray(p) ? p.length : 0; } catch(e) { count = d.content ? 1 : 0; }
+      const chObj = (CHAPTER_MAP[sc]||[]).find(function(c){ return String(c.n) === String(ch); });
+      const total = chObj ? chObj.s : '?';
+      const pct = total !== '?' ? Math.round((count/total)*100) : '?';
+      el.innerHTML = '<b style="color:' + (count>=total?'#27AE60':'#C9830A') + '">' + count + '/' + total + ' verses (' + pct + '%)</b><br>' +
+        'Saved: ' + (d.savedAt||'unknown') + '<br>' +
+        (count < total ? '<span style="color:#C9830A">Incomplete — use Repair</span>' : '<span style="color:#27AE60">Complete</span>');
+    }
+  } catch(e) { el.innerHTML = '<span style="color:var(--red)">Error: ' + e.message + '</span>'; }
+}
+
+async function kgListAll() {
+  const el = document.getElementById('kg-all-list');
+  el.innerHTML = '<span style="color:var(--muted)">Loading...</span>';
+  try {
+    const r = await api('GET', '/katha/list');
+    if (!r.files || !r.files.length) { el.innerHTML = 'No content generated yet.'; return; }
+    let html2 = '<div style="margin-bottom:10px;color:var(--orange);font-weight:700;">' + r.count + ' files on backend</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">';
+    r.files.forEach(function(f) {
+      const parts = f.replace('.json','').split('_');
+      const lang2 = parts[parts.length-1];
+      const ch2 = parts[parts.length-2];
+      const sc2 = parts.slice(0,-2).join('_');
+      html2 += '<div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:11px;"><div style="color:var(--orange);font-weight:700;">' + sc2 + '</div><div>Ch ' + ch2 + ' · ' + lang2 + '</div></div>';
+    });
+    html2 += '</div>';
+    el.innerHTML = html2;
+  } catch(e) { el.innerHTML = 'Error: ' + e.message; }
+}
+
+async function kgDeleteChapter() {
+  const sc = document.getElementById('kg-scripture').value;
+  const ch = document.getElementById('kg-chapter').value;
+  const lang = document.getElementById('kg-lang').value;
+  if (!confirm('Delete ' + sc + ' Chapter ' + ch + ' [' + lang + ']?')) return;
+  await fetch(BACKEND + '/admin/katha/' + sc + '/' + ch + '/' + lang, { method:'DELETE', headers:{'x-admin-key':ADMIN_KEY} });
+  toast('Deleted Ch' + ch + ' [' + lang + ']');
+  kgCheckStatus();
+}
+
+function buildKathaPrompt(sc, chN, chTitle, from, to, lang) {
+  const isH = lang === 'hindi';
+  const langRule = isH ? 'Write ALL text fields in pure Hindi (Devanagari). NO English.' : 'Write ALL text fields in clear English.';
+  return 'You are a Vedic scholar following Gita Press Gorakhpur tradition.\n' + langRule + '\nCRITICAL: Return ONLY a valid JSON array. No markdown. Start with [ end with ].\n\n' +
+    'Generate Bhagavad Gita Chapter ' + chN + ' (' + chTitle + '), verses ' + from + ' to ' + to + '.\n\n' +
+    'Each object must have EXACTLY these fields:\n' +
+    '{"verse_id":"' + chN + '.N","chapter":' + chN + ',"verse_number":N,"sanskrit_full":"Complete Devanagari Sanskrit both lines",' +
+    '"roman_transliteration":"Both lines Roman","word_meanings_grid":[{"word":"Devanagari","meaning":"' + (isH?'Hindi':'English') + ' meaning","significance":"context"}],' +
+    '"tika_' + (isH?'hindi':'english') + '":"3 sentences Gita Press style ' + (isH?'Hindi':'English') + ' meaning",' +
+    '"teaching":"1 practical ' + (isH?'Hindi':'English') + ' sentence for today",' +
+    '"gahan_drishti":"Rishi speaks to reader in ' + (isH?'Hindi':'English') + ' — 2-3 warm sentences connecting to their daily life",' +
+    '"bal_seekh":"2-line simple ' + (isH?'Hindi':'English') + ' moral for 10-year-old child",' +
+    '"speaker":"Krishna/Arjuna/Sanjaya","chapter_context":"1 sentence context"}\n\nReturn ONLY the JSON array for verses ' + from + ' to ' + to + '. Start with [';
+}
+
+async function callKathaAI(apiKey, prompt) {
+  if (apiKey.startsWith('AIza')) {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey;
+    const res = await fetch(url, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.1,maxOutputTokens:8000}})
+    });
+    if (res.status === 429) throw new Error('429');
+    const d = await res.json();
+    const text = d && d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts && d.candidates[0].content.parts[0] ? d.candidates[0].content.parts[0].text : null;
+    if (text) return text;
+    throw new Error('Gemini empty: ' + JSON.stringify(d && d.error ? d.error : 'unknown'));
+  }
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer ' + apiKey},
+    body: JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:8000})
+  });
+  if (res.status === 429) throw new Error('429');
+  const d = await res.json();
+  const text = d && d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : null;
+  if (text) return text;
+  throw new Error('Groq empty response');
+}
+
+function parseKathaJSON(raw) {
+  let cleaned = raw.trim().replace(/^```json\s*/i,'').replace(/\s*```$/i,'').replace(/^```\s*/i,'').replace(/\s*```$/i,'');
+  const start = cleaned.indexOf('['), end = cleaned.lastIndexOf(']');
+  if (start === -1 || end === -1) return null;
+  try { const p = JSON.parse(cleaned.slice(start, end+1)); return Array.isArray(p) ? p : null; }
+  catch(e) { kgLog('JSON parse error: ' + e.message, 'err'); return null; }
+}
+
+async function kgGenerate(mode) {
+  const apiKey = document.getElementById('kg-apikey').value.trim();
+  const sc = document.getElementById('kg-scripture').value;
+  const chN = parseInt(document.getElementById('kg-chapter').value);
+  const lang = document.getElementById('kg-lang').value;
+  if (!apiKey) { toast('Enter API key first', true); return; }
+
+  const chObj = (CHAPTER_MAP[sc]||[]).find(function(c){ return c.n === chN; });
+  const total = chObj ? chObj.s : 30;
+  const chTitle = chObj ? chObj.t : 'Chapter ' + chN;
+
+  document.getElementById('kg-log').innerHTML = '';
+  kgLog('Starting ' + mode + ': ' + sc + ' Ch' + chN + ' ' + chTitle + ' | ' + total + ' verses | Lang: ' + lang, 'info');
+  kgSetProgress(2, 'Starting...');
+
+  let existingVerses = [], existingIds = new Set();
+  try {
+    const existing = await fetch(BACKEND + '/katha/' + sc + '/' + chN + '/' + lang);
+    if (existing.ok) {
+      const d = await existing.json();
+      try {
+        const p = JSON.parse(d.content);
+        if (Array.isArray(p)) {
+          existingVerses = p;
+          existingIds = new Set(p.map(function(v){ return v.verse_number || parseInt((v.verse_id||'0.0').split('.')[1]); }));
+          kgLog('Found ' + existingVerses.length + ' existing verses', 'ok');
+        }
+      } catch(e) { kgLog('Old text format — will regenerate', 'wait'); }
+    } else { kgLog('No existing content — fresh generation', 'info'); }
+  } catch(e) { kgLog('Check existing error: ' + e.message, 'wait'); }
+
+  if (mode === 'repair' && sc === 'bhagavad_gita' && chN === 1) {
+    kgLog('REPAIR: Scanning for verse 1.13 issue...', 'wait');
+    const v13 = existingVerses.find(function(v){ return v.verse_number===13 || v.verse_id==='1.13'; });
+    if (!v13 || !v13.tika_hindi || !v13.gahan_drishti) {
+      kgLog('Verse 1.13 incomplete — wiping 1.13 onwards', 'wait');
+      existingVerses = existingVerses.filter(function(v){
+        const n = v.verse_number || parseInt((v.verse_id||'0.0').split('.')[1]);
+        return n < 13;
+      });
+      existingIds = new Set(existingVerses.map(function(v){ return v.verse_number || parseInt((v.verse_id||'0.0').split('.')[1]); }));
+      kgLog('Kept ' + existingVerses.length + ' good verses (1.1-1.12)', 'ok');
+    } else { kgLog('1.13 looks complete', 'ok'); }
+  }
+
+  const missing = [];
+  for (let v = 1; v <= total; v++) { if (!existingIds.has(v)) missing.push(v); }
+
+  if (missing.length === 0) { kgLog('All verses already present! Nothing to do.', 'ok'); kgSetProgress(100, 'Already complete'); return; }
+  kgLog('Missing: ' + missing.length + ' verses', 'info');
+
+  const batches = [];
+  for (let i = 0; i < missing.length; i += 5) batches.push(missing.slice(i, i+5));
+  kgLog('Batches: ' + batches.length + ' x 5 verses, 20s gap', 'info');
+
+  let allVerses = existingVerses.slice(), done = 0;
+
+  for (let bi = 0; bi < batches.length; bi++) {
+    const batch = batches[bi];
+    const from = batch[0], to = batch[batch.length-1];
+    kgLog('Batch ' + (bi+1) + '/' + batches.length + ': verses ' + from + '-' + to + '...', 'info');
+    kgSetProgress(Math.round(((bi+0.5)/batches.length)*90), 'Batch ' + (bi+1) + '/' + batches.length + ': verses ' + from + '-' + to);
+
+    try {
+      const prompt = buildKathaPrompt(sc, chN, chTitle, from, to, lang);
+      const result = await callKathaAI(apiKey, prompt);
+      const verses = parseKathaJSON(result);
+      if (!verses || !verses.length) { kgLog('Batch ' + (bi+1) + ': no parseable verses', 'wait'); continue; }
+      allVerses = allVerses.concat(verses);
+      const saved = await fetch(BACKEND + '/katha/save', {
+        method:'POST', headers:{'Content-Type':'application/json','x-admin-key':ADMIN_KEY},
+        body: JSON.stringify({scriptureId:sc, unitId:chN, lang:lang, content:JSON.stringify(allVerses), ts:Date.now()})
+      });
+      const sd = await saved.json();
+      if (sd.success) { done += verses.length; kgLog('Batch ' + (bi+1) + ' saved — ' + done + ' new verses', 'ok'); }
+      else { kgLog('Save failed: ' + JSON.stringify(sd), 'err'); }
+    } catch(e) {
+      kgLog('Batch ' + (bi+1) + ' error: ' + e.message, 'err');
+      if (e.message.indexOf('429') !== -1) { kgLog('Rate limited — waiting 65s...', 'wait'); await kgSleep(65000); bi--; continue; }
+    }
+
+    if (bi < batches.length - 1) {
+      for (let s = 20; s > 0; s--) {
+        kgLog('Waiting ' + s + 's...', 'wait');
+        kgSetProgress(Math.round(((bi+1)/batches.length)*90), 'Waiting ' + s + 's...');
+        await kgSleep(1000);
+      }
+    }
+  }
+
+  kgSetProgress(100, 'Done — ' + done + ' verses generated');
+  kgLog('Generation complete! Total: ' + allVerses.length + '/' + total, 'ok');
+  toast('Done! ' + allVerses.length + '/' + total + ' verses for Ch' + chN);
+  await kgCheckStatus();
+}
+// ─── END KATHA GENERATOR ───────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() { init(); updateChapterList(); });
 </script>
 </body>
 </html>

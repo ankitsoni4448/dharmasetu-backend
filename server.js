@@ -64,6 +64,27 @@ let TRANSACTIONS = [];
 console.log(`[Startup] Config loaded — basic:₹${CONFIG.basicPrice}, pro:₹${CONFIG.premiumPrice}`);
 console.log(`[Startup] Uploads loaded: ${UPLOADS.length}`);
 
+// ─── ADMIN PANEL HTML ────────────────────────────────────────────
+// Serves the single admin dashboard at /admin-portal
+// Place admin_dashboard.html in the SAME folder as server.js on Render
+// To upload: push admin_dashboard.html to your GitHub repo root
+app.get('/admin-portal', (req, res) => {
+  // Try admin_dashboard.html first (production name), then fallback names
+  const candidates = ['admin_dashboard.html', 'admin_dashboard_FINAL.html', 'dashboard.html'];
+  for (const name of candidates) {
+    const htmlPath = path.join(__dirname, name);
+    if (fs.existsSync(htmlPath)) { res.sendFile(htmlPath); return; }
+  }
+  res.status(404).send(`
+    <html><body style="font-family:sans-serif;background:#0D0500;color:#F4A261;padding:40px;">
+    <h2>🕉 DharmaSetu Admin Panel</h2>
+    <p style="color:#FDF6ED;">Dashboard HTML not found on server.</p>
+    <p><strong>Fix:</strong> Add <code>admin_dashboard.html</code> to your GitHub repo root and redeploy.</p>
+    <p style="color:rgba(255,255,255,0.4);">Backend is running fine — only the HTML file is missing.</p>
+    </body></html>
+  `);
+});
+
 // ─── MIDDLEWARE ──────────────────────────────────────────────────
 app.use(cors({origin:'*'}));
 app.use(express.json({limit:'50mb'}));
@@ -304,6 +325,63 @@ app.delete('/admin/uploads/:id', adminAuth, (req, res) => {
   UPLOADS.splice(idx, 1);
   writeJSON(UPLOADS_FILE, UPLOADS);
   res.json({success:true});
+});
+
+// ─── ADMIN GENERATE-BOOK ──────────────────────────────────────
+// Called by admin dashboard Katha Generator
+// This proxies a single batch to Gemini/Groq with verified params
+// The dashboard calls AI directly (CORS allows it) — this endpoint
+// is for programmatic batch generation via the katha_admin_generator.js script
+app.post('/admin/generate-book', adminAuth, async (req, res) => {
+  try {
+    const { scriptureId, unitId, lang, content, verseCount } = req.body;
+    if (!scriptureId || !unitId || !lang || !content) {
+      return res.status(400).json({ error: 'Missing: scriptureId, unitId, lang, content' });
+    }
+    // This endpoint receives pre-generated content from admin scripts
+    // and saves it to the katha cache — same as /katha/save but admin-only
+    const filename = `${scriptureId}_${unitId}_${lang}.json`;
+    const filepath = path.join(KATHA_DIR, filename);
+    const existing = fs.existsSync(filepath) ? readJSON(filepath, null) : null;
+
+    let finalVerses;
+    try {
+      const newVerses = typeof content === 'string' ? JSON.parse(content) : content;
+      if (Array.isArray(newVerses) && existing?.content) {
+        // Merge: keep existing good verses, add new ones
+        const existingVerses = typeof existing.content === 'string' ? JSON.parse(existing.content) : existing.content;
+        if (Array.isArray(existingVerses)) {
+          const existingIds = new Set(existingVerses.map(v => v.verse_number || parseInt(v.verse_id?.split('.')[1])));
+          const fresh = newVerses.filter(v => {
+            const n = v.verse_number || parseInt(v.verse_id?.split('.')[1]);
+            return !existingIds.has(n);
+          });
+          finalVerses = [...existingVerses, ...fresh];
+          console.log(`[Generate] Merged: ${existingVerses.length} existing + ${fresh.length} new = ${finalVerses.length}`);
+        } else {
+          finalVerses = newVerses;
+        }
+      } else {
+        finalVerses = Array.isArray(newVerses) ? newVerses : content;
+      }
+    } catch(e) {
+      finalVerses = content; // store as-is if not parseable as array
+    }
+
+    writeJSON(filepath, {
+      scriptureId, unitId, lang,
+      content: typeof finalVerses === 'string' ? finalVerses : JSON.stringify(finalVerses),
+      verseCount: verseCount || (Array.isArray(finalVerses) ? finalVerses.length : 0),
+      ts: Date.now(),
+      savedAt: new Date().toISOString(),
+    });
+
+    console.log(`[Generate] Saved: ${filename}`);
+    res.json({ success: true, saved: filename, verseCount: Array.isArray(finalVerses) ? finalVerses.length : 0 });
+  } catch(err) {
+    console.error('[Generate Error]', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Admin can also delete katha cache to force regeneration
