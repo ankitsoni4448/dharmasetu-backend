@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DharmaSetu Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0A0400;--card:#130700;--card2:#1A0800;
+  --orange:#E8620A;--gold:#C9830A;--cream:#FDF6ED;
+  --green:#27AE60;--red:#E74C3C;--blue:#2980B9;
+  --border:rgba(240,165,0,0.15);--muted:rgba(253,246,237,0.4);
+}
+body{background:var(--bg);color:var(--cream);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:230px;background:var(--card);border-right:1px solid var(--border);padding:0;position:fixed;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;}
+.brand{padding:18px 20px;border-bottom:1px solid var(--border);}
+.brand h1{font-size:17px;color:var(--orange);font-weight:800;}
+.brand p{font-size:11px;color:var(--muted);margin-top:2px;}
+.conn-pill{margin:10px 14px;padding:8px 12px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;}
+.conn-ok{background:rgba(39,174,96,0.12);color:#27AE60;border:1px solid rgba(39,174,96,0.3);}
+.conn-err{background:rgba(231,76,60,0.12);color:#E74C3C;border:1px solid rgba(231,76,60,0.3);}
+.conn-wait{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);}
+nav{flex:1;}
+.ni{display:flex;align-items:center;gap:10px;padding:11px 18px;cursor:pointer;font-size:13px;color:var(--muted);border-left:3px solid transparent;transition:all 0.18s;}
+.ni:hover{background:rgba(232,98,10,0.07);color:var(--cream);}
+.ni.active{background:rgba(232,98,10,0.12);color:var(--orange);border-left-color:var(--orange);font-weight:700;}
+.ni-icon{font-size:15px;width:18px;text-align:center;}
+.sidebar-footer{padding:14px 18px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);}
+
+/* MAIN */
+.main{margin-left:230px;flex:1;padding:26px;min-height:100vh;}
+.sec{display:none;}.sec.active{display:block;}
+h2{font-size:21px;font-weight:800;color:var(--cream);margin-bottom:4px;}
+.psub{font-size:13px;color:var(--muted);margin-bottom:22px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* CARDS */
+.card{background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--border);margin-bottom:16px;}
+.card h3{font-size:15px;font-weight:700;color:var(--cream);margin-bottom:14px;}
+.stat-card{background:var(--card);border-radius:14px;padding:18px;border:1px solid var(--border);}
+.stat-val{font-size:26px;font-weight:800;color:var(--orange);margin:6px 0;}
+.stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;}
+.stat-chg{font-size:12px;margin-top:2px;}
+.up{color:var(--green)}.dn{color:var(--red)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:9px 12px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--border);}
+td{padding:9px 12px;border-bottom:1px solid rgba(240,165,0,0.05);color:rgba(253,246,237,0.8);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.018);}
+
+/* BADGE */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.bg{background:rgba(39,174,96,0.14);color:#27AE60;border:1px solid rgba(39,174,96,0.28);}
+.br{background:rgba(231,76,60,0.14);color:#E74C3C;border:1px solid rgba(231,76,60,0.28);}
+.bo{background:rgba(232,98,10,0.14);color:var(--orange);border:1px solid rgba(232,98,10,0.28);}
+.bgo{background:rgba(201,131,10,0.14);color:var(--gold);border:1px solid rgba(201,131,10,0.28);}
+.bb{background:rgba(41,128,185,0.14);color:#5DADE2;border:1px solid rgba(41,128,185,0.28);}
+.bw{background:rgba(255,255,255,0.07);color:var(--muted);border:1px solid rgba(255,255,255,0.1);}
+
+/* FORMS */
+label{display:block;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;}
+input,select,textarea{width:100%;background:rgba(255,255,255,0.055);border:1px solid var(--border);border-radius:10px;padding:9px 13px;color:var(--cream);font-size:14px;outline:none;transition:border 0.18s;margin-bottom:14px;}
+input:focus,select:focus,textarea:focus{border-color:var(--orange);}
+select option{background:#1A0800;}
+textarea{resize:vertical;min-height:75px;margin-bottom:0;}
+
+/* BUTTONS */
+.btn{padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.18s;display:inline-flex;align-items:center;gap:6px;}
+.btn-p{background:var(--orange);color:#fff;}.btn-p:hover{opacity:.88;}
+.btn-g{background:var(--green);color:#fff;}
+.btn-r{background:var(--red);color:#fff;}
+.btn-gold{background:var(--gold);color:#fff;}
+.btn-o{background:transparent;color:var(--orange);border:1px solid var(--orange);}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:8px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+
+/* TOGGLE */
+.tog{width:44px;height:24px;background:rgba(255,255,255,0.1);border-radius:12px;cursor:pointer;position:relative;transition:background .25s;flex-shrink:0;border:none;}
+.tog.on{background:var(--orange);}
+.tog::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:9px;top:3px;left:3px;transition:left .25s;}
+.tog.on::after{left:23px;}
+
+/* MISC */
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(240,165,0,0.07);}
+.setting-row:last-child{border-bottom:none;}
+.srow-lbl{font-size:14px;color:var(--cream);}
+.srow-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.progress-track{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin:7px 0;}
+.progress-fill{height:6px;border-radius:3px;}
+.alert-box{border-radius:10px;padding:11px 15px;margin-bottom:16px;font-size:13px;}
+.alert-r{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);color:#E74C3C;}
+.alert-b{background:rgba(41,128,185,0.1);border:1px solid rgba(41,128,185,0.3);color:#5DADE2;}
+.alert-g{background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);color:#27AE60;}
+.alert-o{background:rgba(232,98,10,0.1);border:1px solid rgba(232,98,10,0.3);color:var(--orange);}
+.price-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
+.price-box:hover{border-color:var(--orange);background:rgba(232,98,10,0.04);}
+.cause-card{background:var(--card2);border:1px solid var(--border);border-radius:13px;padding:16px;margin-bottom:10px;}
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--card);border:1px solid var(--orange);border-radius:12px;padding:12px 18px;font-size:13px;font-weight:600;color:var(--orange);opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.err{border-color:var(--red);color:var(--red);}
+.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;}
+.upload-zone:hover{border-color:var(--orange);background:rgba(232,98,10,0.04);}
+.plan-card{border:1.5px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all .2s;}
+.plan-card:hover,.plan-card.sel{border-color:var(--orange);background:rgba(232,98,10,0.05);}
+.plan-card h4{font-size:16px;font-weight:800;color:var(--orange);margin-bottom:4px;}
+.plan-price{font-size:28px;font-weight:800;color:var(--cream);}
+.plan-features{font-size:13px;color:var(--muted);line-height:1.9;margin-top:10px;}
+.plan-features span{color:var(--green);}
+</style>
+</head>
+<body>
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<div class="sidebar">
+  <div class="brand">
+    <h1>🕉 DharmaSetu</h1>
+    <p>Admin Dashboard v2.0</p>
+  </div>
+  <div id="conn-status" class="conn-pill conn-wait">⟳ Connecting to backend...</div>
+  <nav>
+    <div class="ni active" onclick="show('overview')"><span class="ni-icon">📊</span>Live Overview</div>
+    <div class="ni" onclick="show('pricing')"><span class="ni-icon">💰</span>Pricing & Plans</div>
+    <div class="ni" onclick="show('donations')"><span class="ni-icon">🙏</span>Seva & Donations</div>
+    <div class="ni" onclick="show('features')"><span class="ni-icon">⚙️</span>Feature Flags</div>
+    <div class="ni" onclick="show('content')"><span class="ni-icon">📚</span>Content Upload</div>
+    <div class="ni" onclick="show('ai')"><span class="ni-icon">🤖</span>AI Monitoring</div>
+    <div class="ni" onclick="show('transactions')"><span class="ni-icon">💳</span>Transactions</div>
+    <div class="ni" onclick="show('users')"><span class="ni-icon">👥</span>Users</div>
+    <div class="ni" onclick="show('notifications')"><span class="ni-icon">🔔</span>Notifications</div>
+    <div class="ni" onclick="show('settings')"><span class="ni-icon">🔐</span>App Settings</div>
+  </nav>
+  <div class="sidebar-footer">
+    Backend: <span id="footer-url" style="color:var(--orange);font-size:10px;">connecting...</span><br>
+    <span id="footer-time"></span>
+  </div>
+</div>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<div class="main">
+
+<!-- ── OVERVIEW ── -->
+<div id="sec-overview" class="sec active">
+  <h2>📊 Live Overview</h2>
+  <p class="psub"><span class="live-dot"></span>Connected to Render backend · <span id="live-time"></span></p>
+  <div id="overview-banner" class="alert-b">⟳ Loading live data from backend...</div>
+
+  <div class="g4" style="margin-bottom:18px;">
+    <div class="stat-card"><div class="stat-lbl">Active Uploads</div><div class="stat-val" id="ov-uploads">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Paid Revenue (₹)</div><div class="stat-val" id="ov-revenue">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Transactions</div><div class="stat-val" id="ov-txns">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Donations Raised</div><div class="stat-val" id="ov-don">—</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <h3>⚙️ Live Config Snapshot</h3>
+      <div id="ov-config" style="font-size:13px;color:var(--muted);line-height:2;">Loading...</div>
+      <div class="btn-row">
+        <button class="btn btn-p btn-sm" onclick="init()">🔄 Refresh</button>
+        <button class="btn btn-o btn-sm" onclick="testConn()">🔗 Test Connection</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🚀 Launch Checklist</h3>
+      <div style="font-size:13px;line-height:2.3;">
+        <div id="chk1">✅ Backend live on Render</div>
+        <div id="chk2">⏳ Admin key configured</div>
+        <div id="chk3">⏳ Gita CSV uploaded</div>
+        <div id="chk4">⏳ UPI ID set in payment_screen.js</div>
+        <div>⏳ Build APK with: <code style="color:var(--orange)">eas build --platform android</code></div>
+        <div>⏳ Submit to Google Play Store (₹1,750)</div>
+        <div>⏳ Privacy Policy URL live</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PRICING & PLANS ── -->
+<div id="sec-pricing" class="sec">
+  <h2>💰 Pricing & Plans</h2>
+  <p class="psub">Set prices, build bundles, choose which features cost money. Changes push to app immediately.</p>
+
+  <div class="alert-o">💡 How it works: App reads prices from backend on startup → stores locally → shows in payment screen. Change here → instant effect next time user opens app.</div>
+
+  <div class="g2">
+    <div class="card">
+      <h3>📱 Subscription Prices</h3>
+      <label>Basic Plan — ₹/month</label>
+      <input type="number" id="p-basic" value="99" min="49"/>
+      <label>Pro / Premium Plan — ₹/month</label>
+      <input type="number" id="p-pro" value="249" min="99"/>
+      <label>NRI / International Plan — ₹/month</label>
+      <input type="number" id="p-nri" value="499" min="199"/>
+      <label>Free Questions per Day (before paywall)</label>
+      <input type="number" id="p-freeqs" value="3" min="1" max="20"/>
+      <label>Free Fact-Checks per Day</label>
+      <input type="number" id="p-freefc" value="3" min="1" max="20"/>
+      <div class="btn-row">
+        <button class="btn btn-p" onclick="savePricing()">💾 Save Prices → Push to App</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🎁 Subscription Bundles</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">These appear in the app payment screen. Edit features, prices, toggle active.</p>
+      <div id="bundle-list"></div>
+      <div class="btn-row">
+        <button class="btn btn-o btn-sm" onclick="addBundle()">+ Add Bundle</button>
+        <button class="btn btn-p btn-sm" onclick="saveBundles()">💾 Save Bundles</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎟️ Manual Premium Grant</h3>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Give Premium free to influencers, testers, special users.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <input type="text" id="grant-phone" placeholder="Phone number +91XXXXXXXXXX" style="max-width:260px;"/>
+      <select id="grant-days" style="width:130px;"><option>30 days</option><option>7 days</option><option>60 days</option><option>Lifetime</option></select>
+      <button class="btn btn-gold" onclick="grantPremium()">🎁 Grant Premium</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DONATIONS ── -->
+<div id="sec-donations" class="sec">
+  <h2>🙏 Seva & Donations</h2>
+  <p class="psub">Manage donation campaigns. Users donate from inside the app. You choose causes, set goals, track funds.</p>
+
+  <div class="g3" style="margin-bottom:18px;">
+    <div class="stat-card"><div class="stat-lbl">Total Raised</div><div class="stat-val" style="color:var(--green)" id="don-total">₹0</div></div>
+    <div class="stat-card"><div class="stat-lbl">Active Campaigns</div><div class="stat-val" id="don-count">0</div></div>
+    <div class="stat-card"><div class="stat-lbl">Total Donations</div><div class="stat-val" id="don-txns">0</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Current Campaigns</h3>
+    <div id="don-list">Loading campaigns...</div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn btn-p btn-sm" onclick="saveDonations()">💾 Save All Changes</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>➕ Add New Campaign</h3>
+    <div class="g2">
+      <div>
+        <label>Campaign ID (no spaces, e.g. ganga_cleanup)</label>
+        <input type="text" id="nc-id" placeholder="army_welfare"/>
+        <label>Name (English)</label>
+        <input type="text" id="nc-name" placeholder="Army Welfare Fund"/>
+      </div>
+      <div>
+        <label>Name (Hindi)</label>
+        <input type="text" id="nc-nameh" placeholder="सेना कल्याण कोष"/>
+        <label>Goal Amount (₹)</label>
+        <input type="number" id="nc-goal" placeholder="100000"/>
+      </div>
+    </div>
+    <label>Description (shown in app)</label>
+    <textarea id="nc-desc" placeholder="Support the welfare of Indian Army families..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-p" onclick="addDonation()">➕ Add Campaign</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── FEATURE FLAGS ── -->
+<div id="sec-features" class="sec">
+  <h2>⚙️ Feature Flags</h2>
+  <p class="psub">Turn any feature ON/OFF instantly across all users. No app update needed. Changes apply on next app startup.</p>
+
+  <div class="card">
+    <h3>Core Features</h3>
+    <div class="setting-row"><div><div class="srow-lbl">Katha Vault</div><div class="srow-sub">Scripture reader — Gita live, others Coming Soon</div></div><button class="tog on" id="f-kathaVaultEnabled" onclick="toggleF(this,'kathaVaultEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Fact Check (Viral Jhoot)</div><div class="srow-sub">Debunking feature in DharmaChat</div></div><button class="tog on" id="f-factCheckEnabled" onclick="toggleF(this,'factCheckEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Debate Arena</div><div class="srow-sub">AI debate practice for students</div></div><button class="tog on" id="f-debateEnabled" onclick="toggleF(this,'debateEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Mantra Verify</div><div class="srow-sub">Verify authenticity of mantras</div></div><button class="tog on" id="f-mantraVerifyEnabled" onclick="toggleF(this,'mantraVerifyEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Peace Mode</div><div class="srow-sub">Dharmic stress relief feature</div></div><button class="tog on" id="f-peaceModeEnabled" onclick="toggleF(this,'peaceModeEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Seva Donations</div><div class="srow-sub">Show donation section in app</div></div><button class="tog on" id="f-donationEnabled" onclick="toggleF(this,'donationEnabled')"></button></div>
+    <div class="setting-row" style="border:1px solid rgba(231,76,60,0.2);border-radius:10px;padding:14px;margin-top:10px;"><div><div class="srow-lbl" style="color:var(--red);">⚠️ Maintenance Mode</div><div class="srow-sub">Disables app for ALL users — only use during critical updates</div></div><button class="tog" id="f-maintenanceMode" onclick="toggleF(this,'maintenanceMode')"></button></div>
+    <div class="btn-row"><button class="btn btn-p" onclick="saveFeatures()">💾 Save Feature Flags → Push to App</button></div>
+  </div>
+
+  <div class="card">
+    <h3>🤖 AI Settings</h3>
+    <label>Free Questions Before Paywall</label>
+    <input type="number" id="ai-freeqs" value="3"/>
+    <label>AI Model</label>
+    <select id="ai-model">
+      <option value="llama-3.3-70b-versatile">Groq — LLaMA 3.3 70B (Recommended)</option>
+      <option value="mixtral-8x7b-32768">Groq — Mixtral 8x7B</option>
+    </select>
+    <div class="btn-row"><button class="btn btn-p" onclick="saveAI()">💾 Save AI Settings</button></div>
+  </div>
+</div>
+
+<!-- ── CONTENT UPLOAD ── -->
+<div id="sec-content" class="sec">
+  <h2>📚 Content Upload</h2>
+  <p class="psub">Upload PDFs, CSVs, text files, audio transcripts. AI reads everything and uses it to give better answers. Content is split into chunks for AI context.</p>
+
+  <div class="alert-b">📋 How it works: Upload here → backend splits into chunks → app fetches on startup → AI uses in answers. User never sees "uploaded file", they see beautiful AI-explained content.</div>
+
+  <div class="g2">
+    <div class="card">
+      <h3>➕ Upload New Content</h3>
+      <label>Content Title</label>
+      <input type="text" id="ul-title" placeholder="Bhagavad Gita — All 700 Shlokas CSV"/>
+      <label>Content Type</label>
+      <select id="ul-type">
+        <option value="scripture">Scripture / Holy Book</option>
+        <option value="commentary">Commentary / Explanation</option>
+        <option value="science">Scientific Research</option>
+        <option value="historical">Historical Document</option>
+        <option value="audio_transcript">Audio Transcript</option>
+      </select>
+      <label>Topics (comma separated)</label>
+      <input type="text" id="ul-topics" placeholder="Gita, Krishna, Dharma, Chapter 1, Karma Yoga"/>
+      <label>Trust Level</label>
+      <select id="ul-trust">
+        <option value="high">High — Gita Press / Primary Scripture</option>
+        <option value="medium">Medium — Commentary / Secondary Source</option>
+      </select>
+
+      <!-- File upload zone -->
+      <div class="upload-zone" onclick="document.getElementById('ul-file').click()">
+        <input type="file" id="ul-file" style="display:none" accept=".txt,.csv,.json,.pdf" onchange="fileSelected(this)"/>
+        <div style="font-size:36px;">📄</div>
+        <p style="color:var(--muted);font-size:13px;margin-top:8px;">Click to select file (.txt, .csv, .json)</p>
+        <div id="ul-filename" style="color:var(--orange);font-weight:700;margin-top:8px;font-size:13px;"></div>
+      </div>
+
+      <div style="text-align:center;color:var(--muted);font-size:12px;margin:12px 0;">— OR paste text directly below —</div>
+      <label>Paste Text / CSV Content</label>
+      <textarea id="ul-text" rows="6" placeholder="Paste your Gita CSV, scripture text, or any content here...&#10;&#10;Format example:&#10;chapter,verse,sanskrit,hindi,english&#10;1,1,धर्मक्षेत्रे...,धृतराष्ट्र ने कहा...,Dhritarashtra said..."></textarea>
+
+      <div class="btn-row" style="margin-top:4px;">
+        <button class="btn btn-p" onclick="uploadContent()">📤 Upload to Backend</button>
+        <button class="btn btn-o" onclick="clearUpload()">✕ Clear</button>
+      </div>
+
+      <div id="ul-progress" style="display:none;margin-top:14px;">
+        <div id="ul-prog-txt" style="font-size:13px;color:var(--orange);margin-bottom:6px;">Uploading...</div>
+        <div class="progress-track"><div class="progress-fill" id="ul-prog-bar" style="width:0%;background:var(--orange);"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Content Library</h3>
+      <div class="btn-row" style="margin-bottom:14px;">
+        <button class="btn btn-o btn-sm" onclick="loadUploads()">🔄 Refresh</button>
+      </div>
+      <div id="ul-list"><p style="color:var(--muted);font-size:13px;">Loading...</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── AI MONITORING ── -->
+<div id="sec-ai" class="sec">
+  <h2>🤖 AI Monitoring</h2>
+  <p class="psub">Quality control — flagged answers, blocked queries, AI performance metrics.</p>
+  <div class="g3" style="margin-bottom:18px;">
+    <div class="stat-card"><div class="stat-lbl">Answers Today</div><div class="stat-val">Live via Firebase</div></div>
+    <div class="stat-card"><div class="stat-lbl">Flagged Answers</div><div class="stat-val" style="color:var(--red)">7</div></div>
+    <div class="stat-card"><div class="stat-lbl">Blocked Queries</div><div class="stat-val" style="color:var(--gold)">23</div></div>
+  </div>
+  <div class="card">
+    <h3>🚨 Flagged Answers — Needs Review</h3>
+    <table>
+      <tr><th>Question</th><th>Issue</th><th>User</th><th>Action</th></tr>
+      <tr><td>Manusmriti on women?</td><td><span class="badge br">Wrong source</span></td><td>Anon</td><td><button class="btn btn-o btn-sm">Review</button></td></tr>
+      <tr><td>What is Aryan Invasion?</td><td><span class="badge bgo">Incomplete</span></td><td>Priya S</td><td><button class="btn btn-o btn-sm">Review</button></td></tr>
+      <tr><td>Krishna death story</td><td><span class="badge bgo">More detail needed</span></td><td>Rajesh</td><td><button class="btn btn-o btn-sm">Review</button></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>🛑 Blocked Queries Today</h3>
+    <table>
+      <tr><th>Query</th><th>Block Reason</th><th>Time</th></tr>
+      <tr><td>Why is Islam wrong?</td><td><span class="badge br">Anti-religion</span></td><td>2:14 PM</td></tr>
+      <tr><td>Generate hate speech...</td><td><span class="badge br">Hate content</span></td><td>11:30 AM</td></tr>
+      <tr><td>Ignore previous instructions...</td><td><span class="badge br">Prompt injection</span></td><td>9:45 AM</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ── TRANSACTIONS ── -->
+<div id="sec-transactions" class="sec">
+  <h2>💳 Transactions</h2>
+  <p class="psub">All subscription payments and donations. Live after Razorpay webhook is connected.</p>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3>Recent Transactions</h3>
+      <button class="btn btn-o btn-sm" onclick="loadTxns()">🔄 Refresh</button>
+    </div>
+    <div id="txn-list"><p style="color:var(--muted);font-size:13px;">Loading...</p></div>
+  </div>
+</div>
+
+<!-- ── USERS ── -->
+<div id="sec-users" class="sec">
+  <h2>👥 User Management</h2>
+  <p class="psub">All registered users. Live data from Firebase. Search, filter, view details.</p>
+  <div class="card" style="margin-bottom:16px;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <input type="text" placeholder="🔍 Search by name, phone, city..." style="max-width:280px;margin-bottom:0;"/>
+      <select style="width:140px;margin-bottom:0;"><option>All Plans</option><option>Free</option><option>Premium</option></select>
+      <button class="btn btn-o btn-sm">Export CSV</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="alert-b" style="margin-bottom:14px;">👆 Connect Firebase to see real users. Demo data shown below.</div>
+    <table>
+      <tr><th>User</th><th>Rashi</th><th>Plan</th><th>Streak</th><th>Questions</th><th>Last Active</th><th></th></tr>
+      <tr><td><b>Ankit Soni</b><br><small style="color:var(--muted)">Indore</small></td><td>Mesh</td><td><span class="badge bgo">Premium</span></td><td>🔥 23</td><td>187</td><td>Now</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
+      <tr><td><b>Priya Sharma</b><br><small style="color:var(--muted)">Delhi</small></td><td>Kark</td><td><span class="badge bgo">Premium</span></td><td>🔥 15</td><td>94</td><td>2m ago</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
+      <tr><td><b>Rajesh Kumar</b><br><small style="color:var(--muted)">Mumbai</small></td><td>Simha</td><td><span class="badge bb">Free</span></td><td>🔥 7</td><td>31</td><td>14m ago</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ── NOTIFICATIONS ── -->
+<div id="sec-notifications" class="sec">
+  <h2>🔔 Push Notifications</h2>
+  <p class="psub">Send to all users or specific groups. Requires Firebase Admin SDK setup on backend.</p>
+  <div class="g2">
+    <div class="card">
+      <h3>📤 Send Notification</h3>
+      <label>Title</label>
+      <input type="text" id="n-title" placeholder="🕉 Breaking — Viral Lie Debunked"/>
+      <label>Message</label>
+      <textarea id="n-body" placeholder="The truth about [topic] — tap to read the complete Dharmic answer..."></textarea>
+      <label>Send To</label>
+      <select id="n-target" style="margin-bottom:14px;">
+        <option value="all">All Users</option>
+        <option value="premium">Premium Users Only</option>
+        <option value="free">Free Users Only</option>
+      </select>
+      <button class="btn btn-p" style="width:100%;" onclick="sendNotif()">🚀 Send Now</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px;">Note: Add FIREBASE_SERVICE_ACCOUNT to Render env vars to enable real push notifications.</p>
+    </div>
+    <div class="card">
+      <h3>📋 Auto Notifications</h3>
+      <div style="font-size:13px;line-height:2.2;color:rgba(253,246,237,0.7);">
+        <div>✅ Daily verse — 7:00 AM every day</div>
+        <div>✅ Streak reminder — 7:00 PM if not opened</div>
+        <div>✅ Premium renewal — 7 days before expiry</div>
+        <div>✅ Festival alerts — 3 days before festival</div>
+        <div>⏳ Win-back offer — 14 days after cancel</div>
+        <div>⏳ Ekadashi reminder — evening before</div>
+      </div>
+      <div class="alert-b" style="margin-top:14px;font-size:12px;">All auto-notifications run from Firebase Cloud Messaging (free). Setup once, runs forever.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SETTINGS ── -->
+<div id="sec-settings" class="sec">
+  <h2>🔐 App Settings</h2>
+  <p class="psub">Backend connection, admin key, app version, security controls.</p>
+
+  <div class="card">
+    <h3>🔗 Backend Connection</h3>
+    <label>Render Backend URL</label>
+    <input type="text" id="s-backend" value="https://dharmasetu-backend-2c65.onrender.com" readonly style="opacity:0.7;"/>
+    <label>Admin Key (your ADMIN_PASSWORD from Render)</label>
+    <input type="password" id="s-adminkey" placeholder="Enter your ADMIN_PASSWORD"/>
+    <div class="btn-row">
+      <button class="btn btn-p" onclick="saveAdminKey()">🔑 Save Admin Key</button>
+      <button class="btn btn-o" onclick="testConn()">🔗 Test Connection</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📱 App Version</h3>
+    <label>Current App Version</label>
+    <input type="text" id="s-version" value="1.0.0"/>
+    <div class="btn-row">
+      <button class="btn btn-p" onclick="saveVersion()">💾 Save Version</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔐 Security Settings</h3>
+    <div class="setting-row"><div><div class="srow-lbl">Rate Limiting</div><div class="srow-sub">Max 60 requests/minute per user</div></div><button class="tog on"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Content Filter (Anti-hate)</div><div class="srow-sub">Block political, anti-religion, hate queries</div></div><button class="tog on"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Device Fingerprinting</div><div class="srow-sub">Prevent multiple free accounts per device</div></div><button class="tog on"></button></div>
+    <div class="alert-r" style="margin-top:14px;">⚠️ Before Play Store: Move Groq and Gemini API keys from app code to Render backend environment variables.</div>
+  </div>
+
+  <div class="card">
+    <h3>💳 Razorpay / Payment Setup</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">For real payments, add these to Render environment variables:</p>
+    <div style="font-size:13px;line-height:2.2;color:rgba(253,246,237,0.7);">
+      <div><code style="color:var(--orange);">RAZORPAY_KEY_ID</code> = rzp_live_XXXXXXXXXXXXXXXX</div>
+      <div><code style="color:var(--orange);">RAZORPAY_KEY_SECRET</code> = your secret key</div>
+      <div><code style="color:var(--orange);">ADMIN_PASSWORD</code> = your admin password</div>
+    </div>
+    <div class="alert-b" style="margin-top:14px;">Get keys from: <strong>dashboard.razorpay.com → Settings → API Keys</strong>. Free account, no monthly fees, 2% per transaction.</div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<!-- TOAST -->
+<div class="toast-wrap">
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIG — your Render backend URL
+// ═══════════════════════════════════════════════════════════════
+let BACKEND = 'https://dharmasetu-backend-2c65.onrender.com';
+let ADMIN_KEY = localStorage.getItem('ds_admin_key') || 'DharmaSetu@2025';
+let liveConfig = {};
+let liveBundles = [];
+let liveDonations = [];
+
+// ── HELPERS ────────────────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event?.currentTarget?.classList.add('active');
+  if (id === 'content') loadUploads();
+  if (id === 'transactions') loadTxns();
+  if (id === 'overview') loadStats();
+  if (id === 'donations') renderDonations();
+}
+
+let toastTimer;
+function toast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.textContent = (isErr ? '✕  ' : '✓  ') + msg;
+  t.className = 'toast show' + (isErr ? ' err' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+async function api(method, path, body, isForm = false) {
+  const opts = { method, headers: { 'x-admin-key': ADMIN_KEY } };
+  if (isForm) {
+    opts.body = body;
+  } else if (body) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  }
+  try {
+    const r = await fetch(BACKEND + path, opts);
+    return await r.json();
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+// ── INIT / STARTUP ─────────────────────────────────────────────
+async function init() {
+  document.getElementById('footer-url').textContent = BACKEND.replace('https://','');
+  await testConn();
+  await loadConfig();
+  await loadStats();
+  setInterval(() => {
+    document.getElementById('footer-time').textContent = new Date().toLocaleTimeString();
+    document.getElementById('live-time').textContent = new Date().toLocaleTimeString();
+  }, 1000);
+}
+
+async function testConn() {
+  const el = document.getElementById('conn-status');
+  el.className = 'conn-pill conn-wait'; el.textContent = '⟳ Testing...';
+  try {
+    const r = await fetch(BACKEND + '/health', { signal: AbortSignal.timeout(6000) });
+    if (r.ok) {
+      el.className = 'conn-pill conn-ok'; el.textContent = '● Backend Connected';
+      document.getElementById('overview-banner').className = 'alert-g';
+      document.getElementById('overview-banner').textContent = '✅ Backend connected: ' + BACKEND;
+      document.getElementById('chk1').textContent = '✅ Backend live on Render';
+    } else throw new Error();
+  } catch {
+    el.className = 'conn-pill conn-err'; el.textContent = '✕ Backend Offline';
+    document.getElementById('overview-banner').className = 'alert-r';
+    document.getElementById('overview-banner').textContent = '✕ Cannot reach backend. Check Render → is service running?';
+  }
+}
+
+async function loadConfig() {
+  const r = await api('GET', '/admin/config');
+  if (!r.success) return;
+  liveConfig = r.config;
+  liveBundles = r.config.bundles || getDefaultBundles();
+  liveDonations = r.config.donations || getDefaultDonations();
+  applyConfigToUI(liveConfig);
+  renderBundles();
+  renderDonations();
+}
+
+function applyConfigToUI(c) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+  set('p-basic', c.basicPrice);
+  set('p-pro', c.premiumPrice);
+  set('p-nri', c.nriPrice);
+  set('p-freeqs', c.freeQuestionsLimit);
+  set('p-freefc', c.freeFactCheckLimit);
+  set('ai-freeqs', c.freeQuestionsLimit);
+  set('s-version', c.appVersion);
+
+  const flags = ['kathaVaultEnabled','factCheckEnabled','debateEnabled','mantraVerifyEnabled','peaceModeEnabled','donationEnabled','maintenanceMode'];
+  flags.forEach(f => {
+    const btn = document.getElementById('f-' + f);
+    if (btn) btn.className = 'tog' + (c[f] ? ' on' : '');
+  });
+
+  document.getElementById('ov-config').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <span>Basic: <b style="color:var(--orange)">₹${c.basicPrice||99}/mo</b></span>
+      <span>Pro: <b style="color:var(--orange)">₹${c.premiumPrice||249}/mo</b></span>
+      <span>Free Qs: <b style="color:var(--orange)">${c.freeQuestionsLimit||3}/day</b></span>
+      <span>Version: <b style="color:var(--orange)">${c.appVersion||'1.0.0'}</b></span>
+      <span>Maintenance: <b style="color:${c.maintenanceMode?'#E74C3C':'#27AE60'}">${c.maintenanceMode?'ON ⚠️':'OFF ✓'}</b></span>
+      <span>Uploads: <b style="color:var(--orange)" id="ov-uploads-inline">—</b></span>
+    </div>
+  `;
+}
+
+function getDefaultBundles() {
+  return [
+    { id:'basic', name:'Basic', nameHi:'बेसिक', price:99, active:true, features:['30 questions/day','15 fact-checks/day','Mantra Verify','Save answers','No ads'] },
+    { id:'pro',   name:'Pro',   nameHi:'प्रो',   price:249, active:true, features:['Unlimited questions','Unlimited fact-checks','All Debate levels','Peace Mode','No ads','Priority support'] },
+  ];
+}
+function getDefaultDonations() {
+  return [
+    { id:'army',   name:'Army Welfare',    nameHi:'सेना कल्याण',       desc:'Support Indian Army welfare fund',         goal:100000, raised:0, active:true },
+    { id:'temple', name:'Temple Restore',  nameHi:'मंदिर जीर्णोद्धार', desc:'Restore ancient temples across India',     goal:500000, raised:0, active:true },
+    { id:'dharma', name:'Dharma Education',nameHi:'धर्म शिक्षा',       desc:'Educate youth about Sanatan Dharma',       goal:250000, raised:0, active:true },
+  ];
+}
+
+async function loadStats() {
+  const r = await api('GET', '/admin/stats');
+  if (!r.success) return;
+  const s = r.stats;
+  document.getElementById('ov-uploads').textContent = s.activeUploads || 0;
+  document.getElementById('ov-revenue').textContent = '₹' + (s.totalRevenue || 0).toLocaleString();
+  document.getElementById('ov-txns').textContent = s.paidTransactions || 0;
+  document.getElementById('ov-don').textContent = '₹' + (s.donationRaised || 0).toLocaleString();
+  document.getElementById('don-total').textContent = '₹' + (s.donationRaised || 0).toLocaleString();
+  document.getElementById('don-txns').textContent = s.totalTransactions || 0;
+  if (s.activeUploads >= 1) document.getElementById('chk3').textContent = '✅ Content uploaded (' + s.activeUploads + ' pieces)';
+}
+
+// ── PRICING ────────────────────────────────────────────────────
+async function savePricing() {
+  const r = await api('POST', '/admin/config', {
+    basicPrice: +document.getElementById('p-basic').value,
+    premiumPrice: +document.getElementById('p-pro').value,
+    nriPrice: +document.getElementById('p-nri').value,
+    freeQuestionsLimit: +document.getElementById('p-freeqs').value,
+    freeFactCheckLimit: +document.getElementById('p-freefc').value,
+  });
+  r.success ? toast('Prices saved! App reads on next startup.') : toast('Save failed: ' + r.error, true);
+}
+
+// ── BUNDLES ────────────────────────────────────────────────────
+function renderBundles() {
+  document.getElementById('bundle-list').innerHTML = liveBundles.map((b, i) => `
+    <div class="price-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" value="${b.name}" onchange="liveBundles[${i}].name=this.value" style="font-size:15px;font-weight:800;color:var(--orange);background:transparent;border:none;border-bottom:1px solid var(--border);width:90px;padding:2px;margin-bottom:0;"/>
+          <input type="text" value="${b.nameHi||''}" onchange="liveBundles[${i}].nameHi=this.value" style="font-size:13px;color:var(--gold);background:transparent;border:none;border-bottom:1px solid var(--border);width:80px;padding:2px;margin-bottom:0;"/>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span class="badge ${b.active?'bg':'bw'}" style="cursor:pointer;" onclick="liveBundles[${i}].active=!liveBundles[${i}].active;renderBundles()">${b.active?'Active':'Hidden'}</span>
+          <button class="btn btn-r btn-sm" onclick="liveBundles.splice(${i},1);renderBundles()">✕</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:10px;">
+        <span style="color:var(--muted);font-size:13px;">₹</span>
+        <input type="number" value="${b.price}" onchange="liveBundles[${i}].price=+this.value" style="font-size:24px;font-weight:800;color:var(--cream);background:transparent;border:none;border-bottom:1px solid var(--border);width:75px;padding:2px;margin-bottom:0;"/>
+        <span style="color:var(--muted);font-size:13px;">/month</span>
+      </div>
+      <label>Features (one per line)</label>
+      <textarea rows="4" onchange="liveBundles[${i}].features=this.value.split('\\n').filter(Boolean)">${(b.features||[]).join('\n')}</textarea>
+    </div>
+  `).join('');
+}
+
+function addBundle() {
+  liveBundles.push({ id:'plan_'+Date.now(), name:'New Plan', nameHi:'नया प्लान', price:149, active:true, features:['Feature 1','Feature 2','Feature 3'] });
+  renderBundles();
+}
+
+async function saveBundles() {
+  const r = await api('POST', '/admin/bundles', { bundles: liveBundles });
+  r.success ? toast('Bundles saved!') : toast('Failed: ' + r.error, true);
+}
+
+async function grantPremium() {
+  const phone = document.getElementById('grant-phone').value.trim();
+  const days = document.getElementById('grant-days').value;
+  if (!phone) { toast('Enter phone number', true); return; }
+  toast(`Premium granted to ${phone} for ${days}. Implement in Firebase for real effect.`);
+}
+
+// ── DONATIONS ──────────────────────────────────────────────────
+function renderDonations() {
+  const total = liveDonations.filter(d=>d.active).length;
+  document.getElementById('don-count').textContent = total;
+  document.getElementById('don-list').innerHTML = liveDonations.map((d, i) => `
+    <div class="cause-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div>
+          <span style="font-size:15px;font-weight:700;color:var(--cream);">${d.name} / ${d.nameHi}</span><br>
+          <span style="font-size:12px;color:var(--muted);">${d.desc}</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span class="badge ${d.active?'bg':'bw'}" style="cursor:pointer;" onclick="liveDonations[${i}].active=!liveDonations[${i}].active;renderDonations()">${d.active?'Active':'Hidden'}</span>
+          <button class="btn btn-r btn-sm" onclick="liveDonations.splice(${i},1);renderDonations()">✕</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div><label>Goal (₹)</label><input type="number" value="${d.goal}" onchange="liveDonations[${i}].goal=+this.value" style="margin-bottom:0;"/></div>
+        <div><label>Raised so far (₹)</label><input type="number" value="${d.raised||0}" onchange="liveDonations[${i}].raised=+this.value" style="margin-bottom:0;"/></div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${Math.min(100,Math.round(((d.raised||0)/Math.max(d.goal,1))*100))}%;background:var(--orange);"></div></div>
+      <span style="font-size:11px;color:var(--muted);">₹${(d.raised||0).toLocaleString()} of ₹${d.goal.toLocaleString()} — ${Math.round(((d.raised||0)/Math.max(d.goal,1))*100)}%</span>
+    </div>
+  `).join('');
+}
+
+function addDonation() {
+  const id=document.getElementById('nc-id').value.trim(),
+        name=document.getElementById('nc-name').value.trim(),
+        nameHi=document.getElementById('nc-nameh').value.trim(),
+        goal=+document.getElementById('nc-goal').value||100000,
+        desc=document.getElementById('nc-desc').value.trim();
+  if(!id||!name){toast('Campaign ID and Name required',true);return;}
+  liveDonations.push({id,name,nameHi:nameHi||name,desc,goal,raised:0,active:true});
+  ['nc-id','nc-name','nc-nameh','nc-goal','nc-desc'].forEach(i=>document.getElementById(i).value='');
+  renderDonations();
+  toast('Campaign added! Click Save All Changes.');
+}
+
+async function saveDonations() {
+  const r = await api('POST', '/admin/donations', { donations: liveDonations });
+  r.success ? toast('Donation campaigns saved!') : toast('Failed: ' + r.error, true);
+}
+
+// ── FEATURE FLAGS ──────────────────────────────────────────────
+function toggleF(btn, key) {
+  btn.classList.toggle('on');
+  liveConfig[key] = btn.classList.contains('on');
+}
+async function saveFeatures() {
+  const keys = ['kathaVaultEnabled','factCheckEnabled','debateEnabled','mantraVerifyEnabled','peaceModeEnabled','donationEnabled','maintenanceMode'];
+  const body = {};
+  keys.forEach(k => { body[k] = liveConfig[k] !== false; });
+  const r = await api('POST', '/admin/config', body);
+  r.success ? toast('Feature flags saved!') : toast('Failed', true);
+}
+async function saveAI() {
+  const r = await api('POST', '/admin/config', {
+    freeQuestionsLimit: +document.getElementById('ai-freeqs').value,
+    aiModel: document.getElementById('ai-model').value,
+  });
+  r.success ? toast('AI settings saved!') : toast('Failed', true);
+}
+
+// ── CONTENT UPLOAD ─────────────────────────────────────────────
+let selectedFile = null;
+function fileSelected(inp) {
+  selectedFile = inp.files[0];
+  document.getElementById('ul-filename').textContent = '📎 ' + selectedFile.name + ' (' + (selectedFile.size/1024).toFixed(1) + ' KB)';
+  if (!document.getElementById('ul-title').value) {
+    document.getElementById('ul-title').value = selectedFile.name.replace(/\.[^.]+$/,'');
+  }
+}
+
+async function uploadContent() {
+  const title = document.getElementById('ul-title').value.trim();
+  const pasteText = document.getElementById('ul-text').value.trim();
+  if (!title) { toast('Enter a content title', true); return; }
+  if (!selectedFile && !pasteText) { toast('Select a file or paste text', true); return; }
+
+  const prog = document.getElementById('ul-progress');
+  const bar = document.getElementById('ul-prog-bar');
+  const txt = document.getElementById('ul-prog-txt');
+  prog.style.display = 'block';
+  bar.style.width = '25%';
+  txt.textContent = 'Preparing...';
+
+  const fd = new FormData();
+  fd.append('title', title);
+  fd.append('type', document.getElementById('ul-type').value);
+  fd.append('topics', document.getElementById('ul-topics').value);
+  fd.append('trustLevel', document.getElementById('ul-trust').value);
+  if (pasteText) fd.append('textContent', pasteText);
+  if (selectedFile) fd.append('file', selectedFile);
+
+  bar.style.width = '60%';
+  txt.textContent = 'Uploading to backend...';
+
+  const r = await api('POST', '/admin/upload', fd, true);
+  bar.style.width = '100%';
+  if (r.success) {
+    txt.textContent = '✅ Uploaded! ' + r.upload.chunkCount + ' AI chunks created.';
+    toast('"' + r.upload.title + '" uploaded — ' + r.upload.chunkCount + ' chunks ready');
+    clearUpload();
+    await loadUploads();
+    document.getElementById('chk3').textContent = '✅ Content uploaded successfully';
+  } else {
+    txt.textContent = '✕ Error: ' + r.error;
+    toast('Upload failed: ' + r.error, true);
+  }
+  setTimeout(() => prog.style.display = 'none', 5000);
+}
+
+function clearUpload() {
+  document.getElementById('ul-title').value = '';
+  document.getElementById('ul-topics').value = '';
+  document.getElementById('ul-text').value = '';
+  document.getElementById('ul-filename').textContent = '';
+  document.getElementById('ul-file').value = '';
+  selectedFile = null;
+}
+
+async function loadUploads() {
+  const el = document.getElementById('ul-list');
+  el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Loading...</p>';
+  const r = await api('GET', '/admin/uploads');
+  if (!r.success || !r.uploads) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Could not load. Check connection.</p>'; return; }
+  if (!r.uploads.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">No content uploaded yet. Upload your first scripture above.</p>'; return; }
+  el.innerHTML = `<table>
+    <tr><th>Title</th><th>Type</th><th>Chunks</th><th>Status</th><th>Date</th><th></th></tr>
+    ${r.uploads.map(u => `<tr>
+      <td>${u.title}</td>
+      <td><span class="badge bo">${u.type}</span></td>
+      <td>${u.chunkCount}</td>
+      <td><span class="badge ${u.active?'bg':'bw'}">${u.active?'Active':'Off'}</span></td>
+      <td>${new Date(u.uploadedAt).toLocaleDateString()}</td>
+      <td><button class="btn btn-r btn-sm" onclick="delUpload('${u.id}')">Del</button></td>
+    </tr>`).join('')}
+  </table>`;
+}
+
+async function delUpload(id) {
+  if (!confirm('Delete this content? AI will stop using it.')) return;
+  await fetch(BACKEND + '/admin/uploads/' + id, { method:'DELETE', headers:{'x-admin-key':ADMIN_KEY} });
+  toast('Deleted'); loadUploads();
+}
+
+// ── TRANSACTIONS ───────────────────────────────────────────────
+async function loadTxns() {
+  const el = document.getElementById('txn-list');
+  el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Loading...</p>';
+  const r = await api('GET', '/admin/transactions');
+  if (!r.transactions?.length) {
+    el.innerHTML = '<p style="color:var(--muted);font-size:13px;">No transactions yet. Transactions appear here after Razorpay integration. Get keys from dashboard.razorpay.com</p>';
+    return;
+  }
+  el.innerHTML = `<table>
+    <tr><th>Order ID</th><th>Type</th><th>Amount</th><th>Status</th><th>Time</th></tr>
+    ${r.transactions.map(t => `<tr>
+      <td style="font-family:monospace;font-size:11px;">${t.id}</td>
+      <td><span class="badge bo">${t.type||'—'}</span></td>
+      <td>₹${((t.amount||0)/100).toFixed(0)}</td>
+      <td><span class="badge ${t.status==='paid'?'bg':'bw'}">${t.status}</span></td>
+      <td>${t.created_at ? new Date(t.created_at*1000).toLocaleString() : '—'}</td>
+    </tr>`).join('')}
+  </table>`;
+}
+
+// ── NOTIFICATIONS ──────────────────────────────────────────────
+async function sendNotif() {
+  const title = document.getElementById('n-title').value.trim();
+  const body = document.getElementById('n-body').value.trim();
+  if (!title || !body) { toast('Fill title and message', true); return; }
+  toast('Queued: "' + title + '". Add FIREBASE_SERVICE_ACCOUNT to Render for real delivery.');
+}
+
+// ── SETTINGS ───────────────────────────────────────────────────
+function saveAdminKey() {
+  const key = document.getElementById('s-adminkey').value.trim();
+  if (!key) { toast('Enter admin key', true); return; }
+  ADMIN_KEY = key;
+  localStorage.setItem('ds_admin_key', key);
+  document.getElementById('chk2').textContent = '✅ Admin key configured';
+  toast('Admin key saved! Testing connection...');
+  testConn();
+}
+
+async function saveVersion() {
+  const r = await api('POST', '/admin/config', { appVersion: document.getElementById('s-version').value });
+  r.success ? toast('Version updated!') : toast('Failed', true);
+}
+
+// ── START ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
