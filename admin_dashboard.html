@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DharmaSetu Admin</title>
+<title>DharmaSetu Admin v3</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -13,53 +13,37 @@
   --border:rgba(240,165,0,0.15);--muted:rgba(253,246,237,0.4);
 }
 body{background:var(--bg);color:var(--cream);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;min-height:100vh;}
-
-/* SIDEBAR */
-.sidebar{width:230px;background:var(--card);border-right:1px solid var(--border);padding:0;position:fixed;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;}
-.brand{padding:18px 20px;border-bottom:1px solid var(--border);}
-.brand h1{font-size:17px;color:var(--orange);font-weight:800;}
-.brand p{font-size:11px;color:var(--muted);margin-top:2px;}
-.conn-pill{margin:10px 14px;padding:8px 12px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;}
+.sidebar{width:220px;background:var(--card);border-right:1px solid var(--border);position:fixed;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;}
+.brand{padding:16px 18px;border-bottom:1px solid var(--border);}
+.brand h1{font-size:16px;color:var(--orange);font-weight:800;}
+.brand p{font-size:10px;color:var(--muted);margin-top:2px;}
+.conn-pill{margin:8px 12px;padding:7px 10px;border-radius:8px;font-size:11px;font-weight:700;text-align:center;}
 .conn-ok{background:rgba(39,174,96,0.12);color:#27AE60;border:1px solid rgba(39,174,96,0.3);}
 .conn-err{background:rgba(231,76,60,0.12);color:#E74C3C;border:1px solid rgba(231,76,60,0.3);}
 .conn-wait{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);}
 nav{flex:1;}
-.ni{display:flex;align-items:center;gap:10px;padding:11px 18px;cursor:pointer;font-size:13px;color:var(--muted);border-left:3px solid transparent;transition:all 0.18s;}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--muted);border-left:3px solid transparent;transition:all 0.18s;}
 .ni:hover{background:rgba(232,98,10,0.07);color:var(--cream);}
 .ni.active{background:rgba(232,98,10,0.12);color:var(--orange);border-left-color:var(--orange);font-weight:700;}
-.ni-icon{font-size:15px;width:18px;text-align:center;}
-.sidebar-footer{padding:14px 18px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);}
-
-/* MAIN */
-.main{margin-left:230px;flex:1;padding:26px;min-height:100vh;}
+.ni-icon{font-size:14px;width:18px;text-align:center;}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);}
+.main{margin-left:220px;flex:1;padding:24px;min-height:100vh;}
 .sec{display:none;}.sec.active{display:block;}
-h2{font-size:21px;font-weight:800;color:var(--cream);margin-bottom:4px;}
-.psub{font-size:13px;color:var(--muted);margin-bottom:22px;}
-
-/* GRID */
+h2{font-size:20px;font-weight:800;color:var(--cream);margin-bottom:4px;}
+.psub{font-size:13px;color:var(--muted);margin-bottom:20px;}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
 @media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr}}
-
-/* CARDS */
 .card{background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--border);margin-bottom:16px;}
-.card h3{font-size:15px;font-weight:700;color:var(--cream);margin-bottom:14px;}
+.card h3{font-size:14px;font-weight:700;color:var(--cream);margin-bottom:14px;}
 .stat-card{background:var(--card);border-radius:14px;padding:18px;border:1px solid var(--border);}
 .stat-val{font-size:26px;font-weight:800;color:var(--orange);margin:6px 0;}
 .stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;}
-.stat-chg{font-size:12px;margin-top:2px;}
-.up{color:var(--green)}.dn{color:var(--red)}
-
-/* TABLE */
 table{width:100%;border-collapse:collapse;font-size:13px;}
-th{text-align:left;padding:9px 12px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--border);}
-td{padding:9px 12px;border-bottom:1px solid rgba(240,165,0,0.05);color:rgba(253,246,237,0.8);}
-tr:last-child td{border-bottom:none;}
-tr:hover td{background:rgba(255,255,255,0.018);}
-
-/* BADGE */
+th{text-align:left;padding:8px 12px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);}
+td{padding:8px 12px;border-bottom:1px solid rgba(240,165,0,0.05);color:rgba(253,246,237,0.8);}
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
 .bg{background:rgba(39,174,96,0.14);color:#27AE60;border:1px solid rgba(39,174,96,0.28);}
 .br{background:rgba(231,76,60,0.14);color:#E74C3C;border:1px solid rgba(231,76,60,0.28);}
@@ -67,16 +51,12 @@ tr:hover td{background:rgba(255,255,255,0.018);}
 .bgo{background:rgba(201,131,10,0.14);color:var(--gold);border:1px solid rgba(201,131,10,0.28);}
 .bb{background:rgba(41,128,185,0.14);color:#5DADE2;border:1px solid rgba(41,128,185,0.28);}
 .bw{background:rgba(255,255,255,0.07);color:var(--muted);border:1px solid rgba(255,255,255,0.1);}
-
-/* FORMS */
 label{display:block;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;}
 input,select,textarea{width:100%;background:rgba(255,255,255,0.055);border:1px solid var(--border);border-radius:10px;padding:9px 13px;color:var(--cream);font-size:14px;outline:none;transition:border 0.18s;margin-bottom:14px;}
 input:focus,select:focus,textarea:focus{border-color:var(--orange);}
 select option{background:#1A0800;}
 textarea{resize:vertical;min-height:75px;margin-bottom:0;}
-
-/* BUTTONS */
-.btn{padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.18s;display:inline-flex;align-items:center;gap:6px;}
+.btn{padding:9px 16px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.18s;display:inline-flex;align-items:center;gap:6px;}
 .btn-p{background:var(--orange);color:#fff;}.btn-p:hover{opacity:.88;}
 .btn-g{background:var(--green);color:#fff;}
 .btn-r{background:var(--red);color:#fff;}
@@ -84,17 +64,13 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
 .btn-o{background:transparent;color:var(--orange);border:1px solid var(--orange);}
 .btn-sm{padding:5px 12px;font-size:12px;border-radius:8px;}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
-
-/* TOGGLE */
 .tog{width:44px;height:24px;background:rgba(255,255,255,0.1);border-radius:12px;cursor:pointer;position:relative;transition:background .25s;flex-shrink:0;border:none;}
 .tog.on{background:var(--orange);}
 .tog::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:9px;top:3px;left:3px;transition:left .25s;}
 .tog.on::after{left:23px;}
-
-/* MISC */
 .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.setting-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(240,165,0,0.07);}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid rgba(240,165,0,0.07);}
 .setting-row:last-child{border-bottom:none;}
 .srow-lbl{font-size:14px;color:var(--cream);}
 .srow-sub{font-size:12px;color:var(--muted);margin-top:2px;}
@@ -105,32 +81,34 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
 .alert-b{background:rgba(41,128,185,0.1);border:1px solid rgba(41,128,185,0.3);color:#5DADE2;}
 .alert-g{background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);color:#27AE60;}
 .alert-o{background:rgba(232,98,10,0.1);border:1px solid rgba(232,98,10,0.3);color:var(--orange);}
-.price-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
-.price-box:hover{border-color:var(--orange);background:rgba(232,98,10,0.04);}
-.cause-card{background:var(--card2);border:1px solid var(--border);border-radius:13px;padding:16px;margin-bottom:10px;}
-.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:9999;}
 .toast{background:var(--card);border:1px solid var(--orange);border-radius:12px;padding:12px 18px;font-size:13px;font-weight:600;color:var(--orange);opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateY(0);}
 .toast.err{border-color:var(--red);color:var(--red);}
-.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;}
+.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;}
 .upload-zone:hover{border-color:var(--orange);background:rgba(232,98,10,0.04);}
-.plan-card{border:1.5px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all .2s;}
-.plan-card:hover,.plan-card.sel{border-color:var(--orange);background:rgba(232,98,10,0.05);}
-.plan-card h4{font-size:16px;font-weight:800;color:var(--orange);margin-bottom:4px;}
-.plan-price{font-size:28px;font-weight:800;color:var(--cream);}
-.plan-features{font-size:13px;color:var(--muted);line-height:1.9;margin-top:10px;}
-.plan-features span{color:var(--green);}
+/* Katha log styling */
+#kg-log .verse-ok{color:#27AE60;}
+#kg-log .verse-err{color:#E74C3C;}
+#kg-log .verse-wait{color:#C9830A;}
+#kg-log .verse-info{color:#5DADE2;}
+#kg-log .verse-done{color:#F4A261;font-weight:bold;}
+.kg-verse-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px;font-size:12px;}
+.kg-verse-id{color:var(--orange);font-weight:800;}
+.status-chip{padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;display:inline-block;}
+.s-done{background:rgba(39,174,96,0.14);color:#27AE60;}
+.s-pend{background:rgba(201,131,10,0.14);color:#C9830A;}
+.s-missing{background:rgba(231,76,60,0.14);color:#E74C3C;}
 </style>
 </head>
 <body>
 
-<!-- ════════════════ SIDEBAR ════════════════ -->
 <div class="sidebar">
   <div class="brand">
     <h1>🕉 DharmaSetu</h1>
-    <p>Admin Dashboard v2.0</p>
+    <p>Admin Dashboard v3.0</p>
   </div>
-  <div id="conn-status" class="conn-pill conn-wait">⟳ Connecting to backend...</div>
+  <div id="conn-status" class="conn-pill conn-wait">⟳ Connecting...</div>
   <nav>
     <div class="ni active" onclick="show('overview')"><span class="ni-icon">📊</span>Live Overview</div>
     <div class="ni" onclick="show('pricing')"><span class="ni-icon">💰</span>Pricing & Plans</div>
@@ -145,24 +123,23 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
     <div class="ni" onclick="show('settings')"><span class="ni-icon">🔐</span>App Settings</div>
   </nav>
   <div class="sidebar-footer">
-    Backend: <span id="footer-url" style="color:var(--orange);font-size:10px;">connecting...</span><br>
+    <span id="footer-url" style="color:var(--orange);font-size:10px;">connecting...</span><br>
     <span id="footer-time"></span>
   </div>
 </div>
 
-<!-- ════════════════ MAIN ════════════════ -->
 <div class="main">
 
 <!-- ── OVERVIEW ── -->
 <div id="sec-overview" class="sec active">
   <h2>📊 Live Overview</h2>
   <p class="psub"><span class="live-dot"></span>Connected to Render backend · <span id="live-time"></span></p>
-  <div id="overview-banner" class="alert-b">⟳ Loading live data from backend...</div>
+  <div id="overview-banner" class="alert-b">⟳ Loading live data...</div>
 
   <div class="g4" style="margin-bottom:18px;">
     <div class="stat-card"><div class="stat-lbl">Active Uploads</div><div class="stat-val" id="ov-uploads">—</div></div>
     <div class="stat-card"><div class="stat-lbl">Paid Revenue (₹)</div><div class="stat-val" id="ov-revenue">—</div></div>
-    <div class="stat-card"><div class="stat-lbl">Transactions</div><div class="stat-val" id="ov-txns">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Katha Chapters</div><div class="stat-val" id="ov-katha">—</div></div>
     <div class="stat-card"><div class="stat-lbl">Donations Raised</div><div class="stat-val" id="ov-don">—</div></div>
   </div>
 
@@ -178,25 +155,22 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
     <div class="card">
       <h3>🚀 Launch Checklist</h3>
       <div style="font-size:13px;line-height:2.3;">
-        <div id="chk1">✅ Backend live on Render</div>
-        <div id="chk2">⏳ Admin key configured</div>
-        <div id="chk3">⏳ Gita CSV uploaded</div>
-        <div id="chk4">⏳ UPI ID set in payment_screen.js</div>
-        <div>⏳ Build APK with: <code style="color:var(--orange)">eas build --platform android</code></div>
+        <div id="chk-backend">⏳ Backend live on Render</div>
+        <div id="chk-adminkey">⏳ Admin key configured</div>
+        <div id="chk-katha">⏳ Katha chapters generated</div>
+        <div id="chk-upi">⏳ UPI ID set in payment.js</div>
+        <div>⏳ Build APK: <code style="color:var(--orange)">eas build --platform android</code></div>
         <div>⏳ Submit to Google Play Store (₹1,750)</div>
-        <div>⏳ Privacy Policy URL live</div>
+        <div>⏳ Move API keys to Render env vars</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── PRICING & PLANS ── -->
+<!-- ── PRICING ── -->
 <div id="sec-pricing" class="sec">
   <h2>💰 Pricing & Plans</h2>
-  <p class="psub">Set prices, build bundles, choose which features cost money. Changes push to app immediately.</p>
-
-  <div class="alert-o">💡 How it works: App reads prices from backend on startup → stores locally → shows in payment screen. Change here → instant effect next time user opens app.</div>
-
+  <p class="psub">Changes push to app on next startup via /config endpoint.</p>
   <div class="g2">
     <div class="card">
       <h3>📱 Subscription Prices</h3>
@@ -206,18 +180,16 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
       <input type="number" id="p-pro" value="249" min="99"/>
       <label>NRI / International Plan — ₹/month</label>
       <input type="number" id="p-nri" value="499" min="199"/>
-      <label>Free Questions per Day (before paywall)</label>
+      <label>Free Questions per Day</label>
       <input type="number" id="p-freeqs" value="3" min="1" max="20"/>
       <label>Free Fact-Checks per Day</label>
       <input type="number" id="p-freefc" value="3" min="1" max="20"/>
       <div class="btn-row">
-        <button class="btn btn-p" onclick="savePricing()">💾 Save Prices → Push to App</button>
+        <button class="btn btn-p" onclick="savePricing()">💾 Save Prices</button>
       </div>
     </div>
-
     <div class="card">
       <h3>🎁 Subscription Bundles</h3>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">These appear in the app payment screen. Edit features, prices, toggle active.</p>
       <div id="bundle-list"></div>
       <div class="btn-row">
         <button class="btn btn-o btn-sm" onclick="addBundle()">+ Add Bundle</button>
@@ -225,148 +197,133 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
       </div>
     </div>
   </div>
-
-  <div class="card">
-    <h3>🎟️ Manual Premium Grant</h3>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Give Premium free to influencers, testers, special users.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <input type="text" id="grant-phone" placeholder="Phone number +91XXXXXXXXXX" style="max-width:260px;"/>
-      <select id="grant-days" style="width:130px;"><option>30 days</option><option>7 days</option><option>60 days</option><option>Lifetime</option></select>
-      <button class="btn btn-gold" onclick="grantPremium()">🎁 Grant Premium</button>
-    </div>
-  </div>
 </div>
 
 <!-- ── DONATIONS ── -->
 <div id="sec-donations" class="sec">
   <h2>🙏 Seva & Donations</h2>
-  <p class="psub">Manage donation campaigns. Users donate from inside the app. You choose causes, set goals, track funds.</p>
-
+  <p class="psub">Manage donation campaigns. Data is live from backend.</p>
   <div class="g3" style="margin-bottom:18px;">
-    <div class="stat-card"><div class="stat-lbl">Total Raised</div><div class="stat-val" style="color:var(--green)" id="don-total">₹0</div></div>
-    <div class="stat-card"><div class="stat-lbl">Active Campaigns</div><div class="stat-val" id="don-count">0</div></div>
-    <div class="stat-card"><div class="stat-lbl">Total Donations</div><div class="stat-val" id="don-txns">0</div></div>
+    <div class="stat-card"><div class="stat-lbl">Total Raised</div><div class="stat-val" style="color:var(--green)" id="don-total">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Active Campaigns</div><div class="stat-val" id="don-count">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Transactions</div><div class="stat-val" id="don-txns">—</div></div>
   </div>
-
   <div class="card">
     <h3>Current Campaigns</h3>
-    <div id="don-list">Loading campaigns...</div>
+    <div id="don-list">Loading...</div>
     <div class="btn-row" style="margin-top:14px;">
-      <button class="btn btn-p btn-sm" onclick="saveDonations()">💾 Save All Changes</button>
+      <button class="btn btn-p btn-sm" onclick="saveDonations()">💾 Save Changes</button>
     </div>
   </div>
-
   <div class="card">
-    <h3>➕ Add New Campaign</h3>
+    <h3>➕ Add Campaign</h3>
     <div class="g2">
       <div>
-        <label>Campaign ID (no spaces, e.g. ganga_cleanup)</label>
-        <input type="text" id="nc-id" placeholder="army_welfare"/>
-        <label>Name (English)</label>
-        <input type="text" id="nc-name" placeholder="Army Welfare Fund"/>
+        <label>Campaign ID</label><input type="text" id="nc-id" placeholder="ganga_cleanup"/>
+        <label>Name (English)</label><input type="text" id="nc-name" placeholder="Ganga Cleanup"/>
       </div>
       <div>
-        <label>Name (Hindi)</label>
-        <input type="text" id="nc-nameh" placeholder="सेना कल्याण कोष"/>
-        <label>Goal Amount (₹)</label>
-        <input type="number" id="nc-goal" placeholder="100000"/>
+        <label>Name (Hindi)</label><input type="text" id="nc-nameh" placeholder="गंगा स्वच्छता"/>
+        <label>Goal (₹)</label><input type="number" id="nc-goal" placeholder="100000"/>
       </div>
     </div>
-    <label>Description (shown in app)</label>
-    <textarea id="nc-desc" placeholder="Support the welfare of Indian Army families..."></textarea>
-    <div class="btn-row">
-      <button class="btn btn-p" onclick="addDonation()">➕ Add Campaign</button>
-    </div>
+    <label>Description</label>
+    <textarea id="nc-desc" placeholder="Brief description shown in app..."></textarea>
+    <div class="btn-row"><button class="btn btn-p" onclick="addDonation()">➕ Add Campaign</button></div>
   </div>
 </div>
 
 <!-- ── FEATURE FLAGS ── -->
 <div id="sec-features" class="sec">
   <h2>⚙️ Feature Flags</h2>
-  <p class="psub">Turn any feature ON/OFF instantly across all users. No app update needed. Changes apply on next app startup.</p>
-
+  <p class="psub">Toggle features ON/OFF instantly. No app update needed.</p>
   <div class="card">
     <h3>Core Features</h3>
-    <div class="setting-row"><div><div class="srow-lbl">Katha Vault</div><div class="srow-sub">Scripture reader — Gita live, others Coming Soon</div></div><button class="tog on" id="f-kathaVaultEnabled" onclick="toggleF(this,'kathaVaultEnabled')"></button></div>
-    <div class="setting-row"><div><div class="srow-lbl">Fact Check (Viral Jhoot)</div><div class="srow-sub">Debunking feature in DharmaChat</div></div><button class="tog on" id="f-factCheckEnabled" onclick="toggleF(this,'factCheckEnabled')"></button></div>
-    <div class="setting-row"><div><div class="srow-lbl">Debate Arena</div><div class="srow-sub">AI debate practice for students</div></div><button class="tog on" id="f-debateEnabled" onclick="toggleF(this,'debateEnabled')"></button></div>
-    <div class="setting-row"><div><div class="srow-lbl">Mantra Verify</div><div class="srow-sub">Verify authenticity of mantras</div></div><button class="tog on" id="f-mantraVerifyEnabled" onclick="toggleF(this,'mantraVerifyEnabled')"></button></div>
-    <div class="setting-row"><div><div class="srow-lbl">Peace Mode</div><div class="srow-sub">Dharmic stress relief feature</div></div><button class="tog on" id="f-peaceModeEnabled" onclick="toggleF(this,'peaceModeEnabled')"></button></div>
-    <div class="setting-row"><div><div class="srow-lbl">Seva Donations</div><div class="srow-sub">Show donation section in app</div></div><button class="tog on" id="f-donationEnabled" onclick="toggleF(this,'donationEnabled')"></button></div>
-    <div class="setting-row" style="border:1px solid rgba(231,76,60,0.2);border-radius:10px;padding:14px;margin-top:10px;"><div><div class="srow-lbl" style="color:var(--red);">⚠️ Maintenance Mode</div><div class="srow-sub">Disables app for ALL users — only use during critical updates</div></div><button class="tog" id="f-maintenanceMode" onclick="toggleF(this,'maintenanceMode')"></button></div>
-    <div class="btn-row"><button class="btn btn-p" onclick="saveFeatures()">💾 Save Feature Flags → Push to App</button></div>
-  </div>
-
-  <div class="card">
-    <h3>🤖 AI Settings</h3>
-    <label>Free Questions Before Paywall</label>
-    <input type="number" id="ai-freeqs" value="3"/>
-    <label>AI Model</label>
-    <select id="ai-model">
-      <option value="llama-3.3-70b-versatile">Groq — LLaMA 3.3 70B (Recommended)</option>
-      <option value="mixtral-8x7b-32768">Groq — Mixtral 8x7B</option>
-    </select>
-    <div class="btn-row"><button class="btn btn-p" onclick="saveAI()">💾 Save AI Settings</button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Katha Vault</div><div class="srow-sub">Scripture reader</div></div><button class="tog on" id="f-kathaVaultEnabled" onclick="toggleF(this,'kathaVaultEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Fact Check</div><div class="srow-sub">Viral Jhoot debunking</div></div><button class="tog on" id="f-factCheckEnabled" onclick="toggleF(this,'factCheckEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Debate Arena</div><div class="srow-sub">AI debate practice</div></div><button class="tog on" id="f-debateEnabled" onclick="toggleF(this,'debateEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Mantra Verify</div><div class="srow-sub">Verify authenticity</div></div><button class="tog on" id="f-mantraVerifyEnabled" onclick="toggleF(this,'mantraVerifyEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Peace Mode</div><div class="srow-sub">Dharmic stress relief</div></div><button class="tog on" id="f-peaceModeEnabled" onclick="toggleF(this,'peaceModeEnabled')"></button></div>
+    <div class="setting-row"><div><div class="srow-lbl">Seva Donations</div><div class="srow-sub">Donation section in app</div></div><button class="tog on" id="f-donationEnabled" onclick="toggleF(this,'donationEnabled')"></button></div>
+    <div class="setting-row" style="border:1px solid rgba(231,76,60,0.2);border-radius:10px;padding:13px;margin-top:10px;">
+      <div><div class="srow-lbl" style="color:var(--red)">⚠️ Maintenance Mode</div><div class="srow-sub">Disables app for ALL users</div></div>
+      <button class="tog" id="f-maintenanceMode" onclick="toggleF(this,'maintenanceMode')"></button>
+    </div>
+    <div class="btn-row"><button class="btn btn-p" onclick="saveFeatures()">💾 Save Feature Flags</button></div>
   </div>
 </div>
 
 <!-- ── CONTENT UPLOAD ── -->
 <div id="sec-content" class="sec">
   <h2>📚 Content Upload</h2>
-  <p class="psub">Upload PDFs, CSVs, text files, audio transcripts. AI reads everything and uses it to give better answers. Content is split into chunks for AI context.</p>
-
-  <div class="alert-b">📋 How it works: Upload here → backend splits into chunks → app fetches on startup → AI uses in answers. User never sees "uploaded file", they see beautiful AI-explained content.</div>
-
+  <p class="psub">Upload PDFs, CSVs, text. AI uses this to give better answers.</p>
   <div class="g2">
     <div class="card">
       <h3>➕ Upload New Content</h3>
       <label>Content Title</label>
-      <input type="text" id="ul-title" placeholder="Bhagavad Gita — All 700 Shlokas CSV"/>
+      <input type="text" id="ul-title" placeholder="Bhagavad Gita — All 700 Shlokas"/>
       <label>Content Type</label>
       <select id="ul-type">
         <option value="scripture">Scripture / Holy Book</option>
-        <option value="commentary">Commentary / Explanation</option>
+        <option value="commentary">Commentary</option>
         <option value="science">Scientific Research</option>
         <option value="historical">Historical Document</option>
-        <option value="audio_transcript">Audio Transcript</option>
       </select>
       <label>Topics (comma separated)</label>
-      <input type="text" id="ul-topics" placeholder="Gita, Krishna, Dharma, Chapter 1, Karma Yoga"/>
+      <input type="text" id="ul-topics" placeholder="Gita, Krishna, Karma Yoga"/>
       <label>Trust Level</label>
       <select id="ul-trust">
         <option value="high">High — Gita Press / Primary Scripture</option>
-        <option value="medium">Medium — Commentary / Secondary Source</option>
+        <option value="medium">Medium — Commentary / Secondary</option>
       </select>
-
-      <!-- File upload zone -->
       <div class="upload-zone" onclick="document.getElementById('ul-file').click()">
         <input type="file" id="ul-file" style="display:none" accept=".txt,.csv,.json,.pdf" onchange="fileSelected(this)"/>
-        <div style="font-size:36px;">📄</div>
-        <p style="color:var(--muted);font-size:13px;margin-top:8px;">Click to select file (.txt, .csv, .json)</p>
-        <div id="ul-filename" style="color:var(--orange);font-weight:700;margin-top:8px;font-size:13px;"></div>
+        <div style="font-size:32px">📄</div>
+        <p style="color:var(--muted);font-size:12px;margin-top:6px">Click to select (.txt, .csv, .json)</p>
+        <div id="ul-filename" style="color:var(--orange);font-weight:700;font-size:12px;margin-top:6px"></div>
       </div>
-
-      <div style="text-align:center;color:var(--muted);font-size:12px;margin:12px 0;">— OR paste text directly below —</div>
-      <label>Paste Text / CSV Content</label>
-      <textarea id="ul-text" rows="6" placeholder="Paste your Gita CSV, scripture text, or any content here...&#10;&#10;Format example:&#10;chapter,verse,sanskrit,hindi,english&#10;1,1,धर्मक्षेत्रे...,धृतराष्ट्र ने कहा...,Dhritarashtra said..."></textarea>
-
-      <div class="btn-row" style="margin-top:4px;">
-        <button class="btn btn-p" onclick="uploadContent()">📤 Upload to Backend</button>
+      <div style="text-align:center;color:var(--muted);font-size:11px;margin:10px 0">— or paste text —</div>
+      <label>Paste Text</label>
+      <textarea id="ul-text" rows="5" placeholder="Paste scripture text, CSV, or any content..."></textarea>
+      <div class="btn-row" style="margin-top:8px">
+        <button class="btn btn-p" onclick="uploadContent()">📤 Upload</button>
         <button class="btn btn-o" onclick="clearUpload()">✕ Clear</button>
       </div>
-
-      <div id="ul-progress" style="display:none;margin-top:14px;">
-        <div id="ul-prog-txt" style="font-size:13px;color:var(--orange);margin-bottom:6px;">Uploading...</div>
-        <div class="progress-track"><div class="progress-fill" id="ul-prog-bar" style="width:0%;background:var(--orange);"></div></div>
+      <div id="ul-progress" style="display:none;margin-top:12px">
+        <div id="ul-prog-txt" style="font-size:12px;color:var(--orange);margin-bottom:5px"></div>
+        <div class="progress-track"><div class="progress-fill" id="ul-prog-bar" style="width:0%;background:var(--orange)"></div></div>
       </div>
     </div>
-
     <div class="card">
       <h3>📋 Content Library</h3>
-      <div class="btn-row" style="margin-bottom:14px;">
+      <div class="btn-row" style="margin-bottom:12px">
         <button class="btn btn-o btn-sm" onclick="loadUploads()">🔄 Refresh</button>
       </div>
-      <div id="ul-list"><p style="color:var(--muted);font-size:13px;">Loading...</p></div>
+      <div id="ul-list"><p style="color:var(--muted);font-size:13px">Loading...</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── AI MONITORING ── -->
+<div id="sec-ai" class="sec">
+  <h2>🤖 AI Monitoring</h2>
+  <p class="psub">Quality control for AI answers. Live flagging system.</p>
+  <div class="card">
+    <div class="alert-b" style="margin-bottom:14px">Connect Firebase to see real flagged answers and blocked queries. Currently showing system status.</div>
+    <h3>🔱 AI Configuration</h3>
+    <div style="font-size:13px;line-height:2.2;color:rgba(253,246,237,0.7);">
+      <div>Primary AI: <b style="color:var(--orange)">Groq LLaMA 3.3 70B</b> (DharmaChat)</div>
+      <div>Fallback: <b style="color:var(--orange)">Gemini 2.0 Flash</b></div>
+      <div>Katha Generator: <b style="color:var(--orange)">Gemini 2.0 Flash FIRST → Groq fallback</b></div>
+      <div>Content Filter: <b style="color:#27AE60">Active</b> — blocks political, hate, injection queries</div>
+      <div>Hardcoded Truths: <b style="color:#27AE60">Active</b> — Shambuka, AIT, Caste, Om Science</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🛑 Content Filter Status</h3>
+    <div style="font-size:13px;color:var(--muted);line-height:2.2">
+      Blocked patterns: Anti-religion queries · Political content · Prompt injection · Hate speech<br>
+      Response to blocked: "DharmaSetu केवल सनातन धर्म के लिए है 🙏"
     </div>
   </div>
 </div>
@@ -374,133 +331,114 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
 <!-- ── KATHA GENERATOR ── -->
 <div id="sec-katha" class="sec">
   <h2>📖 Katha Vault Generator</h2>
-  <p class="psub">Generate scripture content using Gemini AI. Content is saved to backend and served to all app users. Never generate from the mobile app — do it here.</p>
+  <p class="psub">Generate scripture content verse-by-verse. Each verse saves immediately. Gemini API first → Groq fallback.</p>
 
-  <div class="alert-o">📌 How it works: Select chapter → Click Generate → AI creates Divine JSON (5 verses/batch, 20s gap) → Auto-saves to backend → All users get it instantly without any API calls.</div>
+  <div class="alert-o">
+    📌 <strong>How it works:</strong> Paste your Gemini key → Select chapter → Click Generate →
+    Verses are generated ONE BY ONE, each saved immediately to backend → All app users get it instantly.
+    Live log shows real-time progress below.
+  </div>
 
   <div class="g2">
     <div class="card">
       <h3>⚙️ Generator Settings</h3>
-      <label>API Key (Gemini or Groq)</label>
-      <input type="password" id="kg-apikey" placeholder="Paste your Gemini or Groq API key" style="margin-bottom:10px;"/>
+
+      <label>Gemini API Key (PRIMARY — preferred)</label>
+      <input type="password" id="kg-gemini-key" placeholder="AIzaSy... (Gemini 2.0 Flash — FREE)"/>
+
+      <label>Groq API Key (FALLBACK — if Gemini fails)</label>
+      <input type="password" id="kg-groq-key" placeholder="gsk_... (LLaMA 3.3 70B — FREE)"/>
+
+      <div style="background:rgba(39,174,96,0.07);border:1px solid rgba(39,174,96,0.2);border-radius:8px;padding:10px;margin-bottom:14px;font-size:12px;color:rgba(39,174,96,0.9)">
+        ✅ Priority: <strong>Gemini First → Groq Fallback</strong><br>
+        Both keys = maximum reliability. If Gemini hits rate limit, Groq continues automatically.
+      </div>
+
       <label>Select Scripture</label>
-      <select id="kg-scripture" style="margin-bottom:10px;" onchange="updateChapterList()">
+      <select id="kg-scripture" style="margin-bottom:10px" onchange="updateChapterList()">
         <option value="bhagavad_gita">Bhagavad Gita</option>
         <option value="valmiki_ramayana">Valmiki Ramayana</option>
-        <option value="ramcharitmanas">Ramcharitmanas</option>
         <option value="mahabharata">Mahabharata</option>
         <option value="srimad_bhagavatam">Srimad Bhagavatam</option>
         <option value="upanishads">Upanishads</option>
-        <option value="vishnu_purana">Vishnu Purana</option>
-        <option value="shiva_purana">Shiva Purana</option>
-        <option value="devi_bhagavata">Devi Bhagavata Purana</option>
-        <option value="garuda_purana">Garuda Purana</option>
       </select>
-      <label>Select Chapter / Unit</label>
-      <select id="kg-chapter" style="margin-bottom:10px;"></select>
+
+      <label>Select Chapter</label>
+      <select id="kg-chapter" style="margin-bottom:10px"></select>
+
       <label>Language</label>
-      <select id="kg-lang" style="margin-bottom:14px;">
-        <option value="hindi">Hindi</option>
+      <select id="kg-lang" style="margin-bottom:14px">
+        <option value="hindi">Hindi (Recommended first)</option>
         <option value="english">English</option>
       </select>
+
       <div class="btn-row">
-        <button class="btn btn-p" onclick="kgGenerate('generate')">🕉 Generate</button>
-        <button class="btn btn-gold" onclick="kgGenerate('repair')">🔧 Repair Incomplete</button>
+        <button class="btn btn-p" id="kg-gen-btn" onclick="kgStartGeneration()">🕉 Generate Verse by Verse</button>
+        <button class="btn btn-gold" onclick="kgCheckStatus()">📊 Check Status</button>
         <button class="btn btn-r" onclick="kgDeleteChapter()">🗑 Delete Chapter</button>
       </div>
-      <div class="btn-row" style="margin-top:8px;">
-        <button class="btn btn-o btn-sm" onclick="kgCheckStatus()">📊 Check Status</button>
+      <div class="btn-row" style="margin-top:6px">
         <button class="btn btn-o btn-sm" onclick="kgListAll()">📋 List All Generated</button>
       </div>
     </div>
 
     <div class="card">
       <h3>📊 Chapter Status</h3>
-      <div id="kg-status-display" style="font-size:13px;color:var(--muted);line-height:2;">
-        Select a chapter and click "Check Status" to see what's been generated.
+      <div id="kg-status-display" style="font-size:13px;color:var(--muted);line-height:2">
+        Select a chapter and click "Check Status".
       </div>
+      <div id="kg-verse-grid" style="margin-top:12px"></div>
     </div>
   </div>
 
   <div class="card">
-    <h3>🖥️ Live Generation Log</h3>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <div id="kg-progress-label" style="font-size:13px;color:var(--orange);font-weight:700;">Ready</div>
-      <button class="btn btn-o btn-sm" onclick="document.getElementById('kg-log').innerHTML='';document.getElementById('kg-progress').style.width='0%'">Clear</button>
+    <h3>🖥️ Live Verse Generation Log</h3>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div id="kg-progress-label" style="font-size:13px;color:var(--orange);font-weight:700">Ready</div>
+      <div style="display:flex;gap:8px">
+        <span id="kg-api-badge" style="font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,0.05);color:var(--muted)">No active job</span>
+        <button class="btn btn-o btn-sm" onclick="document.getElementById('kg-log').innerHTML='';kgSetProgress(0,'Ready')">Clear</button>
+      </div>
     </div>
-    <div class="progress-track" style="margin-bottom:12px;"><div class="progress-fill" id="kg-progress" style="width:0%;background:var(--orange);transition:width 0.5s;"></div></div>
-    <div id="kg-log" style="background:#0A0300;border-radius:10px;padding:14px;height:240px;overflow-y:auto;font-size:12px;font-family:monospace;border:1px solid var(--border);"></div>
+    <div class="progress-track" style="margin-bottom:10px">
+      <div class="progress-fill" id="kg-progress" style="width:0%;background:var(--orange);transition:width 0.5s"></div>
+    </div>
+    <div id="kg-log" style="background:#050100;border-radius:10px;padding:14px;height:280px;overflow-y:auto;font-size:12px;font-family:monospace;border:1px solid var(--border);white-space:pre-wrap;word-break:break-all;"></div>
   </div>
 
   <div class="card">
     <h3>📋 All Generated Content</h3>
-    <div class="btn-row" style="margin-bottom:14px;">
+    <div class="btn-row" style="margin-bottom:12px">
       <button class="btn btn-o btn-sm" onclick="kgListAll()">🔄 Refresh</button>
     </div>
-    <div id="kg-all-list" style="font-size:13px;color:var(--muted);">Click "List All Generated" to see what's on the backend.</div>
-  </div>
-</div>
-
-<!-- ── AI MONITORING ── -->
-<div id="sec-ai" class="sec">
-  <h2>🤖 AI Monitoring</h2>
-  <p class="psub">Quality control — flagged answers, blocked queries, AI performance metrics.</p>
-  <div class="g3" style="margin-bottom:18px;">
-    <div class="stat-card"><div class="stat-lbl">Answers Today</div><div class="stat-val">Live via Firebase</div></div>
-    <div class="stat-card"><div class="stat-lbl">Flagged Answers</div><div class="stat-val" style="color:var(--red)">7</div></div>
-    <div class="stat-card"><div class="stat-lbl">Blocked Queries</div><div class="stat-val" style="color:var(--gold)">23</div></div>
-  </div>
-  <div class="card">
-    <h3>🚨 Flagged Answers — Needs Review</h3>
-    <table>
-      <tr><th>Question</th><th>Issue</th><th>User</th><th>Action</th></tr>
-      <tr><td>Manusmriti on women?</td><td><span class="badge br">Wrong source</span></td><td>Anon</td><td><button class="btn btn-o btn-sm">Review</button></td></tr>
-      <tr><td>What is Aryan Invasion?</td><td><span class="badge bgo">Incomplete</span></td><td>Priya S</td><td><button class="btn btn-o btn-sm">Review</button></td></tr>
-      <tr><td>Krishna death story</td><td><span class="badge bgo">More detail needed</span></td><td>Rajesh</td><td><button class="btn btn-o btn-sm">Review</button></td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h3>🛑 Blocked Queries Today</h3>
-    <table>
-      <tr><th>Query</th><th>Block Reason</th><th>Time</th></tr>
-      <tr><td>Why is Islam wrong?</td><td><span class="badge br">Anti-religion</span></td><td>2:14 PM</td></tr>
-      <tr><td>Generate hate speech...</td><td><span class="badge br">Hate content</span></td><td>11:30 AM</td></tr>
-      <tr><td>Ignore previous instructions...</td><td><span class="badge br">Prompt injection</span></td><td>9:45 AM</td></tr>
-    </table>
+    <div id="kg-all-list" style="font-size:13px;color:var(--muted)">Click "List All Generated" to see what's cached on backend.</div>
   </div>
 </div>
 
 <!-- ── TRANSACTIONS ── -->
 <div id="sec-transactions" class="sec">
   <h2>💳 Transactions</h2>
-  <p class="psub">All subscription payments and donations. Live after Razorpay webhook is connected.</p>
+  <p class="psub">Live after Razorpay webhook is connected. Payments shown in real-time.</p>
   <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
       <h3>Recent Transactions</h3>
       <button class="btn btn-o btn-sm" onclick="loadTxns()">🔄 Refresh</button>
     </div>
-    <div id="txn-list"><p style="color:var(--muted);font-size:13px;">Loading...</p></div>
+    <div id="txn-list"><p style="color:var(--muted);font-size:13px">Loading...</p></div>
   </div>
 </div>
 
 <!-- ── USERS ── -->
 <div id="sec-users" class="sec">
   <h2>👥 User Management</h2>
-  <p class="psub">All registered users. Live data from Firebase. Search, filter, view details.</p>
-  <div class="card" style="margin-bottom:16px;">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-      <input type="text" placeholder="🔍 Search by name, phone, city..." style="max-width:280px;margin-bottom:0;"/>
-      <select style="width:140px;margin-bottom:0;"><option>All Plans</option><option>Free</option><option>Premium</option></select>
-      <button class="btn btn-o btn-sm">Export CSV</button>
-    </div>
-  </div>
+  <p class="psub">Live user data. Connect Firebase Admin SDK to Render env vars to enable real user data.</p>
   <div class="card">
-    <div class="alert-b" style="margin-bottom:14px;">👆 Connect Firebase to see real users. Demo data shown below.</div>
+    <div class="alert-b" style="margin-bottom:14px">
+      To see real users: Add FIREBASE_ADMIN credentials to Render environment variables and implement Firebase Admin SDK endpoints.
+    </div>
     <table>
-      <tr><th>User</th><th>Rashi</th><th>Plan</th><th>Streak</th><th>Questions</th><th>Last Active</th><th></th></tr>
-      <tr><td><b>Ankit Soni</b><br><small style="color:var(--muted)">Indore</small></td><td>Mesh</td><td><span class="badge bgo">Premium</span></td><td>🔥 23</td><td>187</td><td>Now</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
-      <tr><td><b>Priya Sharma</b><br><small style="color:var(--muted)">Delhi</small></td><td>Kark</td><td><span class="badge bgo">Premium</span></td><td>🔥 15</td><td>94</td><td>2m ago</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
-      <tr><td><b>Rajesh Kumar</b><br><small style="color:var(--muted)">Mumbai</small></td><td>Simha</td><td><span class="badge bb">Free</span></td><td>🔥 7</td><td>31</td><td>14m ago</td><td><button class="btn btn-o btn-sm">View</button></td></tr>
+      <tr><th>User</th><th>Rashi</th><th>Plan</th><th>Streak</th><th>Last Active</th></tr>
+      <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">Firebase Admin SDK not connected. Add credentials to Render env vars.</td></tr>
     </table>
   </div>
 </div>
@@ -508,34 +446,33 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
 <!-- ── NOTIFICATIONS ── -->
 <div id="sec-notifications" class="sec">
   <h2>🔔 Push Notifications</h2>
-  <p class="psub">Send to all users or specific groups. Requires Firebase Admin SDK setup on backend.</p>
+  <p class="psub">Requires FIREBASE_SERVICE_ACCOUNT in Render env vars for real delivery.</p>
   <div class="g2">
     <div class="card">
       <h3>📤 Send Notification</h3>
       <label>Title</label>
       <input type="text" id="n-title" placeholder="🕉 Breaking — Viral Lie Debunked"/>
       <label>Message</label>
-      <textarea id="n-body" placeholder="The truth about [topic] — tap to read the complete Dharmic answer..."></textarea>
+      <textarea id="n-body" placeholder="The truth about [topic]..."></textarea>
       <label>Send To</label>
-      <select id="n-target" style="margin-bottom:14px;">
+      <select id="n-target" style="margin-bottom:14px">
         <option value="all">All Users</option>
-        <option value="premium">Premium Users Only</option>
+        <option value="premium">Premium Only</option>
         <option value="free">Free Users Only</option>
       </select>
-      <button class="btn btn-p" style="width:100%;" onclick="sendNotif()">🚀 Send Now</button>
-      <p style="font-size:11px;color:var(--muted);margin-top:10px;">Note: Add FIREBASE_SERVICE_ACCOUNT to Render env vars to enable real push notifications.</p>
+      <button class="btn btn-p" style="width:100%" onclick="sendNotif()">🚀 Send Now</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Add FIREBASE_SERVICE_ACCOUNT to Render env for real push delivery.</p>
     </div>
     <div class="card">
-      <h3>📋 Auto Notifications</h3>
-      <div style="font-size:13px;line-height:2.2;color:rgba(253,246,237,0.7);">
+      <h3>📋 Automated Notifications</h3>
+      <div style="font-size:13px;line-height:2.2;color:rgba(253,246,237,0.7)">
         <div>✅ Daily verse — 7:00 AM every day</div>
         <div>✅ Streak reminder — 7:00 PM if not opened</div>
-        <div>✅ Premium renewal — 7 days before expiry</div>
-        <div>✅ Festival alerts — 3 days before festival</div>
+        <div>✅ Ekadashi reminder — evening before</div>
+        <div>✅ Festival alerts — 3 days before</div>
+        <div>✅ Subscription renewal — 7 days before</div>
         <div>⏳ Win-back offer — 14 days after cancel</div>
-        <div>⏳ Ekadashi reminder — evening before</div>
       </div>
-      <div class="alert-b" style="margin-top:14px;font-size:12px;">All auto-notifications run from Firebase Cloud Messaging (free). Setup once, runs forever.</div>
     </div>
   </div>
 </div>
@@ -543,65 +480,49 @@ textarea{resize:vertical;min-height:75px;margin-bottom:0;}
 <!-- ── SETTINGS ── -->
 <div id="sec-settings" class="sec">
   <h2>🔐 App Settings</h2>
-  <p class="psub">Backend connection, admin key, app version, security controls.</p>
-
+  <p class="psub">Backend connection and security.</p>
   <div class="card">
     <h3>🔗 Backend Connection</h3>
     <label>Render Backend URL</label>
-    <input type="text" id="s-backend" value="https://dharmasetu-backend-2c65.onrender.com" readonly style="opacity:0.7;"/>
-    <label>Admin Key (your ADMIN_PASSWORD from Render)</label>
-    <input type="password" id="s-adminkey" placeholder="Enter your ADMIN_PASSWORD"/>
+    <input type="text" id="s-backend" value="https://dharmasetu-backend-2c65.onrender.com" readonly style="opacity:0.6"/>
+    <label>Admin Key (ADMIN_PASSWORD from Render)</label>
+    <input type="password" id="s-adminkey" placeholder="DharmaSetu@2025"/>
     <div class="btn-row">
-      <button class="btn btn-p" onclick="saveAdminKey()">🔑 Save Admin Key</button>
-      <button class="btn btn-o" onclick="testConn()">🔗 Test Connection</button>
+      <button class="btn btn-p" onclick="saveAdminKey()">🔑 Save & Test</button>
     </div>
   </div>
-
   <div class="card">
     <h3>📱 App Version</h3>
-    <label>Current App Version</label>
+    <label>Current Version</label>
     <input type="text" id="s-version" value="1.0.0"/>
     <div class="btn-row">
-      <button class="btn btn-p" onclick="saveVersion()">💾 Save Version</button>
+      <button class="btn btn-p" onclick="saveVersion()">💾 Save</button>
     </div>
   </div>
-
   <div class="card">
-    <h3>🔐 Security Settings</h3>
-    <div class="setting-row"><div><div class="srow-lbl">Rate Limiting</div><div class="srow-sub">Max 60 requests/minute per user</div></div><button class="tog on"></button></div>
-    <div class="setting-row"><div><div class="srow-lbl">Content Filter (Anti-hate)</div><div class="srow-sub">Block political, anti-religion, hate queries</div></div><button class="tog on"></button></div>
-    <div class="setting-row"><div><div class="srow-lbl">Device Fingerprinting</div><div class="srow-sub">Prevent multiple free accounts per device</div></div><button class="tog on"></button></div>
-    <div class="alert-r" style="margin-top:14px;">⚠️ Before Play Store: Move Groq and Gemini API keys from app code to Render backend environment variables.</div>
-  </div>
-
-  <div class="card">
-    <h3>💳 Razorpay / Payment Setup</h3>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">For real payments, add these to Render environment variables:</p>
-    <div style="font-size:13px;line-height:2.2;color:rgba(253,246,237,0.7);">
-      <div><code style="color:var(--orange);">RAZORPAY_KEY_ID</code> = rzp_live_XXXXXXXXXXXXXXXX</div>
-      <div><code style="color:var(--orange);">RAZORPAY_KEY_SECRET</code> = your secret key</div>
-      <div><code style="color:var(--orange);">ADMIN_PASSWORD</code> = your admin password</div>
+    <h3>⚠️ Pre-Launch Checklist</h3>
+    <div class="alert-r" style="margin-bottom:10px">Before Play Store submission, move these from app code to Render env vars:</div>
+    <div style="font-size:13px;line-height:2.2;color:rgba(253,246,237,0.7)">
+      <div><code style="color:var(--orange)">GROQ_KEY</code> — from config_keys.js → Render env</div>
+      <div><code style="color:var(--orange)">GEM_KEY</code> — from config_keys.js → Render env</div>
+      <div><code style="color:var(--orange)">RAZORPAY_KEY_ID</code> + <code style="color:var(--orange)">RAZORPAY_KEY_SECRET</code></div>
+      <div><code style="color:var(--orange)">FIREBASE_PRIVATE_KEY</code> for real OTP</div>
     </div>
-    <div class="alert-b" style="margin-top:14px;">Get keys from: <strong>dashboard.razorpay.com → Settings → API Keys</strong>. Free account, no monthly fees, 2% per transaction.</div>
   </div>
 </div>
 
 </div><!-- end main -->
 
-<!-- TOAST -->
-<div class="toast-wrap">
-  <div class="toast" id="toast"></div>
-</div>
+<div class="toast-wrap"><div class="toast" id="toast"></div></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-// CONFIG — your Render backend URL
-// ═══════════════════════════════════════════════════════════════
 let BACKEND = 'https://dharmasetu-backend-2c65.onrender.com';
 let ADMIN_KEY = localStorage.getItem('ds_admin_key') || 'DharmaSetu@2025';
 let liveConfig = {};
 let liveBundles = [];
 let liveDonations = [];
+let activeJobId = null;
+let sseConnection = null;
 
 // ── HELPERS ────────────────────────────────────────────────────
 function show(id) {
@@ -609,10 +530,10 @@ function show(id) {
   document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
   event?.currentTarget?.classList.add('active');
-  if (id === 'content') loadUploads();
+  if (id === 'content')      loadUploads();
   if (id === 'transactions') loadTxns();
-  if (id === 'overview') loadStats();
-  if (id === 'donations') renderDonations();
+  if (id === 'overview')     loadStats();
+  if (id === 'donations')    renderDonations();
 }
 
 let toastTimer;
@@ -626,29 +547,24 @@ function toast(msg, isErr = false) {
 
 async function api(method, path, body, isForm = false) {
   const opts = { method, headers: { 'x-admin-key': ADMIN_KEY } };
-  if (isForm) {
-    opts.body = body;
-  } else if (body) {
-    opts.headers['Content-Type'] = 'application/json';
-    opts.body = JSON.stringify(body);
-  }
-  try {
-    const r = await fetch(BACKEND + path, opts);
-    return await r.json();
-  } catch (e) {
-    return { error: e.message };
-  }
+  if (isForm) { opts.body = body; }
+  else if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+  try { const r = await fetch(BACKEND + path, opts); return await r.json(); }
+  catch(e) { return { error: e.message }; }
 }
 
-// ── INIT / STARTUP ─────────────────────────────────────────────
 async function init() {
   document.getElementById('footer-url').textContent = BACKEND.replace('https://','');
+  if (localStorage.getItem('ds_admin_key')) {
+    document.getElementById('chk-adminkey').textContent = '✅ Admin key configured';
+  }
   await testConn();
   await loadConfig();
   await loadStats();
   setInterval(() => {
-    document.getElementById('footer-time').textContent = new Date().toLocaleTimeString();
-    document.getElementById('live-time').textContent = new Date().toLocaleTimeString();
+    const t = new Date().toLocaleTimeString();
+    document.getElementById('footer-time').textContent = t;
+    document.getElementById('live-time').textContent = t;
   }, 1000);
 }
 
@@ -656,17 +572,19 @@ async function testConn() {
   const el = document.getElementById('conn-status');
   el.className = 'conn-pill conn-wait'; el.textContent = '⟳ Testing...';
   try {
-    const r = await fetch(BACKEND + '/health', { signal: AbortSignal.timeout(6000) });
+    const r = await fetch(BACKEND + '/health', { signal: AbortSignal.timeout ? AbortSignal.timeout(6000) : undefined });
     if (r.ok) {
+      const d = await r.json();
       el.className = 'conn-pill conn-ok'; el.textContent = '● Backend Connected';
       document.getElementById('overview-banner').className = 'alert-g';
-      document.getElementById('overview-banner').textContent = '✅ Backend connected: ' + BACKEND;
-      document.getElementById('chk1').textContent = '✅ Backend live on Render';
+      document.getElementById('overview-banner').textContent = '✅ Backend live: ' + BACKEND;
+      document.getElementById('chk-backend').textContent = '✅ Backend live on Render';
+      if (d.kathaChapters > 0) document.getElementById('chk-katha').textContent = `✅ ${d.kathaChapters} Katha chapters cached`;
     } else throw new Error();
   } catch {
     el.className = 'conn-pill conn-err'; el.textContent = '✕ Backend Offline';
     document.getElementById('overview-banner').className = 'alert-r';
-    document.getElementById('overview-banner').textContent = '✕ Cannot reach backend. Check Render → is service running?';
+    document.getElementById('overview-banner').textContent = '✕ Cannot reach backend. Check Render dashboard.';
   }
 }
 
@@ -674,9 +592,9 @@ async function loadConfig() {
   const r = await api('GET', '/admin/config');
   if (!r.success) return;
   liveConfig = r.config;
-  liveBundles = r.config.bundles || getDefaultBundles();
-  liveDonations = r.config.donations || getDefaultDonations();
-  applyConfigToUI(liveConfig);
+  liveBundles = r.config.bundles || [];
+  liveDonations = r.config.donations || [];
+  applyConfigToUI(r.config);
   renderBundles();
   renderDonations();
 }
@@ -688,39 +606,22 @@ function applyConfigToUI(c) {
   set('p-nri', c.nriPrice);
   set('p-freeqs', c.freeQuestionsLimit);
   set('p-freefc', c.freeFactCheckLimit);
-  set('ai-freeqs', c.freeQuestionsLimit);
   set('s-version', c.appVersion);
 
-  const flags = ['kathaVaultEnabled','factCheckEnabled','debateEnabled','mantraVerifyEnabled','peaceModeEnabled','donationEnabled','maintenanceMode'];
-  flags.forEach(f => {
+  ['kathaVaultEnabled','factCheckEnabled','debateEnabled','mantraVerifyEnabled','peaceModeEnabled','donationEnabled','maintenanceMode'].forEach(f => {
     const btn = document.getElementById('f-' + f);
     if (btn) btn.className = 'tog' + (c[f] ? ' on' : '');
   });
 
   document.getElementById('ov-config').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-      <span>Basic: <b style="color:var(--orange)">₹${c.basicPrice||99}/mo</b></span>
-      <span>Pro: <b style="color:var(--orange)">₹${c.premiumPrice||249}/mo</b></span>
-      <span>Free Qs: <b style="color:var(--orange)">${c.freeQuestionsLimit||3}/day</b></span>
-      <span>Version: <b style="color:var(--orange)">${c.appVersion||'1.0.0'}</b></span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px">
+      <span>Basic: <b style="color:var(--orange)">₹${c.basicPrice}/mo</b></span>
+      <span>Pro: <b style="color:var(--orange)">₹${c.premiumPrice}/mo</b></span>
+      <span>Free Qs: <b style="color:var(--orange)">${c.freeQuestionsLimit}/day</b></span>
+      <span>Version: <b style="color:var(--orange)">${c.appVersion}</b></span>
       <span>Maintenance: <b style="color:${c.maintenanceMode?'#E74C3C':'#27AE60'}">${c.maintenanceMode?'ON ⚠️':'OFF ✓'}</b></span>
-      <span>Uploads: <b style="color:var(--orange)" id="ov-uploads-inline">—</b></span>
-    </div>
-  `;
-}
-
-function getDefaultBundles() {
-  return [
-    { id:'basic', name:'Basic', nameHi:'बेसिक', price:99, active:true, features:['30 questions/day','15 fact-checks/day','Mantra Verify','Save answers','No ads'] },
-    { id:'pro',   name:'Pro',   nameHi:'प्रो',   price:249, active:true, features:['Unlimited questions','Unlimited fact-checks','All Debate levels','Peace Mode','No ads','Priority support'] },
-  ];
-}
-function getDefaultDonations() {
-  return [
-    { id:'army',   name:'Army Welfare',    nameHi:'सेना कल्याण',       desc:'Support Indian Army welfare fund',         goal:100000, raised:0, active:true },
-    { id:'temple', name:'Temple Restore',  nameHi:'मंदिर जीर्णोद्धार', desc:'Restore ancient temples across India',     goal:500000, raised:0, active:true },
-    { id:'dharma', name:'Dharma Education',nameHi:'धर्म शिक्षा',       desc:'Educate youth about Sanatan Dharma',       goal:250000, raised:0, active:true },
-  ];
+      <span>Uploads: <b style="color:var(--orange)" id="ov-uploads-inline">loading...</b></span>
+    </div>`;
 }
 
 async function loadStats() {
@@ -729,11 +630,13 @@ async function loadStats() {
   const s = r.stats;
   document.getElementById('ov-uploads').textContent = s.activeUploads || 0;
   document.getElementById('ov-revenue').textContent = '₹' + (s.totalRevenue || 0).toLocaleString();
-  document.getElementById('ov-txns').textContent = s.paidTransactions || 0;
+  document.getElementById('ov-katha').textContent = s.kathaChaptersCached || 0;
   document.getElementById('ov-don').textContent = '₹' + (s.donationRaised || 0).toLocaleString();
   document.getElementById('don-total').textContent = '₹' + (s.donationRaised || 0).toLocaleString();
   document.getElementById('don-txns').textContent = s.totalTransactions || 0;
-  if (s.activeUploads >= 1) document.getElementById('chk3').textContent = '✅ Content uploaded (' + s.activeUploads + ' pieces)';
+  const inlineEl = document.getElementById('ov-uploads-inline');
+  if (inlineEl) inlineEl.textContent = (s.activeUploads || 0);
+  if (s.kathaChaptersCached > 0) document.getElementById('chk-katha').textContent = `✅ ${s.kathaChaptersCached} Katha chapters cached`;
 }
 
 // ── PRICING ────────────────────────────────────────────────────
@@ -745,138 +648,100 @@ async function savePricing() {
     freeQuestionsLimit: +document.getElementById('p-freeqs').value,
     freeFactCheckLimit: +document.getElementById('p-freefc').value,
   });
-  r.success ? toast('Prices saved! App reads on next startup.') : toast('Save failed: ' + r.error, true);
+  r.success ? toast('Prices saved!') : toast('Failed: ' + r.error, true);
 }
 
-// ── BUNDLES ────────────────────────────────────────────────────
 function renderBundles() {
   document.getElementById('bundle-list').innerHTML = liveBundles.map((b, i) => `
-    <div class="price-box">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" value="${b.name}" onchange="liveBundles[${i}].name=this.value" style="font-size:15px;font-weight:800;color:var(--orange);background:transparent;border:none;border-bottom:1px solid var(--border);width:90px;padding:2px;margin-bottom:0;"/>
-          <input type="text" value="${b.nameHi||''}" onchange="liveBundles[${i}].nameHi=this.value" style="font-size:13px;color:var(--gold);background:transparent;border:none;border-bottom:1px solid var(--border);width:80px;padding:2px;margin-bottom:0;"/>
-        </div>
-        <div style="display:flex;gap:6px;align-items:center;">
-          <span class="badge ${b.active?'bg':'bw'}" style="cursor:pointer;" onclick="liveBundles[${i}].active=!liveBundles[${i}].active;renderBundles()">${b.active?'Active':'Hidden'}</span>
+    <div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <input type="text" value="${b.name}" onchange="liveBundles[${i}].name=this.value" style="font-size:15px;font-weight:800;color:var(--orange);background:transparent;border:none;border-bottom:1px solid var(--border);width:100px;padding:2px;margin-bottom:0"/>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="badge ${b.active?'bg':'bw'}" style="cursor:pointer" onclick="liveBundles[${i}].active=!liveBundles[${i}].active;renderBundles()">${b.active?'Active':'Hidden'}</span>
           <button class="btn btn-r btn-sm" onclick="liveBundles.splice(${i},1);renderBundles()">✕</button>
         </div>
       </div>
-      <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:10px;">
-        <span style="color:var(--muted);font-size:13px;">₹</span>
-        <input type="number" value="${b.price}" onchange="liveBundles[${i}].price=+this.value" style="font-size:24px;font-weight:800;color:var(--cream);background:transparent;border:none;border-bottom:1px solid var(--border);width:75px;padding:2px;margin-bottom:0;"/>
-        <span style="color:var(--muted);font-size:13px;">/month</span>
+      <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:8px">
+        <span style="color:var(--muted);font-size:12px">₹</span>
+        <input type="number" value="${b.price}" onchange="liveBundles[${i}].price=+this.value" style="font-size:22px;font-weight:800;color:var(--cream);background:transparent;border:none;border-bottom:1px solid var(--border);width:65px;padding:2px;margin-bottom:0"/>
+        <span style="color:var(--muted);font-size:12px">/month</span>
       </div>
       <label>Features (one per line)</label>
-      <textarea rows="4" onchange="liveBundles[${i}].features=this.value.split('\\n').filter(Boolean)">${(b.features||[]).join('\n')}</textarea>
-    </div>
-  `).join('');
+      <textarea rows="3" onchange="liveBundles[${i}].features=this.value.split('\\n').filter(Boolean)">${(b.features||[]).join('\n')}</textarea>
+    </div>`).join('');
 }
-
 function addBundle() {
-  liveBundles.push({ id:'plan_'+Date.now(), name:'New Plan', nameHi:'नया प्लान', price:149, active:true, features:['Feature 1','Feature 2','Feature 3'] });
+  liveBundles.push({ id:'plan_'+Date.now(), name:'New Plan', nameHi:'नया प्लान', price:149, active:true, features:['Feature 1','Feature 2'] });
   renderBundles();
 }
-
 async function saveBundles() {
   const r = await api('POST', '/admin/bundles', { bundles: liveBundles });
-  r.success ? toast('Bundles saved!') : toast('Failed: ' + r.error, true);
-}
-
-async function grantPremium() {
-  const phone = document.getElementById('grant-phone').value.trim();
-  const days = document.getElementById('grant-days').value;
-  if (!phone) { toast('Enter phone number', true); return; }
-  toast(`Premium granted to ${phone} for ${days}. Implement in Firebase for real effect.`);
+  r.success ? toast('Bundles saved!') : toast('Failed', true);
 }
 
 // ── DONATIONS ──────────────────────────────────────────────────
 function renderDonations() {
-  const total = liveDonations.filter(d=>d.active).length;
+  const total = liveDonations.filter(d => d.active).length;
   document.getElementById('don-count').textContent = total;
   document.getElementById('don-list').innerHTML = liveDonations.map((d, i) => `
-    <div class="cause-card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div>
-          <span style="font-size:15px;font-weight:700;color:var(--cream);">${d.name} / ${d.nameHi}</span><br>
-          <span style="font-size:12px;color:var(--muted);">${d.desc}</span>
+          <span style="font-size:14px;font-weight:700;color:var(--cream)">${d.name} / ${d.nameHi}</span><br>
+          <span style="font-size:11px;color:var(--muted)">${d.desc}</span>
         </div>
-        <div style="display:flex;gap:6px;align-items:center;">
-          <span class="badge ${d.active?'bg':'bw'}" style="cursor:pointer;" onclick="liveDonations[${i}].active=!liveDonations[${i}].active;renderDonations()">${d.active?'Active':'Hidden'}</span>
+        <div style="display:flex;gap:6px">
+          <span class="badge ${d.active?'bg':'bw'}" style="cursor:pointer" onclick="liveDonations[${i}].active=!liveDonations[${i}].active;renderDonations()">${d.active?'Active':'Hidden'}</span>
           <button class="btn btn-r btn-sm" onclick="liveDonations.splice(${i},1);renderDonations()">✕</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-        <div><label>Goal (₹)</label><input type="number" value="${d.goal}" onchange="liveDonations[${i}].goal=+this.value" style="margin-bottom:0;"/></div>
-        <div><label>Raised so far (₹)</label><input type="number" value="${d.raised||0}" onchange="liveDonations[${i}].raised=+this.value" style="margin-bottom:0;"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label>Goal (₹)</label><input type="number" value="${d.goal}" onchange="liveDonations[${i}].goal=+this.value" style="margin-bottom:0"/></div>
+        <div><label>Raised (₹)</label><input type="number" value="${d.raised||0}" onchange="liveDonations[${i}].raised=+this.value" style="margin-bottom:0"/></div>
       </div>
-      <div class="progress-track"><div class="progress-fill" style="width:${Math.min(100,Math.round(((d.raised||0)/Math.max(d.goal,1))*100))}%;background:var(--orange);"></div></div>
-      <span style="font-size:11px;color:var(--muted);">₹${(d.raised||0).toLocaleString()} of ₹${d.goal.toLocaleString()} — ${Math.round(((d.raised||0)/Math.max(d.goal,1))*100)}%</span>
-    </div>
-  `).join('');
+      <div class="progress-track" style="margin-top:8px">
+        <div class="progress-fill" style="width:${Math.min(100,Math.round(((d.raised||0)/Math.max(d.goal,1))*100))}%;background:var(--orange)"></div>
+      </div>
+      <span style="font-size:10px;color:var(--muted)">₹${(d.raised||0).toLocaleString()} of ₹${d.goal.toLocaleString()}</span>
+    </div>`).join('');
 }
-
 function addDonation() {
-  const id=document.getElementById('nc-id').value.trim(),
-        name=document.getElementById('nc-name').value.trim(),
-        nameHi=document.getElementById('nc-nameh').value.trim(),
-        goal=+document.getElementById('nc-goal').value||100000,
-        desc=document.getElementById('nc-desc').value.trim();
-  if(!id||!name){toast('Campaign ID and Name required',true);return;}
-  liveDonations.push({id,name,nameHi:nameHi||name,desc,goal,raised:0,active:true});
-  ['nc-id','nc-name','nc-nameh','nc-goal','nc-desc'].forEach(i=>document.getElementById(i).value='');
-  renderDonations();
-  toast('Campaign added! Click Save All Changes.');
+  const id=document.getElementById('nc-id').value.trim(), name=document.getElementById('nc-name').value.trim();
+  if(!id||!name){toast('ID and Name required',true);return;}
+  liveDonations.push({id,name,nameHi:document.getElementById('nc-nameh').value.trim()||name,desc:document.getElementById('nc-desc').value.trim(),goal:+document.getElementById('nc-goal').value||100000,raised:0,active:true});
+  ['nc-id','nc-name','nc-nameh','nc-goal','nc-desc'].forEach(x=>document.getElementById(x).value='');
+  renderDonations(); toast('Campaign added — click Save');
 }
-
 async function saveDonations() {
   const r = await api('POST', '/admin/donations', { donations: liveDonations });
-  r.success ? toast('Donation campaigns saved!') : toast('Failed: ' + r.error, true);
+  r.success ? toast('Donations saved!') : toast('Failed', true);
 }
 
 // ── FEATURE FLAGS ──────────────────────────────────────────────
-function toggleF(btn, key) {
-  btn.classList.toggle('on');
-  liveConfig[key] = btn.classList.contains('on');
-}
+function toggleF(btn, key) { btn.classList.toggle('on'); liveConfig[key] = btn.classList.contains('on'); }
 async function saveFeatures() {
   const keys = ['kathaVaultEnabled','factCheckEnabled','debateEnabled','mantraVerifyEnabled','peaceModeEnabled','donationEnabled','maintenanceMode'];
-  const body = {};
-  keys.forEach(k => { body[k] = liveConfig[k] !== false; });
+  const body = {}; keys.forEach(k => { body[k] = liveConfig[k] !== false; });
   const r = await api('POST', '/admin/config', body);
   r.success ? toast('Feature flags saved!') : toast('Failed', true);
-}
-async function saveAI() {
-  const r = await api('POST', '/admin/config', {
-    freeQuestionsLimit: +document.getElementById('ai-freeqs').value,
-    aiModel: document.getElementById('ai-model').value,
-  });
-  r.success ? toast('AI settings saved!') : toast('Failed', true);
 }
 
 // ── CONTENT UPLOAD ─────────────────────────────────────────────
 let selectedFile = null;
 function fileSelected(inp) {
   selectedFile = inp.files[0];
-  document.getElementById('ul-filename').textContent = '📎 ' + selectedFile.name + ' (' + (selectedFile.size/1024).toFixed(1) + ' KB)';
-  if (!document.getElementById('ul-title').value) {
-    document.getElementById('ul-title').value = selectedFile.name.replace(/\.[^.]+$/,'');
-  }
+  document.getElementById('ul-filename').textContent = '📎 ' + selectedFile.name;
+  if (!document.getElementById('ul-title').value) document.getElementById('ul-title').value = selectedFile.name.replace(/\.[^.]+$/,'');
 }
-
 async function uploadContent() {
   const title = document.getElementById('ul-title').value.trim();
   const pasteText = document.getElementById('ul-text').value.trim();
-  if (!title) { toast('Enter a content title', true); return; }
-  if (!selectedFile && !pasteText) { toast('Select a file or paste text', true); return; }
-
+  if (!title) { toast('Enter a title', true); return; }
+  if (!selectedFile && !pasteText) { toast('Select file or paste text', true); return; }
   const prog = document.getElementById('ul-progress');
-  const bar = document.getElementById('ul-prog-bar');
-  const txt = document.getElementById('ul-prog-txt');
   prog.style.display = 'block';
-  bar.style.width = '25%';
-  txt.textContent = 'Preparing...';
-
+  document.getElementById('ul-prog-bar').style.width = '40%';
+  document.getElementById('ul-prog-txt').textContent = 'Uploading...';
   const fd = new FormData();
   fd.append('title', title);
   fd.append('type', document.getElementById('ul-type').value);
@@ -884,141 +749,116 @@ async function uploadContent() {
   fd.append('trustLevel', document.getElementById('ul-trust').value);
   if (pasteText) fd.append('textContent', pasteText);
   if (selectedFile) fd.append('file', selectedFile);
-
-  bar.style.width = '60%';
-  txt.textContent = 'Uploading to backend...';
-
   const r = await api('POST', '/admin/upload', fd, true);
-  bar.style.width = '100%';
+  document.getElementById('ul-prog-bar').style.width = '100%';
   if (r.success) {
-    txt.textContent = '✅ Uploaded! ' + r.upload.chunkCount + ' AI chunks created.';
-    toast('"' + r.upload.title + '" uploaded — ' + r.upload.chunkCount + ' chunks ready');
-    clearUpload();
-    await loadUploads();
-    document.getElementById('chk3').textContent = '✅ Content uploaded successfully';
+    document.getElementById('ul-prog-txt').textContent = '✅ Uploaded! ' + r.upload.chunkCount + ' chunks';
+    toast('"' + r.upload.title + '" uploaded'); clearUpload(); loadUploads();
   } else {
-    txt.textContent = '✕ Error: ' + r.error;
-    toast('Upload failed: ' + r.error, true);
+    document.getElementById('ul-prog-txt').textContent = '✕ Error: ' + r.error;
+    toast('Upload failed', true);
   }
-  setTimeout(() => prog.style.display = 'none', 5000);
+  setTimeout(() => prog.style.display='none', 4000);
 }
-
 function clearUpload() {
-  document.getElementById('ul-title').value = '';
-  document.getElementById('ul-topics').value = '';
-  document.getElementById('ul-text').value = '';
+  ['ul-title','ul-topics','ul-text'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('ul-filename').textContent = '';
-  document.getElementById('ul-file').value = '';
-  selectedFile = null;
+  document.getElementById('ul-file').value = ''; selectedFile = null;
 }
-
 async function loadUploads() {
   const el = document.getElementById('ul-list');
-  el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Loading...</p>';
+  el.innerHTML = '<p style="color:var(--muted);font-size:12px">Loading...</p>';
   const r = await api('GET', '/admin/uploads');
-  if (!r.success || !r.uploads) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Could not load. Check connection.</p>'; return; }
-  if (!r.uploads.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">No content uploaded yet. Upload your first scripture above.</p>'; return; }
+  if (!r.uploads?.length) { el.innerHTML = '<p style="color:var(--muted);font-size:12px">No content uploaded yet.</p>'; return; }
   el.innerHTML = `<table>
-    <tr><th>Title</th><th>Type</th><th>Chunks</th><th>Status</th><th>Date</th><th></th></tr>
+    <tr><th>Title</th><th>Type</th><th>Chunks</th><th>Status</th><th></th></tr>
     ${r.uploads.map(u => `<tr>
-      <td>${u.title}</td>
-      <td><span class="badge bo">${u.type}</span></td>
-      <td>${u.chunkCount}</td>
-      <td><span class="badge ${u.active?'bg':'bw'}">${u.active?'Active':'Off'}</span></td>
-      <td>${new Date(u.uploadedAt).toLocaleDateString()}</td>
+      <td>${u.title}</td><td><span class="badge bo">${u.type}</span></td>
+      <td>${u.chunkCount}</td><td><span class="badge ${u.active?'bg':'bw'}">${u.active?'Active':'Off'}</span></td>
       <td><button class="btn btn-r btn-sm" onclick="delUpload('${u.id}')">Del</button></td>
     </tr>`).join('')}
   </table>`;
 }
-
 async function delUpload(id) {
-  if (!confirm('Delete this content? AI will stop using it.')) return;
-  await fetch(BACKEND + '/admin/uploads/' + id, { method:'DELETE', headers:{'x-admin-key':ADMIN_KEY} });
+  if (!confirm('Delete?')) return;
+  await api('DELETE', '/admin/uploads/' + id);
   toast('Deleted'); loadUploads();
 }
 
 // ── TRANSACTIONS ───────────────────────────────────────────────
 async function loadTxns() {
   const el = document.getElementById('txn-list');
-  el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Loading...</p>';
   const r = await api('GET', '/admin/transactions');
-  if (!r.transactions?.length) {
-    el.innerHTML = '<p style="color:var(--muted);font-size:13px;">No transactions yet. Transactions appear here after Razorpay integration. Get keys from dashboard.razorpay.com</p>';
-    return;
-  }
+  if (!r.transactions?.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">No transactions yet. Razorpay webhook will populate this after live payments.</p>'; return; }
   el.innerHTML = `<table>
     <tr><th>Order ID</th><th>Type</th><th>Amount</th><th>Status</th><th>Time</th></tr>
     ${r.transactions.map(t => `<tr>
-      <td style="font-family:monospace;font-size:11px;">${t.id}</td>
+      <td style="font-family:monospace;font-size:11px">${t.id}</td>
       <td><span class="badge bo">${t.type||'—'}</span></td>
       <td>₹${((t.amount||0)/100).toFixed(0)}</td>
       <td><span class="badge ${t.status==='paid'?'bg':'bw'}">${t.status}</span></td>
-      <td>${t.created_at ? new Date(t.created_at*1000).toLocaleString() : '—'}</td>
+      <td>${t.created_at?new Date(t.created_at*1000).toLocaleString():'—'}</td>
     </tr>`).join('')}
   </table>`;
 }
 
-// ── NOTIFICATIONS ──────────────────────────────────────────────
 async function sendNotif() {
   const title = document.getElementById('n-title').value.trim();
   const body = document.getElementById('n-body').value.trim();
   if (!title || !body) { toast('Fill title and message', true); return; }
-  toast('Queued: "' + title + '". Add FIREBASE_SERVICE_ACCOUNT to Render for real delivery.');
+  toast('Add FIREBASE_SERVICE_ACCOUNT to Render to enable real delivery. Queued: "' + title + '"');
 }
 
 // ── SETTINGS ───────────────────────────────────────────────────
 function saveAdminKey() {
   const key = document.getElementById('s-adminkey').value.trim();
   if (!key) { toast('Enter admin key', true); return; }
-  ADMIN_KEY = key;
-  localStorage.setItem('ds_admin_key', key);
-  document.getElementById('chk2').textContent = '✅ Admin key configured';
-  toast('Admin key saved! Testing connection...');
-  testConn();
+  ADMIN_KEY = key; localStorage.setItem('ds_admin_key', key);
+  document.getElementById('chk-adminkey').textContent = '✅ Admin key configured';
+  toast('Key saved! Testing...'); testConn();
 }
-
 async function saveVersion() {
   const r = await api('POST', '/admin/config', { appVersion: document.getElementById('s-version').value });
   r.success ? toast('Version updated!') : toast('Failed', true);
 }
 
-// ── START ──────────────────────────────────────────────────────
-
 // ═══════════════════════════════════════════════════════════════
-// KATHA GENERATOR
+// KATHA GENERATOR — Verse by Verse with SSE live log
 // ═══════════════════════════════════════════════════════════════
 
 const CHAPTER_MAP = {
-  bhagavad_gita:    [{n:1,t:'Arjuna Vishada Yoga',s:47},{n:2,t:'Sankhya Yoga',s:72},{n:3,t:'Karma Yoga',s:43},{n:4,t:'Jnana Karma Sanyasa Yoga',s:42},{n:5,t:'Karma Sanyasa Yoga',s:29},{n:6,t:'Atmasanyama Yoga',s:47},{n:7,t:'Jnana Vijnana Yoga',s:30},{n:8,t:'Aksara Brahma Yoga',s:28},{n:9,t:'Raja Vidya Yoga',s:34},{n:10,t:'Vibhuti Yoga',s:42},{n:11,t:'Vishwarupa Darshana Yoga',s:55},{n:12,t:'Bhakti Yoga',s:20},{n:13,t:'Kshetra Yoga',s:34},{n:14,t:'Gunatraya Yoga',s:27},{n:15,t:'Purushottama Yoga',s:20},{n:16,t:'Daivasura Sampad Yoga',s:24},{n:17,t:'Sraddhatraya Yoga',s:28},{n:18,t:'Moksha Sanyasa Yoga',s:78}],
+  bhagavad_gita: [
+    {n:1,t:'Arjuna Vishada Yoga',s:47},{n:2,t:'Sankhya Yoga',s:72},{n:3,t:'Karma Yoga',s:43},
+    {n:4,t:'Jnana Karma Sanyasa Yoga',s:42},{n:5,t:'Karma Sanyasa Yoga',s:29},{n:6,t:'Atmasanyama Yoga',s:47},
+    {n:7,t:'Jnana Vijnana Yoga',s:30},{n:8,t:'Aksara Brahma Yoga',s:28},{n:9,t:'Raja Vidya Yoga',s:34},
+    {n:10,t:'Vibhuti Yoga',s:42},{n:11,t:'Vishwarupa Darshana Yoga',s:55},{n:12,t:'Bhakti Yoga',s:20},
+    {n:13,t:'Kshetra Yoga',s:34},{n:14,t:'Gunatraya Yoga',s:27},{n:15,t:'Purushottama Yoga',s:20},
+    {n:16,t:'Daivasura Sampad Yoga',s:24},{n:17,t:'Sraddhatraya Yoga',s:28},{n:18,t:'Moksha Sanyasa Yoga',s:78},
+  ],
   valmiki_ramayana: [{n:1,t:'Bala Kanda',s:77},{n:2,t:'Ayodhya Kanda',s:119},{n:3,t:'Aranya Kanda',s:75},{n:4,t:'Kishkindha Kanda',s:67},{n:5,t:'Sundara Kanda',s:68},{n:6,t:'Yuddha Kanda',s:131},{n:7,t:'Uttara Kanda',s:111}],
-  ramcharitmanas:   [{n:1,t:'Bal Kand',s:360},{n:2,t:'Ayodhya Kand',s:326},{n:3,t:'Aranya Kand',s:46},{n:4,t:'Kishkindha Kand',s:30},{n:5,t:'Sundar Kand',s:60},{n:6,t:'Lanka Kand',s:117},{n:7,t:'Uttar Kand',s:130}],
-  mahabharata:      [{n:1,t:'Adi Parva',s:227},{n:2,t:'Sabha Parva',s:79},{n:3,t:'Vana Parva',s:317},{n:5,t:'Udyoga Parva',s:199},{n:6,t:'Bhishma Parva',s:122},{n:12,t:'Shanti Parva',s:365},{n:18,t:'Svargarohana Parva',s:5}],
-  srimad_bhagavatam:[{n:1,t:'Skandha 1',s:19},{n:7,t:'Skandha 7',s:15},{n:10,t:'Skandha 10',s:90}],
-  upanishads:       [{n:1,t:'Isha Upanishad',s:18},{n:3,t:'Katha Upanishad',s:119},{n:5,t:'Mundaka Upanishad',s:64},{n:9,t:'Chandogya Upanishad',s:154}],
-  vishnu_purana:    [{n:1,t:'Amsha 1',s:22},{n:2,t:'Amsha 2',s:16},{n:3,t:'Amsha 3',s:18},{n:4,t:'Amsha 4',s:24},{n:5,t:'Amsha 5 Krishna',s:38},{n:6,t:'Amsha 6',s:8}],
-  shiva_purana:     [{n:1,t:'Vidyeshvara Samhita',s:25},{n:2,t:'Rudra Samhita',s:43},{n:3,t:'Shatarudra Samhita',s:42},{n:4,t:'Kotirudra Samhita',s:43},{n:5,t:'Uma Samhita',s:59},{n:6,t:'Kailasa Samhita',s:23},{n:7,t:'Vayaviya Samhita',s:41}],
-  devi_bhagavata:   [{n:1,t:'Skandha 1',s:20},{n:3,t:'Skandha 3',s:30},{n:5,t:'Skandha 5',s:35},{n:7,t:'Skandha 7',s:40},{n:9,t:'Skandha 9',s:50}],
-  garuda_purana:    [{n:1,t:'Acharakanda',s:229},{n:2,t:'Preta Kalpa',s:49}],
+  mahabharata: [{n:1,t:'Adi Parva',s:227},{n:2,t:'Sabha Parva',s:79},{n:6,t:'Bhishma Parva',s:122},{n:12,t:'Shanti Parva',s:365},{n:18,t:'Svargarohana Parva',s:5}],
+  srimad_bhagavatam: [{n:1,t:'Skandha 1',s:19},{n:10,t:'Skandha 10 Krishna',s:90}],
+  upanishads: [{n:1,t:'Isha Upanishad',s:18},{n:3,t:'Katha Upanishad',s:119},{n:5,t:'Mundaka Upanishad',s:64}],
 };
 
 function updateChapterList() {
   const sc = document.getElementById('kg-scripture').value;
   const sel = document.getElementById('kg-chapter');
   sel.innerHTML = '';
-  (CHAPTER_MAP[sc] || []).forEach(function(ch) {
+  (CHAPTER_MAP[sc] || []).forEach(ch => {
     const opt = document.createElement('option');
     opt.value = ch.n;
-    opt.textContent = 'Ch ' + ch.n + ': ' + ch.t + ' (' + ch.s + ' verses)';
+    opt.textContent = `Ch ${ch.n}: ${ch.t} (${ch.s} verses)`;
+    opt.dataset.s = ch.s; opt.dataset.t = ch.t;
     sel.appendChild(opt);
   });
 }
 
 function kgLog(msg, type) {
-  const t2 = type || 'info';
   const log = document.getElementById('kg-log');
-  const color = t2==='ok'?'#27AE60':t2==='err'?'#E74C3C':t2==='wait'?'#C9830A':'#5DADE2';
   const ts = new Date().toLocaleTimeString();
-  log.innerHTML += '<span style="color:' + color + '">[' + ts + '] ' + msg + '</span>\n';
+  const color = type==='ok'?'#27AE60':type==='err'?'#E74C3C':type==='wait'?'#C9830A':type==='done'?'#F4A261':'#5DADE2';
+  log.innerHTML += `<span style="color:${color}">[${ts}] ${msg}</span>\n`;
   log.scrollTop = log.scrollHeight;
 }
 
@@ -1027,204 +867,146 @@ function kgSetProgress(pct, label) {
   document.getElementById('kg-progress-label').textContent = label;
 }
 
-function kgSleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
-
 async function kgCheckStatus() {
   const sc = document.getElementById('kg-scripture').value;
   const ch = document.getElementById('kg-chapter').value;
   const lang = document.getElementById('kg-lang').value;
   const el = document.getElementById('kg-status-display');
-  el.innerHTML = '<span style="color:var(--muted)">Checking...</span>';
-  try {
-    const r = await fetch(BACKEND + '/katha/' + sc + '/' + ch + '/' + lang);
-    if (r.status === 404) {
-      el.innerHTML = '<span style="color:var(--red)">Not generated yet</span>';
-    } else if (r.ok) {
-      const d = await r.json();
-      let count = 0;
-      try { const p = JSON.parse(d.content); count = Array.isArray(p) ? p.length : 0; } catch(e) { count = d.content ? 1 : 0; }
-      const chObj = (CHAPTER_MAP[sc]||[]).find(function(c){ return String(c.n) === String(ch); });
-      const total = chObj ? chObj.s : '?';
-      const pct = total !== '?' ? Math.round((count/total)*100) : '?';
-      el.innerHTML = '<b style="color:' + (count>=total?'#27AE60':'#C9830A') + '">' + count + '/' + total + ' verses (' + pct + '%)</b><br>' +
-        'Saved: ' + (d.savedAt||'unknown') + '<br>' +
-        (count < total ? '<span style="color:#C9830A">Incomplete — use Repair</span>' : '<span style="color:#27AE60">Complete</span>');
-    }
-  } catch(e) { el.innerHTML = '<span style="color:var(--red)">Error: ' + e.message + '</span>'; }
+  el.innerHTML = '<span style="color:var(--muted)">Checking backend...</span>';
+
+  const r = await api('GET', `/admin/katha/status/${sc}/${ch}/${lang}`);
+  const opt = document.getElementById('kg-chapter').selectedOptions[0];
+  const total = opt ? +opt.dataset.s : 0;
+
+  if (!r.exists) {
+    el.innerHTML = `<span style="color:var(--red)">Not generated yet</span><br><span style="color:var(--muted)">Total: ${total} verses needed</span>`;
+  } else {
+    const pct = total ? Math.round((r.verseCount/total)*100) : 0;
+    const color = r.verseCount >= total ? '#27AE60' : '#C9830A';
+    el.innerHTML = `<b style="color:${color}">${r.verseCount}/${total} verses (${pct}%)</b><br>
+      Saved: ${r.savedAt || 'unknown'}<br>
+      ${r.verseCount < total ? '<span style="color:#C9830A">Incomplete — click Generate to fill missing</span>' : '<span style="color:#27AE60">✅ Complete!</span>'}`;
+  }
 }
 
 async function kgListAll() {
   const el = document.getElementById('kg-all-list');
   el.innerHTML = '<span style="color:var(--muted)">Loading...</span>';
-  try {
-    const r = await api('GET', '/katha/list');
-    if (!r.files || !r.files.length) { el.innerHTML = 'No content generated yet.'; return; }
-    let html2 = '<div style="margin-bottom:10px;color:var(--orange);font-weight:700;">' + r.count + ' files on backend</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">';
-    r.files.forEach(function(f) {
-      const parts = f.replace('.json','').split('_');
-      const lang2 = parts[parts.length-1];
-      const ch2 = parts[parts.length-2];
-      const sc2 = parts.slice(0,-2).join('_');
-      html2 += '<div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:11px;"><div style="color:var(--orange);font-weight:700;">' + sc2 + '</div><div>Ch ' + ch2 + ' · ' + lang2 + '</div></div>';
-    });
-    html2 += '</div>';
-    el.innerHTML = html2;
-  } catch(e) { el.innerHTML = 'Error: ' + e.message; }
+  const r = await api('GET', '/katha/list');
+  if (!r.files?.length) { el.innerHTML = 'No content generated yet.'; return; }
+  el.innerHTML = `<div style="margin-bottom:8px;color:var(--orange);font-weight:700">${r.count} chapters cached on backend</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    ${r.files.map(f => {
+      const name = f.file.replace('.json','');
+      return `<div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:11px">
+        <div style="color:var(--orange);font-weight:700">${name}</div>
+        <div style="color:var(--muted)">${f.verseCount||'?'} verses</div>
+      </div>`;
+    }).join('')}
+    </div>`;
 }
 
 async function kgDeleteChapter() {
   const sc = document.getElementById('kg-scripture').value;
   const ch = document.getElementById('kg-chapter').value;
   const lang = document.getElementById('kg-lang').value;
-  if (!confirm('Delete ' + sc + ' Chapter ' + ch + ' [' + lang + ']?')) return;
-  await fetch(BACKEND + '/admin/katha/' + sc + '/' + ch + '/' + lang, { method:'DELETE', headers:{'x-admin-key':ADMIN_KEY} });
-  toast('Deleted Ch' + ch + ' [' + lang + ']');
-  kgCheckStatus();
+  if (!confirm(`Delete ${sc} Chapter ${ch} [${lang}]?`)) return;
+  await api('DELETE', `/admin/katha/${sc}/${ch}/${lang}`);
+  toast(`Deleted Ch${ch} [${lang}]`); kgCheckStatus();
 }
 
-function buildKathaPrompt(sc, chN, chTitle, from, to, lang) {
-  const isH = lang === 'hindi';
-  const langRule = isH ? 'Write ALL text fields in pure Hindi (Devanagari). NO English.' : 'Write ALL text fields in clear English.';
-  return 'You are a Vedic scholar following Gita Press Gorakhpur tradition.\n' + langRule + '\nCRITICAL: Return ONLY a valid JSON array. No markdown. Start with [ end with ].\n\n' +
-    'Generate Bhagavad Gita Chapter ' + chN + ' (' + chTitle + '), verses ' + from + ' to ' + to + '.\n\n' +
-    'Each object must have EXACTLY these fields:\n' +
-    '{"verse_id":"' + chN + '.N","chapter":' + chN + ',"verse_number":N,"sanskrit_full":"Complete Devanagari Sanskrit both lines",' +
-    '"roman_transliteration":"Both lines Roman","word_meanings_grid":[{"word":"Devanagari","meaning":"' + (isH?'Hindi':'English') + ' meaning","significance":"context"}],' +
-    '"tika_' + (isH?'hindi':'english') + '":"3 sentences Gita Press style ' + (isH?'Hindi':'English') + ' meaning",' +
-    '"teaching":"1 practical ' + (isH?'Hindi':'English') + ' sentence for today",' +
-    '"gahan_drishti":"Rishi speaks to reader in ' + (isH?'Hindi':'English') + ' — 2-3 warm sentences connecting to their daily life",' +
-    '"bal_seekh":"2-line simple ' + (isH?'Hindi':'English') + ' moral for 10-year-old child",' +
-    '"speaker":"Krishna/Arjuna/Sanjaya","chapter_context":"1 sentence context"}\n\nReturn ONLY the JSON array for verses ' + from + ' to ' + to + '. Start with [';
-}
+async function kgStartGeneration() {
+  const geminiKey = document.getElementById('kg-gemini-key').value.trim();
+  const groqKey   = document.getElementById('kg-groq-key').value.trim();
+  const sc        = document.getElementById('kg-scripture').value;
+  const chSel     = document.getElementById('kg-chapter').selectedOptions[0];
+  const chN       = chSel?.value;
+  const total     = chSel ? +chSel.dataset.s : 47;
+  const title     = chSel ? chSel.dataset.t : '';
+  const lang      = document.getElementById('kg-lang').value;
 
-async function callKathaAI(apiKey, prompt) {
-  if (apiKey.startsWith('AIza')) {
-    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey;
-    const res = await fetch(url, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.1,maxOutputTokens:8000}})
-    });
-    if (res.status === 429) throw new Error('429');
-    const d = await res.json();
-    const text = d && d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts && d.candidates[0].content.parts[0] ? d.candidates[0].content.parts[0].text : null;
-    if (text) return text;
-    throw new Error('Gemini empty: ' + JSON.stringify(d && d.error ? d.error : 'unknown'));
-  }
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer ' + apiKey},
-    body: JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:8000})
-  });
-  if (res.status === 429) throw new Error('429');
-  const d = await res.json();
-  const text = d && d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : null;
-  if (text) return text;
-  throw new Error('Groq empty response');
-}
-
-function parseKathaJSON(raw) {
-  let cleaned = raw.trim().replace(/^```json\s*/i,'').replace(/\s*```$/i,'').replace(/^```\s*/i,'').replace(/\s*```$/i,'');
-  const start = cleaned.indexOf('['), end = cleaned.lastIndexOf(']');
-  if (start === -1 || end === -1) return null;
-  try { const p = JSON.parse(cleaned.slice(start, end+1)); return Array.isArray(p) ? p : null; }
-  catch(e) { kgLog('JSON parse error: ' + e.message, 'err'); return null; }
-}
-
-async function kgGenerate(mode) {
-  const apiKey = document.getElementById('kg-apikey').value.trim();
-  const sc = document.getElementById('kg-scripture').value;
-  const chN = parseInt(document.getElementById('kg-chapter').value);
-  const lang = document.getElementById('kg-lang').value;
-  if (!apiKey) { toast('Enter API key first', true); return; }
-
-  const chObj = (CHAPTER_MAP[sc]||[]).find(function(c){ return c.n === chN; });
-  const total = chObj ? chObj.s : 30;
-  const chTitle = chObj ? chObj.t : 'Chapter ' + chN;
+  if (!geminiKey && !groqKey) { toast('Paste at least one API key (Gemini or Groq)', true); return; }
+  if (!chN) { toast('Select a chapter', true); return; }
 
   document.getElementById('kg-log').innerHTML = '';
-  kgLog('Starting ' + mode + ': ' + sc + ' Ch' + chN + ' ' + chTitle + ' | ' + total + ' verses | Lang: ' + lang, 'info');
-  kgSetProgress(2, 'Starting...');
+  kgSetProgress(2, 'Starting generation...');
 
-  let existingVerses = [], existingIds = new Set();
+  const apiBadge = document.getElementById('kg-api-badge');
+  apiBadge.textContent = geminiKey ? '🟢 Gemini → Groq fallback' : '🟡 Groq only';
+  apiBadge.style.background = 'rgba(39,174,96,0.12)';
+  apiBadge.style.color = '#27AE60';
+
+  const jobId = `${sc}_${chN}_${lang}_${Date.now()}`;
+  activeJobId = jobId;
+
+  kgLog(`Job: ${jobId}`, 'info');
+  kgLog(`Sending to backend: ${sc} Ch${chN} "${title}" | ${total} verses | ${lang}`, 'info');
+  kgLog(`API: ${geminiKey ? 'Gemini FIRST' : '(no Gemini)'} ${groqKey ? '→ Groq fallback' : '(no Groq)'}`, 'info');
+
+  // Start SSE connection for live log
+  if (sseConnection) { sseConnection.close(); sseConnection = null; }
+
+  // Trigger generation on backend
+  const r = await api('POST', '/admin/katha/generate', {
+    scriptureId: sc, unitId: chN, lang, totalVerses: total,
+    chapterTitle: title, geminiKey, groqKey,
+    mode: 'generate', jobId,
+  });
+
+  if (!r.success) {
+    kgLog('Error: ' + r.error, 'err'); toast('Generation failed: ' + r.error, true); return;
+  }
+
+  kgLog(`Backend acknowledged: ${r.toGenerate} verses to generate (${r.existing} already done)`, 'ok');
+  if (r.toGenerate === 0) {
+    kgLog('All verses already generated!', 'done');
+    kgSetProgress(100, 'Already complete');
+    kgCheckStatus(); return;
+  }
+
+  // Connect to SSE stream
   try {
-    const existing = await fetch(BACKEND + '/katha/' + sc + '/' + chN + '/' + lang);
-    if (existing.ok) {
-      const d = await existing.json();
+    sseConnection = new EventSource(`${BACKEND}/admin/katha/stream/${jobId}?key=${encodeURIComponent(ADMIN_KEY)}`);
+    let versesGenerated = 0;
+
+    sseConnection.onmessage = (event) => {
       try {
-        const p = JSON.parse(d.content);
-        if (Array.isArray(p)) {
-          existingVerses = p;
-          existingIds = new Set(p.map(function(v){ return v.verse_number || parseInt((v.verse_id||'0.0').split('.')[1]); }));
-          kgLog('Found ' + existingVerses.length + ' existing verses', 'ok');
+        const data = JSON.parse(event.data);
+        if (data.type === 'end') {
+          sseConnection.close(); sseConnection = null;
+          kgSetProgress(100, 'Generation complete!');
+          apiBadge.textContent = '✅ Done';
+          kgCheckStatus(); loadStats();
+          return;
         }
-      } catch(e) { kgLog('Old text format — will regenerate', 'wait'); }
-    } else { kgLog('No existing content — fresh generation', 'info'); }
-  } catch(e) { kgLog('Check existing error: ' + e.message, 'wait'); }
+        if (data.type === 'done') {
+          kgLog(data.msg, 'done');
+          return;
+        }
+        const type = data.type || 'info';
+        kgLog(data.msg, type);
 
-  if (mode === 'repair' && sc === 'bhagavad_gita' && chN === 1) {
-    kgLog('REPAIR: Scanning for verse 1.13 issue...', 'wait');
-    const v13 = existingVerses.find(function(v){ return v.verse_number===13 || v.verse_id==='1.13'; });
-    if (!v13 || !v13.tika_hindi || !v13.gahan_drishti) {
-      kgLog('Verse 1.13 incomplete — wiping 1.13 onwards', 'wait');
-      existingVerses = existingVerses.filter(function(v){
-        const n = v.verse_number || parseInt((v.verse_id||'0.0').split('.')[1]);
-        return n < 13;
-      });
-      existingIds = new Set(existingVerses.map(function(v){ return v.verse_number || parseInt((v.verse_id||'0.0').split('.')[1]); }));
-      kgLog('Kept ' + existingVerses.length + ' good verses (1.1-1.12)', 'ok');
-    } else { kgLog('1.13 looks complete', 'ok'); }
+        if (type === 'ok') {
+          versesGenerated++;
+          const pct = Math.round((versesGenerated / r.toGenerate) * 100);
+          kgSetProgress(pct, `${versesGenerated}/${r.toGenerate} verses saved`);
+        }
+      } catch {}
+    };
+
+    sseConnection.onerror = () => {
+      kgLog('SSE connection lost — generation may still be running on backend', 'wait');
+      apiBadge.textContent = '⚠️ Reconnecting';
+    };
+  } catch(e) {
+    kgLog('Could not connect to live log stream: ' + e.message, 'wait');
+    kgLog('Generation is still running on backend. Check status in 2-3 mins.', 'info');
   }
 
-  const missing = [];
-  for (let v = 1; v <= total; v++) { if (!existingIds.has(v)) missing.push(v); }
-
-  if (missing.length === 0) { kgLog('All verses already present! Nothing to do.', 'ok'); kgSetProgress(100, 'Already complete'); return; }
-  kgLog('Missing: ' + missing.length + ' verses', 'info');
-
-  const batches = [];
-  for (let i = 0; i < missing.length; i += 5) batches.push(missing.slice(i, i+5));
-  kgLog('Batches: ' + batches.length + ' x 5 verses, 20s gap', 'info');
-
-  let allVerses = existingVerses.slice(), done = 0;
-
-  for (let bi = 0; bi < batches.length; bi++) {
-    const batch = batches[bi];
-    const from = batch[0], to = batch[batch.length-1];
-    kgLog('Batch ' + (bi+1) + '/' + batches.length + ': verses ' + from + '-' + to + '...', 'info');
-    kgSetProgress(Math.round(((bi+0.5)/batches.length)*90), 'Batch ' + (bi+1) + '/' + batches.length + ': verses ' + from + '-' + to);
-
-    try {
-      const prompt = buildKathaPrompt(sc, chN, chTitle, from, to, lang);
-      const result = await callKathaAI(apiKey, prompt);
-      const verses = parseKathaJSON(result);
-      if (!verses || !verses.length) { kgLog('Batch ' + (bi+1) + ': no parseable verses', 'wait'); continue; }
-      allVerses = allVerses.concat(verses);
-      const saved = await fetch(BACKEND + '/katha/save', {
-        method:'POST', headers:{'Content-Type':'application/json','x-admin-key':ADMIN_KEY},
-        body: JSON.stringify({scriptureId:sc, unitId:chN, lang:lang, content:JSON.stringify(allVerses), ts:Date.now()})
-      });
-      const sd = await saved.json();
-      if (sd.success) { done += verses.length; kgLog('Batch ' + (bi+1) + ' saved — ' + done + ' new verses', 'ok'); }
-      else { kgLog('Save failed: ' + JSON.stringify(sd), 'err'); }
-    } catch(e) {
-      kgLog('Batch ' + (bi+1) + ' error: ' + e.message, 'err');
-      if (e.message.indexOf('429') !== -1) { kgLog('Rate limited — waiting 65s...', 'wait'); await kgSleep(65000); bi--; continue; }
-    }
-
-    if (bi < batches.length - 1) {
-      for (let s = 20; s > 0; s--) {
-        kgLog('Waiting ' + s + 's...', 'wait');
-        kgSetProgress(Math.round(((bi+1)/batches.length)*90), 'Waiting ' + s + 's...');
-        await kgSleep(1000);
-      }
-    }
-  }
-
-  kgSetProgress(100, 'Done — ' + done + ' verses generated');
-  kgLog('Generation complete! Total: ' + allVerses.length + '/' + total, 'ok');
-  toast('Done! ' + allVerses.length + '/' + total + ' verses for Ch' + chN);
-  await kgCheckStatus();
+  document.getElementById('kg-gen-btn').disabled = false;
 }
-// ─── END KATHA GENERATOR ───────────────────────────────────────
+
+// ── START ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() { init(); updateChapterList(); });
 </script>
 </body>
