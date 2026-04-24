@@ -1,211 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DharmaSetu Admin v6</title>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DharmaSetu Admin v8</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0A0400;--card:#130700;--card2:#1A0800;--orange:#E8620A;--gold:#C9830A;--cream:#FDF6ED;--green:#27AE60;--red:#E74C3C;--blue:#3498DB;--border:rgba(240,165,0,0.15);--muted:rgba(253,246,237,0.4)}
+:root{--bg:#0A0400;--card:#130700;--card2:#1A0800;--saffron:#E8620A;--gold:#C9830A;--cream:#FDF6ED;--green:#27AE60;--red:#E74C3C;--blue:#3498DB;--border:rgba(240,165,0,0.15);--muted:rgba(253,246,237,0.4)}
 body{background:var(--bg);color:var(--cream);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;min-height:100vh;font-size:13px}
-/* SIDEBAR */
-.sb{width:195px;background:var(--card);border-right:1px solid var(--border);position:fixed;height:100vh;overflow-y:auto;display:flex;flex-direction:column;z-index:100}
-.sb-brand{padding:13px 15px;border-bottom:1px solid var(--border)}
-.sb-brand h1{font-size:14px;color:var(--orange);font-weight:800}
-.sb-brand p{font-size:10px;color:var(--muted);margin-top:1px}
-.conn{margin:7px 10px;padding:6px 10px;border-radius:7px;font-size:11px;font-weight:700;text-align:center}
-.conn-ok{background:rgba(39,174,96,.12);color:#27AE60;border:1px solid rgba(39,174,96,.3)}
-.conn-err{background:rgba(231,76,60,.12);color:#E74C3C;border:1px solid rgba(231,76,60,.3)}
-.conn-wait{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border)}
-nav{flex:1}
-.ni{display:flex;align-items:center;gap:7px;padding:9px 13px;cursor:pointer;color:var(--muted);border-left:3px solid transparent;transition:all .15s;font-size:12px}
+.sb{width:200px;background:var(--card);border-right:1px solid var(--border);position:fixed;height:100vh;overflow-y:auto;display:flex;flex-direction:column;z-index:100}
+.sb-brand{padding:14px 15px;border-bottom:1px solid var(--border)}
+.sb-brand h1{font-size:15px;color:var(--saffron);font-weight:800}
+.sb-brand p{font-size:10px;color:var(--muted);margin-top:2px}
+.db-pill{margin:8px 10px;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;text-align:center}
+.db-ok{background:rgba(39,174,96,.12);color:#27AE60;border:1px solid rgba(39,174,96,.25)}
+.db-err{background:rgba(231,76,60,.12);color:#E74C3C;border:1px solid rgba(231,76,60,.25)}
+.db-wait{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border)}
+nav{flex:1;padding:6px 0}
+.ni{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;color:var(--muted);border-left:3px solid transparent;font-size:12px;transition:all .15s;user-select:none}
 .ni:hover{background:rgba(232,98,10,.07);color:var(--cream)}
-.ni.active{background:rgba(232,98,10,.12);color:var(--orange);border-left-color:var(--orange);font-weight:700}
-.sb-foot{padding:10px 13px;border-top:1px solid var(--border);font-size:10px;color:var(--muted)}
-/* MAIN */
-.main{margin-left:195px;flex:1;padding:20px;min-height:100vh}
+.ni.active{background:rgba(232,98,10,.12);color:var(--saffron);border-left-color:var(--saffron);font-weight:700}
+.ni .badge{margin-left:auto;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700}
+.sb-foot{padding:10px 14px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);line-height:1.6}
+.main{margin-left:200px;flex:1;padding:20px}
 .sec{display:none}.sec.active{display:block}
-h2{font-size:18px;font-weight:800;margin-bottom:3px}
+h2{font-size:18px;font-weight:800;margin-bottom:4px}
 .psub{font-size:12px;color:var(--muted);margin-bottom:16px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media(max-width:1100px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr}}
 .card{background:var(--card);border-radius:13px;padding:16px;border:1px solid var(--border);margin-bottom:13px}
-.card h3{font-size:13px;font-weight:700;margin-bottom:11px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--gold)}
 .stat{background:var(--card);border-radius:11px;padding:14px;border:1px solid var(--border)}
-.stat-v{font-size:22px;font-weight:800;color:var(--orange);margin:4px 0}
+.stat-v{font-size:22px;font-weight:800;color:var(--saffron);margin:5px 0}
 .stat-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
 table{width:100%;border-collapse:collapse;font-size:12px}
-th{text-align:left;padding:6px 9px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border)}
+th{text-align:left;padding:7px 9px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border)}
 td{padding:7px 9px;border-bottom:1px solid rgba(240,165,0,.05);vertical-align:middle}
 tr:hover td{background:rgba(232,98,10,.03)}
-.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
+label{display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;margin-top:10px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;background:rgba(255,255,255,.055);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--cream);font-size:13px;outline:none;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--saffron)}
+select option{background:#1A0800}
+textarea{resize:vertical;min-height:65px}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
 .bg{background:rgba(39,174,96,.14);color:#27AE60;border:1px solid rgba(39,174,96,.25)}
 .br{background:rgba(231,76,60,.14);color:#E74C3C;border:1px solid rgba(231,76,60,.25)}
-.bo{background:rgba(232,98,10,.14);color:var(--orange);border:1px solid rgba(232,98,10,.25)}
+.bo{background:rgba(232,98,10,.14);color:var(--saffron);border:1px solid rgba(232,98,10,.25)}
 .bgo{background:rgba(201,131,10,.14);color:var(--gold);border:1px solid rgba(201,131,10,.25)}
 .bb{background:rgba(52,152,219,.14);color:#5DADE2;border:1px solid rgba(52,152,219,.25)}
 .bw{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)}
-label{display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
-input,select,textarea{width:100%;background:rgba(255,255,255,.055);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--cream);font-size:13px;outline:none;margin-bottom:11px;transition:border .15s}
-input:focus,select:focus,textarea:focus{border-color:var(--orange)}
-select option{background:#1A0800}
-textarea{resize:vertical;min-height:65px;margin-bottom:0}
-.btn{padding:7px 13px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
-.btn-p{background:var(--orange);color:#fff}.btn-p:hover{opacity:.88}
-.btn-g{background:var(--green);color:#fff}
-.btn-r{background:var(--red);color:#fff}
-.btn-gold{background:var(--gold);color:#fff}
-.btn-o{background:transparent;color:var(--orange);border:1px solid var(--orange)}
-.btn-sm{padding:3px 9px;font-size:11px;border-radius:6px}
-.btn-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
-.tog{width:40px;height:21px;background:rgba(255,255,255,.1);border-radius:11px;cursor:pointer;position:relative;transition:background .25s;flex-shrink:0;border:none}
-.tog.on{background:var(--orange)}
-.tog::after{content:'';position:absolute;width:15px;height:15px;background:#fff;border-radius:8px;top:3px;left:3px;transition:left .25s}
-.tog.on::after{left:22px}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.btn{padding:8px 14px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn-p{background:var(--saffron);color:#fff}.btn-p:hover{opacity:.88}
+.btn-g{background:var(--green);color:#fff}.btn-g:hover{opacity:.88}
+.btn-r{background:var(--red);color:#fff}.btn-r:hover{opacity:.88}
+.btn-o{background:transparent;color:var(--saffron);border:1px solid var(--saffron)}
+.btn-sm{padding:4px 10px;font-size:11px;border-radius:7px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tog{width:42px;height:22px;background:rgba(255,255,255,.1);border-radius:11px;cursor:pointer;position:relative;transition:background .25s;flex-shrink:0;border:none;outline:none}
+.tog.on{background:var(--saffron)}.tog.on.green{background:var(--green)}
+.tog::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:8px;top:3px;left:3px;transition:left .2s}
+.tog.on::after{left:23px}
 .sr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(240,165,0,.07)}
 .sr:last-child{border-bottom:none}
-.sr-l{font-size:13px}.sr-s{font-size:11px;color:var(--muted);margin-top:2px}
-.pt{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin:5px 0}
-.pf{height:5px;border-radius:3px}
-.alert{border-radius:9px;padding:9px 13px;margin-bottom:13px;font-size:12px}
+.sr-l{font-size:13px;font-weight:600}.sr-s{font-size:11px;color:var(--muted);margin-top:2px}
+.alert{border-radius:9px;padding:10px 14px;margin-bottom:13px;font-size:12px;line-height:1.7}
 .ar{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#E74C3C}
 .ab{background:rgba(52,152,219,.1);border:1px solid rgba(52,152,219,.3);color:#5DADE2}
 .ag{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27AE60}
-.ao{background:rgba(232,98,10,.1);border:1px solid rgba(232,98,10,.3);color:var(--orange)}
+.ao{background:rgba(232,98,10,.1);border:1px solid rgba(232,98,10,.3);color:var(--saffron)}
 .toast-wrap{position:fixed;bottom:18px;right:18px;z-index:9999}
-.toast{background:var(--card);border:1px solid var(--orange);border-radius:9px;padding:9px 15px;font-size:12px;font-weight:600;color:var(--orange);opacity:0;transform:translateY(7px);transition:all .3s;pointer-events:none}
-.toast.show{opacity:1;transform:none}
-.toast.err{border-color:var(--red);color:var(--red)}
-.uzn{border:2px dashed var(--border);border-radius:11px;padding:22px;text-align:center;cursor:pointer;transition:all .2s}
-.uzn:hover{border-color:var(--orange);background:rgba(232,98,10,.04)}
-/* Tabs inside sections */
-.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:14px}
-.tab{padding:9px 16px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s}
-.tab.on{color:var(--orange);border-bottom-color:var(--orange)}
-/* Payment method selector */
-.pay-method{display:flex;gap:8px;margin-bottom:13px}
-.pay-opt{flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--border);text-align:center;cursor:pointer;transition:all .15s}
-.pay-opt.on{border-color:var(--orange);background:rgba(232,98,10,.1)}
-.pay-opt h4{font-size:13px;font-weight:700;margin-bottom:3px}
-.pay-opt p{font-size:11px;color:var(--muted)}
-.pay-opt.on h4{color:var(--orange)}
+.toast{background:#160800;border:1px solid var(--saffron);border-radius:9px;padding:9px 16px;font-size:12px;font-weight:600;color:var(--saffron);opacity:0;transform:translateY(7px);transition:all .3s;pointer-events:none;max-width:280px}
+.toast.show{opacity:1;transform:none}.toast.err{border-color:var(--red);color:var(--red)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.key-field{position:relative;display:flex;gap:6px;align-items:center}
+.key-field input{flex:1}
+.key-saved{color:#27AE60;font-size:11px;font-weight:700}
+.key-missing{color:#E74C3C;font-size:11px}
+.pay-opt{flex:1;padding:12px;border-radius:10px;border:2px solid var(--border);text-align:center;cursor:pointer;transition:all .15s}
+.pay-opt.on{border-color:var(--saffron);background:rgba(232,98,10,.1)}
+.pay-opt h4{font-size:13px;font-weight:700;margin-bottom:3px}.pay-opt p{font-size:11px;color:var(--muted)}
+.pay-opt.on h4{color:var(--saffron)}
+.prow{display:flex;gap:8px;margin-bottom:12px}
+.sep{border-top:1px solid var(--border);margin:14px 0}
+.fbar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin:5px 0}
+.ff{height:5px;border-radius:3px}
+.premium-chip{display:inline-block;padding:2px 7px;border-radius:12px;font-size:10px;font-weight:800;margin-left:6px}
+.prem{background:rgba(201,131,10,.18);color:var(--gold);border:1px solid rgba(201,131,10,.35)}
+.free{background:rgba(39,174,96,.12);color:#27AE60;border:1px solid rgba(39,174,96,.25)}
 </style>
 </head>
 <body>
 
 <div class="sb">
-  <div class="sb-brand"><h1>🕉 DharmaSetu</h1><p>Admin Dashboard v6.0</p></div>
-  <div id="conn" class="conn conn-wait">⟳ Connecting...</div>
+  <div class="sb-brand"><h1>🕉 DharmaSetu</h1><p>Admin Dashboard v8</p></div>
+  <div id="db-conn" class="db-pill db-wait">⟳ Connecting...</div>
   <nav>
-    <div class="ni active"   onclick="show('overview')">    <span>📊</span>Live Overview</div>
-    <div class="ni"          onclick="show('apikeys')">     <span>🔑</span>API Keys</div>
-    <div class="ni"          onclick="show('payment')">     <span>💳</span>Payment Config</div>
-    <div class="ni"          onclick="show('pricing')">     <span>💰</span>Pricing & Plans</div>
-    <div class="ni"          onclick="show('donations')">   <span>🙏</span>Seva & Donations</div>
-    <div class="ni"          onclick="show('features')">    <span>⚙️</span>Feature Flags</div>
-    <div class="ni"          onclick="show('content')">     <span>📚</span>Content Upload</div>
-    <div class="ni"          onclick="show('katha')">       <span>📖</span>Katha Generator</div>
-    <div class="ni"          onclick="show('feedback')">    <span>🛡️</span>AI Feedback</div>
-    <div class="ni"          onclick="show('transactions')"><span>💵</span>Transactions</div>
-    <div class="ni"          onclick="show('users')">       <span>👥</span>Users</div>
-    <div class="ni"          onclick="show('database')">    <span>🗄️</span>Database (Gist)</div>
-    <div class="ni"          onclick="show('settings')">    <span>🔐</span>App Settings</div>
+    <div class="ni active" onclick="show('overview')">   <span>📊</span>Overview</div>
+    <div class="ni" onclick="show('apikeys')">           <span>🔑</span>API Keys</div>
+    <div class="ni" onclick="show('payment')">           <span>💳</span>Payment</div>
+    <div class="ni" onclick="show('features')">          <span>⚙️</span>Feature Flags<span class="badge" id="fb-badge" style="display:none">0</span></div>
+    <div class="ni" onclick="show('pricing')">           <span>💰</span>Pricing</div>
+    <div class="ni" onclick="show('donations')">         <span>🙏</span>Donations</div>
+    <div class="ni" onclick="show('content')">           <span>📚</span>Content Upload</div>
+    <div class="ni" onclick="show('katha')">             <span>📖</span>Katha Generator</div>
+    <div class="ni" onclick="show('feedback')">          <span>🛡️</span>AI Feedback<span class="badge" id="fb-count-badge" style="display:none">0</span></div>
+    <div class="ni" onclick="show('users')">             <span>👥</span>Users</div>
+    <div class="ni" onclick="show('transactions')">      <span>💵</span>Transactions</div>
+    <div class="ni" onclick="show('database')">          <span>🗄️</span>Database</div>
   </nav>
-  <div class="sb-foot"><div id="sb-url" style="color:var(--orange)">connecting...</div><div id="sb-time"></div></div>
+  <div class="sb-foot"><div id="sb-url" style="color:var(--saffron);word-break:break-all"></div><div id="sb-time" style="margin-top:2px"></div></div>
 </div>
 
 <div class="main">
 
-<!-- OVERVIEW -->
+<!-- ═══ OVERVIEW ═══ -->
 <div id="sec-overview" class="sec active">
   <h2>📊 Live Overview</h2>
-  <p class="psub"><span class="live-dot"></span>Real-time backend data · <span id="live-time"></span></p>
-  <div id="ov-banner" class="alert ab">⟳ Loading...</div>
+  <p class="psub"><span class="live-dot"></span> Real-time Supabase data · <span id="live-t"></span></p>
+  <div id="ov-alert" class="alert ab">⟳ Loading...</div>
   <div class="g4" style="margin-bottom:14px">
-    <div class="stat"><div class="stat-l">Total Users</div><div class="stat-v" id="ov-users">—</div></div>
-    <div class="stat"><div class="stat-l">Premium Users</div><div class="stat-v" id="ov-premium" style="color:var(--gold)">—</div></div>
-    <div class="stat"><div class="stat-l">Revenue (₹)</div><div class="stat-v" id="ov-rev" style="color:var(--green)">—</div></div>
-    <div class="stat"><div class="stat-l">Katha Chapters</div><div class="stat-v" id="ov-katha">—</div></div>
+    <div class="stat"><div class="stat-l">Users</div><div class="stat-v" id="ov-u">—</div></div>
+    <div class="stat"><div class="stat-l">Premium</div><div class="stat-v" id="ov-p" style="color:var(--gold)">—</div></div>
+    <div class="stat"><div class="stat-l">Revenue ₹</div><div class="stat-v" id="ov-r" style="color:var(--green)">—</div></div>
+    <div class="stat"><div class="stat-l">Katha Chapters</div><div class="stat-v" id="ov-k">—</div></div>
   </div>
   <div class="g2">
-    <div class="card"><h3>⚙️ Config Snapshot</h3><div id="ov-config" style="font-size:12px;color:var(--muted);line-height:2">—</div>
-      <div class="btn-row"><button class="btn btn-p btn-sm" onclick="init()">🔄 Refresh</button><button class="btn btn-o btn-sm" onclick="testConn()">🔗 Test</button></div></div>
     <div class="card"><h3>🚀 Launch Checklist</h3>
-      <div style="font-size:12px;line-height:2.4">
-        <div id="chk-backend">⏳ Backend live</div>
-        <div id="chk-db">⏳ GitHub Gist DB connected</div>
-        <div id="chk-aikeys">⏳ AI keys saved</div>
-        <div id="chk-payment">⏳ Payment configured</div>
+      <div style="font-size:12px;line-height:2.4" id="checklist">
+        <div id="chk-backend">⏳ Backend live on Render</div>
+        <div id="chk-db">⏳ Supabase connected</div>
+        <div id="chk-ai">⏳ AI keys saved</div>
+        <div id="chk-pay">⏳ Payment configured</div>
         <div id="chk-katha">⏳ Katha chapters generated</div>
-        <div>⏳ Build APK: <code style="color:var(--orange)">eas build --platform android</code></div>
-        <div>⏳ Submit Google Play (₹1,750)</div>
-      </div></div>
-  </div>
-</div>
-
-<!-- API KEYS -->
-<div id="sec-apikeys" class="sec">
-  <h2>🔑 API Keys</h2>
-  <p class="psub">Store AI keys here — they stay in backend. App never sees them. Enter both for maximum reliability.</p>
-  <div class="alert ab">✅ Both keys stored securely in GitHub Gist. App uses /ai/chat proxy — never touches keys directly.</div>
-  <div class="card">
-    <h3>🤖 AI API Keys</h3>
-    <label>Gemini API Key (PRIMARY — gemini-2.0-flash, FREE)</label>
-    <div style="display:flex;gap:8px"><input type="password" id="k-gem" placeholder="AIzaSy... — get from aistudio.google.com/apikey"/><button class="btn btn-o btn-sm" onclick="toggleShow('k-gem')">👁</button></div>
-    <label>Groq API Key (FALLBACK — llama-3.3-70b, FREE)</label>
-    <div style="display:flex;gap:8px"><input type="password" id="k-groq" placeholder="gsk_... — get from console.groq.com"/><button class="btn btn-o btn-sm" onclick="toggleShow('k-groq')">👁</button></div>
-    <div class="alert ao" style="margin-top:8px;margin-bottom:10px;font-size:12px">
-      💡 Enter BOTH keys. If Gemini hits rate limit → Groq takes over. If Groq fails → Gemini retries after 42s.<br>
-      Gemini 2.0 Flash: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--orange)">aistudio.google.com/apikey</a> (free, generous quota)<br>
-      Groq: <a href="https://console.groq.com/keys" target="_blank" style="color:var(--orange)">console.groq.com/keys</a> (free)
+        <div id="chk-users">⏳ Users registering</div>
+        <div>⬜ <code style="color:var(--saffron)">eas build --platform android</code></div>
+        <div>⬜ Submit Google Play (₹1,750)</div>
+      </div>
     </div>
-    <div id="ai-status" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
-    <div class="btn-row"><button class="btn btn-p" onclick="saveAPIKeys()">💾 Save API Keys</button><button class="btn btn-o" onclick="testAI()">🧪 Test AI</button></div>
+    <div class="card"><h3>⚡ Quick Stats</h3>
+      <div id="ov-stats" style="font-size:12px;line-height:2.4;color:var(--muted)">Loading...</div>
+      <div class="btn-row"><button class="btn btn-p btn-sm" onclick="init()">🔄 Refresh All</button><button class="btn btn-o btn-sm" onclick="testConn()">🔗 Test Connection</button></div>
+    </div>
   </div>
 </div>
 
-<!-- PAYMENT CONFIG -->
+<!-- ═══ API KEYS ═══ -->
+<div id="sec-apikeys" class="sec">
+  <h2>🔑 AI API Keys</h2>
+  <p class="psub">Enter both keys. If Gemini fails → Groq takes over. Keys saved permanently in Supabase.</p>
+  <div class="alert ag">✅ Keys saved to Supabase — survive Render restarts. Never put keys in app code.</div>
+  <div class="card">
+    <h3>🤖 AI Keys (Both Required)</h3>
+    <label>Gemini API Key — Primary (gemini-2.0-flash, FREE)</label>
+    <div class="key-field">
+      <input type="password" id="k-gem" placeholder="AIzaSy... — from aistudio.google.com/apikey"/>
+      <button class="btn btn-o btn-sm" onclick="togglePwd('k-gem')">👁</button>
+      <button class="btn btn-r btn-sm" onclick="deleteKey('geminiKey')">✕</button>
+    </div>
+    <div id="gem-status" class="key-missing">Not saved yet</div>
+
+    <label>Groq API Key — Fallback (llama-3.3-70b, FREE)</label>
+    <div class="key-field">
+      <input type="password" id="k-groq" placeholder="gsk_... — from console.groq.com"/>
+      <button class="btn btn-o btn-sm" onclick="togglePwd('k-groq')">👁</button>
+      <button class="btn btn-r btn-sm" onclick="deleteKey('groqKey')">✕</button>
+    </div>
+    <div id="groq-status" class="key-missing">Not saved yet</div>
+
+    <div class="alert ao" style="margin-top:12px;font-size:12px">
+      💡 Gemini 2.0 Flash: FREE at <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--saffron)">aistudio.google.com/apikey</a><br>
+      💡 Groq LLaMA 70B: FREE at <a href="https://console.groq.com/keys" target="_blank" style="color:var(--saffron)">console.groq.com/keys</a>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-p" onclick="saveAPIKeys()">💾 Save Both Keys to Supabase</button>
+      <button class="btn btn-o" onclick="testAI()">🧪 Test AI Now</button>
+    </div>
+    <div id="ai-test-result" style="font-size:12px;color:var(--muted);margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- ═══ PAYMENT ═══ -->
 <div id="sec-payment" class="sec">
   <h2>💳 Payment Configuration</h2>
-  <p class="psub">Choose which payment method for subscriptions and donations. Switch anytime from here.</p>
+  <p class="psub">All settings saved permanently in Supabase. Changes take effect immediately.</p>
+  <div class="alert ag">✅ Payment config saved to Supabase — never disappears on refresh.</div>
 
   <div class="card">
-    <h3>📱 For Subscriptions</h3>
-    <div class="pay-method">
-      <div class="pay-opt on" id="sub-upi" onclick="setPayMethod('subscription','upi')"><h4>📱 PhonePe UPI</h4><p>Personal account<br>Instant, no setup</p></div>
-      <div class="pay-opt" id="sub-rzp" onclick="setPayMethod('subscription','razorpay')"><h4>🏦 Razorpay</h4><p>Business account<br>Auto-verify payments</p></div>
+    <h3>📱 Choose Method per Transaction Type</h3>
+    <label>Subscriptions (Premium plans)</label>
+    <div class="prow">
+      <div class="pay-opt on" id="sub-upi-opt" onclick="setPayMethod('subscription','upi')"><h4>📱 PhonePe / UPI</h4><p>Personal account</p></div>
+      <div class="pay-opt" id="sub-rzp-opt" onclick="setPayMethod('subscription','razorpay')"><h4>🏦 Razorpay</h4><p>Business account</p></div>
     </div>
-    <h3>🙏 For Donations</h3>
-    <div class="pay-method">
-      <div class="pay-opt on" id="don-upi" onclick="setPayMethod('donation','upi')"><h4>📱 PhonePe UPI</h4><p>Personal account</p></div>
-      <div class="pay-opt" id="don-rzp" onclick="setPayMethod('donation','razorpay')"><h4>🏦 Razorpay</h4><p>Business account</p></div>
+    <label>Donations (Seva campaigns)</label>
+    <div class="prow">
+      <div class="pay-opt on" id="don-upi-opt" onclick="setPayMethod('donation','upi')"><h4>📱 PhonePe / UPI</h4><p>Personal account</p></div>
+      <div class="pay-opt" id="don-rzp-opt" onclick="setPayMethod('donation','razorpay')"><h4>🏦 Razorpay</h4><p>Business account</p></div>
     </div>
   </div>
 
   <div class="g2">
     <div class="card">
-      <h3>📱 PhonePe / UPI Details</h3>
+      <h3>📱 PhonePe / UPI</h3>
       <label>Your UPI ID</label>
-      <input type="text" id="p-upi" placeholder="e.g. 9876543210@ybl or yourname@okicici"/>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">
-        Find your UPI ID: PhonePe app → Profile icon → UPI ID<br>
-        Format: <code style="color:var(--orange)">number@ybl</code> (PhonePe) or <code style="color:var(--orange)">name@okicici</code> (ICICI)
+      <input type="text" id="p-upi" placeholder="e.g. 9876543210@ybl"/>
+      <div id="upi-status" style="font-size:11px;color:var(--muted);margin-top:4px">
+        Find in PhonePe app → Profile → UPI ID. Format: <code style="color:var(--saffron)">number@ybl</code>
       </div>
-      <div class="btn-row"><button class="btn btn-p" onclick="savePayment()">💾 Save UPI ID</button></div>
+      <div class="btn-row">
+        <button class="btn btn-p" onclick="savePayment()">💾 Save UPI ID</button>
+        <button class="btn btn-r btn-sm" onclick="deleteKey('phonepeUPI')">✕ Remove</button>
+      </div>
     </div>
     <div class="card">
-      <h3>🏦 Razorpay Details</h3>
-      <div class="alert ab" style="margin-bottom:10px;font-size:11px">Get keys from <a href="https://dashboard.razorpay.com/app/keys" target="_blank" style="color:var(--orange)">dashboard.razorpay.com</a> → Settings → API Keys. Free account, 2% per transaction.</div>
-      <label>Razorpay Key ID (safe)</label>
+      <h3>🏦 Razorpay</h3>
+      <div class="alert ab" style="margin-bottom:10px;font-size:11px">
+        For Razorpay app link: use <b>https://dharmasetu.in</b><br>
+        Get keys: <a href="https://dashboard.razorpay.com/app/keys" target="_blank" style="color:var(--saffron)">dashboard.razorpay.com → API Keys</a>
+      </div>
+      <label>Key ID (safe, sent to app)</label>
       <input type="text" id="p-rzp-id" placeholder="rzp_live_xxxxxxxxxxxxx"/>
-      <label>Razorpay Key Secret (kept in backend only)</label>
-      <div style="display:flex;gap:8px"><input type="password" id="p-rzp-secret" placeholder="your_secret_key"/><button class="btn btn-o btn-sm" onclick="toggleShow('p-rzp-secret')">👁</button></div>
-      <div class="btn-row"><button class="btn btn-p" onclick="savePayment()">💾 Save Razorpay</button><button class="btn btn-o" onclick="testRazorpay()">🧪 Test</button></div>
+      <label>Key Secret (stays in backend only)</label>
+      <div class="key-field">
+        <input type="password" id="p-rzp-sec" placeholder="your_secret_key"/>
+        <button class="btn btn-o btn-sm" onclick="togglePwd('p-rzp-sec')">👁</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-p" onclick="savePayment()">💾 Save Razorpay</button>
+        <button class="btn btn-r btn-sm" onclick="deleteKey('razorpayKeyId')">✕ Remove</button>
+      </div>
     </div>
   </div>
 
@@ -215,34 +242,61 @@ textarea{resize:vertical;min-height:65px;margin-bottom:0}
   </div>
 </div>
 
-<!-- PRICING -->
+<!-- ═══ FEATURE FLAGS ═══ -->
+<div id="sec-features" class="sec">
+  <h2>⚙️ Feature Flags & Premium Control</h2>
+  <p class="psub">Toggle features on/off. Set which features require Premium. Changes save to Supabase instantly.</p>
+
+  <div class="card">
+    <h3>🌟 Feature Control — Enabled + Premium Toggle</h3>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px">
+      <span class="premium-chip prem">PREMIUM</span> = only paying users &nbsp;|&nbsp; <span class="premium-chip free">FREE</span> = all users &nbsp;|&nbsp; Disabled = hidden from everyone
+    </div>
+    <div id="feature-list">Loading...</div>
+    <div class="btn-row">
+      <button class="btn btn-p" onclick="saveFeatures()">💾 Save Feature Flags</button>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:rgba(232,98,10,.3)">
+    <h3>💡 Premium Enforcement in App</h3>
+    <div style="font-size:12px;line-height:2.2;color:rgba(253,246,237,.75)">
+      When a free user taps a Premium feature:<br>
+      <span style="color:var(--saffron)">→</span> A paywall popup appears automatically<br>
+      <span style="color:var(--saffron)">→</span> They are redirected to the Payment screen<br>
+      <span style="color:var(--saffron)">→</span> The app checks <code style="color:var(--gold)">featureFlags[name].isPremium</code> from /config<br><br>
+      <b>App refreshes flags every startup</b> — changes here reflect within 1 app restart
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRICING ═══ -->
 <div id="sec-pricing" class="sec">
   <h2>💰 Pricing & Plans</h2>
-  <p class="psub">Changes go live on next app startup via /config endpoint.</p>
   <div class="g2">
     <div class="card">
-      <h3>💵 Subscription Prices</h3>
-      <label>Basic Plan — ₹/month</label><input type="number" id="pp-basic" value="99" min="49"/>
-      <label>Pro Plan — ₹/month</label><input type="number" id="pp-pro" value="249" min="99"/>
-      <label>NRI Plan — ₹/month</label><input type="number" id="pp-nri" value="499" min="199"/>
-      <label>Free Questions / Day</label><input type="number" id="pp-fqs" value="3" min="1" max="20"/>
-      <label>Free Fact-Checks / Day</label><input type="number" id="pp-ffc" value="3" min="1" max="20"/>
+      <h3>💵 Prices</h3>
+      <label>Basic Plan ₹/month</label><input type="number" id="pp-basic" value="99"/>
+      <label>Pro Plan ₹/month</label><input type="number" id="pp-pro" value="249"/>
+      <label>NRI Plan ₹/month</label><input type="number" id="pp-nri" value="499"/>
+      <label>Free Questions/Day</label><input type="number" id="pp-fq" value="3"/>
+      <label>Free Fact-Checks/Day</label><input type="number" id="pp-ffc" value="3"/>
       <div class="btn-row"><button class="btn btn-p" onclick="savePricing()">💾 Save Prices</button></div>
     </div>
     <div class="card">
       <h3>🎁 Subscription Bundles</h3>
       <div id="bundle-list"></div>
-      <div class="btn-row"><button class="btn btn-o btn-sm" onclick="addBundle()">+ Add Bundle</button><button class="btn btn-p btn-sm" onclick="saveBundles()">💾 Save</button></div>
+      <div class="btn-row"><button class="btn btn-o btn-sm" onclick="addBundle()">+ Add</button><button class="btn btn-p btn-sm" onclick="saveBundles()">💾 Save</button></div>
     </div>
   </div>
 </div>
 
-<!-- DONATIONS -->
+<!-- ═══ DONATIONS ═══ -->
 <div id="sec-donations" class="sec">
   <h2>🙏 Seva & Donations</h2>
   <div class="g3" style="margin-bottom:14px">
-    <div class="stat"><div class="stat-l">Total Raised</div><div class="stat-v" style="color:var(--green)" id="d-total">—</div></div>
-    <div class="stat"><div class="stat-l">Active Campaigns</div><div class="stat-v" id="d-count">—</div></div>
+    <div class="stat"><div class="stat-l">Raised ₹</div><div class="stat-v" style="color:var(--green)" id="d-raised">—</div></div>
+    <div class="stat"><div class="stat-l">Campaigns</div><div class="stat-v" id="d-count">—</div></div>
     <div class="stat"><div class="stat-l">Transactions</div><div class="stat-v" id="d-txns">—</div></div>
   </div>
   <div class="card"><h3>Campaigns</h3><div id="don-list">Loading...</div>
@@ -250,197 +304,148 @@ textarea{resize:vertical;min-height:65px;margin-bottom:0}
   </div>
 </div>
 
-<!-- FEATURES -->
-<div id="sec-features" class="sec">
-  <h2>⚙️ Feature Flags</h2>
-  <p class="psub">Toggle instantly — no app update needed.</p>
-  <div class="card">
-    <h3>Core Features</h3>
-    <div class="sr"><div><div class="sr-l">Katha Vault</div><div class="sr-s">Scripture reader</div></div><button class="tog on" id="f-kathaVaultEnabled" onclick="tf(this,'kathaVaultEnabled')"></button></div>
-    <div class="sr"><div><div class="sr-l">Fact Check</div><div class="sr-s">Viral Jhoot debunking</div></div><button class="tog on" id="f-factCheckEnabled" onclick="tf(this,'factCheckEnabled')"></button></div>
-    <div class="sr"><div><div class="sr-l">Debate Arena</div><div class="sr-s">AI debate practice</div></div><button class="tog on" id="f-debateEnabled" onclick="tf(this,'debateEnabled')"></button></div>
-    <div class="sr"><div><div class="sr-l">Mantra Verify</div></div><button class="tog on" id="f-mantraVerifyEnabled" onclick="tf(this,'mantraVerifyEnabled')"></button></div>
-    <div class="sr"><div><div class="sr-l">Peace Mode</div></div><button class="tog on" id="f-peaceModeEnabled" onclick="tf(this,'peaceModeEnabled')"></button></div>
-    <div class="sr"><div><div class="sr-l">Seva Donations</div></div><button class="tog on" id="f-donationEnabled" onclick="tf(this,'donationEnabled')"></button></div>
-    <div class="sr" style="border:1px solid rgba(231,76,60,.2);border-radius:9px;padding:12px;margin-top:8px">
-      <div><div class="sr-l" style="color:var(--red)">⚠️ Maintenance Mode</div><div class="sr-s">Disables ALL users</div></div>
-      <button class="tog" id="f-maintenanceMode" onclick="tf(this,'maintenanceMode')"></button>
-    </div>
-    <div class="btn-row"><button class="btn btn-p" onclick="saveFeatures()">💾 Save Feature Flags</button></div>
-  </div>
-</div>
-
-<!-- CONTENT UPLOAD -->
+<!-- ═══ CONTENT ═══ -->
 <div id="sec-content" class="sec">
   <h2>📚 Content Upload</h2>
-  <p class="psub">Upload Geeta CSV, PDFs, text — AI uses this for better answers. Now saved permanently in GitHub Gist!</p>
-  <div class="alert ag">✅ Uploads now save to GitHub Gist — permanent, never lost on Render restart.</div>
+  <p class="psub">Upload CSV, PDF text, commentary — AI uses this for better answers. Saved permanently in Supabase.</p>
   <div class="g2">
     <div class="card">
-      <h3>➕ Upload New Content</h3>
-      <label>Title</label><input type="text" id="ul-title" placeholder="Bhagavad Gita — All 700 Shlokas"/>
-      <label>Type</label>
-      <select id="ul-type"><option value="scripture">Scripture</option><option value="commentary">Commentary</option><option value="science">Scientific Research</option><option value="historical">Historical Document</option></select>
+      <h3>➕ Upload New</h3>
+      <label>Title</label><input type="text" id="ul-title" placeholder="Bhagavad Gita — Shlokas"/>
+      <label>Type</label><select id="ul-type"><option value="scripture">Scripture</option><option value="commentary">Commentary</option><option value="science">Scientific Research</option><option value="historical">Historical Document</option></select>
       <label>Topics (comma separated)</label><input type="text" id="ul-topics" placeholder="Gita, Krishna, Karma Yoga"/>
-      <label>Trust Level</label>
-      <select id="ul-trust"><option value="high">High — Gita Press / Primary</option><option value="medium">Medium — Commentary</option></select>
-      <div class="uzn" onclick="document.getElementById('ul-file').click()">
-        <input type="file" id="ul-file" style="display:none" accept=".txt,.csv,.json" onchange="fileSelected(this)"/>
-        <div style="font-size:26px">📄</div>
-        <p style="color:var(--muted);font-size:11px;margin-top:4px">Click to select (.txt .csv .json)</p>
-        <div id="ul-fname" style="color:var(--orange);font-weight:700;font-size:11px;margin-top:3px"></div>
+      <label>Trust Level</label><select id="ul-trust"><option value="high">High — Gita Press / Primary</option><option value="medium">Medium — Commentary</option></select>
+      <label>File (.txt .csv .json)</label>
+      <div style="border:2px dashed var(--border);border-radius:9px;padding:16px;text-align:center;cursor:pointer" onclick="document.getElementById('ul-file').click()">
+        <input type="file" id="ul-file" style="display:none" accept=".txt,.csv,.json" onchange="fileChosen(this)"/>
+        <div>📄 Click to select file</div>
+        <div id="ul-fname" style="color:var(--saffron);font-size:11px;margin-top:4px"></div>
       </div>
-      <div style="text-align:center;color:var(--muted);font-size:11px;margin:7px 0">— or paste text —</div>
-      <label>Paste Text</label><textarea id="ul-text" rows="4" placeholder="Paste scripture text, CSV, etc..."></textarea>
-      <div class="btn-row" style="margin-top:8px"><button class="btn btn-p" onclick="doUpload()">📤 Upload</button><button class="btn btn-o" onclick="clearUpload()">✕ Clear</button></div>
-      <div id="ul-prog" style="display:none;margin-top:9px"><div id="ul-ptxt" style="font-size:11px;color:var(--orange);margin-bottom:4px"></div><div class="pt"><div class="pf" id="ul-pbar" style="width:0%;background:var(--orange)"></div></div></div>
+      <label>— or paste text —</label><textarea id="ul-text" rows="3" placeholder="Paste text directly..."></textarea>
+      <div class="btn-row"><button class="btn btn-p" onclick="doUpload()">📤 Upload to Supabase</button></div>
     </div>
-    <div class="card"><h3>📋 Content Library</h3><div class="btn-row" style="margin-bottom:9px"><button class="btn btn-o btn-sm" onclick="loadUploads()">🔄 Refresh</button></div><div id="ul-list" style="color:var(--muted);font-size:12px">Loading...</div></div>
+    <div class="card"><h3>📋 Library</h3><button class="btn btn-o btn-sm" onclick="loadUploads()" style="margin-bottom:9px">🔄 Refresh</button><div id="ul-list" style="font-size:12px;color:var(--muted)">Loading...</div></div>
   </div>
 </div>
 
-<!-- KATHA GENERATOR -->
+<!-- ═══ KATHA ═══ -->
 <div id="sec-katha" class="sec">
   <h2>📖 Katha Vault Generator</h2>
-  <p class="psub">2 verses at a time · 8s gap · Gemini 2.0 Flash first → Groq fallback · Each verse saves immediately to GitHub Gist</p>
-  <div class="alert ag">✅ v6: Uses gemini-2.0-flash (correct FREE model). 2 verses per batch. Auto-retry on rate limit. Saved permanently to Gist.</div>
-
+  <p class="psub">2 verses/batch · 20s gap · Gemini→Groq fallback · Saves directly to Supabase · Click Generate again to resume</p>
+  <div class="alert ag">✅ Supabase storage — verses never lost. Generation resumes from last saved verse automatically.</div>
   <div class="g2">
     <div class="card">
       <h3>⚙️ Settings</h3>
-      <div class="alert ab" style="margin-bottom:10px;font-size:11px">Keys auto-loaded from API Keys section. Override below only if needed.</div>
-      <label>Gemini Key Override (optional)</label><input type="password" id="kg-gem" placeholder="Leave empty to use saved key"/>
-      <label>Groq Key Override (optional)</label><input type="password" id="kg-groq" placeholder="Leave empty to use saved key"/>
-      <div id="kg-saved-status" style="font-size:11px;color:#27AE60;margin-bottom:10px"></div>
-      <label>Scripture</label><select id="kg-sc" onchange="updateChapters()"></select>
-      <label>Chapter</label><select id="kg-ch" style="margin-bottom:6px"></select>
-      <label>Language</label><select id="kg-lang"><option value="hindi">Hindi (Recommended first)</option><option value="english">English</option></select>
+      <div id="kg-key-status" style="font-size:11px;color:var(--muted);margin-bottom:10px">Loading key status...</div>
+      <label>Override Gemini Key (optional)</label><input type="password" id="kg-gem" placeholder="Leave empty to use saved key"/>
+      <label>Override Groq Key (optional)</label><input type="password" id="kg-groq" placeholder="Leave empty to use saved key"/>
+      <label>Scripture</label><select id="kg-sc" onchange="updateCh()"></select>
+      <label>Chapter / Kanda / Parva</label><select id="kg-ch"></select>
+      <label>Language</label><select id="kg-lang"><option value="hindi">Hindi (हिंदी)</option><option value="english">English</option></select>
       <div class="btn-row">
-        <button class="btn btn-p" onclick="kgStart()">🕉 Generate</button>
-        <button class="btn btn-gold" onclick="kgCheck()">📊 Status</button>
-        <button class="btn btn-r" onclick="kgDelete()">🗑 Delete</button>
+        <button class="btn btn-p" onclick="kgStart()">🕉 Generate / Resume</button>
+        <button class="btn btn-o btn-sm" onclick="kgStatus()">📊 Status</button>
+        <button class="btn btn-r btn-sm" onclick="kgDel()">🗑 Delete</button>
       </div>
-      <div class="btn-row" style="margin-top:4px"><button class="btn btn-o btn-sm" onclick="kgListAll()">📋 List All</button></div>
     </div>
-    <div class="card">
-      <h3>📊 Chapter Status</h3>
-      <div id="kg-status" style="font-size:12px;color:var(--muted);line-height:2">Select chapter → click Status</div>
-    </div>
+    <div class="card"><h3>📊 Chapter Status</h3><div id="kg-st" style="font-size:12px;color:var(--muted)">Select chapter → click Status</div></div>
   </div>
-
   <div class="card">
-    <h3>🖥️ Live Log</h3>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div id="kg-plbl" style="font-size:13px;color:var(--orange);font-weight:700">Ready</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3>🖥️ Live Log</h3>
       <div style="display:flex;gap:7px">
-        <span id="kg-badge" style="font-size:10px;padding:2px 8px;border-radius:12px;background:rgba(255,255,255,.05);color:var(--muted)">Idle</span>
-        <button class="btn btn-o btn-sm" onclick="document.getElementById('kg-log').innerHTML='';kgProg(0,'Ready')">Clear</button>
+        <span id="kg-badge" style="font-size:11px;padding:2px 9px;border-radius:12px;background:rgba(255,255,255,.05);color:var(--muted)">Idle</span>
+        <button class="btn btn-o btn-sm" onclick="kgClear()">Clear</button>
       </div>
     </div>
-    <div class="pt" style="margin-bottom:8px"><div class="pf" id="kg-prog" style="width:0%;background:var(--orange);transition:width .5s"></div></div>
-    <div id="kg-log" style="background:#050100;border-radius:9px;padding:11px;height:250px;overflow-y:auto;font-size:11px;font-family:monospace;border:1px solid var(--border);white-space:pre-wrap;line-height:1.7"></div>
+    <div id="kg-prog-lbl" style="font-size:12px;color:var(--saffron);font-weight:700;margin-bottom:6px">Ready</div>
+    <div class="fbar"><div class="ff" id="kg-prog" style="width:0%;background:var(--saffron);transition:width .5s"></div></div>
+    <div id="kg-log" style="background:#050100;border-radius:9px;padding:12px;height:240px;overflow-y:auto;font-size:11px;font-family:monospace;border:1px solid var(--border);white-space:pre-wrap;line-height:1.75;margin-top:8px"></div>
   </div>
-
-  <div class="card"><h3>📋 All Generated</h3><div class="btn-row" style="margin-bottom:9px"><button class="btn btn-o btn-sm" onclick="kgListAll()">🔄 Refresh</button></div><div id="kg-all" style="font-size:12px;color:var(--muted)">Click "List All"</div></div>
+  <div class="card"><h3>📋 All Generated Chapters</h3><button class="btn btn-o btn-sm" onclick="kgListAll()" style="margin-bottom:9px">🔄 Refresh</button><div id="kg-all" style="font-size:12px;color:var(--muted)">Click Refresh</div></div>
 </div>
 
-<!-- AI FEEDBACK -->
+<!-- ═══ FEEDBACK ═══ -->
 <div id="sec-feedback" class="sec">
   <h2>🛡️ AI Feedback & Corrections</h2>
-  <p class="psub">Review wrong AI answers. Correct them here. Corrections saved permanently to Gist.</p>
+  <p class="psub">Every 👎 from users saves here permanently. Correct wrong answers. Changes logged.</p>
+  <div class="alert ag">✅ Feedback saves directly to Supabase feedback table. Never lost.</div>
   <div class="g3" style="margin-bottom:14px">
-    <div class="stat"><div class="stat-l">Total Feedback</div><div class="stat-v" id="fb-total">—</div></div>
-    <div class="stat"><div class="stat-l">Pending Review</div><div class="stat-v" style="color:var(--red)" id="fb-pending">—</div></div>
-    <div class="stat"><div class="stat-l">Corrected</div><div class="stat-v" style="color:var(--green)" id="fb-done">—</div></div>
+    <div class="stat"><div class="stat-l">Total</div><div class="stat-v" id="fb-t">—</div></div>
+    <div class="stat"><div class="stat-l">Pending</div><div class="stat-v" style="color:var(--red)" id="fb-p">—</div></div>
+    <div class="stat"><div class="stat-l">Corrected</div><div class="stat-v" style="color:var(--green)" id="fb-d">—</div></div>
   </div>
   <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
-      <h3>Flagged Answers</h3>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3>Feedback Entries</h3>
       <button class="btn btn-o btn-sm" onclick="loadFeedback()">🔄 Refresh</button>
     </div>
     <div id="fb-list" style="color:var(--muted);font-size:12px">Loading...</div>
   </div>
 </div>
 
-<!-- TRANSACTIONS -->
+<!-- ═══ USERS ═══ -->
+<div id="sec-users" class="sec">
+  <h2>👥 User Management</h2>
+  <p class="psub">All users who registered via the app. Saves to Supabase on signup/login.</p>
+  <div class="alert ab">💡 Users appear here after they sign up in the mobile app. Make sure register_backend.js is added to login.js (see instructions below).</div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <input type="text" id="u-search" placeholder="🔍 Search name, phone, email, city..." oninput="loadUsers()" style="flex:1"/>
+    <select id="u-plan" onchange="loadUsers()" style="width:130px"><option value="all">All Plans</option><option value="free">Free</option><option value="basic">Basic</option><option value="pro">Pro</option></select>
+    <button class="btn btn-o btn-sm" onclick="exportCSV()">📥 Export CSV</button>
+  </div>
+  <div class="card">
+    <div id="u-count" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
+    <div class="alert ao" style="margin-bottom:12px;font-size:11px">
+      <b>If users not showing:</b> Make sure in your <code>app/login.js</code> you have:<br>
+      1. <code>import {'{ registerUserToBackend }'} from './register_backend';</code> at top<br>
+      2. <code>registerUserToBackend(userData);</code> inside verifyAndSave() after AsyncStorage.setItem
+    </div>
+    <div id="u-list" style="color:var(--muted);font-size:12px">Loading...</div>
+  </div>
+</div>
+
+<!-- ═══ TRANSACTIONS ═══ -->
 <div id="sec-transactions" class="sec">
   <h2>💵 Transactions</h2>
   <div class="g3" style="margin-bottom:14px">
-    <div class="stat"><div class="stat-l">Total</div><div class="stat-v" id="tx-total">—</div></div>
-    <div class="stat"><div class="stat-l">Paid</div><div class="stat-v" style="color:var(--green)" id="tx-paid">—</div></div>
-    <div class="stat"><div class="stat-l">Revenue (₹)</div><div class="stat-v" style="color:var(--gold)" id="tx-rev">—</div></div>
+    <div class="stat"><div class="stat-l">Total</div><div class="stat-v" id="tx-t">—</div></div>
+    <div class="stat"><div class="stat-l">Paid</div><div class="stat-v" style="color:var(--green)" id="tx-p">—</div></div>
+    <div class="stat"><div class="stat-l">Revenue ₹</div><div class="stat-v" style="color:var(--gold)" id="tx-r">—</div></div>
   </div>
   <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
-      <h3>Recent Transactions</h3><button class="btn btn-o btn-sm" onclick="loadTxns()">🔄 Refresh</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3>All Transactions</h3><button class="btn btn-o btn-sm" onclick="loadTxns()">🔄 Refresh</button>
     </div>
     <div id="tx-list" style="color:var(--muted);font-size:12px">Loading...</div>
   </div>
 </div>
 
-<!-- USERS -->
-<div id="sec-users" class="sec">
-  <h2>👥 User Management</h2>
-  <div style="display:flex;gap:8px;margin-bottom:13px">
-    <input type="text" id="u-search" placeholder="🔍 Search name, phone, city..." oninput="loadUsers()" style="margin-bottom:0;flex:1"/>
-    <select id="u-plan" onchange="loadUsers()" style="margin-bottom:0;width:130px"><option value="all">All Plans</option><option value="free">Free</option><option value="basic">Basic</option><option value="pro">Pro</option></select>
-    <button class="btn btn-o btn-sm" onclick="exportCSV()">📥 CSV</button>
-  </div>
-  <div class="card">
-    <div id="u-info" class="alert ab" style="margin-bottom:11px">Users appear here after they sign up in app.</div>
-    <div id="u-list" style="color:var(--muted);font-size:12px">Loading...</div>
-  </div>
-</div>
-
-<!-- DATABASE -->
+<!-- ═══ DATABASE ═══ -->
 <div id="sec-database" class="sec">
-  <h2>🗄️ GitHub Gist Database</h2>
-  <p class="psub">Free, private, permanent database. Never resets. Easy to migrate to Supabase in Phase 2.</p>
-  <div id="db-status-box" class="alert ab">Loading database status...</div>
+  <h2>🗄️ Database — Supabase</h2>
+  <p class="psub">All data saved permanently. No GitHub Gist. Supabase only.</p>
+  <div id="db-box" class="alert ab">Checking...</div>
   <div class="g2">
     <div class="card">
-      <h3>📋 Setup Instructions</h3>
-      <div id="db-instructions" style="font-size:12px;line-height:2.2;color:rgba(253,246,237,.75)">Loading...</div>
+      <h3>⚙️ Setup Instructions</h3>
+      <div id="db-inst" style="font-size:12px;line-height:2.3;color:rgba(253,246,237,.75)">Loading...</div>
       <div class="btn-row"><button class="btn btn-p" onclick="loadDBStatus()">🔄 Check Status</button></div>
     </div>
     <div class="card">
       <h3>📊 Table Sizes</h3>
       <div id="db-tables" style="font-size:12px;line-height:2.5;color:rgba(253,246,237,.75)">Loading...</div>
-      <div class="btn-row"><button class="btn btn-o" onclick="loadDBStatus()">🔄 Refresh</button></div>
     </div>
   </div>
   <div class="card">
-    <h3>💡 Why GitHub Gist?</h3>
-    <div style="font-size:12px;line-height:2.2;color:rgba(253,246,237,.75)">
-      <div>✅ <b>FREE</b> — GitHub gives unlimited private Gists at zero cost</div>
-      <div>✅ <b>PERMANENT</b> — Data never lost, survives Render restarts, redeploys, sleeps</div>
-      <div>✅ <b>SECURE</b> — Private Gist, only you can access with your GitHub token</div>
-      <div>✅ <b>NO SETUP</b> — Auto-created on first run, just add 2 env vars to Render</div>
-      <div>✅ <b>EASY MIGRATION</b> — When ready for Phase 2, export JSON to Supabase/Firebase</div>
-      <div>⚠️ <b>LIMITS</b> — Good up to ~10,000 users. After that, move to Supabase (₹0 free tier)</div>
+    <h3>🏗️ Architecture (Simplified)</h3>
+    <div style="font-size:12px;line-height:2.3;color:rgba(253,246,237,.75)">
+      <div>📱 <b>React Native App</b> → talks to → <b>Render Backend</b> → saves to → <b>Supabase</b></div>
+      <div>🖥️ <b>Admin Dashboard</b> → talks to → <b>Render Backend</b> → reads/writes → <b>Supabase</b></div>
+      <div>❌ GitHub Gist: <b>REMOVED</b> — was confusing and unreliable</div>
+      <div>✅ Supabase free tier: <b>500MB storage, 2GB bandwidth, 50,000 rows</b> — plenty for Phase 1</div>
+      <div>✅ Easy migration to Supabase Pro or Firebase when revenue allows</div>
     </div>
-  </div>
-</div>
-
-<!-- SETTINGS -->
-<div id="sec-settings" class="sec">
-  <h2>🔐 App Settings</h2>
-  <div class="card">
-    <h3>🔗 Backend URL</h3>
-    <label>Render URL</label><input type="text" id="s-url" value="https://dharmasetu-backend-2c65.onrender.com" readonly style="opacity:.6"/>
-    <label>Admin Key</label><input type="password" id="s-key" placeholder="DharmaSetu@Admin2025"/>
-    <div class="btn-row"><button class="btn btn-p" onclick="saveKey()">🔑 Save & Test</button></div>
-  </div>
-  <div class="card">
-    <h3>📱 App Version</h3>
-    <label>Version</label><input type="text" id="s-ver" value="1.0.0"/>
-    <div class="btn-row"><button class="btn btn-p" onclick="saveVer()">💾 Save</button></div>
-  </div>
-  <div class="card">
-    <h3>🔒 Security</h3>
-    <div class="sr"><div><div class="sr-l">Rate Limiting</div><div class="sr-s">60 req/min per user</div></div><button class="tog on"></button></div>
-    <div class="sr"><div><div class="sr-l">Content Filter</div><div class="sr-s">Block political, hate queries</div></div><button class="tog on"></button></div>
-    <div class="sr"><div><div class="sr-l">Device Fingerprinting</div><div class="sr-s">Prevent multiple free accounts</div></div><button class="tog on"></button></div>
   </div>
 </div>
 
@@ -448,326 +453,374 @@ textarea{resize:vertical;min-height:65px;margin-bottom:0}
 <div class="toast-wrap"><div class="toast" id="toast"></div></div>
 
 <script>
+// ─── CONFIG ───────────────────────────────────────────────────────
 let BACKEND = 'https://dharmasetu-backend-2c65.onrender.com';
-let KEY = localStorage.getItem('ds_key') || 'DharmaSetu@Admin2025';
-let CFG = {}, BUNDLES = [], DONS = [], PAYMETH = { subscription:'upi', donation:'upi' };
+let KEY = localStorage.getItem('ds_admin_key') || 'DharmaSetu@Admin2025';
+let CFG_LOCAL = {}, BUNDLES = [], DONS = [], FLAGS = {}, PAYMETH = { subscription:'upi', donation:'upi' };
 let sseConn = null;
 
-// ── UTILS ──────────────────────────────────────────────────────
+// ─── UTILS ───────────────────────────────────────────────────────
 function show(id) {
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
-  document.getElementById('sec-'+id).classList.add('active');
+  const sec = document.getElementById('sec-'+id);
+  if (sec) sec.classList.add('active');
   event?.currentTarget?.classList.add('active');
-  const auto = { content:loadUploads, transactions:loadTxns, overview:loadStats, donations:()=>renderDons(), users:loadUsers, feedback:loadFeedback, database:loadDBStatus };
+  const auto = { feedback:loadFeedback, users:loadUsers, transactions:loadTxns, content:loadUploads, database:loadDBStatus, overview:loadStats };
   if (auto[id]) auto[id]();
 }
-let _tt;
-function toast(msg,err=false){const t=document.getElementById('toast');t.textContent=(err?'✕  ':'✓  ')+msg;t.className='toast show'+(err?' err':'');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3000)}
-async function api(m,p,b,form=false){
-  const o={method:m,headers:{'x-admin-key':KEY}};
-  if(form)o.body=b; else if(b){o.headers['Content-Type']='application/json';o.body=JSON.stringify(b);}
-  try{const r=await fetch(BACKEND+p,o);return await r.json();}catch(e){return{error:e.message};}
-}
-function toggleShow(id){const el=document.getElementById(id);el.type=el.type==='password'?'text':'password';}
-function timeAgo(iso){if(!iso)return'Never';const d=Date.now()-new Date(iso).getTime();const m=Math.floor(d/60000),h=Math.floor(d/3600000),dy=Math.floor(d/86400000);if(dy>0)return dy+'d ago';if(h>0)return h+'h ago';if(m>0)return m+'m ago';return'Now';}
 
-// ── INIT ───────────────────────────────────────────────────────
+let _tt;
+function toast(msg, err=false) {
+  const t=document.getElementById('toast');
+  t.textContent=(err?'✕  ':'✅  ')+msg;
+  t.className='toast show'+(err?' err':'');
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+async function api(method, path, body, form=false) {
+  const opts = { method, headers:{ 'x-admin-key':KEY } };
+  if (form) opts.body = body;
+  else if (body) { opts.headers['Content-Type']='application/json'; opts.body=JSON.stringify(body); }
+  try {
+    const r = await fetch(BACKEND+path, opts);
+    const d = await r.json();
+    if (!r.ok && !d.success) console.error('[API]', method, path, d.error||d);
+    return d;
+  } catch(e) { console.error('[API err]', e.message); return { error: e.message }; }
+}
+
+function togglePwd(id) { const el=document.getElementById(id); el.type=el.type==='password'?'text':'password'; }
+function timeAgo(iso) { if(!iso)return'Never'; const d=Date.now()-new Date(iso).getTime(); const m=Math.floor(d/60000),h=Math.floor(d/3600000),dy=Math.floor(d/86400000); if(dy>0)return dy+'d ago'; if(h>0)return h+'h ago'; if(m>0)return m+'m ago'; return'Just now'; }
+function esc(s) { return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ─── INIT ─────────────────────────────────────────────────────────
 async function init() {
-  document.getElementById('sb-url').textContent = BACKEND.replace('https://','');
+  document.getElementById('sb-url').textContent = BACKEND.replace('https://','').slice(0,30);
+  setInterval(()=>{ const t=new Date().toLocaleTimeString(); document.getElementById('sb-time').textContent=t; const lt=document.getElementById('live-t'); if(lt)lt.textContent=t; },1000);
   await testConn();
   await loadConfig();
   await loadStats();
-  updateChapters();
-  setInterval(()=>{const t=new Date().toLocaleTimeString();['sb-time','live-time'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t;});},1000);
+  loadFeedback(); // pre-load feedback badge
+  updateCh();
 }
 
 async function testConn() {
-  const el=document.getElementById('conn'),ovb=document.getElementById('ov-banner');
-  el.className='conn conn-wait';el.textContent='⟳ Testing...';
+  const el=document.getElementById('db-conn');
+  el.className='db-pill db-wait'; el.textContent='⟳ Testing...';
   try {
-    const r=await fetch(BACKEND+'/health');
-    if(r.ok){
-      const d=await r.json();
-      el.className='conn conn-ok';el.textContent='● Connected';
-      ovb.className='alert ag';ovb.textContent=`✅ Backend live | Users:${d.users} | Katha:${d.kathaChapters} | DB:${d.dbConnected?'✅ Gist':'⚠️ No Gist'}`;
-      document.getElementById('chk-backend').textContent='✅ Backend live on Render';
-      if(d.dbConnected) document.getElementById('chk-db').textContent='✅ GitHub Gist DB connected';
-      if(d.kathaChapters>0) document.getElementById('chk-katha').textContent=`✅ ${d.kathaChapters} Katha chapters`;
+    const r = await fetch(BACKEND+'/health');
+    if (r.ok) {
+      const d = await r.json();
+      el.className='db-pill db-ok'; el.textContent='● Connected';
+      const oa=document.getElementById('ov-alert');
+      if(oa){ oa.className='alert '+(d.supabaseConfigured?'ag':'ar'); oa.textContent=d.supabaseConfigured?`✅ Backend live | Supabase: ${d.db} | Users: ${d.tables?.users||0} | Katha: ${d.tables?.katha||0}`:`✅ Backend live | ⚠️ Supabase NOT configured — add SUPABASE_URL and SUPABASE_SERVICE_KEY to Render env vars`; }
+      const cb=document.getElementById('chk-backend'); if(cb) cb.textContent='✅ Backend live on Render';
+      if(d.supabaseConfigured) { const cd=document.getElementById('chk-db'); if(cd) cd.textContent='✅ Supabase connected'; }
+      if(d.tables?.users>0) { const cu=document.getElementById('chk-users'); if(cu) cu.textContent=`✅ ${d.tables.users} user(s) registered`; }
+      if(d.tables?.katha>0) { const ck=document.getElementById('chk-katha'); if(ck) ck.textContent=`✅ ${d.tables.katha} Katha verses in Supabase`; }
     } else throw new Error('HTTP '+r.status);
-  } catch(e){
-    el.className='conn conn-err';el.textContent='✕ Offline';
-    ovb.className='alert ar';ovb.textContent='✕ Backend offline: '+e.message;
+  } catch(e) {
+    el.className='db-pill db-err'; el.textContent='✕ Offline';
+    const oa=document.getElementById('ov-alert'); if(oa) { oa.className='alert ar'; oa.textContent='✕ Backend offline: '+e.message; }
   }
 }
 
 async function loadConfig() {
-  const r=await api('GET','/admin/config');
-  if(!r.success)return;
-  CFG=r.config; BUNDLES=r.config.bundles||[]; DONS=r.config.donations||[];
-  PAYMETH={ subscription:r.config.subscriptionPayment||'upi', donation:r.config.donationPayment||'upi' };
+  const r = await api('GET','/admin/config');
+  if (!r.success) return;
+  CFG_LOCAL = r.config; BUNDLES = r.config.bundles||[]; DONS = r.config.donations||[]; FLAGS = r.config.featureFlags||{};
+  PAYMETH = { subscription: r.config.subscriptionPayment||'upi', donation: r.config.donationPayment||'upi' };
   applyConfig(r.config);
 }
 
 function applyConfig(c) {
-  const set=(id,v)=>{const el=document.getElementById(id);if(el&&v!==undefined)el.value=v;};
-  set('pp-basic',c.basicPrice);set('pp-pro',c.premiumPrice);set('pp-nri',c.nriPrice);
-  set('pp-fqs',c.freeQuestionsLimit);set('pp-ffc',c.freeFactCheckLimit);
-  set('s-ver',c.appVersion);
-  // API keys (masked)
-  set('k-gem', c.geminiKey?.length>4 ? c.geminiKey.slice(0,6)+'***' : '');
-  set('k-groq', c.groqKey?.length>4 ? c.groqKey.slice(0,6)+'***' : '');
-  // Payment
-  set('p-upi',c.phonepeUPI||'');
-  set('p-rzp-id',c.razorpayKeyId||'');
-  // Feature flags
-  ['kathaVaultEnabled','factCheckEnabled','debateEnabled','mantraVerifyEnabled','peaceModeEnabled','donationEnabled','maintenanceMode'].forEach(f=>{
-    const btn=document.getElementById('f-'+f);if(btn)btn.className='tog'+(c[f]?' on':'');
-  });
-  // Payment method selectors
+  const set=(id,v)=>{ const e=document.getElementById(id); if(e&&v!==undefined) e.value=v; };
+  set('pp-basic',c.basicPrice); set('pp-pro',c.premiumPrice);
+  set('pp-nri',c.nriPrice); set('pp-fq',c.freeQuestionsLimit);
+  set('p-upi', c.phonepeUPI||'');
+  set('p-rzp-id', c.razorpayKeyId||'');
+
+  // Key status indicators
+  const gemSt=document.getElementById('gem-status'), groqSt=document.getElementById('groq-status');
+  if(gemSt) { gemSt.className=c.geminiKey?'key-saved':'key-missing'; gemSt.textContent=c.geminiKey?('✅ Saved: '+c.geminiKey.slice(0,8)+'...'):'❌ Not saved yet — enter key above'; }
+  if(groqSt) { groqSt.className=c.groqKey?'key-saved':'key-missing'; groqSt.textContent=c.groqKey?('✅ Saved: '+c.groqKey.slice(0,8)+'...'):'❌ Not saved yet — enter key above'; }
+
+  // UPI status
+  const us=document.getElementById('upi-status'); if(us) us.textContent=c.phonepeUPI?'✅ Saved: '+c.phonepeUPI:'⚠️ Not saved. Enter UPI ID above.'; if(us) us.style.color=c.phonepeUPI?'#27AE60':'rgba(253,246,237,.4)';
+
+  // Payment method
   setPayUI('subscription', PAYMETH.subscription);
   setPayUI('donation', PAYMETH.donation);
-  // AI status
-  const aiEl=document.getElementById('ai-status');
-  if(aiEl) aiEl.textContent = (c.geminiKey?'✅ Gemini key saved':'⚠️ No Gemini key') + ' | ' + (c.groqKey?'✅ Groq key saved':'⚠️ No Groq key');
-  // Payment status
-  const psEl=document.getElementById('pay-status');
-  if(psEl) psEl.innerHTML = `UPI ID: <b style="color:var(--orange)">${c.phonepeUPI||'⚠️ Not set'}</b><br>Razorpay: <b style="color:${c.hasRazorpay?'#27AE60':'#E74C3C'}">${c.hasRazorpay?'✅ Configured':'⚠️ Not configured'}</b><br>Subscriptions via: <b style="color:var(--gold)">${PAYMETH.subscription.toUpperCase()}</b><br>Donations via: <b style="color:var(--gold)">${PAYMETH.donation.toUpperCase()}</b>`;
+
+  // Pay status card
+  const ps=document.getElementById('pay-status');
+  if(ps) ps.innerHTML=`<div>UPI ID: <b style="color:${c.phonepeUPI?'#27AE60':'#E74C3C'}">${c.phonepeUPI||'⚠️ Not configured'}</b></div><div>Razorpay: <b style="color:${c.hasRazorpay?'#27AE60':'#E74C3C'}">${c.hasRazorpay?'✅ Configured':'⚠️ Not configured'}</b></div><div>Subscriptions via: <b style="color:var(--gold)">${PAYMETH.subscription.toUpperCase()}</b></div><div>Donations via: <b style="color:var(--gold)">${PAYMETH.donation.toUpperCase()}</b></div>`;
+
   // Checklist
-  if(c.geminiKey||c.groqKey) document.getElementById('chk-aikeys').textContent='✅ AI keys saved in backend';
-  if(c.phonepeUPI||c.hasRazorpay) document.getElementById('chk-payment').textContent='✅ Payment configured';
-  // Overview snapshot
-  const el=document.getElementById('ov-config');
-  if(el) el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:11px"><span>Basic: <b style="color:var(--orange)">₹${c.basicPrice}/mo</b></span><span>Pro: <b style="color:var(--orange)">₹${c.premiumPrice}/mo</b></span><span>Free Qs: <b style="color:var(--orange)">${c.freeQuestionsLimit}/day</b></span><span>Version: <b style="color:var(--orange)">${c.appVersion}</b></span><span>AI: <b style="color:${(c.geminiKey||c.groqKey)?'#27AE60':'#E74C3C'}">${(c.geminiKey||c.groqKey)?'✅ Ready':'⚠️ No keys'}</b></span><span>Pay UPI: <b style="color:${c.phonepeUPI?'#27AE60':'#E74C3C'}">${c.phonepeUPI?'✅ Set':'⚠️ Not set'}</b></span></div>`;
-  renderBundles(); renderDons();
+  if(c.geminiKey||c.groqKey) { const e=document.getElementById('chk-ai'); if(e) e.textContent='✅ AI keys saved in Supabase'; }
+  if(c.phonepeUPI||c.hasRazorpay) { const e=document.getElementById('chk-pay'); if(e) e.textContent='✅ Payment configured'; }
+
+  // Katha key status
+  const kks=document.getElementById('kg-key-status');
+  if(kks) kks.textContent=(c.geminiKey?'✅ Gemini key loaded':'⚠️ No Gemini key')+' | '+(c.groqKey?'✅ Groq key loaded':'⚠️ No Groq key');
+
+  // Stats card
+  const os=document.getElementById('ov-stats');
+  if(os) os.innerHTML=`<div>Version: <b style="color:var(--saffron)">${c.appVersion||'1.0.0'}</b></div><div>Basic Price: <b style="color:var(--saffron)">₹${c.basicPrice}/mo</b></div><div>Pro Price: <b style="color:var(--saffron)">₹${c.premiumPrice}/mo</b></div><div>Free Qs/day: <b style="color:var(--saffron)">${c.freeQuestionsLimit}</b></div><div>AI: <b style="color:${(c.geminiKey||c.groqKey)?'#27AE60':'#E74C3C'}">${(c.geminiKey||c.groqKey)?'✅ Ready':'⚠️ No keys'}</b></div>`;
+
+  renderBundles(); renderDons(); renderFeatures();
 }
 
 async function loadStats() {
-  const r=await api('GET','/admin/stats');if(!r.success)return;
-  const s=r.stats;
-  document.getElementById('ov-users').textContent=s.totalUsers||0;
-  document.getElementById('ov-premium').textContent=s.premiumUsers||0;
-  document.getElementById('ov-rev').textContent='₹'+(s.totalRevenue||0).toLocaleString();
-  document.getElementById('ov-katha').textContent=s.kathaChapters||0;
-  document.getElementById('d-total').textContent='₹'+(s.donationRaised||0).toLocaleString();
-  document.getElementById('d-txns').textContent=s.totalTransactions||0;
-  document.getElementById('d-count').textContent=(DONS.filter(d=>d.active).length||'—');
-  document.getElementById('fb-total').textContent=s.pendingFeedback!==undefined?'—':'—';
+  const r = await api('GET','/admin/stats');
+  if (!r.success) return;
+  const s = r.stats;
+  const set=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
+  set('ov-u',s.totalUsers||0); set('ov-p',s.premiumUsers||0);
+  set('ov-r','₹'+(s.totalRevenue||0).toLocaleString());
+  set('ov-k',s.kathaChapters||0);
+  set('d-raised','₹'+(s.donationRaised||0).toLocaleString());
+  set('d-count',DONS.filter(d=>d.active).length||'—');
+  set('d-txns',s.totalTransactions||0);
+  set('fb-t',s.totalFeedback||0); set('fb-p',s.pendingFeedback||0); set('fb-d',(s.totalFeedback||0)-(s.pendingFeedback||0));
+  if(s.pendingFeedback>0) { const b=document.getElementById('fb-count-badge'); if(b){b.textContent=s.pendingFeedback;b.style.display='';} }
+  if(s.kathaChapters>0) { const e=document.getElementById('chk-katha'); if(e) e.textContent=`✅ ${s.kathaChapters} chapters, ${s.totalVerses} verses`; }
+  if(s.totalUsers>0) { const e=document.getElementById('chk-users'); if(e) e.textContent=`✅ ${s.totalUsers} user(s) registered`; }
 }
 
-// ── API KEYS ───────────────────────────────────────────────────
+// ─── API KEYS ─────────────────────────────────────────────────────
 async function saveAPIKeys() {
   const gem=document.getElementById('k-gem').value.trim();
   const groq=document.getElementById('k-groq').value.trim();
+  if (!gem && !groq) { toast('Enter at least one key',true); return; }
   const body={};
-  if(gem&&!gem.includes('***'))body.geminiKey=gem;
-  if(groq&&!groq.includes('***'))body.groqKey=groq;
-  if(!Object.keys(body).length){toast('No changes (key fields show *** = already saved)',true);return;}
-  const r=await api('POST','/admin/config',body);
-  if(r.success){toast('API keys saved to Gist! ✅');applyConfig(r.config);}else toast('Failed: '+r.error,true);
+  if(gem && !gem.includes('***')) body.geminiKey=gem;
+  if(groq && !groq.includes('***')) body.groqKey=groq;
+  if(!Object.keys(body).length) { toast('Keys already saved (show *** = saved)',true); return; }
+  const r = await api('POST','/admin/config',body);
+  if(r.success) { toast('Keys saved to Supabase permanently! ✅'); document.getElementById('k-gem').value=''; document.getElementById('k-groq').value=''; applyConfig(r.config); }
+  else toast('Failed: '+r.error,true);
+}
+
+async function deleteKey(name) {
+  if(!confirm('Delete '+name+'?')) return;
+  const r = await api('DELETE','/admin/config/'+name);
+  if(r.success) { toast(name+' deleted'); loadConfig(); }
+  else toast('Failed: '+r.error,true);
 }
 
 async function testAI() {
-  toast('Testing AI...');
-  const r=await api('POST','/ai/chat',{prompt:'Say: TEST OK'});
-  if(r.success) toast('✅ AI working! Response: '+r.text.slice(0,30)+' (via '+r.usedApi+')');
-  else toast('AI error: '+r.error,true);
+  const el=document.getElementById('ai-test-result');
+  el.textContent='Testing...'; el.style.color='var(--muted)';
+  const r = await api('POST','/ai/chat',{prompt:'Reply with exactly: DHARMASETU_OK'});
+  if(r.success) { el.textContent='✅ AI working! Response: "'+r.text.slice(0,30)+'" via '+r.usedApi; el.style.color='#27AE60'; toast('AI test passed!'); }
+  else { el.textContent='❌ '+r.error; el.style.color='#E74C3C'; toast('AI test failed',true); }
 }
 
-// ── PAYMENT ────────────────────────────────────────────────────
+// ─── PAYMENT ─────────────────────────────────────────────────────
 function setPayUI(type, method) {
-  const upiEl=document.getElementById(type[0]+'on-upi')||document.getElementById('sub-upi')||document.getElementById((type==='subscription'?'sub':'don')+'-upi');
-  const rzpEl=document.getElementById((type==='subscription'?'sub':'don')+'-rzp');
-  if(!upiEl||!rzpEl)return;
-  upiEl.className='pay-opt'+(method==='upi'?' on':'');
-  rzpEl.className='pay-opt'+(method==='razorpay'?' on':'');
+  const pre = type==='subscription' ? 'sub' : 'don';
+  const upi=document.getElementById(pre+'-upi-opt'), rzp=document.getElementById(pre+'-rzp-opt');
+  if(upi) upi.className='pay-opt'+(method==='upi'?' on':'');
+  if(rzp) rzp.className='pay-opt'+(method==='razorpay'?' on':'');
 }
-function setPayMethod(type, method) {
-  PAYMETH[type]=method;
-  setPayUI(type,method);
-}
+function setPayMethod(type, method) { PAYMETH[type]=method; setPayUI(type,method); }
+
 async function savePayment() {
   const upi=document.getElementById('p-upi').value.trim();
   const rzpId=document.getElementById('p-rzp-id').value.trim();
-  const rzpSec=document.getElementById('p-rzp-secret').value.trim();
+  const rzpSec=document.getElementById('p-rzp-sec').value.trim();
   const body={ subscriptionPayment:PAYMETH.subscription, donationPayment:PAYMETH.donation };
-  if(upi)body.phonepeUPI=upi;
-  if(rzpId)body.razorpayKeyId=rzpId;
-  if(rzpSec&&!rzpSec.includes('***'))body.razorpayKeySecret=rzpSec;
-  const r=await api('POST','/admin/config',body);
-  if(r.success){toast('Payment config saved! ✅');applyConfig(r.config);}else toast('Failed: '+r.error,true);
+  if(upi) body.phonepeUPI=upi;
+  if(rzpId && !rzpId.includes('***')) body.razorpayKeyId=rzpId;
+  if(rzpSec && !rzpSec.includes('***')) body.razorpayKeySecret=rzpSec;
+  const r = await api('POST','/admin/config',body);
+  if(r.success) { toast('Payment config saved permanently! ✅'); applyConfig(r.config); }
+  else toast('Failed: '+r.error,true);
 }
-async function testRazorpay(){toast('Razorpay test coming soon — set keys and create a test order from app');}
 
-// ── PRICING ────────────────────────────────────────────────────
-async function savePricing(){const r=await api('POST','/admin/config',{basicPrice:+document.getElementById('pp-basic').value,premiumPrice:+document.getElementById('pp-pro').value,nriPrice:+document.getElementById('pp-nri').value,freeQuestionsLimit:+document.getElementById('pp-fqs').value,freeFactCheckLimit:+document.getElementById('pp-ffc').value});r.success?toast('Prices saved!'):toast('Failed',true);}
-function renderBundles(){document.getElementById('bundle-list').innerHTML=BUNDLES.map((b,i)=>`<div style="border:1px solid var(--border);border-radius:9px;padding:11px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><input value="${b.name}" onchange="BUNDLES[${i}].name=this.value" style="font-size:13px;font-weight:800;color:var(--orange);background:transparent;border:none;border-bottom:1px solid var(--border);width:80px;padding:2px;margin-bottom:0"/><div style="display:flex;gap:5px"><span class="badge ${b.active?'bg':'bw'}" style="cursor:pointer" onclick="BUNDLES[${i}].active=!BUNDLES[${i}].active;renderBundles()">${b.active?'Active':'Off'}</span><button class="btn btn-r btn-sm" onclick="BUNDLES.splice(${i},1);renderBundles()">✕</button></div></div><div style="display:flex;align-items:baseline;gap:3px"><span style="color:var(--muted);font-size:10px">₹</span><input type="number" value="${b.price}" onchange="BUNDLES[${i}].price=+this.value" style="font-size:19px;font-weight:800;background:transparent;border:none;border-bottom:1px solid var(--border);width:55px;padding:2px;margin-bottom:0"/><span style="color:var(--muted);font-size:10px">/mo</span></div></div>`).join('');}
+// ─── FEATURES ────────────────────────────────────────────────────
+function renderFeatures() {
+  const el=document.getElementById('feature-list');
+  if(!el) return;
+  const keys = Object.keys(FLAGS);
+  if(!keys.length) { el.innerHTML='<div style="color:var(--muted)">Loading feature flags...</div>'; return; }
+  el.innerHTML = keys.map(k=>{
+    const f=FLAGS[k]; const eid=`fen-${k}`, pid=`fpm-${k}`;
+    return `<div class="sr">
+      <div><div class="sr-l">${esc(f.label||k)} <span class="premium-chip ${f.isPremium?'prem':'free'}" id="fchip-${k}">${f.isPremium?'PREMIUM':'FREE'}</span></div></div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="text-align:center"><div style="font-size:9px;color:var(--muted);margin-bottom:3px">ENABLED</div><button class="tog ${f.enabled?'on':''}" id="${eid}" onclick="toggleFeature('${k}','enabled')"></button></div>
+        <div style="text-align:center"><div style="font-size:9px;color:var(--muted);margin-bottom:3px">PREMIUM</div><button class="tog ${f.isPremium?'on green':''}" id="${pid}" onclick="toggleFeature('${k}','isPremium')"></button></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFeature(key, prop) {
+  if (!FLAGS[key]) return;
+  FLAGS[key][prop] = !FLAGS[key][prop];
+  const id = prop==='enabled' ? `fen-${key}` : `fpm-${key}`;
+  const btn=document.getElementById(id);
+  if(btn) { btn.className='tog'+(FLAGS[key][prop]?' on':'')+(prop==='isPremium'?' green':''); }
+  const chip=document.getElementById(`fchip-${key}`);
+  if(chip) { chip.className='premium-chip '+(FLAGS[key].isPremium?'prem':'free'); chip.textContent=FLAGS[key].isPremium?'PREMIUM':'FREE'; }
+}
+
+async function saveFeatures() {
+  const r = await api('POST','/admin/config',{featureFlags:FLAGS});
+  if(r.success) toast('Feature flags saved to Supabase! ✅');
+  else toast('Failed: '+r.error,true);
+}
+
+// ─── PRICING ─────────────────────────────────────────────────────
+async function savePricing(){const r=await api('POST','/admin/config',{basicPrice:+document.getElementById('pp-basic').value,premiumPrice:+document.getElementById('pp-pro').value,nriPrice:+document.getElementById('pp-nri').value,freeQuestionsLimit:+document.getElementById('pp-fq').value,freeFactCheckLimit:+document.getElementById('pp-ffc').value});r.success?toast('Prices saved!'):toast('Failed',true);}
+
+function renderBundles(){const el=document.getElementById('bundle-list');if(!el)return;el.innerHTML=BUNDLES.map((b,i)=>`<div style="border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><input value="${esc(b.name)}" style="font-size:13px;font-weight:800;color:var(--saffron);background:transparent;border:none;border-bottom:1px solid var(--border);width:80px" onchange="BUNDLES[${i}].name=this.value"/><div style="display:flex;gap:5px"><span class="badge ${b.active?'bg':'bw'}" style="cursor:pointer" onclick="BUNDLES[${i}].active=!BUNDLES[${i}].active;renderBundles()">${b.active?'Active':'Off'}</span><button class="btn btn-r btn-sm" onclick="BUNDLES.splice(${i},1);renderBundles()">✕</button></div></div><div style="margin-top:6px"><input type="number" value="${b.price}" style="font-size:18px;font-weight:800;background:transparent;border:none;border-bottom:1px solid var(--border);width:60px;color:var(--saffron)" onchange="BUNDLES[${i}].price=+this.value"/> <span style="color:var(--muted);font-size:11px">/mo</span></div></div>`).join('');}
 function addBundle(){BUNDLES.push({id:'plan_'+Date.now(),name:'New',nameHi:'नया',price:149,active:true,features:['Feature 1']});renderBundles();}
 async function saveBundles(){const r=await api('POST','/admin/bundles',{bundles:BUNDLES});r.success?toast('Bundles saved!'):toast('Failed',true);}
 
-// ── DONATIONS ──────────────────────────────────────────────────
-function renderDons(){document.getElementById('don-list').innerHTML=DONS.map((d,i)=>`<div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:11px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><b>${d.name} / ${d.nameHi}</b><div style="font-size:11px;color:var(--muted)">${d.desc}</div></div><div style="display:flex;gap:5px"><span class="badge ${d.active?'bg':'bw'}" style="cursor:pointer" onclick="DONS[${i}].active=!DONS[${i}].active;renderDons()">${d.active?'Active':'Off'}</span></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><div><label>Goal (₹)</label><input type="number" value="${d.goal}" onchange="DONS[${i}].goal=+this.value" style="margin-bottom:0"/></div><div><label>Raised (₹)</label><input type="number" value="${d.raised||0}" onchange="DONS[${i}].raised=+this.value" style="margin-bottom:0"/></div></div><div class="pt"><div class="pf" style="width:${Math.min(100,Math.round(((d.raised||0)/Math.max(d.goal,1))*100))}%;background:var(--orange)"></div></div></div>`).join('');}
+// ─── DONATIONS ───────────────────────────────────────────────────
+function renderDons(){const el=document.getElementById('don-list');if(!el||!DONS.length)return;el.innerHTML=DONS.map((d,i)=>`<div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:11px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><b>${esc(d.name)}</b><span class="badge ${d.active?'bg':'bw'}" style="cursor:pointer" onclick="DONS[${i}].active=!DONS[${i}].active;renderDons()">${d.active?'Active':'Off'}</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><div><div style="font-size:10px;color:var(--muted)">Goal ₹</div><input type="number" value="${d.goal}" onchange="DONS[${i}].goal=+this.value" style="margin:0"/></div><div><div style="font-size:10px;color:var(--muted)">Raised ₹</div><input type="number" value="${d.raised||0}" onchange="DONS[${i}].raised=+this.value" style="margin:0"/></div></div></div>`).join('');}
 async function saveDons(){const r=await api('POST','/admin/donations',{donations:DONS});r.success?toast('Campaigns saved!'):toast('Failed',true);}
 
-// ── FEATURES ───────────────────────────────────────────────────
-function tf(btn,k){btn.classList.toggle('on');CFG[k]=btn.classList.contains('on');}
-async function saveFeatures(){const keys=['kathaVaultEnabled','factCheckEnabled','debateEnabled','mantraVerifyEnabled','peaceModeEnabled','donationEnabled','maintenanceMode'];const b={};keys.forEach(k=>b[k]=!!CFG[k]);const r=await api('POST','/admin/config',b);r.success?toast('Features saved!'):toast('Failed',true);}
-
-// ── CONTENT ────────────────────────────────────────────────────
+// ─── CONTENT ─────────────────────────────────────────────────────
 let selFile=null;
-function fileSelected(inp){selFile=inp.files[0];document.getElementById('ul-fname').textContent='📎 '+selFile.name;if(!document.getElementById('ul-title').value)document.getElementById('ul-title').value=selFile.name.replace(/\.[^.]+$/,'');}
+function fileChosen(inp){selFile=inp.files[0];document.getElementById('ul-fname').textContent='📎 '+selFile.name;if(!document.getElementById('ul-title').value)document.getElementById('ul-title').value=selFile.name.replace(/\.[^.]+$/,'');}
 async function doUpload(){
-  const title=document.getElementById('ul-title').value.trim();
-  const paste=document.getElementById('ul-text').value.trim();
-  if(!title){toast('Enter a title',true);return;}
-  if(!selFile&&!paste){toast('Select file or paste text',true);return;}
-  const prog=document.getElementById('ul-prog');prog.style.display='block';
-  document.getElementById('ul-pbar').style.width='40%';document.getElementById('ul-ptxt').textContent='Uploading...';
+  const title=document.getElementById('ul-title').value.trim(),paste=document.getElementById('ul-text').value.trim();
+  if(!title){toast('Enter a title first',true);return;}
+  if(!selFile&&!paste){toast('Select a file or paste text',true);return;}
   const fd=new FormData();fd.append('title',title);fd.append('type',document.getElementById('ul-type').value);fd.append('topics',document.getElementById('ul-topics').value);fd.append('trustLevel',document.getElementById('ul-trust').value);
   if(paste)fd.append('textContent',paste);if(selFile)fd.append('file',selFile);
+  toast('Uploading to Supabase...');
   const r=await api('POST','/admin/upload',fd,true);
-  document.getElementById('ul-pbar').style.width='100%';
-  if(r.success){document.getElementById('ul-ptxt').textContent=`✅ ${r.upload.chunkCount} chunks, ${r.upload.charCount} chars saved to Gist`;toast('"'+r.upload.title+'" uploaded & saved permanently');clearUpload();loadUploads();}
-  else{document.getElementById('ul-ptxt').textContent='✕ '+r.error;toast('Upload failed',true);}
-  setTimeout(()=>prog.style.display='none',5000);
+  if(r.success){toast('"'+r.upload.title+'" uploaded! '+r.upload.chunkCount+' chunks');['ul-title','ul-topics','ul-text'].forEach(i=>document.getElementById(i).value='');selFile=null;document.getElementById('ul-fname').textContent='';loadUploads();}
+  else toast('Upload failed: '+r.error,true);
 }
-function clearUpload(){['ul-title','ul-topics','ul-text'].forEach(id=>document.getElementById(id).value='');document.getElementById('ul-fname').textContent='';document.getElementById('ul-file').value='';selFile=null;}
-async function loadUploads(){
-  const el=document.getElementById('ul-list');el.innerHTML='<span style="color:var(--muted)">Loading...</span>';
-  const r=await api('GET','/admin/uploads');
-  if(!r.uploads?.length){el.innerHTML='<span style="color:var(--muted)">No uploads yet. Upload CSV/text files above.</span>';return;}
-  el.innerHTML=`<table><tr><th>Title</th><th>Type</th><th>Chars</th><th>Status</th><th></th></tr>${r.uploads.map(u=>`<tr><td>${u.title}</td><td><span class="badge bo">${u.type}</span></td><td>${(u.charCount||0).toLocaleString()}</td><td><span class="badge ${u.active?'bg':'bw'}">${u.active?'Active':'Off'}</span></td><td><button class="btn btn-r btn-sm" onclick="delUpload('${u.id}')">Del</button></td></tr>`).join('')}</table>`;
-}
+async function loadUploads(){const el=document.getElementById('ul-list');el.innerHTML='Loading...';const r=await api('GET','/admin/uploads');if(!r.uploads?.length){el.innerHTML='<span style="color:var(--muted)">No uploads yet.</span>';return;}el.innerHTML=`<table><tr><th>Title</th><th>Type</th><th>Size</th><th>Status</th><th></th></tr>${r.uploads.map(u=>`<tr><td>${esc(u.title)}</td><td><span class="badge bo">${u.type}</span></td><td>${(u.charCount||0).toLocaleString()}</td><td><span class="badge ${u.active?'bg':'bw'}">${u.active?'Active':'Off'}</span></td><td><button class="btn btn-r btn-sm" onclick="delUpload('${u.id}')">Del</button></td></tr>`).join('')}</table>`;}
 async function delUpload(id){if(!confirm('Delete?'))return;await api('DELETE','/admin/uploads/'+id);toast('Deleted');loadUploads();}
 
-// ── KATHA GENERATOR ────────────────────────────────────────────
-const KCH={bhagavad_gita:[{n:1,t:'Arjuna Vishada Yoga',s:47},{n:2,t:'Sankhya Yoga',s:72},{n:3,t:'Karma Yoga',s:43},{n:4,t:'Jnana Karma Sanyasa Yoga',s:42},{n:5,t:'Karma Sanyasa Yoga',s:29},{n:6,t:'Atmasanyama Yoga',s:47},{n:7,t:'Jnana Vijnana Yoga',s:30},{n:8,t:'Aksara Brahma Yoga',s:28},{n:9,t:'Raja Vidya Yoga',s:34},{n:10,t:'Vibhuti Yoga',s:42},{n:11,t:'Vishwarupa Darshana Yoga',s:55},{n:12,t:'Bhakti Yoga',s:20},{n:13,t:'Kshetra Yoga',s:34},{n:14,t:'Gunatraya Yoga',s:27},{n:15,t:'Purushottama Yoga',s:20},{n:16,t:'Daivasura Sampad Yoga',s:24},{n:17,t:'Sraddhatraya Yoga',s:28},{n:18,t:'Moksha Sanyasa Yoga',s:78}],valmiki_ramayana:[{n:1,t:'Bala Kanda',s:77},{n:2,t:'Ayodhya Kanda',s:119},{n:3,t:'Aranya Kanda',s:75},{n:4,t:'Kishkindha Kanda',s:67},{n:5,t:'Sundara Kanda',s:68},{n:6,t:'Yuddha Kanda',s:131},{n:7,t:'Uttara Kanda',s:111}],mahabharata:[{n:1,t:'Adi Parva',s:227},{n:6,t:'Bhishma Parva',s:122},{n:18,t:'Svargarohana Parva',s:5}],srimad_bhagavatam:[{n:1,t:'Skandha 1',s:19},{n:10,t:'Skandha 10',s:90}],upanishads:[{n:1,t:'Isha Upanishad',s:18},{n:3,t:'Katha Upanishad',s:119}]};
+// ─── KATHA ───────────────────────────────────────────────────────
+const KCH={bhagavad_gita:[{n:1,t:'Arjuna Vishada Yoga',s:47},{n:2,t:'Sankhya Yoga',s:72},{n:3,t:'Karma Yoga',s:43},{n:4,t:'Jnana Karma Sanyasa Yoga',s:42},{n:5,t:'Karma Sanyasa Yoga',s:29},{n:6,t:'Atmasanyama Yoga',s:47},{n:7,t:'Jnana Vijnana Yoga',s:30},{n:8,t:'Aksara Brahma Yoga',s:28},{n:9,t:'Raja Vidya Yoga',s:34},{n:10,t:'Vibhuti Yoga',s:42},{n:11,t:'Vishwarupa Darshana Yoga',s:55},{n:12,t:'Bhakti Yoga',s:20},{n:13,t:'Kshetra Yoga',s:34},{n:14,t:'Gunatraya Yoga',s:27},{n:15,t:'Purushottama Yoga',s:20},{n:16,t:'Daivasura Sampad Yoga',s:24},{n:17,t:'Sraddhatraya Yoga',s:28},{n:18,t:'Moksha Sanyasa Yoga',s:78}],valmiki_ramayana:[{n:1,t:'Bala Kanda',s:77},{n:2,t:'Ayodhya Kanda',s:119},{n:3,t:'Aranya Kanda',s:75},{n:4,t:'Kishkindha Kanda',s:67},{n:5,t:'Sundara Kanda',s:68},{n:6,t:'Yuddha Kanda',s:131},{n:7,t:'Uttara Kanda',s:111}]};
 
-function updateChapters(){
-  const sc=document.getElementById('kg-sc');const ch=document.getElementById('kg-ch');
-  if(!sc)return;
-  const scriptures=Object.keys(KCH);
-  if(!sc.innerHTML){scriptures.forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());sc.appendChild(o);});}
-  const sel=sc.value||scriptures[0];ch.innerHTML='';
-  (KCH[sel]||[]).forEach(c=>{const o=document.createElement('option');o.value=c.n;o.textContent=`Ch ${c.n}: ${c.t} (${c.s} vs)`;o.dataset.s=c.s;o.dataset.t=c.t;ch.appendChild(o);});
-  // Show saved key status
-  const st=document.getElementById('kg-saved-status');
-  if(st) st.textContent=(CFG.geminiKey?'✅ Gemini key loaded':'⚠️ No Gemini')+(CFG.groqKey?' | ✅ Groq key loaded':' | ⚠️ No Groq');
+function updateCh(){const sc=document.getElementById('kg-sc'),ch=document.getElementById('kg-ch');if(!sc)return;const scs=Object.keys(KCH);if(!sc.innerHTML.trim()){scs.forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());sc.appendChild(o);});}const sel=sc.value||scs[0];ch.innerHTML='';(KCH[sel]||[]).forEach(c=>{const o=document.createElement('option');o.value=c.n;o.textContent=`Ch ${c.n}: ${c.t} (${c.s} vs)`;o.dataset.s=c.s;o.dataset.t=c.t;ch.appendChild(o);});}
+
+function kgLog(msg,type='info'){const el=document.getElementById('kg-log');const c={ok:'#27AE60',err:'#E74C3C',wait:'#C9830A',done:'#F4A261',info:'#5DADE2'}[type]||'#5DADE2';el.innerHTML+=`<span style="color:${c}">${esc(msg)}</span>\n`;el.scrollTop=el.scrollHeight;}
+function kgProg(p,label){document.getElementById('kg-prog').style.width=p+'%';document.getElementById('kg-prog-lbl').textContent=label;}
+function kgClear(){document.getElementById('kg-log').innerHTML='';kgProg(0,'Ready');document.getElementById('kg-badge').textContent='Idle';}
+
+async function kgStatus(){
+  const sc=document.getElementById('kg-sc').value,ch=document.getElementById('kg-ch').selectedOptions[0],lang=document.getElementById('kg-lang').value;
+  if(!ch)return;const el=document.getElementById('kg-st');el.innerHTML='Checking Supabase...';
+  const r=await api('GET',`/admin/katha/status/${sc}/${ch.value}/${lang}`);
+  const tot=+ch.dataset.s||0;
+  if(!r.exists){el.innerHTML=`<span style="color:var(--red)">❌ Not generated yet</span><br><span style="color:var(--muted)">Need ${tot} verses</span>`;return;}
+  const pct=Math.round(r.verseCount/tot*100);
+  el.innerHTML=`<b style="color:${r.verseCount>=tot?'#27AE60':'#C9830A'}">${r.verseCount}/${tot} verses (${pct}%)</b><br>${r.verseCount<tot?`<span style="color:#C9830A">⚠️ Incomplete — click Generate to resume from missing verses</span>`:' <span style="color:#27AE60">✅ Complete!</span>'}`;
 }
 
-function kgLog(m,t='info'){const el=document.getElementById('kg-log');const ts=new Date().toLocaleTimeString();const c={ok:'#27AE60',err:'#E74C3C',wait:'#C9830A',done:'#F4A261',info:'#5DADE2'}[t]||'#5DADE2';el.innerHTML+=`<span style="color:${c}">[${ts}] ${m}</span>\n`;el.scrollTop=el.scrollHeight;}
-function kgProg(p,l){document.getElementById('kg-prog').style.width=p+'%';document.getElementById('kg-plbl').textContent=l;}
+async function kgDel(){const sc=document.getElementById('kg-sc').value,ch=document.getElementById('kg-ch').value,lang=document.getElementById('kg-lang').value;if(!confirm(`Delete ${sc} Ch${ch} [${lang}] from Supabase?`))return;await api('DELETE',`/admin/katha/${sc}/${ch}/${lang}`);toast('Deleted from Supabase');kgStatus();}
 
-async function kgCheck(){
-  const sc=document.getElementById('kg-sc').value;const ch=document.getElementById('kg-ch').selectedOptions[0];const lang=document.getElementById('kg-lang').value;
-  const el=document.getElementById('kg-status');el.innerHTML='<span style="color:var(--muted)">Checking...</span>';
-  const r=await api('GET',`/admin/katha/status/${sc}/${ch?.value}/${lang}`);
-  const tot=ch?+ch.dataset.s:0;
-  el.innerHTML=!r.exists?`<span style="color:var(--red)">❌ Not generated yet</span><br><span style="color:var(--muted)">Need ${tot} verses</span>`:
-    `<b style="color:${r.verseCount>=tot?'#27AE60':'#C9830A'}">${r.verseCount}/${tot} verses (${Math.round(r.verseCount/tot*100)}%)</b><br>Saved: ${r.savedAt||'unknown'}<br>${r.verseCount<tot?'<span style="color:#C9830A">⚠️ Incomplete — generate again to fill gaps</span>':'<span style="color:#27AE60">✅ Complete!</span>'}`;
-}
-
-async function kgListAll(){
-  const el=document.getElementById('kg-all');el.innerHTML='<span style="color:var(--muted)">Loading...</span>';
-  const r=await api('GET','/katha/list');
-  if(!r.files?.length){el.innerHTML='<span style="color:var(--muted)">None generated yet.</span>';return;}
-  el.innerHTML=`<b style="color:var(--orange)">${r.count} chapters saved</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px;margin-top:8px">${r.files.map(f=>`<div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:7px;padding:7px;font-size:11px"><div style="color:var(--orange);font-weight:700">${f.file.replace('.json','')}</div><div style="color:var(--muted)">${f.verseCount||'?'} verses</div></div>`).join('')}</div>`;
-}
-
-async function kgDelete(){
-  const sc=document.getElementById('kg-sc').value,ch=document.getElementById('kg-ch').value,lang=document.getElementById('kg-lang').value;
-  if(!confirm(`Delete ${sc} Ch${ch} [${lang}]?`))return;
-  await api('DELETE',`/admin/katha/${sc}/${ch}/${lang}`);toast('Deleted');kgCheck();
-}
+async function kgListAll(){const el=document.getElementById('kg-all');el.innerHTML='Loading from Supabase...';const r=await api('GET','/katha/list');if(!r.chapters?.length){el.innerHTML='<span style="color:var(--muted)">None generated yet.</span>';return;}el.innerHTML=`<b style="color:var(--saffron)">${r.count} chapter(s) in Supabase</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-top:9px">${r.chapters.map(c=>`<div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:11px"><div style="color:var(--saffron);font-weight:700">${esc(c.key)}</div><div style="color:var(--muted)">${c.verseCount} verses</div></div>`).join('')}</div>`;}
 
 async function kgStart(){
-  const gem=document.getElementById('kg-gem').value.trim();const groq=document.getElementById('kg-groq').value.trim();
-  const sc=document.getElementById('kg-sc').value;const chSel=document.getElementById('kg-ch').selectedOptions[0];const lang=document.getElementById('kg-lang').value;
+  const gemOv=document.getElementById('kg-gem').value.trim(),groqOv=document.getElementById('kg-groq').value.trim();
+  const sc=document.getElementById('kg-sc').value,chSel=document.getElementById('kg-ch').selectedOptions[0],lang=document.getElementById('kg-lang').value;
   if(!chSel){toast('Select a chapter',true);return;}
   const chN=chSel.value,total=+chSel.dataset.s||47,title=chSel.dataset.t||`Ch ${chN}`;
   const jobId=`${sc}_${chN}_${lang}_${Date.now()}`;
-  document.getElementById('kg-log').innerHTML='';kgProg(2,'Starting...');
-  document.getElementById('kg-badge').textContent=CFG.geminiKey?'🟢 Gemini→Groq':'🟡 Groq only';
-  kgLog(`🕉 ${sc} Ch${chN} "${title}" | ${total} verses | ${lang}`,'info');
-  kgLog(`📡 ${gem?'Custom Gemini key':'Saved Gemini key'} + ${groq?'Custom Groq key':'Saved Groq key'}`,'info');
-  kgLog(`📦 2 verses per batch | 8s gap | Each verse → GitHub Gist immediately`,'info');
+  kgClear(); kgProg(2,'Starting...');
+  document.getElementById('kg-badge').textContent='⟳ Running';
+  kgLog(`🕉 ${sc} Ch${chN} "${title}" | ${lang.toUpperCase()}`, 'info');
+  kgLog(`📦 2 verses/batch · 20s gap · Saves to Supabase immediately`, 'info');
 
-  // Connect SSE
+  // SSE
   if(sseConn){sseConn.close();sseConn=null;}
-  let done=0,total2=0;
+  let done=0,toGen=0;
   sseConn=new EventSource(`${BACKEND}/admin/katha/stream/${jobId}?key=${encodeURIComponent(KEY)}`);
   sseConn.onmessage=e=>{
-    try{const d=JSON.parse(e.data);if(d.type==='end'){sseConn.close();sseConn=null;kgCheck();loadStats();return;}kgLog(d.msg,d.type||'info');if(d.type==='ok'){done++;if(total2>0)kgProg(Math.round(done/total2*100),`${done}/${total2} verses`);}}catch{}
+    try{
+      const d=JSON.parse(e.data);
+      if(d.type==='end'){sseConn?.close();sseConn=null;kgStatus();kgListAll();loadStats();document.getElementById('kg-badge').textContent='Done';return;}
+      kgLog(d.msg||'',d.type||'info');
+      if(d.type==='ok'){done++;if(toGen>0)kgProg(Math.round(done/toGen*100),`${done}/${toGen} verses`);}
+    }catch{}
   };
-  sseConn.onerror=()=>kgLog('⚠️ Live stream lost — generation still running on backend','wait');
+  sseConn.onerror=()=>{ kgLog('⚠️ Stream disconnected (generation continues on server)', 'wait'); };
 
-  // Start
-  const r=await api('POST','/admin/katha/generate',{scriptureId:sc,unitId:chN,lang,totalVerses:total,chapterTitle:title,geminiKey:gem||undefined,groqKey:groq||undefined,jobId});
+  const r=await api('POST','/admin/katha/generate',{scriptureId:sc,unitId:chN,lang,totalVerses:total,chapterTitle:title,geminiKey:gemOv||undefined,groqKey:groqOv||undefined,jobId});
   if(!r.success){kgLog('❌ Error: '+r.error,'err');toast('Failed: '+r.error,true);return;}
-  total2=r.toGenerate;
-  kgLog(`✅ Backend: ${r.toGenerate} to generate (${r.existing} already done)`,'ok');
-  if(r.toGenerate===0){kgLog('🎉 Already complete!','done');kgProg(100,'Complete');kgCheck();}
+  toGen=r.toGenerate;
+  if(r.resuming)kgLog(`▶️ RESUMING — ${r.existing} already in Supabase, generating ${r.toGenerate} more`,'ok');
+  if(r.toGenerate===0){kgLog('🎉 Already complete! All verses in Supabase.','done');kgProg(100,'Complete');document.getElementById('kg-badge').textContent='Complete';}
 }
 
-// ── FEEDBACK ───────────────────────────────────────────────────
+// ─── FEEDBACK ────────────────────────────────────────────────────
 async function loadFeedback(){
-  const el=document.getElementById('fb-list');el.innerHTML='<span style="color:var(--muted)">Loading...</span>';
+  const el=document.getElementById('fb-list');if(!el)return;
+  el.innerHTML='Loading from Supabase...';
   const r=await api('GET','/admin/feedback');
-  document.getElementById('fb-total').textContent=r.total||0;
-  document.getElementById('fb-pending').textContent=r.pending||0;
-  document.getElementById('fb-done').textContent=(r.total||0)-(r.pending||0);
-  if(!r.feedback?.length){el.innerHTML='<span style="color:var(--muted)">No feedback yet. Users tap 👎 in DharmaChat to send feedback.</span>';return;}
-  el.innerHTML=r.feedback.map(f=>`<div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:11px;margin-bottom:9px">
-    <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="badge ${f.status==='pending'?'br':'bg'}">${f.status}</span><span style="font-size:10px;color:var(--muted)">${f.createdAt?.slice(0,10)||''}</span></div>
-    <div style="font-size:12px;margin-bottom:5px"><b>Q:</b> ${f.question||'—'}</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:5px"><b>Issue:</b> ${f.reason||f.wrongAnswer?.slice(0,80)||'—'}</div>
-    ${f.correctedAnswer?`<div style="font-size:11px;color:#27AE60;margin-bottom:5px"><b>Correction:</b> ${f.correctedAnswer.slice(0,100)}</div>`:''}
-    <textarea rows="2" id="fc-${f.id}" placeholder="Enter corrected answer here..." style="font-size:11px;margin-bottom:6px">${f.correctedAnswer||''}</textarea>
-    <div class="btn-row"><button class="btn btn-g btn-sm" onclick="saveFeedback('${f.id}','reviewed')">✅ Mark Reviewed</button><button class="btn btn-p btn-sm" onclick="saveCorrection('${f.id}')">💾 Save Correction</button></div>
+  if(r.total!==undefined){document.getElementById('fb-t').textContent=r.total;document.getElementById('fb-p').textContent=r.pending||0;document.getElementById('fb-d').textContent=(r.total||0)-(r.pending||0);}
+  if(r.pending>0){const b=document.getElementById('fb-count-badge');if(b){b.textContent=r.pending;b.style.display='';}}
+  if(!r.feedback?.length){el.innerHTML='<div class="alert ab">No feedback yet. When users tap 👎 in DharmaChat, entries appear here automatically.</div>';return;}
+  el.innerHTML=r.feedback.map(f=>`<div style="background:var(--card2);border:1px solid ${f.status==='pending'?'rgba(231,76,60,.3)':'rgba(39,174,96,.2)'};border-radius:10px;padding:13px;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+      <span class="badge ${f.status==='pending'?'br':f.status==='corrected'?'bg':'bw'}">${f.status||'pending'}</span>
+      <span style="font-size:10px;color:var(--muted)">${f.created_at?.slice(0,16)||''} | ${f.phone||'anonymous'}</span>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--cream);margin-bottom:5px">❓ ${esc(f.question||'—').slice(0,120)}</div>
+    <div style="font-size:11px;color:rgba(253,246,237,.5);margin-bottom:5px">Issue: ${esc(f.reason||f.wrong_answer||'—').slice(0,100)}</div>
+    ${f.corrected_answer?`<div style="font-size:11px;color:#27AE60;margin-bottom:7px">✅ Correction: ${esc(f.corrected_answer).slice(0,100)}</div>`:''}
+    <textarea rows="2" id="fc-${f.id}" placeholder="Enter corrected answer here..." style="font-size:11px;margin-bottom:7px">${esc(f.corrected_answer||'')}</textarea>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <button class="btn btn-g btn-sm" onclick="fbReview('${f.id}')">✅ Mark Reviewed</button>
+      <button class="btn btn-p btn-sm" onclick="fbCorrect('${f.id}')">💾 Save Correction</button>
+      <button class="btn btn-r btn-sm" onclick="fbDelete('${f.id}')">🗑 Delete</button>
+    </div>
   </div>`).join('');
 }
-async function saveCorrection(id){const c=document.getElementById('fc-'+id)?.value;if(!c)return;await api('PATCH','/admin/feedback/'+id,{correctedAnswer:c,status:'corrected'});toast('Correction saved to Gist!');loadFeedback();}
-async function saveFeedback(id,status){await api('PATCH','/admin/feedback/'+id,{status});toast('Status updated');loadFeedback();}
+async function fbCorrect(id){const c=document.getElementById('fc-'+id)?.value;if(!c)return;const r=await api('PATCH','/admin/feedback/'+id,{corrected_answer:c,status:'corrected'});r.success?toast('Correction saved!'):toast('Failed',true);loadFeedback();}
+async function fbReview(id){const r=await api('PATCH','/admin/feedback/'+id,{status:'reviewed'});r.success?toast('Marked reviewed'):toast('Failed',true);loadFeedback();}
+async function fbDelete(id){if(!confirm('Delete feedback?'))return;const r=await api('DELETE','/admin/feedback/'+id);r.success?toast('Deleted'):toast('Failed',true);loadFeedback();}
 
-// ── TRANSACTIONS ───────────────────────────────────────────────
-async function loadTxns(){
-  const el=document.getElementById('tx-list');const r=await api('GET','/admin/transactions');
-  document.getElementById('tx-total').textContent=r.total||0;
-  const paid=(r.transactions||[]).filter(t=>t.status==='paid');
-  document.getElementById('tx-paid').textContent=paid.length;
-  document.getElementById('tx-rev').textContent='₹'+paid.reduce((s,t)=>s+(t.amount||0),0).toLocaleString();
-  if(!r.transactions?.length){el.innerHTML='<span style="color:var(--muted)">No transactions yet. They appear after users make payments.</span>';return;}
-  el.innerHTML=`<table><tr><th>ID</th><th>Type</th><th>Amount</th><th>Status</th><th>User</th><th>Time</th></tr>${r.transactions.map(t=>`<tr><td style="font-family:monospace;font-size:10px">${t.id?.slice(0,14)||'—'}</td><td><span class="badge bo">${t.type||'sub'}</span></td><td>₹${t.amount||0}</td><td><span class="badge ${t.status==='paid'?'bg':'bw'}">${t.status}</span></td><td style="font-size:10px">${t.phone||'—'}</td><td style="font-size:10px;color:var(--muted)">${t.created_at?new Date(t.created_at).toLocaleDateString():'—'}</td></tr>`).join('')}</table>`;
-}
-
-// ── USERS ─────────────────────────────────────────────────────
+// ─── USERS ───────────────────────────────────────────────────────
 async function loadUsers(){
-  const el=document.getElementById('u-list'),s=document.getElementById('u-search').value,p=document.getElementById('u-plan').value;
+  const el=document.getElementById('u-list'),s=document.getElementById('u-search')?.value||'',p=document.getElementById('u-plan')?.value||'all';
+  if(!el)return; el.innerHTML='Loading from Supabase...';
   const r=await api('GET',`/admin/users?search=${encodeURIComponent(s)}&plan=${p}`);
-  document.getElementById('u-info').textContent=r.total?`${r.total} user${r.total>1?'s':''} found`:'No users yet. They appear after signing up in app.';
-  if(!r.users?.length){el.innerHTML='';return;}
-  el.innerHTML=`<table><tr><th>User</th><th>Rashi</th><th>Plan</th><th>Streak</th><th>Last Active</th><th></th></tr>${r.users.map(u=>`<tr><td><b>${u.name}</b><div style="font-size:10px;color:var(--muted)">${u.birthCity||''}</div></td><td><span class="badge bb">${u.rashi||'—'}</span></td><td><span class="badge ${u.plan==='pro'?'bgo':u.plan==='basic'?'bo':'bw'}">${u.plan||'free'}</span></td><td>🔥${u.streak||0}</td><td style="font-size:10px;color:var(--muted)">${timeAgo(u.lastActive)}</td><td><select style="font-size:10px;padding:2px 5px;margin-bottom:0;width:70px" onchange="changeUserPlan('${u.id}',this.value)"><option ${u.plan==='free'?'selected':''} value="free">Free</option><option ${u.plan==='basic'?'selected':''} value="basic">Basic</option><option ${u.plan==='pro'?'selected':''} value="pro">Pro</option></select></td></tr>`).join('')}</table>`;
+  const cnt=document.getElementById('u-count');if(cnt)cnt.textContent=r.total?`${r.total} user${r.total>1?'s':''} found`:'';
+  if(!r.users?.length){el.innerHTML='<div style="color:var(--muted);font-size:12px">No users yet. They appear after signing up in the mobile app.</div>';return;}
+  el.innerHTML=`<table><tr><th>Name</th><th>Phone</th><th>Rashi</th><th>Language</th><th>Plan</th><th>Last Active</th><th></th></tr>${r.users.map(u=>`<tr><td><b>${esc(u.name)}</b>${u.email?`<div style="font-size:10px;color:var(--muted)">${esc(u.email)}</div>`:''}</td><td style="font-family:monospace;font-size:11px">${esc(u.phone||'—')}</td><td><span class="badge bb">${u.rashi||'—'}</span></td><td>${u.language||'—'}</td><td><span class="badge ${u.plan==='pro'?'bgo':u.plan==='basic'?'bo':'bw'}">${u.plan||'free'}</span></td><td style="font-size:10px;color:var(--muted)">${timeAgo(u.last_active)}</td><td><select style="font-size:10px;padding:2px 5px;width:70px" onchange="changeUserPlan('${u.id}',this.value)"><option ${u.plan==='free'?'selected':''} value="free">Free</option><option ${u.plan==='basic'?'selected':''} value="basic">Basic</option><option ${u.plan==='pro'?'selected':''} value="pro">Pro</option></select></td></tr>`).join('')}</table>`;
 }
-async function changeUserPlan(id,plan){await api('PATCH','/admin/users/'+id,{plan});toast('Plan updated to '+plan);}
-function exportCSV(){api('GET','/admin/users?plan=all').then(r=>{if(!r.users?.length){toast('No users',true);return;}const rows=[['Name','Phone','Rashi','Plan','Streak','Questions','City','DOB','Created']];r.users.forEach(u=>rows.push([u.name,u.phone,u.rashi,u.plan,u.streak||0,u.questions||0,u.birthCity||'',u.dob||'',u.createdAt?.slice(0,10)||'']));const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='dharmasetu_users.csv';a.click();toast('CSV exported!');});}
+async function changeUserPlan(id,plan){await api('PATCH','/admin/users/'+id,{plan});toast('Plan → '+plan);}
+function exportCSV(){api('GET','/admin/users?plan=all').then(r=>{if(!r.users?.length){toast('No users',true);return;}const rows=[['Name','Phone','Email','Rashi','Plan','Language','City','DOB','Created','Last Active']];r.users.forEach(u=>rows.push([u.name||'',u.phone||'',u.email||'',u.rashi||'',u.plan||'free',u.language||'',u.birth_city||'',u.dob||'',u.created_at?.slice(0,10)||'',u.last_active?.slice(0,10)||'']));const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='dharmasetu_users.csv';a.click();toast('CSV exported!');});}
 
-// ── DATABASE STATUS ────────────────────────────────────────────
+// ─── TRANSACTIONS ────────────────────────────────────────────────
+async function loadTxns(){
+  const el=document.getElementById('tx-list');el.innerHTML='Loading...';
+  const r=await api('GET','/admin/transactions');
+  document.getElementById('tx-t').textContent=r.total||0;
+  const paid=r.transactions?.filter(t=>t.status==='paid')||[];
+  document.getElementById('tx-p').textContent=paid.length;
+  document.getElementById('tx-r').textContent='₹'+(r.totalRevenue||0).toLocaleString();
+  if(!r.transactions?.length){el.innerHTML='<div style="color:var(--muted)">No transactions yet. They appear after users make payments.</div>';return;}
+  el.innerHTML=`<table><tr><th>ID</th><th>Type</th><th>Amount</th><th>Via</th><th>Status</th><th>User</th><th>Date</th></tr>${r.transactions.map(t=>`<tr><td style="font-family:monospace;font-size:10px">${(t.id||'').slice(0,14)}</td><td><span class="badge bo">${t.payment_type||'sub'}</span></td><td>₹${t.amount||0}</td><td style="font-size:10px">${t.payment_via||'upi'}</td><td><span class="badge ${t.status==='paid'?'bg':'bw'}">${t.status}</span></td><td style="font-size:10px">${t.phone||'—'}</td><td style="font-size:10px;color:var(--muted)">${t.created_at?.slice(0,10)||'—'}</td></tr>`).join('')}</table>`;
+}
+
+// ─── DATABASE STATUS ─────────────────────────────────────────────
 async function loadDBStatus(){
-  const box=document.getElementById('db-status-box'),inst=document.getElementById('db-instructions'),tables=document.getElementById('db-tables');
+  const box=document.getElementById('db-box'),inst=document.getElementById('db-inst'),tables=document.getElementById('db-tables');
   const r=await api('GET','/admin/db-status');
-  if(!r.success){box.className='alert ar';box.textContent='Error loading DB status';return;}
-  box.className=r.dbConnected?'alert ag':'alert ar';
-  box.textContent=r.dbConnected?`✅ GitHub Gist DB Connected | Gist ID: ${r.gistId}`:`⚠️ DB Not Connected | Gist ID: ${r.gistId}`;
-  inst.innerHTML=(r.instructions||[]).map(s=>`<div>${s}</div>`).join('');
-  if(r.tables) tables.innerHTML=Object.entries(r.tables).map(([k,v])=>`<div><b style="color:var(--orange)">${k}:</b> ${v} records</div>`).join('');
+  if(!r.success){if(box)box.innerHTML='Error loading status';return;}
+  if(box){box.className='alert '+(r.connected?'ag':'ar');box.textContent=r.connected?`✅ Supabase fully connected | ${r.supabaseUrl}`:`⚠️ Not connected | ${r.supabaseUrl||'URL not set'}`;}
+  if(inst)inst.innerHTML=(r.instructions||[]).map(s=>`<div style="padding:2px 0">${esc(s)}</div>`).join('');
+  if(tables&&r.connected){const r2=await fetch(BACKEND+'/health');const d=await r2.json();if(d.tables)tables.innerHTML=Object.entries(d.tables).map(([k,v])=>`<div><b style="color:var(--saffron)">${k}:</b> ${v} rows</div>`).join('');}
 }
-
-// ── SETTINGS ──────────────────────────────────────────────────
-function saveKey(){const k=document.getElementById('s-key').value.trim();if(!k){toast('Enter key',true);return;}KEY=k;localStorage.setItem('ds_key',k);toast('Key saved!');testConn();}
-async function saveVer(){const r=await api('POST','/admin/config',{appVersion:document.getElementById('s-ver').value});r.success?toast('Version updated!'):toast('Failed',true);}
 
 // INIT
-document.addEventListener('DOMContentLoaded',()=>{init();updateChapters();});
+document.addEventListener('DOMContentLoaded', () => { init(); updateCh(); });
 </script>
 </body>
 </html>
