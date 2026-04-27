@@ -137,8 +137,20 @@ async function sbRest(method, table, body = null, query = '') {
       let raw = '';
       res.on('data', c => raw += c);
       res.on('end', () => {
-        try { resolve({ status: res.statusCode, data: JSON.parse(raw || '[]') }); }
-        catch { resolve({ status: res.statusCode, data: [] }); }
+        try {
+          const parsed = JSON.parse(raw || '[]');
+          if (res.statusCode >= 400) {
+            console.error(`[Supabase ERROR] ${method} ${table}: HTTP ${res.statusCode}`, parsed);
+            return reject(new Error(`Supabase error ${res.statusCode}: ${JSON.stringify(parsed)}`));
+          }
+          resolve({ status: res.statusCode, data: parsed });
+        } catch(e) {
+          if (res.statusCode >= 400) {
+            console.error(`[Supabase ERROR] ${method} ${table}: HTTP ${res.statusCode}`, raw);
+            return reject(new Error(`Supabase error ${res.statusCode}`));
+          }
+          resolve({ status: res.statusCode, data: [] });
+        }
       });
     });
     req.on('error', e => { console.error('[Supabase]', method, table, e.message); reject(e); });
@@ -154,9 +166,27 @@ async function sbSelect(table, query = '') {
 async function sbInsert(table, row) {
   return sbRest('POST', table, row);
 }
-async function sbUpsert(table, row, onConflict = '') {
-  const q = onConflict ? `?on_conflict=${onConflict}` : '';
-  return sbRest('POST', table, row, q);
+async function sbUpsert(table, row, matchCols = 'id') {
+  if (!matchCols) return sbRest('POST', table, row);
+  const cols = matchCols.split(',');
+  let qParts = [];
+  for (const c of cols) {
+    if (row[c] !== undefined) qParts.push(`${c}=eq.${encodeURIComponent(row[c])}`);
+  }
+  if (qParts.length === 0) return sbRest('POST', table, row);
+  
+  const query = `?${qParts.join('&')}`;
+  try {
+    const existing = await sbSelect(table, query + '&limit=1');
+    if (existing && existing.length > 0) {
+      return await sbRest('PATCH', table, row, query);
+    } else {
+      return await sbRest('POST', table, row);
+    }
+  } catch(e) {
+    console.error(`[sbUpsert] Failed for table ${table}:`, e.message);
+    throw e;
+  }
 }
 async function sbUpdate(table, query, patch) {
   return sbRest('PATCH', table, patch, query);
@@ -174,7 +204,7 @@ async function loadConfigFromDB() {
     rows.forEach(r => { map[r.key] = r.value; });
 
     if (map.gemini_key)           CFG.geminiKey           = map.gemini_key;
-    if (map.groq_key)             CFG.groqKey             = map.groqKey;
+    if (map.groq_key)             CFG.groqKey             = map.groq_key;
     if (map.phonepe_upi)          CFG.phonepeUPI          = map.phonepe_upi;
     if (map.razorpay_key_id)      CFG.razorpayKeyId       = map.razorpay_key_id;
     if (map.razorpay_key_secret)  CFG.razorpayKeySecret   = map.razorpay_key_secret;
@@ -465,14 +495,18 @@ app.post('/users/register', async (req, res) => {
     const id = `u_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
     const newUser = {
       id, phone: cleanPhone, name: cleanName,
-      email: sanitize(email || '', 200),
-      firebase_uid: firebaseUid || '',
-      rashi: rashi || 'Mesh', nakshatra: nakshatra || 'Ashwini',
-      deity: deity || 'Hanuman', language: language || 'hindi',
-      birth_city: sanitize(birthCity || '', 100), dob: dob || '',
-      plan: 'free', streak: 0, questions: 0, pts: 0,
       created_at: new Date().toISOString(), last_active: new Date().toISOString(),
+      plan: 'free', streak: 0, questions: 0, pts: 0,
     };
+    if (email) newUser.email = sanitize(email, 200);
+    if (firebaseUid) newUser.firebase_uid = firebaseUid;
+    if (rashi) newUser.rashi = rashi;
+    if (nakshatra) newUser.nakshatra = nakshatra;
+    if (deity) newUser.deity = deity;
+    if (language) newUser.language = language;
+    if (birthCity) newUser.birth_city = sanitize(birthCity, 100);
+    if (dob) newUser.dob = dob;
+
     await sbInsert('users', newUser);
     res.json({ success: true, user: newUser, isNew: true });
   } catch(e) {
@@ -512,15 +546,16 @@ app.post('/feedback', async (req, res) => {
     const { question, wrongAnswer, correctedAnswer, reason, phone, rating } = req.body;
     const entry = {
       id: `fb_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
-      question:         sanitize(question         || '', 500),
-      wrong_answer:     sanitize(wrongAnswer      || '', 1000),
-      corrected_answer: sanitize(correctedAnswer  || '', 1000),
-      reason:           sanitize(reason           || '', 300),
-      phone:            sanitize(phone            || '', 20),
-      rating:           rating === 'up' ? 'up' : 'down',
       status:           'pending',
       created_at:       new Date().toISOString(),
     };
+    if (question) entry.question = sanitize(question, 500);
+    if (wrongAnswer) entry.wrong_answer = sanitize(wrongAnswer, 1000);
+    if (correctedAnswer) entry.corrected_answer = sanitize(correctedAnswer, 1000);
+    if (reason) entry.reason = sanitize(reason, 300);
+    if (phone) entry.phone = sanitize(phone, 20);
+    if (rating) entry.rating = rating === 'up' ? 'up' : 'down';
+
     await sbInsert('feedback', entry);
     res.json({ success: true, id: entry.id });
   } catch(e) {
