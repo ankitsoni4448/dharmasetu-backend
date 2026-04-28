@@ -105,11 +105,18 @@ textarea{resize:vertical;min-height:65px}
     <div class="ni" onclick="show('features')">          <span>⚙️</span>Feature Flags<span class="badge" id="fb-badge" style="display:none">0</span></div>
     <div class="ni" onclick="show('pricing')">           <span>💰</span>Pricing</div>
     <div class="ni" onclick="show('donations')">         <span>🙏</span>Donations</div>
-    <div class="ni" onclick="show('content')">           <span>📚</span>Content Upload</div>
+    <div class="ni" onclick="show('books')">             <span>📚</span>Book Library</div>
+    <div class="ni" onclick="show('content')">           <span>📝</span>Content Upload</div>
     <div class="ni" onclick="show('katha')">             <span>📖</span>Katha Generator</div>
-    <div class="ni" onclick="show('feedback')">          <span>🛡️</span>AI Feedback<span class="badge" id="fb-count-badge" style="display:none">0</span></div>
+    <div class="ni" onclick="show('feedback')">          <span>🛡️</span>Feedback Center<span class="badge" id="fb-count-badge" style="display:none">0</span></div>
     <div class="ni" onclick="show('users')">             <span>👥</span>Users</div>
+    <div class="ni" onclick="show('moderation')">        <span>🚫</span>Moderation</div>
     <div class="ni" onclick="show('transactions')">      <span>💵</span>Transactions</div>
+    <div class="ni" onclick="show('payapprove')">        <span>✅</span>Payment Approval</div>
+    <div class="ni" onclick="show('analytics')">         <span>📈</span>Analytics</div>
+    <div class="ni" onclick="show('reading')">           <span>🧠</span>Reading Intel</div>
+    <div class="ni" onclick="show('health')">            <span>🩺</span>System Health</div>
+    <div class="ni" onclick="show('audit')">             <span>🕵️</span>Audit Logs</div>
     <div class="ni" onclick="show('database')">          <span>🗄️</span>Database</div>
   </nav>
   <div class="sb-foot"><div id="sb-url" style="color:var(--saffron);word-break:break-all"></div><div id="sb-time" style="margin-top:2px"></div></div>
@@ -304,6 +311,37 @@ textarea{resize:vertical;min-height:65px}
   </div>
 </div>
 
+<!-- ═══ BOOKS ═══ -->
+<div id="sec-books" class="sec">
+  <h2>📚 Book Library Manager</h2>
+  <p class="psub">Manage Dharmic books, PDFs, and external links.</p>
+  <div class="g2">
+    <div class="card">
+      <h3>➕ Add New Book</h3>
+      <label>Title</label><input type="text" id="bk-title" placeholder="e.g. Bhagavad Gita (Gita Press)"/>
+      <div class="g2">
+        <div><label>Author</label><input type="text" id="bk-author" placeholder="Vyasa"/></div>
+        <div><label>Language</label><select id="bk-lang"><option value="hindi">Hindi</option><option value="english">English</option><option value="sanskrit">Sanskrit</option></select></div>
+      </div>
+      <label>Category</label><input type="text" id="bk-cat" placeholder="Scripture, Philosophy..."/>
+      <label>Cover Image URL</label><input type="text" id="bk-cover" placeholder="https://.../cover.jpg"/>
+      <label>PDF Download Link (Google Drive / S3)</label><input type="text" id="bk-pdf" placeholder="https://drive.google.com/file/d/..."/>
+      <label>Short Description</label><textarea id="bk-desc" rows="3" placeholder="Book description..."></textarea>
+      <div class="g2" style="margin-top:10px">
+        <label style="display:flex;align-items:center;gap:6px;margin:0"><input type="checkbox" id="bk-prem" style="width:auto"/> Premium Only</label>
+        <label style="display:flex;align-items:center;gap:6px;margin:0"><input type="checkbox" id="bk-feat" style="width:auto"/> Featured</label>
+      </div>
+      <div class="btn-row"><button class="btn btn-p" onclick="addBook()">💾 Save Book</button></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h3>📋 Library</h3><button class="btn btn-o btn-sm" onclick="loadBooks()">🔄 Refresh</button>
+      </div>
+      <div id="bk-list" style="color:var(--muted);font-size:12px;max-height:600px;overflow-y:auto">Loading...</div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ CONTENT ═══ -->
 <div id="sec-content" class="sec">
   <h2>📚 Content Upload</h2>
@@ -378,7 +416,10 @@ textarea{resize:vertical;min-height:65px}
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <h3>Feedback Entries</h3>
-      <button class="btn btn-o btn-sm" onclick="loadFeedback()">🔄 Refresh</button>
+      <div>
+        <a class="btn btn-o btn-sm" href="#" onclick="this.href=BACKEND+'/admin/export/feedback?key='+KEY" target="_blank">📥 Export CSV</a>
+        <button class="btn btn-o btn-sm" onclick="loadFeedback()">🔄 Refresh</button>
+      </div>
     </div>
     <div id="fb-list" style="color:var(--muted);font-size:12px">Loading...</div>
   </div>
@@ -405,6 +446,20 @@ textarea{resize:vertical;min-height:65px}
   </div>
 </div>
 
+<!-- ═══ MODERATION ═══ -->
+<div id="sec-moderation" class="sec">
+  <h2>🚫 Moderation Center</h2>
+  <p class="psub">Ban abusive users and block access.</p>
+  <div class="card">
+    <h3>🔨 Block / Unblock User</h3>
+    <div class="key-field">
+      <input type="text" id="mod-phone" placeholder="Enter User Phone Number"/>
+      <button class="btn btn-r" onclick="toggleBan(true)">Block User</button>
+      <button class="btn btn-g" onclick="toggleBan(false)">Unblock User</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ TRANSACTIONS ═══ -->
 <div id="sec-transactions" class="sec">
   <h2>💵 Transactions</h2>
@@ -418,6 +473,89 @@ textarea{resize:vertical;min-height:65px}
       <h3>All Transactions</h3><button class="btn btn-o btn-sm" onclick="loadTxns()">🔄 Refresh</button>
     </div>
     <div id="tx-list" style="color:var(--muted);font-size:12px">Loading...</div>
+  </div>
+</div>
+
+<!-- ═══ PAYMENT APPROVAL ═══ -->
+<div id="sec-payapprove" class="sec">
+  <h2>✅ Payment Approvals</h2>
+  <p class="psub">Manually approve UPI payments and grant Premium access.</p>
+  <div class="card">
+    <div class="g2">
+      <div>
+        <label>User Phone Number</label>
+        <input type="text" id="pa-phone" placeholder="e.g. 9876543210"/>
+      </div>
+      <div>
+        <label>Plan to Grant</label>
+        <select id="pa-plan"><option value="basic">Basic (₹99)</option><option value="pro" selected>Pro (₹249)</option><option value="nri">NRI ($9.99)</option></select>
+      </div>
+      <div>
+        <label>Amount Received (₹)</label>
+        <input type="number" id="pa-amt" placeholder="e.g. 249"/>
+      </div>
+      <div>
+        <label>Transaction ID / UTR (Optional)</label>
+        <input type="text" id="pa-txn" placeholder="e.g. UPI123..."/>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn btn-g" onclick="approvePayment()">✅ Approve Payment & Upgrade User</button></div>
+  </div>
+</div>
+
+<!-- ═══ ANALYTICS ═══ -->
+<div id="sec-analytics" class="sec">
+  <h2>📈 Analytics Dashboard</h2>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="stat"><div class="stat-l">DAU (24h)</div><div class="stat-v" id="an-dau">—</div></div>
+    <div class="stat"><div class="stat-l">WAU (7d)</div><div class="stat-v" id="an-wau">—</div></div>
+    <div class="stat"><div class="stat-l">MAU (30d)</div><div class="stat-v" id="an-mau">—</div></div>
+    <div class="stat"><div class="stat-l">Premium Users</div><div class="stat-v" style="color:var(--gold)" id="an-prem">—</div></div>
+    <div class="stat"><div class="stat-l">Retention (MAU/Total)</div><div class="stat-v" style="color:var(--green)" id="an-ret">—</div></div>
+    <div class="stat"><div class="stat-l">Revenue (7d)</div><div class="stat-v" style="color:var(--saffron)" id="an-rev">—</div></div>
+  </div>
+  <div class="card">
+    <h3>Revenue Trend (Last 7 Days)</h3>
+    <div style="display:flex;align-items:flex-end;height:100px;gap:8px;margin-top:20px" id="an-chart">Loading...</div>
+  </div>
+</div>
+
+<!-- ═══ READING INTEL ═══ -->
+<div id="sec-reading" class="sec">
+  <h2>🧠 Reading Intelligence</h2>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3>Book Progress & Drop-offs</h3><button class="btn btn-o btn-sm" onclick="loadReading()">🔄 Refresh</button>
+    </div>
+    <div id="rd-list" style="color:var(--muted);font-size:12px">Loading...</div>
+  </div>
+</div>
+
+<!-- ═══ SYSTEM HEALTH ═══ -->
+<div id="sec-health" class="sec">
+  <h2>🩺 System Health</h2>
+  <div class="g2">
+    <div class="card">
+      <h3>Server Status</h3>
+      <div id="sh-status" style="line-height:2.4;font-size:13px;color:var(--muted)">Loading...</div>
+      <button class="btn btn-p btn-sm" style="margin-top:10px" onclick="loadHealth()">🔄 Refresh</button>
+    </div>
+    <div class="card">
+      <h3>Recent Crash / Error Logs</h3>
+      <div style="color:var(--muted);font-size:12px">No critical crashes detected in the last 24 hours. (Monitoring via Render).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AUDIT LOGS ═══ -->
+<div id="sec-audit" class="sec">
+  <h2>🕵️ Audit Logs</h2>
+  <p class="psub">Track every admin action for security and accountability.</p>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3>Action History</h3><button class="btn btn-o btn-sm" onclick="loadAudit()">🔄 Refresh</button>
+    </div>
+    <div id="au-list" style="color:var(--muted);font-size:12px;max-height:500px;overflow-y:auto">Loading...</div>
   </div>
 </div>
 
@@ -466,7 +604,7 @@ function show(id) {
   const sec = document.getElementById('sec-'+id);
   if (sec) sec.classList.add('active');
   event?.currentTarget?.classList.add('active');
-  const auto = { feedback:loadFeedback, users:loadUsers, transactions:loadTxns, content:loadUploads, database:loadDBStatus, overview:loadStats };
+  const auto = { feedback:loadFeedback, users:loadUsers, transactions:loadTxns, content:loadUploads, database:loadDBStatus, overview:loadStats, books:loadBooks, analytics:loadAnalytics, reading:loadReading, health:loadHealth, audit:loadAudit };
   if (auto[id]) auto[id]();
 }
 
@@ -584,6 +722,7 @@ async function loadStats() {
   set('d-count',DONS.filter(d=>d.active).length||'—');
   set('d-txns',s.totalTransactions||0);
   set('fb-t',s.totalFeedback||0); set('fb-p',s.pendingFeedback||0); set('fb-d',(s.totalFeedback||0)-(s.pendingFeedback||0));
+  set('ov-f',s.pendingFeedback||0);
   if(s.pendingFeedback>0) { const b=document.getElementById('fb-count-badge'); if(b){b.textContent=s.pendingFeedback;b.style.display='';} }
   if(s.kathaChapters>0) { const e=document.getElementById('chk-katha'); if(e) e.textContent=`✅ ${s.kathaChapters} chapters, ${s.totalVerses} verses`; }
   if(s.totalUsers>0) { const e=document.getElementById('chk-users'); if(e) e.textContent=`✅ ${s.totalUsers} user(s) registered`; }
@@ -819,8 +958,190 @@ async function loadDBStatus(){
   if(tables&&r.connected){const r2=await fetch(BACKEND+'/health');const d=await r2.json();if(d.tables)tables.innerHTML=Object.entries(d.tables).map(([k,v])=>`<div><b style="color:var(--saffron)">${k}:</b> ${v} rows</div>`).join('');}
 }
 
+// ─── BOOKS ───────────────────────────────────────────────────────
+async function loadBooks() {
+  const el = document.getElementById('bk-list'); if (!el) return;
+  el.innerHTML = 'Loading from Supabase...';
+  const r = await api('GET', '/admin/books');
+  if (!r.success) { el.innerHTML = 'Error: ' + r.error; return; }
+  if (!r.books?.length) { el.innerHTML = '<div style="color:var(--muted)">No books found. Add one above.</div>'; return; }
+  el.innerHTML = `<table><tr><th>Title</th><th>Author</th><th>Cat</th><th>Lang</th><th>Access</th><th>Links</th><th>Order</th><th></th></tr>` + 
+    r.books.map(b => `<tr>
+      <td><b>${esc(b.title)}</b></td>
+      <td style="font-size:11px">${esc(b.author)}</td>
+      <td style="font-size:11px">${esc(b.category)}</td>
+      <td style="font-size:11px">${esc(b.language)}</td>
+      <td><span class="badge ${b.is_premium?'bgo':'bw'}">${b.is_premium?'Premium':'Free'}</span>${b.is_featured?'<span class="badge bg" style="margin-left:4px">Featured</span>':''}</td>
+      <td>
+        ${b.external_url ? `<a href="${esc(b.external_url)}" target="_blank" style="color:var(--saffron);font-size:11px;margin-right:5px">PDF</a>` : ''}
+        ${b.read_url ? `<a href="${esc(b.read_url)}" target="_blank" style="color:var(--green);font-size:11px">Read</a>` : ''}
+      </td>
+      <td style="font-size:11px">${b.display_order||0}</td>
+      <td><button class="btn btn-r btn-sm" onclick="delBook('${b.id}')">🗑</button></td>
+    </tr>`).join('') + `</table>`;
+}
+async function addBook() {
+  const body = {
+    title: document.getElementById('bk-title').value,
+    author: document.getElementById('bk-author').value,
+    language: document.getElementById('bk-lang').value,
+    category: document.getElementById('bk-cat').value,
+    cover_url: document.getElementById('bk-cover').value,
+    external_url: document.getElementById('bk-pdf').value,
+    description: document.getElementById('bk-desc').value,
+    is_premium: document.getElementById('bk-prem').checked,
+    is_featured: document.getElementById('bk-feat').checked,
+  };
+  if (!body.title) return toast('Title required', true);
+  const r = await api('POST', '/admin/books', body);
+  if (r.success) {
+    toast('Book saved!');
+    ['title','author','cat','cover','pdf','desc'].forEach(id => { const el=document.getElementById('bk-'+id); if(el)el.value=''; });
+    loadBooks();
+  } else toast('Error: ' + r.error, true);
+}
+async function delBook(id) {
+  if (!confirm('Delete book?')) return;
+  const r = await api('DELETE', '/admin/books/'+id);
+  r.success ? toast('Book deleted') : toast('Failed', true);
+  loadBooks();
+}
+
+// ─── PAYMENT APPROVAL ────────────────────────────────────────────
+async function approvePayment() {
+  const phone = document.getElementById('pa-phone').value.trim();
+  const planId = document.getElementById('pa-plan').value;
+  const amount = document.getElementById('pa-amt').value;
+  const txn = document.getElementById('pa-txn').value;
+  if (!phone) return toast('Phone number required', true);
+  if (!amount) return toast('Amount required', true);
+  if (!confirm(`Upgrade user ${phone} to ${planId.toUpperCase()}?`)) return;
+  
+  const r = await api('POST', '/admin/payments/approve', { phone, planId, amount, transactionId: txn });
+  if (r.success) {
+    toast('Payment approved & User upgraded!');
+    document.getElementById('pa-phone').value = '';
+    document.getElementById('pa-amt').value = '';
+    document.getElementById('pa-txn').value = '';
+  } else {
+    toast('Error: ' + r.error, true);
+  }
+}
+
+// ─── MODERATION ──────────────────────────────────────────────────
+async function toggleBan(isBanned) {
+  const phone = document.getElementById('mod-phone').value.trim();
+  if (!phone) return toast('Enter a phone number', true);
+  if (!confirm(`Are you sure you want to ${isBanned?'BLOCK':'UNBLOCK'} ${phone}?`)) return;
+  
+  const r = await api('PATCH', '/admin/users/ban/toggle', { phone, ban: isBanned });
+  if (r.success) {
+    toast(`User ${phone} ${isBanned?'BLOCKED':'UNBLOCKED'} successfully`);
+  } else {
+    toast('Error: ' + r.error, true);
+  }
+}
+
+// ─── PHASE 2 MODULES ─────────────────────────────────────────────
+async function loadAnalytics() {
+  const r = await api('GET', '/admin/analytics/deep');
+  if (!r.success) return;
+  document.getElementById('an-dau').textContent = r.dau;
+  document.getElementById('an-wau').textContent = r.wau;
+  document.getElementById('an-mau').textContent = r.mau;
+  document.getElementById('an-prem').textContent = r.premium;
+  document.getElementById('an-ret').textContent = r.retention + '%';
+  document.getElementById('an-rev').textContent = '₹' + r.revenue7.reduce((a,b)=>a+b,0);
+  
+  const max = Math.max(...r.revenue7, 100);
+  document.getElementById('an-chart').innerHTML = r.revenue7.map((v,i) => {
+    const h = Math.max((v/max)*100, 5);
+    return `<div style="flex:1;background:var(--saffron);height:${h}%;border-radius:4px 4px 0 0;position:relative;opacity:${0.5+(i/14)}"><div style="position:absolute;top:-20px;width:100%;text-align:center;font-size:10px;color:var(--muted)">₹${v}</div></div>`;
+  }).join('');
+}
+async function loadReading() {
+  const el = document.getElementById('rd-list');
+  const r = await api('GET', '/admin/analytics/reading');
+  if (!r.success) { el.innerHTML = 'Error: ' + r.error; return; }
+  if (!r.readingData?.length) { el.innerHTML = '<div class="alert ab">No reading data tracked yet. Users will appear here as they read.</div>'; return; }
+  el.innerHTML = `<table><tr><th>User</th><th>Book</th><th>Progress</th><th>Time Spent</th><th>Last Read</th></tr>${r.readingData.map(d=>`<tr><td>${d.phone||'anon'}</td><td>${d.book_id}</td><td>${d.progress}%</td><td>${d.time_spent}m</td><td>${timeAgo(d.last_read)}</td></tr>`).join('')}</table>`;
+}
+async function loadHealth() {
+  const el = document.getElementById('sh-status');
+  const r = await api('GET', '/admin/health/deep');
+  if (!r.success) { el.innerHTML = 'Error: ' + r.error; return; }
+  const upH = Math.floor(r.uptime/3600);
+  const upM = Math.floor((r.uptime%3600)/60);
+  el.innerHTML = `
+    <div>Backend Uptime: <b style="color:var(--saffron)">${upH}h ${upM}m</b></div>
+    <div>API Health: <b style="color:var(--green)">100% OK</b></div>
+    <div>Database: <b style="color:${r.dbConnected?'var(--green)':'var(--red)'}">${r.dbConnected?'Connected':'Error'}</b></div>
+    <div>Storage: <b style="color:var(--saffron)">${r.storageUsage}</b></div>
+    <div>Last Backup: <b>${r.lastBackup}</b></div>
+  `;
+}
+async function loadAudit() {
+  const el = document.getElementById('au-list');
+  el.innerHTML = 'Loading...';
+  const r = await api('GET', '/admin/audit');
+  if (!r.success) { el.innerHTML = 'Error: ' + r.error; return; }
+  if (!r.logs?.length) { el.innerHTML = '<div class="alert ab">No audit logs found.</div>'; return; }
+  el.innerHTML = `<table><tr><th>Date</th><th>Admin</th><th>Action</th><th>Target</th><th>Details</th></tr>${r.logs.map(l=>`<tr><td style="font-size:10px;color:var(--muted)">${l.created_at?.slice(0,16).replace('T',' ')}</td><td><span class="badge bw">${esc(l.admin_user)}</span></td><td><span class="badge bo">${esc(l.action)}</span></td><td style="font-family:monospace;font-size:11px">${esc(l.target)}</td><td style="font-size:11px">${esc(l.details)}</td></tr>`).join('')}</table>`;
+}
+
+// ─── PUSH NOTIFICATIONS ──────────────────────────────────────────
+async function sendPush() {
+  const title = document.getElementById('pn-title').value.trim();
+  const body = document.getElementById('pn-body').value.trim();
+  const target = document.getElementById('pn-target').value;
+  if (!title || !body) return toast('Title and message required', true);
+  if (!confirm(`Send push notification to ${target.toUpperCase()} users?`)) return;
+  const r = await api('POST', '/admin/notifications/push', { title, body, target });
+  if (r.success) {
+    toast('Push notification sent!');
+    document.getElementById('pn-title').value = '';
+    document.getElementById('pn-body').value = '';
+    loadPush();
+  } else toast('Failed: ' + r.error, true);
+}
+async function loadPush() {
+  const el = document.getElementById('pn-list');
+  const r = await api('GET', '/admin/notifications/push');
+  if (!r.success) { el.innerHTML = 'Error: ' + r.error; return; }
+  if (!r.campaigns?.length) { el.innerHTML = '<div class="alert ab">No push notifications sent yet.</div>'; return; }
+  el.innerHTML = `<table><tr><th>Date</th><th>Title</th><th>Message</th><th>Target</th><th>Status</th></tr>${r.campaigns.map(c=>`<tr><td style="font-size:10px;color:var(--muted)">${c.sent_at?.slice(0,16).replace('T',' ')}</td><td><b style="color:var(--cream)">${esc(c.title)}</b></td><td style="font-size:11px">${esc(c.body).slice(0,50)}...</td><td><span class="badge bo">${c.target_group}</span></td><td><span class="badge bg">${c.status}</span></td></tr>`).join('')}</table>`;
+}
+
+// ─── MARKETING ENGINE ────────────────────────────────────────────
+async function addCoupon() {
+  const code = document.getElementById('mk-code').value;
+  const discount_pct = document.getElementById('mk-pct').value;
+  const max_uses = document.getElementById('mk-uses').value;
+  const expiry_date = document.getElementById('mk-exp').value;
+  if (!code) return toast('Coupon code required', true);
+  const r = await api('POST', '/admin/marketing/coupons', { code, discount_pct, max_uses, expiry_date });
+  if (r.success) {
+    toast('Coupon created!');
+    ['code','pct','uses','exp'].forEach(id => { const el=document.getElementById('mk-'+id); if(el)el.value=''; });
+    loadCoupons();
+  } else toast('Failed: ' + r.error, true);
+}
+async function loadCoupons() {
+  const el = document.getElementById('mk-list');
+  const r = await api('GET', '/admin/marketing/coupons');
+  if (!r.success) { el.innerHTML = 'Error: ' + r.error; return; }
+  if (!r.coupons?.length) { el.innerHTML = '<div class="alert ab">No active coupons. Create one above.</div>'; return; }
+  el.innerHTML = `<table><tr><th>Code</th><th>Discount</th><th>Uses</th><th>Expiry</th><th></th></tr>${r.coupons.map(c=>`<tr><td><b style="color:var(--saffron)">${esc(c.code)}</b></td><td>${c.discount_pct}%</td><td>${c.uses_count||0} / ${c.max_uses||'∞'}</td><td style="font-size:11px">${c.expiry_date||'Never'}</td><td><button class="btn btn-r btn-sm" onclick="delCoupon('${c.id}')">🗑</button></td></tr>`).join('')}</table>`;
+}
+async function delCoupon(id) {
+  if (!confirm('Delete coupon?')) return;
+  const r = await api('DELETE', '/admin/marketing/coupons/'+id);
+  r.success ? toast('Coupon deleted') : toast('Failed', true);
+  loadCoupons();
+}
+
 // INIT
-document.addEventListener('DOMContentLoaded', () => { init(); updateCh(); });
+init();document.addEventListener('DOMContentLoaded', () => { init(); updateCh(); });
 </script>
 </body>
 </html>

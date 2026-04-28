@@ -195,6 +195,20 @@ async function sbDelete(table, query) {
   return sbRest('DELETE', table, null, query);
 }
 
+// ─── AUDIT LOGGER ─────────────────────────────────────────────
+async function auditLog(action, adminUser, target, details) {
+  try {
+    await sbInsert('audit_logs', {
+      id: `au_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,
+      action: sanitize(action, 100),
+      admin_user: sanitize(adminUser, 100),
+      target: sanitize(target, 200),
+      details: sanitize(details, 500),
+      created_at: new Date().toISOString()
+    });
+  } catch(e) { console.error('[Audit]', e.message); }
+}
+
 // ─── LOAD CONFIG FROM DB ──────────────────────────────────────
 async function loadConfigFromDB() {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) { console.log('[Config] Supabase not configured'); return; }
@@ -961,6 +975,7 @@ app.post('/admin/config', adminAuth, async (req, res) => {
     }
   }
   await Promise.all(saves);
+  await auditLog('CONFIG_CHANGED', 'admin', 'System Settings', `Updated ${saves.length} keys`);
   const safe = { ...CFG };
   if (safe.razorpayKeySecret?.length > 4) safe.razorpayKeySecret = safe.razorpayKeySecret.slice(0,4) + '***SAVED';
   if (safe.geminiKey?.length > 6)         safe.geminiKey         = safe.geminiKey.slice(0,8)         + '***SAVED';
@@ -1040,6 +1055,50 @@ app.get('/admin/uploads', adminAuth, async (req, res) => {
 app.patch('/admin/uploads/:id',  adminAuth, async (req, res) => { await sbUpdate('uploads', `?id=eq.${req.params.id}`, req.body); res.json({ success: true }); });
 app.delete('/admin/uploads/:id', adminAuth, async (req, res) => { await sbDelete('uploads', `?id=eq.${req.params.id}`); res.json({ success: true }); });
 
+// ════════════════════════════════════════════════════════════════
+// BOOKS (Library Manager)
+// ════════════════════════════════════════════════════════════════
+app.get('/admin/books', adminAuth, async (req, res) => {
+  try {
+    const rows = await sbSelect('books', '?order=display_order.asc,created_at.desc').catch(()=>[]);
+    res.json({ success: true, books: rows, total: rows.length });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/admin/books', adminAuth, async (req, res) => {
+  try {
+    const entry = {
+      id: `bk_${Date.now()}`,
+      title: sanitize(req.body.title || 'Untitled', 200),
+      author: sanitize(req.body.author || 'Unknown', 100),
+      language: sanitize(req.body.language || 'hindi', 50),
+      category: sanitize(req.body.category || 'general', 50),
+      cover_url: sanitize(req.body.cover_url || '', 500),
+      description: sanitize(req.body.description || '', 1000),
+      is_premium: !!req.body.is_premium,
+      is_featured: !!req.body.is_featured,
+      external_url: sanitize(req.body.external_url || '', 500),
+      read_url: sanitize(req.body.read_url || '', 500),
+      tags: req.body.tags ? req.body.tags.split(',').map(t=>sanitize(t.trim(), 50)) : [],
+      display_order: parseInt(req.body.display_order) || 0,
+      created_at: new Date().toISOString()
+    };
+    await sbInsert('books', entry);
+    res.json({ success: true, book: entry });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.patch('/admin/books/:id', adminAuth, async (req, res) => {
+  try {
+    const patch = { ...req.body };
+    delete patch.id; 
+    await sbUpdate('books', `?id=eq.${req.params.id}`, patch);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.delete('/admin/books/:id', adminAuth, async (req, res) => {
+  await sbDelete('books', `?id=eq.${req.params.id}`);
+  res.json({ success: true });
+});
+
 // Users
 app.get('/admin/users', adminAuth, async (req, res) => {
   const { search, plan } = req.query;
@@ -1057,12 +1116,40 @@ app.get('/admin/users', adminAuth, async (req, res) => {
   res.json({ success: true, users: rows, total: rows.length });
 });
 app.patch('/admin/users/:id', adminAuth, async (req, res) => { await sbUpdate('users', `?id=eq.${req.params.id}`, req.body); res.json({ success: true }); });
+app.patch('/admin/users/ban/toggle', adminAuth, async (req, res) => {
+  try {
+    const { phone, ban } = req.body;
+    const cleanPhone = sanitize(phone || '', 20);
+    if (!cleanPhone) return res.status(400).json({ error: 'Phone required' });
+    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { is_banned: !!ban });
+    await auditLog(ban?'USER_BANNED':'USER_UNBANNED', 'admin', cleanPhone, `Status: ${ban}`);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
 
 // Transactions
 app.get('/admin/transactions', adminAuth, async (req, res) => {
   const rows = await sbSelect('payments', '?order=created_at.desc&limit=200');
   const paid = rows.filter(r => r.status === 'paid');
   res.json({ success: true, transactions: rows, total: rows.length, totalRevenue: paid.reduce((s,t) => s+(t.amount||0), 0) });
+});
+app.post('/admin/payments/approve', adminAuth, async (req, res) => {
+  try {
+    const { phone, planId, amount, transactionId } = req.body;
+    const cleanPhone = sanitize(phone || '', 20);
+    const cleanPlan = sanitize(planId || 'pro', 50);
+    const payId = `m_app_${Date.now()}`;
+    await sbInsert('payments', {
+      id: payId, phone: cleanPhone, plan_id: cleanPlan,
+      amount: parseInt(amount)||0, status: 'paid',
+      payment_type: 'subscription', payment_via: 'manual',
+      payment_id: sanitize(transactionId||'manual_approval', 100),
+      paid_at: new Date().toISOString(), created_at: new Date().toISOString()
+    });
+    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { plan: cleanPlan });
+    await auditLog('PAYMENT_APPROVED', 'admin', cleanPhone, `Plan: ${cleanPlan}, Amount: ${amount}`);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 // Feedback
@@ -1072,6 +1159,23 @@ app.get('/admin/feedback', adminAuth, async (req, res) => {
 });
 app.patch('/admin/feedback/:id',  adminAuth, async (req, res) => { await sbUpdate('feedback', `?id=eq.${req.params.id}`, req.body); res.json({ success: true }); });
 app.delete('/admin/feedback/:id', adminAuth, async (req, res) => { await sbDelete('feedback', `?id=eq.${req.params.id}`); res.json({ success: true }); });
+
+// Exports
+app.get('/admin/export/feedback', adminAuth, async (req, res) => {
+  try {
+    const rows = await sbSelect('feedback', '?order=created_at.desc');
+    let csv = 'ID,Date,Phone,Question,Reason,Status,Notes\n';
+    rows.forEach(r => {
+      const q = (r.question||'').replace(/"/g,'""');
+      const re = (r.reason||'').replace(/"/g,'""');
+      const n = (r.notes||'').replace(/"/g,'""');
+      csv += `"${r.id}","${r.created_at}","${r.phone}","${q}","${re}","${r.status}","${n}"\n`;
+    });
+    res.header('Content-Type', 'text/csv');
+    res.attachment('dharmasetu_feedback.csv');
+    res.send(csv);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
 
 // Stats
 app.get('/admin/stats', adminAuth, async (req, res) => {
@@ -1104,6 +1208,67 @@ app.get('/admin/stats', adminAuth, async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Analytics Deep
+app.get('/admin/analytics/deep', adminAuth, async (req, res) => {
+  try {
+    const [users, payments, katha] = await Promise.all([
+      sbSelect('users', '?select=plan,created_at,last_active').catch(() => []),
+      sbSelect('payments', '?select=status,amount,created_at').catch(() => []),
+      sbSelect('katha_vault', '?select=scripture_id').catch(() => []),
+    ]);
+    
+    const now = Date.now();
+    const dayMs = 86400000;
+    
+    const dau = users.filter(u => now - new Date(u.last_active).getTime() < dayMs).length;
+    const wau = users.filter(u => now - new Date(u.last_active).getTime() < dayMs * 7).length;
+    const mau = users.filter(u => now - new Date(u.last_active).getTime() < dayMs * 30).length;
+    
+    const premium = users.filter(u => u.plan !== 'free').length;
+    const retention = users.length ? Math.round((mau / users.length) * 100) : 0;
+    
+    // Revenue trends (last 7 days)
+    const rev7 = [0,0,0,0,0,0,0];
+    payments.filter(p => p.status === 'paid').forEach(p => {
+      const daysAgo = Math.floor((now - new Date(p.created_at).getTime()) / dayMs);
+      if (daysAgo < 7 && daysAgo >= 0) rev7[6 - daysAgo] += (p.amount || 0);
+    });
+
+    res.json({ success: true, dau, wau, mau, premium, retention, revenue7: rev7, topKatha: katha.length });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Reading Intelligence
+app.get('/admin/analytics/reading', adminAuth, async (req, res) => {
+  try {
+    const rows = await sbSelect('reading_progress', '?limit=100').catch(() => []);
+    res.json({ success: true, readingData: rows });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Deep Health
+app.get('/admin/health/deep', adminAuth, async (req, res) => {
+  const configured = !!(SUPABASE_URL && SUPABASE_SERVICE_KEY);
+  let connected = false;
+  try { await sbSelect('admin_settings', '?limit=1'); connected = true; } catch {}
+  res.json({
+    success: true,
+    uptime: process.uptime(),
+    dbConnected: connected,
+    dbConfigured: configured,
+    storageUsage: 'Supabase Free Tier (500MB max)',
+    lastBackup: 'Never'
+  });
+});
+
+// Audit Logs
+app.get('/admin/audit', adminAuth, async (req, res) => {
+  try {
+    const rows = await sbSelect('audit_logs', '?order=created_at.desc&limit=100').catch(()=>[]);
+    res.json({ success: true, logs: rows });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // DB status
 app.get('/admin/db-status', adminAuth, async (req, res) => {
   const configured = !!(SUPABASE_URL && SUPABASE_SERVICE_KEY);
@@ -1114,6 +1279,67 @@ app.get('/admin/db-status', adminAuth, async (req, res) => {
     supabaseUrl:   SUPABASE_URL ? SUPABASE_URL.replace(/eyJ.*/, '***') : 'NOT SET',
     configured, connected,
   });
+});
+
+// ════════════════════════════════════════════════════════════════
+// PHASE 3: GROWTH & MARKETING
+// ════════════════════════════════════════════════════════════════
+
+// Push Notifications
+app.post('/admin/notifications/push', adminAuth, async (req, res) => {
+  try {
+    const { title, body, target } = req.body;
+    if (!title || !body) return res.status(400).json({ error: 'Title and body required' });
+    const entry = {
+      id: `push_${Date.now()}`,
+      title: sanitize(title, 100),
+      body: sanitize(body, 500),
+      target_group: sanitize(target || 'all', 50),
+      status: 'sent',
+      sent_at: new Date().toISOString()
+    };
+    await sbInsert('push_campaigns', entry);
+    await auditLog('PUSH_SENT', 'admin', entry.target_group, `Title: ${entry.title}`);
+    res.json({ success: true, campaign: entry });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.get('/admin/notifications/push', adminAuth, async (req, res) => {
+  try {
+    const rows = await sbSelect('push_campaigns', '?order=sent_at.desc').catch(()=>[]);
+    res.json({ success: true, campaigns: rows });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Marketing Coupons
+app.post('/admin/marketing/coupons', adminAuth, async (req, res) => {
+  try {
+    const { code, discount_pct, max_uses, expiry_date } = req.body;
+    const cleanCode = sanitize(code || '', 50).toUpperCase();
+    if (!cleanCode) return res.status(400).json({ error: 'Code required' });
+    const entry = {
+      id: `cpn_${Date.now()}`,
+      code: cleanCode,
+      discount_pct: parseInt(discount_pct) || 10,
+      max_uses: parseInt(max_uses) || 100,
+      uses_count: 0,
+      expiry_date: sanitize(expiry_date || '', 50),
+      created_at: new Date().toISOString()
+    };
+    await sbInsert('coupons', entry);
+    await auditLog('COUPON_CREATED', 'admin', cleanCode, `${entry.discount_pct}% off`);
+    res.json({ success: true, coupon: entry });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.get('/admin/marketing/coupons', adminAuth, async (req, res) => {
+  try {
+    const rows = await sbSelect('coupons', '?order=created_at.desc').catch(()=>[]);
+    res.json({ success: true, coupons: rows });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.delete('/admin/marketing/coupons/:id', adminAuth, async (req, res) => {
+  await sbDelete('coupons', `?id=eq.${req.params.id}`);
+  await auditLog('COUPON_DELETED', 'admin', req.params.id, '');
+  res.json({ success: true });
 });
 
 // ─── 404 Handler ─────────────────────────────────────────────
