@@ -190,6 +190,39 @@ textarea{resize:vertical;min-height:65px}
   </div>
 </div>
 
+<!-- ═══ FEEDBACK CENTER ═══ -->
+<div id="sec-feedback" class="sec">
+  <h2>🛡️ Feedback Center</h2>
+  <p class="psub">User thumbs up/down, reported issues, and AI corrections from DharmaChat.</p>
+  
+  <div class="card">
+    <div class="sr" style="border-bottom:none;padding:0 0 12px 0">
+      <div class="sr-l">Feedback Logs</div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-o btn-sm" onclick="fetchFeedback()">🔄 Refresh</button>
+      </div>
+    </div>
+    
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>User</th>
+            <th>Type</th>
+            <th>Question & Answer</th>
+            <th>Reason / Comment</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="fb-table">
+          <tr><td colspan="6" style="text-align:center;color:var(--muted)">Loading feedback...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ PAYMENT ═══ -->
 <div id="sec-payment" class="sec">
   <h2>💳 Payment Configuration</h2>
@@ -864,6 +897,31 @@ async function kgDel(){const sc=document.getElementById('kg-sc').value,ch=docume
 
 async function kgListAll(){const el=document.getElementById('kg-all');el.innerHTML='Loading from Supabase...';const r=await api('GET','/katha/list');if(!r.chapters?.length){el.innerHTML='<span style="color:var(--muted)">None generated yet.</span>';return;}el.innerHTML=`<b style="color:var(--saffron)">${r.count} chapter(s) in Supabase</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-top:9px">${r.chapters.map(c=>`<div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:11px"><div style="color:var(--saffron);font-weight:700">${esc(c.key)}</div><div style="color:var(--muted)">${c.verseCount} verses</div></div>`).join('')}</div>`;}
 
+// ─── FEEDBACK ────────────────────────────────────────────────────
+async function loadFeedback() {
+  const el = document.getElementById('fb-list');
+  el.innerHTML = 'Loading...';
+  const r = await api('GET', '/admin/feedback');
+  if (!r.success) { el.innerHTML = 'Error: ' + r.error; return; }
+  
+  document.getElementById('fb-t').textContent = r.feedback.length;
+  document.getElementById('fb-p').textContent = r.feedback.filter(f=>f.status==='pending').length;
+  document.getElementById('fb-d').textContent = r.feedback.filter(f=>f.status!=='pending').length;
+  
+  if (!r.feedback?.length) { el.innerHTML = '<div class="alert ab">No feedback received yet.</div>'; return; }
+  
+  el.innerHTML = `<table><tr><th>Date</th><th>User</th><th>Rating</th><th>Q & A</th><th>Reason</th><th>Status</th></tr>
+    ${r.feedback.map(f => `<tr>
+      <td style="font-size:10px;color:var(--muted)">${(f.created_at||'').slice(0,16).replace('T',' ')}</td>
+      <td>${esc(f.phone||'Anon')}</td>
+      <td style="font-size:18px">${f.rating==='up'?'👍':'👎'}</td>
+      <td style="max-width:300px"><div style="color:var(--saffron);font-weight:700;margin-bottom:3px">Q: ${esc(f.question)}</div><div style="font-size:10px;color:var(--muted)">W: ${esc(f.wrong_answer||'-')}</div></td>
+      <td style="font-size:11px">${esc(f.reason||'-')}</td>
+      <td><span class="badge ${f.status==='pending'?'br':'bg'}">${f.status}</span></td>
+    </tr>`).join('')}
+  </table>`;
+}
+
 async function kgStart(){
   const gemOv=document.getElementById('kg-gem').value.trim(),groqOv=document.getElementById('kg-groq').value.trim();
   const sc=document.getElementById('kg-sc').value,chSel=document.getElementById('kg-ch').selectedOptions[0],lang=document.getElementById('kg-lang').value;
@@ -1141,7 +1199,7 @@ async function delCoupon(id) {
 }
 
 // INIT
-init();document.addEventListener('DOMContentLoaded', () => { init(); updateCh(); });
+init();document.addEventListener('DOMContentLoaded', () => { init(); updateCh(); loadFeedback(); });
 </script>
 </body>
 </html>

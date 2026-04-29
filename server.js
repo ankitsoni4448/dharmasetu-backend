@@ -209,6 +209,20 @@ async function auditLog(action, adminUser, target, details) {
   } catch(e) { console.error('[Audit]', e.message); }
 }
 
+// ─── ERROR LOGGER ─────────────────────────────────────────────
+async function logError(source, message, details = '') {
+  console.error(`[ERROR] [${source}] ${message}`, details);
+  try {
+    await sbInsert('error_logs', {
+      id: `err_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,
+      source: sanitize(source, 100),
+      message: sanitize(message, 500),
+      details: typeof details === 'object' ? JSON.stringify(details).slice(0,1000) : sanitize(String(details), 1000),
+      created_at: new Date().toISOString()
+    });
+  } catch(e) { console.error('[LogError Failed]', e.message); }
+}
+
 // ─── LOAD CONFIG FROM DB ──────────────────────────────────────
 async function loadConfigFromDB() {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) { console.log('[Config] Supabase not configured'); return; }
@@ -283,7 +297,10 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 
 
 function adminAuth(req, res, next) {
   const key = req.headers['x-admin-key'] || req.query.key;
-  if (!key || key !== ADMIN_PASSWORD) return res.status(401).json({ error: 'Unauthorized' });
+  if (!key || key !== ADMIN_PASSWORD) {
+    logError('Auth', 'Unauthorized admin access attempt', { ip: req.ip, path: req.path });
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
   next();
 }
 
@@ -574,6 +591,16 @@ app.post('/feedback', async (req, res) => {
     res.json({ success: true, id: entry.id });
   } catch(e) {
     console.error('[Feedback]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/admin/feedback', adminAuth, async (req, res) => {
+  try {
+    const feedback = await sbSelect('feedback', '?order=created_at.desc.nullslast');
+    res.json({ success: true, feedback });
+  } catch(e) {
+    console.error('[Admin Feedback]', e.message);
     res.status(500).json({ error: e.message });
   }
 });
