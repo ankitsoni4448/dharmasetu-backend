@@ -20,6 +20,43 @@ const fs      = require('fs');
 const path    = require('path');
 const https   = require('https');
 const crypto  = require('crypto');
+let prokeralaToken = null;
+let tokenExpiry = 0;
+
+async function getProkeralaToken() {
+  if (prokeralaToken && Date.now() < tokenExpiry) return prokeralaToken;
+
+  const res = await fetch("https://api.prokerala.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "client_credentials",
+      client_id: process.env.PROKERALA_CLIENT_ID,
+      client_secret: process.env.PROKERALA_CLIENT_SECRET
+    })
+  });
+
+  const data = await res.json();
+  if (!data?.access_token) throw new Error("Token failed");
+
+  prokeralaToken = data.access_token;
+  tokenExpiry = Date.now() + data.expires_in * 1000;
+  return prokeralaToken;
+}
+
+// Rate limit (max 3/min)
+let lastCalls = [];
+function canCallAPI() {
+  const now = Date.now();
+  lastCalls = lastCalls.filter(t => now - t < 60000);
+  if (lastCalls.length >= 3) return false;
+  lastCalls.push(now);
+  return true;
+}
+
+// Cache (6 hours)
+const PANCHANG_CACHE = {};
+const CACHE_TTL = 1000 * 60 * 60 * 6;
 
 require('dotenv').config();
 
@@ -1368,6 +1405,77 @@ app.delete('/admin/marketing/coupons/:id', adminAuth, async (req, res) => {
   await auditLog('COUPON_DELETED', 'admin', req.params.id, '');
   res.json({ success: true });
 });
+// ════════════════════════════════════════════════════════════════
+// PANCHANG API (FINAL CORRECT)
+// ════════════════════════════════════════════════════════════════
+app.get("/api/panchang/today", async (req, res) => {
+  try {
+    const { lat, lng } = req.query;
+
+    if (!lat || !lng) {
+      return res.status(400).json({ success: false, error: "lat/lng required" });
+    }
+
+    const date = new Date().toISOString().split("T")[0];
+    const key = `${lat}|${lng}|${date}`;
+
+    // ✅ CACHE
+    if (PANCHANG_CACHE[key] && Date.now() - PANCHANG_CACHE[key].time < CACHE_TTL) {
+      return res.json({
+        success: true,
+        data: PANCHANG_CACHE[key].data,
+        cached: true
+      });
+    }
+
+    // ✅ RATE LIMIT
+    if (!canCallAPI()) {
+      return res.json({
+        success: false,
+        message: "Rate limit exceeded"
+      });
+    }
+
+    const token = await getProkeralaToken();
+
+    const url = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=lahiri&coordinates=${lat},${lng}&datetime=${date}T00:00:00+05:30`;
+
+    const apiRes = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const json = await apiRes.json();
+
+    const result = {
+      sunrise: json.data?.sunrise || "",
+      sunset: json.data?.sunset || "",
+      tithi: json.data?.tithi?.name || "",
+      nakshatra: json.data?.nakshatra?.name || "",
+      yoga: json.data?.yoga?.name || "",
+      karana: json.data?.karana?.name || "",
+      weekday: json.data?.vaara || ""
+    };
+
+    PANCHANG_CACHE[key] = {
+      data: result,
+      time: Date.now()
+    };
+
+    res.json({
+      success: true,
+      data: result
+    });
+
+  } catch (err) {
+    console.error("Panchang error:", err);
+    res.status(500).json({
+      success: false,
+      error: "Panchang fetch failed"
+    });
+  }
+});
 
 // ─── 404 Handler ─────────────────────────────────────────────
 app.use((req, res) => {
@@ -1379,7 +1487,6 @@ app.use((err, req, res, next) => {
   console.error('[Server Error]', err.message);
   res.status(500).json({ error: 'Internal server error' });
 });
-
 // ─── LAUNCH ──────────────────────────────────────────────────
 app.listen(PORT, async () => {
   console.log(`\n🕉 DharmaSetu Backend v9 SECURE — port ${PORT}`);
