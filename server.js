@@ -310,6 +310,7 @@ app.use(cors({
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization','x-admin-key','apikey'],
 }));
+app.use('/payment/webhook', express.raw({ type: '*/*' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -582,24 +583,68 @@ app.post('/users/register', async (req, res) => {
     res.status(500).json({ error: 'Registration failed. Please try again.' });
   }
 });
-
 app.post('/users/activity', async (req, res) => {
   try {
     const { phone, type } = req.body;
     if (!phone) return res.json({ success: true });
+
     const cleanPhone = sanitize(phone, 20);
     const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`);
+
     if (users.length) {
       const u = users[0];
       const patch = { last_active: new Date().toISOString() };
+
       if (type === 'question') patch.questions = (u.questions || 0) + 1;
-      if (type === 'checkin')  { patch.streak = (u.streak || 0) + 1; patch.pts = (u.pts || 0) + 3; }
+      if (type === 'checkin') {
+        patch.streak = (u.streak || 0) + 1;
+        patch.pts = (u.pts || 0) + 3;
+      }
+
       await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, patch);
     }
+
     res.json({ success: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
+
+// ✅ PREMIUM ACCESS API (CORRECT POSITION)
+app.get('/users/access/:phone', async (req, res) => {
+  try {
+    const phone = sanitize(req.params.phone || '', 20);
+
+    if (!phone) {
+      return res.status(400).json({ error: 'Phone required' });
+    }
+
+    const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
+
+    if (!users.length) {
+      return res.json({
+        success: true,
+        plan: 'free',
+        isPremium: false
+      });
+    }
+
+    const user = users[0];
+
+    const isPremium = user.plan && user.plan !== 'free';
+
+    res.json({
+      success: true,
+      plan: user.plan || 'free',
+      isPremium
+    });
+
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 // ════════════════════════════════════════════════════════════════
 // FEEDBACK
 // ════════════════════════════════════════════════════════════════
@@ -659,7 +704,14 @@ app.get('/payment/config', (req, res) => {
 
 app.post('/payment/razorpay/order', async (req, res) => {
   try {
-    const { amount, type, planId, phone } = req.body;
+    const { planId, phone } = req.body;
+
+const plan = CFG.bundles.find(p => p.id === planId);
+if (!plan) {
+  return res.status(400).json({ error: 'Invalid plan' });
+}
+
+const amount = plan.price;
     if (!CFG.razorpayKeyId || !CFG.razorpayKeySecret) {
       return res.status(503).json({ error: 'Razorpay not configured.' });
     }
@@ -680,7 +732,7 @@ app.post('/payment/razorpay/order', async (req, res) => {
       await sbInsert('payments', {
         id: rzp.id, phone: sanitize(phone||'', 20),
         plan_id: sanitize(planId||'', 50),
-        amount, payment_type: sanitize(type||'subscription', 30),
+        amount, payment_type: 'subscription',
         payment_via: 'razorpay', status: 'created',
         created_at: new Date().toISOString(),
       });
@@ -690,42 +742,158 @@ app.post('/payment/razorpay/order', async (req, res) => {
     }
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
-
 app.post('/payment/confirm', async (req, res) => {
   try {
     const { orderId, phone, planId, paymentId } = req.body;
+
+    if (CFG.subscriptionPayment === 'razorpay') {
+      return res.status(403).json({ error: 'Use Razorpay verification' });
+    }
+
     const id = sanitize(orderId || `m_${Date.now()}`, 100);
     const cleanPhone = sanitize(phone || '', 20);
-    const cleanPlan  = sanitize(planId || '', 50);
+    const cleanPlan = sanitize(planId || '', 50);
+
+    const validPlans = ['basic', 'pro'];
+    if (!validPlans.includes(cleanPlan)) {
+      return res.status(400).json({ error: 'Invalid plan' });
+    }
+
     await sbUpsert('payments', {
-      id, phone: cleanPhone, plan_id: cleanPlan,
-      amount: 0, status: 'paid',
-      payment_id: sanitize(paymentId||'manual', 100),
+      id,
+      phone: cleanPhone,
+      plan_id: cleanPlan,
+      amount: 0,
+      status: 'paid',
+      payment_id: sanitize(paymentId || 'manual', 100),
       paid_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
     }, 'id');
+
     if (cleanPhone && cleanPlan) {
-      await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { plan: cleanPlan });
+      await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, {
+        plan: cleanPlan
+      });
     }
+
     res.json({ success: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
+
+// ✅ WEBHOOK (OUTSIDE — CORRECT)
 app.post('/payment/webhook', async (req, res) => {
   try {
-    // In production: verify Razorpay webhook signature here
-    if (req.body?.event === 'payment.captured') {
-      const p = req.body?.payload?.payment?.entity;
+    const secret = CFG.razorpayKeySecret;
+    const signature = req.headers['x-razorpay-signature'];
+    if (!signature) {
+  return res.status(400).json({ error: 'Missing signature' });
+}
+
+    const expected = crypto
+      .createHmac('sha256', secret)
+      .update(req.body)
+      .digest('hex');
+
+    if (expected !== signature) {
+      return res.status(400).json({ error: 'Invalid webhook signature' });
+    }
+
+    const event = JSON.parse(req.body.toString());
+
+    if (event?.event === 'payment.captured') {
+      const p = event?.payload?.payment?.entity;
+
       if (p) {
-        await sbUpdate('payments', `?id=eq.${encodeURIComponent(p.order_id||'')}`, {
-          status: 'paid', payment_id: p.id, paid_at: new Date().toISOString(),
-        });
+        await sbUpdate('payments',
+          `?id=eq.${encodeURIComponent(p.order_id || '')}`,
+          {
+            status: 'paid',
+            payment_id: p.id,
+            paid_at: new Date().toISOString(),
+          }
+        );
       }
     }
-    res.json({ success: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
-});
 
+    res.json({ success: true });
+
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+// ─────────────────────────────────────────────
+// Razorpay Payment Verification (CRITICAL)
+// ─────────────────────────────────────────────
+app.post('/payment/verify', async (req, res) => {
+  try {
+    const {
+  razorpay_order_id,
+  razorpay_payment_id,
+  razorpay_signature,
+  phone,
+  planId
+} = req.body;
+if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+  return res.status(400).json({ error: 'Missing payment fields' });
+}
+
+// ✅ Plan validation (CORRECT PLACE)
+const validPlans = ['basic', 'pro'];
+
+if (!validPlans.includes(planId)) {
+  return res.status(400).json({ error: 'Invalid plan' });
+}
+
+    if (!CFG.razorpayKeySecret) {
+      return res.status(500).json({ error: 'Razorpay not configured' });
+    }
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", CFG.razorpayKeySecret)
+      .update(body.toString())
+      .digest("hex");
+
+    if (expectedSignature !== razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payment signature"
+      });
+    }
+
+    // ✅ Update payment in DB
+    await sbUpdate('payments',
+      `?id=eq.${encodeURIComponent(razorpay_order_id)}`,
+      {
+        status: 'paid',
+        payment_id: razorpay_payment_id,
+        paid_at: new Date().toISOString()
+      }
+    );
+
+    // ✅ Upgrade user
+    if (phone && planId) {
+      await sbUpdate('users',
+        `?phone=eq.${encodeURIComponent(phone)}`,
+        { plan: planId }
+      );
+    }
+
+    return res.json({
+      success: true,
+      message: "Payment verified & user upgraded"
+    });
+
+  } catch (err) {
+    console.error("Verify error:", err);
+    res.status(500).json({ success: false });
+  }
+});
 // ════════════════════════════════════════════════════════════════
 // CONTENT
 // ════════════════════════════════════════════════════════════════
