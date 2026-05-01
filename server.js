@@ -543,7 +543,7 @@ ${isFC ? '⚡ FACT CHECK MODE: Start with "VERDICT: TRUE/FALSE/MISLEADING" then 
 // ════════════════════════════════════════════════════════════════
 app.post('/users/register', async (req, res) => {
   try {
-    const { phone, name, email, rashi, nakshatra, deity, language, birthCity, dob, firebaseUid } = req.body;
+    const { phone, name, email, rashi, nakshatra, deity, language, birthCity, dob, firebaseUid, pushToken } = req.body;
     if (!phone && !firebaseUid) return res.status(400).json({ error: 'phone or firebaseUid required' });
 
     // Sanitize inputs
@@ -557,6 +557,7 @@ app.post('/users/register', async (req, res) => {
       if (cleanName) updated.name = cleanName;
       if (language)  updated.language = language;
       if (email)     updated.email = sanitize(email, 200);
+      if (pushToken) updated.push_token = pushToken;
       await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, updated);
       return res.json({ success: true, user: { ...existing[0], ...updated }, isNew: false });
     }
@@ -567,6 +568,7 @@ app.post('/users/register', async (req, res) => {
       created_at: new Date().toISOString(), last_active: new Date().toISOString(),
       plan: 'free', streak: 0, questions: 0, pts: 0,
     };
+    if (pushToken) newUser.push_token = pushToken;
     if (email) newUser.email = sanitize(email, 200);
     if (firebaseUid) newUser.firebase_uid = firebaseUid;
     if (rashi) newUser.rashi = rashi;
@@ -1645,6 +1647,100 @@ app.get("/api/panchang/today", async (req, res) => {
   }
 });
 
+app.post('/send-notification', async (req, res) => {
+  try {
+    const { pushToken, title, body } = req.body;
+
+    if (!pushToken) {
+      return res.json({ success: false, error: "No token" });
+    }
+
+    const message = {
+      to: pushToken,
+      sound: 'default',
+      title: title || "DharmaSetu",
+      body: body || "🙏 Daily wisdom awaits you",
+    };
+
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(message),
+    });
+
+    const data = await response.json();
+
+    console.log("Push response:", data);
+
+    res.json({ success: true, data });
+
+  } catch (err) {
+    console.log("Push error:", err);
+    res.json({ success: false });
+  }
+});
+app.post('/admin/send-bulk-notification', adminAuth, async (req, res) => {
+  try {
+    const { title, body } = req.body;
+
+    const users = await sbSelect('users', '?select=push_token');
+
+    let sent = 0;
+
+    for (const u of users) {
+      if (!u.push_token) continue;
+
+      await fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: u.push_token,
+          sound: 'default',
+          title,
+          body,
+        }),
+      });
+
+      sent++;
+    }
+
+    res.json({ success: true, sent });
+
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+app.post('/ai/recommend', async (req, res) => {
+  try {
+    const { mood } = req.body;
+
+    if (!mood) {
+      return res.json({ success: false, mantra: "Gayatri Mantra" });
+    }
+
+    // 🔥 Simple AI logic (safe for now)
+    const map = {
+      peace: "Gayatri Mantra",
+      focus: "Saraswati Mantra",
+      strength: "Hanuman Mantra",
+      healing: "Maha Mrityunjaya Mantra"
+    };
+
+    const mantra = map[mood] || "Gayatri Mantra";
+
+    res.json({
+      success: true,
+      mantra
+    });
+
+  } catch (err) {
+    console.log("AI error:", err);
+    res.json({
+      success: false,
+      mantra: "Gayatri Mantra"
+    });
+  }
+});
 // ─── 404 Handler ─────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
@@ -1655,6 +1751,7 @@ app.use((err, req, res, next) => {
   console.error('[Server Error]', err.message);
   res.status(500).json({ error: 'Internal server error' });
 });
+
 // ─── LAUNCH ──────────────────────────────────────────────────
 app.listen(PORT, async () => {
   console.log(`\n🕉 DharmaSetu Backend v9 SECURE — port ${PORT}`);
