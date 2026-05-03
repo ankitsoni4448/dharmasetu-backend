@@ -20,6 +20,26 @@ const fs      = require('fs');
 const path    = require('path');
 const https   = require('https');
 const crypto  = require('crypto');
+// 🌍 Convert city → lat/lng (NEW)
+async function getCoordinatesFromCity(city) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data && data.length > 0) {
+      return {
+        lat: data[0].lat,
+        lng: data[0].lon
+      };
+    }
+
+    return null;
+  } catch (e) {
+    console.log("City geocode error:", e.message);
+    return null;
+  }
+}
 let prokeralaToken = null;
 let tokenExpiry = 0;
 
@@ -1578,72 +1598,237 @@ app.delete('/admin/marketing/coupons/:id', adminAuth, async (req, res) => {
 // ════════════════════════════════════════════════════════════════
 // PANCHANG API (FINAL CORRECT)
 // ════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// REPLACE the entire /api/panchang/today route in server.js
+// ═══════════════════════════════════════════════════════════════
+
+// ── PASTE THESE CONSTANTS before the route (at top of file near other constants) ──
+
+const VAAR_EN_ARR = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const VAAR_HI_ARR = ['रविवार','सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार'];
+const VAAR_DEITY_EN = ['Surya Dev','Shiva Ji','Hanuman Ji','Ganesh Ji','Vishnu Ji','Lakshmi Mata','Shani Dev'];
+const VAAR_DEITY_HI = ['सूर्य देव','शिव जी','हनुमान जी','गणेश जी','विष्णु जी','लक्ष्मी माता','शनि देव'];
+const VAAR_MANTRA_ARR = [
+  'ॐ घृणि सूर्याय नमः',
+  'ॐ नमः शिवाय',
+  'ॐ नमो हनुमते रुद्रावताराय',
+  'ॐ गं गणपतये नमः',
+  'ॐ नमो भगवते वासुदेवाय',
+  'ॐ श्रीं महालक्ष्म्यै नमः',
+  'ॐ शं शनैश्चराय नमः',
+];
+
+// Rahu Kaal slot (1-indexed, which 1/8th part of the day)
+const RAHU_SLOT = [8, 2, 7, 5, 6, 4, 3];
+
+function buildFullPanchang(raw) {
+  const date = new Date();
+  const dayIndex = date.getDay(); // 0 = Sunday
+
+  // ── paksha ─────────────────────────────────────────────────
+  const tithiHi = raw.tithi || '';
+  const paksha = ['पूर्णिमा','15','Purnima'].some(t => tithiHi.includes(t))
+    ? 'Purnima Paksha'
+    : ['अमावस्या','Amavasya'].some(t => tithiHi.includes(t))
+      ? 'Amavasya Paksha'
+      : (() => {
+          // Simple heuristic: if tithi number 1-15 it's Shukla, else Krishna
+          const match = tithiHi.match(/\d+/);
+          if (!match) return 'Shukla Paksha';
+          return parseInt(match[0]) <= 15 ? 'Shukla Paksha' : 'Krishna Paksha';
+        })();
+
+  // ── vaar ───────────────────────────────────────────────────
+  const vaar = VAAR_HI_ARR[dayIndex] + ' / ' + VAAR_EN_ARR[dayIndex];
+  const vaarDeity = VAAR_DEITY_EN[dayIndex] + ' (' + VAAR_DEITY_HI[dayIndex] + ')';
+  const vaarMantra = VAAR_MANTRA_ARR[dayIndex];
+
+  // ── auspiciousLabel ────────────────────────────────────────
+  const tithi = (raw.tithi || '').toLowerCase();
+  const yoga  = (raw.yoga  || '').toLowerCase();
+  const GOOD_YOGAS   = ['siddhi','shubha','shiva','brahma','priti','saubhagya','vriddhi','harshana'];
+  const BAD_YOGAS    = ['vishkambha','ganda','vajra','vyatipata','parigha','vaidhriti','atiganda','shula'];
+  const GOOD_TITHIS  = ['purnima','tritiya','panchami','saptami','dashami','ekadashi','dwadashi'];
+  const BAD_TITHIS   = ['amavasya','chaturdashi','ashtami'];
+  const isGoodYoga   = GOOD_YOGAS.some(g => yoga.includes(g));
+  const isBadYoga    = BAD_YOGAS.some(b => yoga.includes(b));
+  const isGoodTithi  = GOOD_TITHIS.some(g => tithi.includes(g));
+  const isBadTithi   = BAD_TITHIS.some(b => tithi.includes(b));
+  const auspiciousScore = (isGoodYoga ? 2 : 0) + (isGoodTithi ? 1 : 0) - (isBadYoga ? 2 : 0) - (isBadTithi ? 1 : 0);
+  const auspiciousLabel = auspiciousScore >= 2
+    ? '✨ अत्यंत शुभ दिन'
+    : auspiciousScore >= 1
+      ? '🌸 शुभ दिन'
+      : auspiciousScore <= -2
+        ? '⚠️ सावधानी रखें'
+        : '⚖️ सामान्य दिन';
+
+  // ── vikramSamvat ───────────────────────────────────────────
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const vikramSamvat = month >= 4 ? year + 57 : year + 56;
+
+  // ── rahuKaal (from sunrise/sunset) ────────────────────────
+  let rahuKaal = 'Unavailable';
+  try {
+    if (raw.sunrise && raw.sunset) {
+      const [srH, srM] = raw.sunrise.split(':').map(Number);
+      const [ssH, ssM] = raw.sunset.split(':').map(Number);
+      const totalMin = (ssH * 60 + ssM) - (srH * 60 + srM);
+      const partMin  = totalMin / 8;
+      const slot     = RAHU_SLOT[dayIndex] - 1;
+      const startMin = srH * 60 + srM + slot * partMin;
+      const endMin   = startMin + partMin;
+      const fmt = m => `${String(Math.floor(m/60)).padStart(2,'0')}:${String(Math.round(m%60)).padStart(2,'0')}`;
+      rahuKaal = `${fmt(startMin)} – ${fmt(endMin)}`;
+    }
+  } catch (_) {}
+
+  // ── specialEvents ──────────────────────────────────────────
+  const specialEvents = [];
+  const tithiLower = (raw.tithi || '').toLowerCase();
+  if (tithiLower.includes('ekadashi')) {
+    specialEvents.push({ text: '🌿 एकादशी — विष्णु व्रत · Fast for Lord Vishnu', color: '#27AE60' });
+  }
+  if (tithiLower.includes('purnima')) {
+    specialEvents.push({ text: '🌕 पूर्णिमा — Full moon, highly auspicious', color: '#F4A261' });
+  }
+  if (tithiLower.includes('amavasya')) {
+    specialEvents.push({ text: '🌑 अमावस्या — Pitru Tarpan day', color: '#9B59B6' });
+  }
+  if (tithiLower.includes('chaturthi')) {
+    specialEvents.push({ text: '🐘 चतुर्थी — Ganesh Puja', color: '#E8620A' });
+  }
+  if (dayIndex === 1) specialEvents.push({ text: '🔱 Somvar — Shiva Abhishek', color: '#6B21A8' });
+  if (dayIndex === 2) specialEvents.push({ text: '🏹 Mangalvar — Hanuman Chalisa', color: '#E74C3C' });
+  if (dayIndex === 4) specialEvents.push({ text: '🪷 Guruvar — Vishnu Puja', color: '#F39C12' });
+  if (dayIndex === 5) specialEvents.push({ text: '✨ Shukravar — Lakshmi Puja', color: '#F4A261' });
+
+  return {
+    // Original fields (from Prokerala)
+    tithi:      raw.tithi      || 'Unknown',
+    nakshatra:  raw.nakshatra  || 'Unknown',
+    yoga:       raw.yoga       || 'Unknown',
+    karana:     raw.karana     || 'Unknown',
+    weekday:    raw.weekday    || VAAR_EN_ARR[dayIndex],
+    sunrise:    raw.sunrise    || '06:00',
+    sunset:     raw.sunset     || '18:30',
+    // Derived fields (what the frontend needs)
+    paksha,
+    vaar,
+    vaarDeity,
+    vaarMantra,
+    auspiciousLabel,
+    auspiciousColor: auspiciousScore >= 2 ? '#27AE60' : auspiciousScore <= -2 ? '#E74C3C' : '#C9830A',
+    specialEvents,
+    vikramSamvat,
+    rahuKaal,
+    abhijit: (() => {
+      try {
+        const [srH, srM] = (raw.sunrise||'06:00').split(':').map(Number);
+        const [ssH, ssM] = (raw.sunset||'18:30').split(':').map(Number);
+        const noon = (srH*60+srM + ssH*60+ssM) / 2;
+        const fmt = m => `${String(Math.floor(m/60)).padStart(2,'0')}:${String(Math.round(m%60)).padStart(2,'0')}`;
+        return `${fmt(noon-12)} – ${fmt(noon+12)}`;
+      } catch { return '11:48 – 12:12'; }
+    })(),
+    dateStr: new Date().toLocaleDateString('en-IN', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    }),
+  };
+}
+
+// ── LOCAL FALLBACK (used when Prokerala fails) ─────────────────
+function getFallbackPanchang() {
+  const date = new Date();
+  const dayIndex = date.getDay();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const TITHIS_EN = ['Pratipada','Dwitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami',
+    'Ashtami','Navami','Dashami','Ekadashi','Dwadashi','Trayodashi','Chaturdashi','Purnima'];
+  const NAKS_EN = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu',
+    'Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati'];
+  const dayOfYear = Math.floor((date - new Date(year, 0, 0)) / 86400000);
+  return buildFullPanchang({
+    tithi:     TITHIS_EN[dayOfYear % 15],
+    nakshatra: NAKS_EN[dayOfYear % 15],
+    yoga:      'Shubha',
+    karana:    'Bava',
+    weekday:   VAAR_EN_ARR[dayIndex],
+    sunrise:   '06:12',
+    sunset:    '18:44',
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// REPLACE YOUR EXISTING /api/panchang/today ROUTE WITH THIS:
+// ══════════════════════════════════════════════════════════════
 app.get("/api/panchang/today", async (req, res) => {
   try {
-    const { lat, lng } = req.query;
+    let { lat, lng, city } = req.query;
+
+// 🌍 NEW: If city is provided, convert to lat/lng
+if ((!lat || !lng) && city) {
+  const coords = await getCoordinatesFromCity(city);
+
+  if (coords) {
+    lat = coords.lat;
+    lng = coords.lng;
+  }
+}
 
     if (!lat || !lng) {
-      return res.status(400).json({ success: false, error: "lat/lng required" });
+      return res.json({ success: true, data: getFallbackPanchang(), source: 'fallback_no_coords' });
     }
 
     const date = new Date().toISOString().split("T")[0];
     const key = `${lat}|${lng}|${date}`;
 
-    // ✅ CACHE
+    // ── Cache hit ──────────────────────────────────────────────
     if (PANCHANG_CACHE[key] && Date.now() - PANCHANG_CACHE[key].time < CACHE_TTL) {
-      return res.json({
-        success: true,
-        data: PANCHANG_CACHE[key].data,
-        cached: true
-      });
+      return res.json({ success: true, data: PANCHANG_CACHE[key].data, cached: true });
     }
 
-    // ✅ RATE LIMIT
+    // ── Rate limit ─────────────────────────────────────────────
     if (!canCallAPI()) {
-      return res.json({
-        success: false,
-        message: "Rate limit exceeded"
-      });
+      const fallback = getFallbackPanchang();
+      return res.json({ success: true, data: fallback, source: 'fallback_rate_limit' });
     }
 
-    const token = await getProkeralaToken();
-
-    const url = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=lahiri&coordinates=${lat},${lng}&datetime=${date}T00:00:00+05:30`;
-
-    const apiRes = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`
+    // ── Prokerala API call ─────────────────────────────────────
+    let rawData = null;
+    try {
+      const token = await getProkeralaToken();
+      const url = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=lahiri&coordinates=${lat},${lng}&datetime=${date}T00:00:00+05:30`;
+      const apiRes = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      const json = await apiRes.json();
+      if (json?.data) {
+        rawData = {
+          sunrise:   json.data.sunrise  || '',
+          sunset:    json.data.sunset   || '',
+          tithi:     json.data.tithi?.name     || '',
+          nakshatra: json.data.nakshatra?.name || '',
+          yoga:      json.data.yoga?.name      || '',
+          karana:    json.data.karana?.name    || '',
+          weekday:   json.data.vaara           || '',
+        };
       }
-    });
+    } catch (apiErr) {
+      console.error("Prokerala API error:", apiErr.message);
+    }
 
-    const json = await apiRes.json();
+    // ── Build full response (API data or fallback) ─────────────
+    const fullData = rawData ? buildFullPanchang(rawData) : getFallbackPanchang();
 
-    const result = {
-      sunrise: json.data?.sunrise || "",
-      sunset: json.data?.sunset || "",
-      tithi: json.data?.tithi?.name || "",
-      nakshatra: json.data?.nakshatra?.name || "",
-      yoga: json.data?.yoga?.name || "",
-      karana: json.data?.karana?.name || "",
-      weekday: json.data?.vaara || ""
-    };
+    // ── Cache it ───────────────────────────────────────────────
+    PANCHANG_CACHE[key] = { data: fullData, time: Date.now() };
 
-    PANCHANG_CACHE[key] = {
-      data: result,
-      time: Date.now()
-    };
-
-    res.json({
-      success: true,
-      data: result
-    });
+    res.json({ success: true, data: fullData, source: rawData ? 'prokerala' : 'fallback' });
 
   } catch (err) {
-    console.error("Panchang error:", err);
-    res.status(500).json({
-      success: false,
-      error: "Panchang fetch failed"
-    });
+    console.error("Panchang route error:", err.message);
+    // NEVER crash — always return something usable
+    res.json({ success: true, data: getFallbackPanchang(), source: 'fallback_error' });
   }
 });
 
@@ -1752,6 +1937,68 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
+app.post('/api/dharmic-insight', async (req, res) => {
+  try {
+    const { moodHistory, panchang } = req.body;
+
+    const lastMood = moodHistory?.[0]?.mood || "neutral";
+    const tithi = panchang?.tithi || "";
+    const vaar = panchang?.vaar || "";
+
+    // 🧠 PROMPT
+    const prompt = `
+You are a dharmic AI guide based on Bhagavad Gita and Sanatan Dharma.
+
+User Mood: ${lastMood}
+Tithi: ${tithi}
+Vaar: ${vaar}
+
+Give:
+1. Short title
+2. 3 bullet guidance points
+
+Tone: Spiritual, practical, grounded in dharma.
+`;
+
+    // 🔥 FREE AI (Groq / OpenAI style)
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.EXPO_PUBLIC_GROQ_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama3-70b-8192",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7
+      })
+    });
+
+    const data = await response.json();
+
+    const text = data.choices?.[0]?.message?.content || "";
+
+    // Simple parsing
+    const lines = text.split('\n').filter(l => l.trim());
+
+    res.json({
+      title: lines[0] || "Dharmic Guidance",
+      guidance: lines.slice(1, 4)
+    });
+
+  } catch (e) {
+    console.log("AI error:", e);
+
+    res.json({
+      title: "Stay Balanced",
+      guidance: [
+        "Focus on your duty",
+        "Chant a simple mantra",
+        "Stay calm and aware"
+      ]
+    });
+  }
+});
 // ─── LAUNCH ──────────────────────────────────────────────────
 app.listen(PORT, async () => {
   console.log(`\n🕉 DharmaSetu Backend v9 SECURE — port ${PORT}`);
