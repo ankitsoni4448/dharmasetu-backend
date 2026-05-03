@@ -853,42 +853,46 @@ app.post('/payment/webhook', async (req, res) => {
 app.post('/payment/verify', async (req, res) => {
   try {
     const {
-  razorpay_order_id,
-  razorpay_payment_id,
-  razorpay_signature,
-  phone,
-  planId
-} = req.body;
-if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-  return res.status(400).json({ error: 'Missing payment fields' });
-}
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      phone,
+    } = req.body;
 
-// ✅ Plan validation (CORRECT PLACE)
-const validPlans = ['basic', 'pro'];
-
-if (!validPlans.includes(planId)) {
-  return res.status(400).json({ error: 'Invalid plan' });
-}
+    // Validate required fields
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ error: 'Missing payment fields' });
+    }
 
     if (!CFG.razorpayKeySecret) {
       return res.status(500).json({ error: 'Razorpay not configured' });
     }
 
+    // Verify signature
     const body = razorpay_order_id + "|" + razorpay_payment_id;
-
     const expectedSignature = crypto
       .createHmac("sha256", CFG.razorpayKeySecret)
       .update(body.toString())
       .digest("hex");
 
     if (expectedSignature !== razorpay_signature) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid payment signature"
-      });
+      return res.status(400).json({ success: false, message: "Invalid payment signature" });
     }
 
-    // ✅ Update payment in DB
+    // ✅ CRITICAL FIX: Fetch planId from DB using order_id — NEVER trust client
+    const paymentRows = await sbSelect('payments', `?id=eq.${encodeURIComponent(razorpay_order_id)}&limit=1`);
+    if (!paymentRows.length) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    const planId = paymentRows[0].plan_id; // From DB, not from client
+
+    // Validate plan
+    const validPlans = ['basic', 'pro'];
+    if (!validPlans.includes(planId)) {
+      return res.status(400).json({ error: 'Invalid plan in order' });
+    }
+
+    // Update payment status
     await sbUpdate('payments',
       `?id=eq.${encodeURIComponent(razorpay_order_id)}`,
       {
@@ -898,22 +902,20 @@ if (!validPlans.includes(planId)) {
       }
     );
 
-    // ✅ Upgrade user
-    if (phone && planId) {
+    // Upgrade user plan
+    const cleanPhone = sanitize(phone || '', 20);
+    if (cleanPhone) {
       await sbUpdate('users',
-        `?phone=eq.${encodeURIComponent(phone)}`,
+        `?phone=eq.${encodeURIComponent(cleanPhone)}`,
         { plan: planId }
       );
     }
 
-    return res.json({
-      success: true,
-      message: "Payment verified & user upgraded"
-    });
+    return res.json({ success: true, message: "Payment verified & user upgraded", plan: planId });
 
   } catch (err) {
     console.error("Verify error:", err);
-    res.status(500).json({ success: false });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 // ════════════════════════════════════════════════════════════════
@@ -1926,10 +1928,57 @@ app.post('/ai/recommend', async (req, res) => {
     });
   }
 });
+// ── GET USER BY PHONE (used by login.js for returning users) ──
+app.get('/user/get', async (req, res) => {
+  try {
+    const phone = sanitize(req.query.phone || '', 20);
+    if (!phone) return res.status(400).json({ error: 'Phone required' });
+
+    const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
+    if (!users.length) return res.json({ user: null });
+
+    const u = users[0];
+    res.json({
+      user: {
+        phone: u.phone,
+        name: u.name,
+        rashi: u.rashi,
+        nakshatra: u.nakshatra,
+        deity: u.deity,
+        language: u.language || 'hindi',
+        plan: u.plan || 'free',
+        pts: u.pts || 0,
+        streak: u.streak || 0,
+        birth_city: u.birth_city || '',
+        dob: u.dob || '',
+        firebase_uid: u.firebase_uid || '',
+        push_token: u.push_token || '',
+        lagna: u.lagna || '',
+        mantra: u.mantra || '',
+      }
+    });
+  } catch (e) {
+    console.error('[user/get]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── PAYMENT CONFIG (hyphen version for app compatibility) ──────
+app.get('/payment-config', (req, res) => {
+  res.json({
+    success: true,
+    phonepeUPI:          CFG.phonepeUPI || '',
+    razorpayKeyId:       CFG.razorpayKeyId || '',
+    subscriptionPayment: CFG.subscriptionPayment || 'upi',
+    donationPayment:     CFG.donationPayment || 'upi',
+    hasRazorpay:         !!(CFG.razorpayKeyId && CFG.razorpayKeySecret),
+  });
+});
 // ─── 404 Handler ─────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
+
 
 // ─── Error Handler ────────────────────────────────────────────
 app.use((err, req, res, next) => {
