@@ -1,16 +1,7 @@
 // ════════════════════════════════════════════════════════════════
-// DharmaSetu Backend — SECURE FINAL v9
+// DharmaSetu Backend — SECURE FINAL v10
 // Deploy to: Render.com
 // .env needs: ADMIN_PASSWORD, SUPABASE_URL, SUPABASE_SERVICE_KEY
-//
-// SECURITY in v9:
-// 1. All AI calls go through backend — NO keys in app code
-// 2. Rate limiting on all AI endpoints
-// 3. Input sanitization on all routes
-// 4. Admin key required for all /admin/* routes
-// 5. CORS locked to known origins in production
-// 6. Request size limits enforced
-// 7. No sensitive keys ever sent to client
 // ════════════════════════════════════════════════════════════════
 
 const express = require('express');
@@ -20,78 +11,20 @@ const fs      = require('fs');
 const path    = require('path');
 const https   = require('https');
 const crypto  = require('crypto');
-// 🌍 Convert city → lat/lng (NEW)
-async function getCoordinatesFromCity(city) {
-  try {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data && data.length > 0) {
-      return {
-        lat: data[0].lat,
-        lng: data[0].lon
-      };
-    }
-
-    return null;
-  } catch (e) {
-    console.log("City geocode error:", e.message);
-    return null;
-  }
-}
-let prokeralaToken = null;
-let tokenExpiry = 0;
-
-async function getProkeralaToken() {
-  if (prokeralaToken && Date.now() < tokenExpiry) return prokeralaToken;
-
-  const res = await fetch("https://api.prokerala.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      grant_type: "client_credentials",
-      client_id: process.env.PROKERALA_CLIENT_ID,
-      client_secret: process.env.PROKERALA_CLIENT_SECRET
-    })
-  });
-
-  const data = await res.json();
-  if (!data?.access_token) throw new Error("Token failed");
-
-  prokeralaToken = data.access_token;
-  tokenExpiry = Date.now() + data.expires_in * 1000;
-  return prokeralaToken;
-}
-
-// Rate limit (max 3/min)
-let lastCalls = [];
-function canCallAPI() {
-  const now = Date.now();
-  lastCalls = lastCalls.filter(t => now - t < 60000);
-  if (lastCalls.length >= 3) return false;
-  lastCalls.push(now);
-  return true;
-}
-
-// Cache (6 hours)
-const PANCHANG_CACHE = {};
-const CACHE_TTL = 1000 * 60 * 60 * 6;
 
 require('dotenv').config();
-
-const app  = express();
-const PORT = process.env.PORT || 10000;
 
 // ─── ENVIRONMENT ─────────────────────────────────────────────────
 const ADMIN_PASSWORD       = process.env.ADMIN_PASSWORD       || 'DharmaSetu@Admin2025';
 const SUPABASE_URL         = (process.env.SUPABASE_URL        || '').replace(/\/$/, '');
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
 
-// Validate critical env vars on startup
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  console.warn('[⚠️ WARN] Supabase not configured. Add SUPABASE_URL and SUPABASE_SERVICE_KEY to Render env vars.');
+  console.warn('[⚠️ WARN] Supabase not configured. Add SUPABASE_URL and SUPABASE_SERVICE_KEY to env vars.');
 }
+
+// ─── IN-MEMORY ORDER STORE (fallback when Supabase unavailable) ──
+const memoryOrders = new Map();
 
 // ─── LOCAL /tmp CACHE ─────────────────────────────────────────
 const TMP = '/tmp/ds';
@@ -131,7 +64,7 @@ let CFG = {
   ],
 };
 
-// ─── RATE LIMITER (in-memory, no Redis needed for Phase 1) ─────
+// ─── RATE LIMITER ─────────────────────────────────────────────
 const rateLimits = new Map();
 function checkRateLimit(key, maxPerMinute = 20) {
   const now = Date.now();
@@ -141,7 +74,6 @@ function checkRateLimit(key, maxPerMinute = 20) {
   rateLimits.set(key, arr);
   return true;
 }
-// Clean up rate limit map every 5 minutes
 setInterval(() => {
   const now = Date.now();
   for (const [key, arr] of rateLimits.entries()) {
@@ -157,7 +89,6 @@ function sanitize(str, maxLen = 1000) {
   return str.replace(/<[^>]*>/g, '').replace(/[<>"';()\\]/g, '').trim().slice(0, maxLen);
 }
 
-// Check for prompt injection attacks
 function isPromptInjection(text) {
   const patterns = [
     /ignore\s+(previous|all|above)\s+instructions?/i,
@@ -169,6 +100,9 @@ function isPromptInjection(text) {
   ];
   return patterns.some(p => p.test(text));
 }
+
+// ─── VALID PLANS ──────────────────────────────────────────────
+const VALID_PLANS = ['basic', 'pro'];
 
 // ════════════════════════════════════════════════════════════════
 // SUPABASE REST API
@@ -231,7 +165,6 @@ async function sbUpsert(table, row, matchCols = 'id') {
     if (row[c] !== undefined) qParts.push(`${c}=eq.${encodeURIComponent(row[c])}`);
   }
   if (qParts.length === 0) return sbRest('POST', table, row);
-  
   const query = `?${qParts.join('&')}`;
   try {
     const existing = await sbSelect(table, query + '&limit=1');
@@ -280,6 +213,63 @@ async function logError(source, message, details = '') {
   } catch(e) { console.error('[LogError Failed]', e.message); }
 }
 
+// ─── ORDER STORE HELPERS (Supabase + in-memory fallback) ──────
+async function saveOrder(order) {
+  memoryOrders.set(order.orderId, order);
+  try {
+    await sbInsert('payment_orders', {
+      id: order.orderId,
+      phone: order.userPhone,
+      plan_id: order.planId,
+      amount: order.amount,
+      status: order.status,
+      created_at: order.createdAt,
+    });
+  } catch(e) {
+    console.warn('[Order] Supabase save failed, using memory store:', e.message);
+  }
+}
+
+async function getOrder(orderId) {
+  // Try Supabase first
+  try {
+    const rows = await sbSelect('payment_orders', `?id=eq.${encodeURIComponent(orderId)}&limit=1`);
+    if (rows && rows.length > 0) {
+      const r = rows[0];
+      return {
+        orderId:   r.id,
+        userPhone: r.phone,
+        planId:    r.plan_id,
+        amount:    r.amount,
+        status:    r.status,
+        createdAt: r.created_at,
+      };
+    }
+  } catch(e) {
+    console.warn('[Order] Supabase fetch failed, checking memory store:', e.message);
+  }
+  // Fallback to memory
+  return memoryOrders.get(orderId) || null;
+}
+
+async function markOrderCompleted(orderId) {
+  // Update memory store
+  const order = memoryOrders.get(orderId);
+  if (order) {
+    order.status = 'completed';
+    memoryOrders.set(orderId, order);
+  }
+  // Update Supabase
+  try {
+    await sbUpdate('payment_orders', `?id=eq.${encodeURIComponent(orderId)}`, {
+      status: 'completed',
+      completed_at: new Date().toISOString(),
+    });
+  } catch(e) {
+    console.warn('[Order] Supabase update failed, memory updated only:', e.message);
+  }
+}
+
 // ─── LOAD CONFIG FROM DB ──────────────────────────────────────
 async function loadConfigFromDB() {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) { console.log('[Config] Supabase not configured'); return; }
@@ -324,13 +314,73 @@ async function initDB() {
   console.log('[DB] ✅ Supabase connected');
 }
 
-// ─── MIDDLEWARE ───────────────────────────────────────────────
+// ─── PROKERALA TOKEN ──────────────────────────────────────────
+let prokeralaToken = null;
+let tokenExpiry = 0;
+
+async function getProkeralaToken() {
+  if (prokeralaToken && Date.now() < tokenExpiry) return prokeralaToken;
+  const res = await fetch("https://api.prokerala.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "client_credentials",
+      client_id: process.env.PROKERALA_CLIENT_ID,
+      client_secret: process.env.PROKERALA_CLIENT_SECRET
+    })
+  });
+  const data = await res.json();
+  if (!data?.access_token) throw new Error("Token failed");
+  prokeralaToken = data.access_token;
+  tokenExpiry = Date.now() + data.expires_in * 1000;
+  return prokeralaToken;
+}
+
+// Prokerala rate limit (max 3/min)
+let lastCalls = [];
+function canCallAPI() {
+  const now = Date.now();
+  lastCalls = lastCalls.filter(t => now - t < 60000);
+  if (lastCalls.length >= 3) return false;
+  lastCalls.push(now);
+  return true;
+}
+
+// Panchang cache (6 hours)
+const PANCHANG_CACHE = {};
+const CACHE_TTL = 1000 * 60 * 60 * 6;
+
+// ─── GEOCODE ──────────────────────────────────────────────────
+async function getCoordinatesFromCity(city) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data && data.length > 0) {
+      return { lat: data[0].lat, lng: data[0].lon };
+    }
+    return null;
+  } catch (e) {
+    console.log("City geocode error:", e.message);
+    return null;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// EXPRESS APP
+// ════════════════════════════════════════════════════════════════
+const app  = express();
+const PORT = process.env.PORT || 10000;
+
 app.use(cors({
-  origin: '*', // In production you can restrict this to your app domains
+  origin: '*',
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization','x-admin-key','apikey'],
 }));
+
+// Raw body for webhook MUST come before json parser
 app.use('/payment/webhook', express.raw({ type: '*/*' }));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -343,7 +393,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Maintenance mode middleware
+// Maintenance mode
 app.use((req, res, next) => {
   if (CFG.maintenanceMode && !req.path.startsWith('/admin') && req.path !== '/health') {
     return res.status(503).json({ error: 'App is under maintenance. Please try again soon.' });
@@ -405,13 +455,13 @@ function sseDone(jobId, msg) {
 app.get('/health', async (req, res) => {
   let dbOk = false, tables = {};
   try {
-    const rows = await sbSelect('admin_settings', '?limit=1');
+    await sbSelect('admin_settings', '?limit=1');
     dbOk = true;
     const [u, k, p, f] = await Promise.all([
-      sbSelect('users', '?select=id').catch(() => []),
-      sbSelect('katha_vault', '?select=id').catch(() => []),
-      sbSelect('payments', '?select=id').catch(() => []),
-      sbSelect('feedback', '?select=id').catch(() => []),
+      sbSelect('users',      '?select=id').catch(() => []),
+      sbSelect('katha_vault','?select=id').catch(() => []),
+      sbSelect('payments',   '?select=id').catch(() => []),
+      sbSelect('feedback',   '?select=id').catch(() => []),
     ]);
     tables = { users: u.length, katha: k.length, payments: p.length, feedback: f.length };
   } catch {}
@@ -423,7 +473,6 @@ app.get('/health', async (req, res) => {
   });
 });
 
-// App config endpoint — SAFE: no keys exposed
 app.get('/config', (req, res) => {
   res.json({ success: true, config: {
     premiumPrice:        CFG.premiumPrice,
@@ -435,45 +484,36 @@ app.get('/config', (req, res) => {
     appVersion:          CFG.appVersion,
     bundles:             CFG.bundles.filter(b => b.active),
     donations:           CFG.donations.filter(d => d.active),
-    phonepeUPI:          CFG.phonepeUPI || '',     // UPI ID is safe to share (it's public)
-    razorpayKeyId:       CFG.razorpayKeyId || '',  // Public key is safe
+    phonepeUPI:          CFG.phonepeUPI || '',
+    razorpayKeyId:       CFG.razorpayKeyId || '',
     subscriptionPayment: CFG.subscriptionPayment || 'upi',
     donationPayment:     CFG.donationPayment || 'upi',
     hasRazorpay:         !!(CFG.razorpayKeyId && CFG.razorpayKeySecret),
     featureFlags:        CFG.featureFlags,
-    // NEVER expose: geminiKey, groqKey, razorpayKeySecret, ADMIN_PASSWORD, SUPABASE keys
   }});
 });
 
 // ════════════════════════════════════════════════════════════════
-// SECURE AI PROXY — All AI calls go through here
-// App code has NO API keys. Keys stay on server only.
+// SECURE AI PROXY
 // ════════════════════════════════════════════════════════════════
 app.post('/ai/chat', async (req, res) => {
   try {
     const { prompt, systemPrompt, phone } = req.body;
-
-    // Rate limit: 20 requests per minute per phone/IP
     const rateLimitKey = phone || req.ip || 'anon';
     if (!checkRateLimit(`ai_${rateLimitKey}`, 20)) {
       return res.status(429).json({ error: 'RATE_LIMIT', message: 'Too many requests. Please wait a moment.' });
     }
-
     const rawPrompt = prompt || systemPrompt || '';
     if (!rawPrompt || rawPrompt.trim().length < 2) {
       return res.status(400).json({ error: 'Empty prompt' });
     }
-
-    // Security check
     const cleanPrompt = sanitize(rawPrompt, 2000);
     if (isPromptInjection(cleanPrompt)) {
       return res.status(400).json({ error: 'Invalid request' });
     }
-
     if (!CFG.geminiKey && !CFG.groqKey) {
       return res.status(503).json({ error: 'AI service not configured. Admin: add keys in dashboard.' });
     }
-
     const result = await callAI(CFG.geminiKey, CFG.groqKey, cleanPrompt);
     res.json({ success: true, text: result.text, usedApi: result.usedApi });
   } catch(e) {
@@ -482,40 +522,29 @@ app.post('/ai/chat', async (req, res) => {
   }
 });
 
-// DharmaChat specific — with system prompt built on server
 app.post('/ai/dharma-chat', async (req, res) => {
   try {
     const { messages, userProfile, mode, phone } = req.body;
-
-    // Rate limit
     const rateKey = phone || req.ip || 'anon';
     if (!checkRateLimit(`chat_${rateKey}`, 15)) {
       return res.status(429).json({ error: 'RATE_LIMIT' });
     }
-
     if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Invalid messages' });
     }
-
-    // Sanitize each message
     const cleanMessages = messages.map(m => ({
       role: m.role === 'assistant' ? 'assistant' : 'user',
       content: sanitize(m.content || '', 1000),
     })).filter(m => m.content.length > 0);
 
     const lastMsg = cleanMessages[cleanMessages.length - 1]?.content || '';
-
-    // Security check on last user message
     if (isPromptInjection(lastMsg)) {
       return res.status(400).json({ error: 'Invalid request' });
     }
 
-    // Build system prompt on server (never in client)
     const u = userProfile || {};
     const lang = u.language || 'hindi';
-    const isH = lang === 'hindi';
     const isFC = mode === 'factcheck';
-
     const langRule = {
       hindi:   'तुम्हें केवल और केवल शुद्ध हिंदी में जवाब देना है। एक भी अंग्रेजी शब्द नहीं।',
       english: 'Reply ONLY in pure English. No Hindi, no Hinglish.',
@@ -545,16 +574,71 @@ ${isFC ? '⚡ FACT CHECK MODE: Start with "VERDICT: TRUE/FALSE/MISLEADING" then 
     if (!CFG.geminiKey && !CFG.groqKey) {
       return res.status(503).json({ error: 'AI not configured' });
     }
-
-    // Build full prompt
     const histText = cleanMessages.slice(-8).map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
     const fullPrompt = `${systemPrompt}\n\nConversation:\n${histText}`;
-
     const result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt);
     res.json({ success: true, text: result.text, usedApi: result.usedApi });
   } catch(e) {
     console.error('[AI/dharma-chat]', e.message);
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ error: 'AI service error. Please try again.' });
+  }
+});
+
+app.post('/ai/recommend', async (req, res) => {
+  try {
+    const { mood } = req.body;
+    if (!mood) {
+      return res.json({ success: false, mantra: "Gayatri Mantra" });
+    }
+    const map = {
+      peace: "Gayatri Mantra",
+      focus: "Saraswati Mantra",
+      strength: "Hanuman Mantra",
+      healing: "Maha Mrityunjaya Mantra"
+    };
+    const mantra = map[mood] || "Gayatri Mantra";
+    res.json({ success: true, mantra });
+  } catch (err) {
+    console.error('[AI/recommend]', err.message);
+    res.json({ success: false, mantra: "Gayatri Mantra" });
+  }
+});
+
+app.post('/api/dharmic-insight', async (req, res) => {
+  try {
+    const { moodHistory, panchang } = req.body;
+    const lastMood = moodHistory?.[0]?.mood || "neutral";
+    const tithi = sanitize(panchang?.tithi || '', 100);
+    const vaar  = sanitize(panchang?.vaar  || '', 100);
+
+    if (!CFG.groqKey && !CFG.geminiKey) {
+      return res.json({
+        title: "Stay Balanced",
+        guidance: ["Focus on your duty", "Chant a simple mantra", "Stay calm and aware"]
+      });
+    }
+
+    const prompt = `You are a dharmic AI guide based on Bhagavad Gita and Sanatan Dharma.
+
+User Mood: ${sanitize(lastMood, 50)}
+Tithi: ${tithi}
+Vaar: ${vaar}
+
+Give:
+1. Short title
+2. 3 bullet guidance points
+
+Tone: Spiritual, practical, grounded in dharma.`;
+
+    const result = await callAI(CFG.geminiKey, CFG.groqKey, prompt);
+    const lines = result.text.split('\n').filter(l => l.trim());
+    res.json({ title: lines[0] || "Dharmic Guidance", guidance: lines.slice(1, 4) });
+  } catch (e) {
+    console.error('[dharmic-insight]', e.message);
+    res.json({
+      title: "Stay Balanced",
+      guidance: ["Focus on your duty", "Chant a simple mantra", "Stay calm and aware"]
+    });
   }
 });
 
@@ -566,7 +650,6 @@ app.post('/users/register', async (req, res) => {
     const { phone, name, email, rashi, nakshatra, deity, language, birthCity, dob, firebaseUid, pushToken } = req.body;
     if (!phone && !firebaseUid) return res.status(400).json({ error: 'phone or firebaseUid required' });
 
-    // Sanitize inputs
     const cleanPhone = sanitize(phone || '', 20);
     const cleanName  = sanitize(name  || 'DharmaSetu User', 100);
 
@@ -588,15 +671,15 @@ app.post('/users/register', async (req, res) => {
       created_at: new Date().toISOString(), last_active: new Date().toISOString(),
       plan: 'free', streak: 0, questions: 0, pts: 0,
     };
-    if (pushToken) newUser.push_token = pushToken;
-    if (email) newUser.email = sanitize(email, 200);
-    if (firebaseUid) newUser.firebase_uid = firebaseUid;
-    if (rashi) newUser.rashi = rashi;
-    if (nakshatra) newUser.nakshatra = nakshatra;
-    if (deity) newUser.deity = deity;
-    if (language) newUser.language = language;
-    if (birthCity) newUser.birth_city = sanitize(birthCity, 100);
-    if (dob) newUser.dob = dob;
+    if (pushToken)  newUser.push_token  = pushToken;
+    if (email)      newUser.email       = sanitize(email, 200);
+    if (firebaseUid)newUser.firebase_uid= firebaseUid;
+    if (rashi)      newUser.rashi       = rashi;
+    if (nakshatra)  newUser.nakshatra   = nakshatra;
+    if (deity)      newUser.deity       = deity;
+    if (language)   newUser.language    = language;
+    if (birthCity)  newUser.birth_city  = sanitize(birthCity, 100);
+    if (dob)        newUser.dob         = dob;
 
     await sbInsert('users', newUser);
     res.json({ success: true, user: newUser, isNew: true });
@@ -605,107 +688,105 @@ app.post('/users/register', async (req, res) => {
     res.status(500).json({ error: 'Registration failed. Please try again.' });
   }
 });
+
 app.post('/users/activity', async (req, res) => {
   try {
     const { phone, type } = req.body;
     if (!phone) return res.json({ success: true });
-
     const cleanPhone = sanitize(phone, 20);
     const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`);
-
     if (users.length) {
       const u = users[0];
       const patch = { last_active: new Date().toISOString() };
-
       if (type === 'question') patch.questions = (u.questions || 0) + 1;
       if (type === 'checkin') {
         patch.streak = (u.streak || 0) + 1;
         patch.pts = (u.pts || 0) + 3;
       }
-
       await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, patch);
     }
-
     res.json({ success: true });
-
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    console.error('[users/activity]', e.message);
+    res.status(500).json({ error: 'Activity update failed.' });
   }
 });
 
-
-// ✅ PREMIUM ACCESS API (CORRECT POSITION)
 app.get('/users/access/:phone', async (req, res) => {
   try {
     const phone = sanitize(req.params.phone || '', 20);
-
-    if (!phone) {
-      return res.status(400).json({ error: 'Phone required' });
-    }
-
+    if (!phone) return res.status(400).json({ error: 'Phone required' });
     const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
-
     if (!users.length) {
-      return res.json({
-        success: true,
-        plan: 'free',
-        isPremium: false
-      });
+      return res.json({ success: true, plan: 'free', isPremium: false });
     }
-
     const user = users[0];
-
     const isPremium = user.plan && user.plan !== 'free';
-
-    res.json({
-      success: true,
-      plan: user.plan || 'free',
-      isPremium
-    });
-
+    res.json({ success: true, plan: user.plan || 'free', isPremium });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    console.error('[users/access]', e.message);
+    res.status(500).json({ error: 'Failed to fetch access info.' });
   }
 });
+
+app.get('/user/get', async (req, res) => {
+  try {
+    const phone = sanitize(req.query.phone || '', 20);
+    if (!phone) return res.status(400).json({ error: 'Phone required' });
+    const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
+    if (!users.length) return res.json({ user: null });
+    const u = users[0];
+    res.json({
+      user: {
+        phone: u.phone,
+        name: u.name,
+        rashi: u.rashi,
+        nakshatra: u.nakshatra,
+        deity: u.deity,
+        language: u.language || 'hindi',
+        plan: u.plan || 'free',
+        pts: u.pts || 0,
+        streak: u.streak || 0,
+        birth_city: u.birth_city || '',
+        dob: u.dob || '',
+        firebase_uid: u.firebase_uid || '',
+        push_token: u.push_token || '',
+        lagna: u.lagna || '',
+        mantra: u.mantra || '',
+      }
+    });
+  } catch (e) {
+    console.error('[user/get]', e.message);
+    res.status(500).json({ error: 'Failed to fetch user.' });
+  }
+});
+
 // ════════════════════════════════════════════════════════════════
 // FEEDBACK
 // ════════════════════════════════════════════════════════════════
 app.post('/feedback', async (req, res) => {
   try {
-    // Rate limit feedback
     const rateKey = req.body.phone || req.ip || 'anon';
     if (!checkRateLimit(`fb_${rateKey}`, 10)) {
       return res.status(429).json({ error: 'Too many feedback submissions' });
     }
-
     const { question, wrongAnswer, correctedAnswer, reason, phone, rating } = req.body;
     const entry = {
       id: `fb_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
-      status:           'pending',
-      created_at:       new Date().toISOString(),
+      status: 'pending',
+      created_at: new Date().toISOString(),
     };
-    if (question) entry.question = sanitize(question, 500);
-    if (wrongAnswer) entry.wrong_answer = sanitize(wrongAnswer, 1000);
+    if (question)        entry.question         = sanitize(question, 500);
+    if (wrongAnswer)     entry.wrong_answer     = sanitize(wrongAnswer, 1000);
     if (correctedAnswer) entry.corrected_answer = sanitize(correctedAnswer, 1000);
-    if (reason) entry.reason = sanitize(reason, 300);
-    if (phone) entry.phone = sanitize(phone, 20);
-    if (rating) entry.rating = rating === 'up' ? 'up' : 'down';
-
+    if (reason)          entry.reason           = sanitize(reason, 300);
+    if (phone)           entry.phone            = sanitize(phone, 20);
+    if (rating)          entry.rating           = rating === 'up' ? 'up' : 'down';
     await sbInsert('feedback', entry);
     res.json({ success: true, id: entry.id });
   } catch(e) {
     console.error('[Feedback]', e.message);
-    res.status(500).json({ error: e.message });
-  }
-});
-
-app.get('/admin/feedback', adminAuth, async (req, res) => {
-  try {
-    const feedback = await sbSelect('feedback', '?order=created_at.desc.nullslast');
-    res.json({ success: true, feedback });
-  } catch(e) {
-    console.error('[Admin Feedback]', e.message);
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ error: 'Feedback submission failed.' });
   }
 });
 
@@ -720,26 +801,155 @@ app.get('/payment/config', (req, res) => {
     subscriptionPayment: CFG.subscriptionPayment || 'upi',
     donationPayment:     CFG.donationPayment || 'upi',
     hasRazorpay:         !!(CFG.razorpayKeyId && CFG.razorpayKeySecret),
-    // NEVER expose razorpayKeySecret
   });
 });
 
+// Alias for app compatibility
+app.get('/payment-config', (req, res) => {
+  res.json({
+    success: true,
+    phonepeUPI:          CFG.phonepeUPI || '',
+    razorpayKeyId:       CFG.razorpayKeyId || '',
+    subscriptionPayment: CFG.subscriptionPayment || 'upi',
+    donationPayment:     CFG.donationPayment || 'upi',
+    hasRazorpay:         !!(CFG.razorpayKeyId && CFG.razorpayKeySecret),
+  });
+});
+
+// ─── UPI ORDER CREATE (SECURE) ────────────────────────────────
+// Creates a server-side order record. planId is stored server-side.
+// Client receives only an orderId to use in /payment/confirm.
+app.post('/payment/upi/create', async (req, res) => {
+  try {
+    const { phone, planId } = req.body;
+
+    if (!phone || typeof phone !== 'string' || phone.trim().length < 5) {
+      return res.status(400).json({ error: 'Valid phone number required' });
+    }
+    if (!planId || !VALID_PLANS.includes(planId)) {
+      return res.status(400).json({ error: 'Invalid plan. Must be one of: ' + VALID_PLANS.join(', ') });
+    }
+
+    const cleanPhone = sanitize(phone, 20);
+    const cleanPlan  = sanitize(planId, 50);
+    const plan = CFG.bundles.find(b => b.id === cleanPlan && b.active);
+    if (!plan) {
+      return res.status(400).json({ error: 'Plan not available' });
+    }
+
+    const orderId = `upi_${Date.now()}_${crypto.randomBytes(6).toString('hex')}`;
+    const order = {
+      orderId,
+      userPhone: cleanPhone,
+      planId:    cleanPlan,
+      amount:    plan.price,
+      status:    'pending',
+      createdAt: new Date().toISOString(),
+    };
+
+    await saveOrder(order);
+
+    res.json({
+      success:  true,
+      orderId,
+      amount:   plan.price,
+      upiId:    CFG.phonepeUPI || '',
+      planName: plan.name,
+    });
+  } catch(e) {
+    console.error('[payment/upi/create]', e.message);
+    res.status(500).json({ error: 'Failed to create order.' });
+  }
+});
+
+// ─── PAYMENT CONFIRM (SECURE) ─────────────────────────────────
+// planId is NEVER accepted from client. Fetched from server-side order store.
+app.post('/payment/confirm', async (req, res) => {
+  try {
+    const { orderId, paymentId } = req.body;
+
+    if (!orderId || typeof orderId !== 'string' || orderId.trim().length < 5) {
+      return res.status(400).json({ error: 'Valid orderId required' });
+    }
+
+    if (CFG.subscriptionPayment === 'razorpay') {
+      return res.status(403).json({ error: 'Use Razorpay verification endpoint' });
+    }
+
+    const cleanOrderId = sanitize(orderId, 100);
+    const order = await getOrder(cleanOrderId);
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    if (order.status === 'completed') {
+      // Idempotent: already processed, return success
+      return res.json({ success: true, message: 'Already processed', plan: order.planId });
+    }
+    if (order.status !== 'pending') {
+      return res.status(400).json({ error: 'Order is not in pending state' });
+    }
+
+    // Validate plan from server-side order (never from client)
+    if (!VALID_PLANS.includes(order.planId)) {
+      return res.status(400).json({ error: 'Invalid plan in order' });
+    }
+
+    // Mark order completed (prevents duplicate confirmation)
+    await markOrderCompleted(cleanOrderId);
+
+    // Record payment
+    const payRecordId = `upi_pay_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
+    await sbInsert('payments', {
+      id:           payRecordId,
+      phone:        order.userPhone,
+      plan_id:      order.planId,
+      amount:       order.amount,
+      status:       'paid',
+      payment_type: 'subscription',
+      payment_via:  'upi',
+      payment_id:   sanitize(paymentId || 'upi_manual', 100),
+      order_ref:    cleanOrderId,
+      paid_at:      new Date().toISOString(),
+      created_at:   new Date().toISOString(),
+    }).catch(e => console.warn('[payment/confirm] Payment record insert failed:', e.message));
+
+    // Upgrade user
+    if (order.userPhone) {
+      await sbUpdate(
+        'users',
+        `?phone=eq.${encodeURIComponent(order.userPhone)}`,
+        { plan: order.planId }
+      );
+    }
+
+    res.json({ success: true, plan: order.planId, message: 'Payment confirmed and plan upgraded.' });
+  } catch (e) {
+    console.error('[payment/confirm]', e.message);
+    res.status(500).json({ error: 'Payment confirmation failed.' });
+  }
+});
+
+// ─── RAZORPAY ORDER CREATE ─────────────────────────────────────
 app.post('/payment/razorpay/order', async (req, res) => {
   try {
     const { planId, phone } = req.body;
 
-const plan = CFG.bundles.find(p => p.id === planId);
-if (!plan) {
-  return res.status(400).json({ error: 'Invalid plan' });
-}
+    if (!planId || !VALID_PLANS.includes(planId)) {
+      return res.status(400).json({ error: 'Invalid plan' });
+    }
+    const plan = CFG.bundles.find(p => p.id === planId && p.active);
+    if (!plan) return res.status(400).json({ error: 'Plan not available' });
 
-const amount = plan.price;
     if (!CFG.razorpayKeyId || !CFG.razorpayKeySecret) {
       return res.status(503).json({ error: 'Razorpay not configured.' });
     }
+
+    const amount = plan.price;
     if (!amount || amount < 1 || amount > 100000) {
       return res.status(400).json({ error: 'Invalid amount' });
     }
+
     const auth = Buffer.from(`${CFG.razorpayKeyId}:${CFG.razorpayKeySecret}`).toString('base64');
     const bodyStr = JSON.stringify({ amount: Math.round(amount) * 100, currency: 'INR', receipt: `ds_${Date.now()}` });
     const rzp = await new Promise((resolve, reject) => {
@@ -747,9 +957,16 @@ const amount = plan.price;
         hostname: 'api.razorpay.com', path: '/v1/orders', method: 'POST',
         headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(bodyStr) },
       };
-      const r = https.request(opts, res => { let d = ''; res.on('data', c => d += c); res.on('end', () => { try { resolve(JSON.parse(d)); } catch { resolve({}); } }); });
-      r.on('error', reject); r.write(bodyStr); r.end();
+      const r = https.request(opts, res => {
+        let d = '';
+        res.on('data', c => d += c);
+        res.on('end', () => { try { resolve(JSON.parse(d)); } catch { resolve({}); } });
+      });
+      r.on('error', reject);
+      r.write(bodyStr);
+      r.end();
     });
+
     if (rzp.id) {
       await sbInsert('payments', {
         id: rzp.id, phone: sanitize(phone||'', 20),
@@ -762,108 +979,20 @@ const amount = plan.price;
     } else {
       res.status(500).json({ error: 'Order creation failed' });
     }
-  } catch(e) { res.status(500).json({ error: e.message }); }
-});
-app.post('/payment/confirm', async (req, res) => {
-  try {
-    const { orderId, phone, planId, paymentId } = req.body;
-
-    if (CFG.subscriptionPayment === 'razorpay') {
-      return res.status(403).json({ error: 'Use Razorpay verification' });
-    }
-
-    const id = sanitize(orderId || `m_${Date.now()}`, 100);
-    const cleanPhone = sanitize(phone || '', 20);
-    const cleanPlan = sanitize(planId || '', 50);
-
-    const validPlans = ['basic', 'pro'];
-    if (!validPlans.includes(cleanPlan)) {
-      return res.status(400).json({ error: 'Invalid plan' });
-    }
-
-    await sbUpsert('payments', {
-      id,
-      phone: cleanPhone,
-      plan_id: cleanPlan,
-      amount: 0,
-      status: 'paid',
-      payment_id: sanitize(paymentId || 'manual', 100),
-      paid_at: new Date().toISOString(),
-      created_at: new Date().toISOString(),
-    }, 'id');
-
-    if (cleanPhone && cleanPlan) {
-      await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, {
-        plan: cleanPlan
-      });
-    }
-
-    res.json({ success: true });
-
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch(e) {
+    console.error('[payment/razorpay/order]', e.message);
+    res.status(500).json({ error: 'Order creation failed.' });
   }
 });
 
-
-// ✅ WEBHOOK (OUTSIDE — CORRECT)
-app.post('/payment/webhook', async (req, res) => {
-  try {
-    const secret = CFG.razorpayKeySecret;
-    const signature = req.headers['x-razorpay-signature'];
-    if (!signature) {
-  return res.status(400).json({ error: 'Missing signature' });
-}
-
-    const expected = crypto
-      .createHmac('sha256', secret)
-      .update(req.body)
-      .digest('hex');
-
-    if (expected !== signature) {
-      return res.status(400).json({ error: 'Invalid webhook signature' });
-    }
-
-    const event = JSON.parse(req.body.toString());
-
-    if (event?.event === 'payment.captured') {
-      const p = event?.payload?.payment?.entity;
-
-      if (p) {
-        await sbUpdate('payments',
-          `?id=eq.${encodeURIComponent(p.order_id || '')}`,
-          {
-            status: 'paid',
-            payment_id: p.id,
-            paid_at: new Date().toISOString(),
-          }
-        );
-      }
-    }
-
-    res.json({ success: true });
-
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-// ─────────────────────────────────────────────
-// Razorpay Payment Verification (CRITICAL)
-// ─────────────────────────────────────────────
+// ─── RAZORPAY VERIFY ──────────────────────────────────────────
 app.post('/payment/verify', async (req, res) => {
   try {
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      phone,
-    } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, phone } = req.body;
 
-    // Validate required fields
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({ error: 'Missing payment fields' });
     }
-
     if (!CFG.razorpayKeySecret) {
       return res.status(500).json({ error: 'Razorpay not configured' });
     }
@@ -879,45 +1008,76 @@ app.post('/payment/verify', async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid payment signature" });
     }
 
-    // ✅ CRITICAL FIX: Fetch planId from DB using order_id — NEVER trust client
+    // Fetch planId from DB — NEVER from client
     const paymentRows = await sbSelect('payments', `?id=eq.${encodeURIComponent(razorpay_order_id)}&limit=1`);
     if (!paymentRows.length) {
       return res.status(404).json({ error: 'Order not found' });
     }
-    const planId = paymentRows[0].plan_id; // From DB, not from client
 
-    // Validate plan
-    const validPlans = ['basic', 'pro'];
-    if (!validPlans.includes(planId)) {
+    const existingPayment = paymentRows[0];
+
+    // Idempotent: already processed
+    if (existingPayment.status === 'paid') {
+      return res.json({ success: true, message: 'Already processed', plan: existingPayment.plan_id });
+    }
+
+    const planId = existingPayment.plan_id;
+    if (!VALID_PLANS.includes(planId)) {
       return res.status(400).json({ error: 'Invalid plan in order' });
     }
 
-    // Update payment status
     await sbUpdate('payments',
       `?id=eq.${encodeURIComponent(razorpay_order_id)}`,
-      {
-        status: 'paid',
-        payment_id: razorpay_payment_id,
-        paid_at: new Date().toISOString()
-      }
+      { status: 'paid', payment_id: razorpay_payment_id, paid_at: new Date().toISOString() }
     );
 
-    // Upgrade user plan
     const cleanPhone = sanitize(phone || '', 20);
     if (cleanPhone) {
-      await sbUpdate('users',
-        `?phone=eq.${encodeURIComponent(cleanPhone)}`,
-        { plan: planId }
-      );
+      await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { plan: planId });
     }
 
-    return res.json({ success: true, message: "Payment verified & user upgraded", plan: planId });
-
+    res.json({ success: true, message: "Payment verified & user upgraded", plan: planId });
   } catch (err) {
-    console.error("Verify error:", err);
-    res.status(500).json({ success: false, error: err.message });
+    console.error('[payment/verify]', err.message);
+    res.status(500).json({ success: false, error: 'Payment verification failed.' });
   }
 });
+
+// ─── RAZORPAY WEBHOOK ─────────────────────────────────────────
+app.post('/payment/webhook', async (req, res) => {
+  try {
+    const secret = CFG.razorpayKeySecret;
+    const signature = req.headers['x-razorpay-signature'];
+    if (!signature) {
+      return res.status(400).json({ error: 'Missing signature' });
+    }
+    if (!secret) {
+      return res.status(500).json({ error: 'Webhook secret not configured' });
+    }
+    const expected = crypto
+      .createHmac('sha256', secret)
+      .update(req.body)
+      .digest('hex');
+    if (expected !== signature) {
+      return res.status(400).json({ error: 'Invalid webhook signature' });
+    }
+    const event = JSON.parse(req.body.toString());
+    if (event?.event === 'payment.captured') {
+      const p = event?.payload?.payment?.entity;
+      if (p && p.order_id) {
+        await sbUpdate('payments',
+          `?id=eq.${encodeURIComponent(p.order_id)}`,
+          { status: 'paid', payment_id: p.id, paid_at: new Date().toISOString() }
+        );
+      }
+    }
+    res.json({ success: true });
+  } catch (e) {
+    console.error('[payment/webhook]', e.message);
+    res.status(500).json({ error: 'Webhook processing failed.' });
+  }
+});
+
 // ════════════════════════════════════════════════════════════════
 // CONTENT
 // ════════════════════════════════════════════════════════════════
@@ -927,16 +1087,29 @@ app.get('/content', async (req, res) => {
     res.json({ success: true, count: rows.length, content: rows.map(u => ({
       id: u.id, title: u.title, type: u.type, topics: u.topics, summary: u.summary,
     }))});
-  } catch(e) { res.json({ success: true, count: 0, content: [] }); }
+  } catch(e) {
+    res.json({ success: true, count: 0, content: [] });
+  }
 });
 
 // ════════════════════════════════════════════════════════════════
 // KATHA VAULT
 // ════════════════════════════════════════════════════════════════
+app.get('/katha/list', async (req, res) => {
+  try {
+    const rows = await sbSelect('katha_vault', '?select=scripture_id,unit_id,lang,chapter_title&order=scripture_id.asc,unit_id.asc');
+    const groups = {};
+    rows.forEach(r => { const k = `${r.scripture_id}_${r.unit_id}_${r.lang}`; groups[k] = (groups[k]||0) + 1; });
+    res.json({ success: true, count: Object.keys(groups).length, chapters: Object.entries(groups).map(([k,n]) => ({ key: k, verseCount: n })) });
+  } catch(e) {
+    console.error('[katha/list]', e.message);
+    res.status(500).json({ error: 'Failed to fetch katha list.' });
+  }
+});
+
 app.get('/katha/:sc/:unit/:lang', async (req, res) => {
   try {
     const { sc, unit, lang } = req.params;
-    // Sanitize params
     const cleanSc   = sanitize(sc,   50);
     const cleanUnit = sanitize(unit, 20);
     const cleanLang = lang === 'hindi' ? 'hindi' : 'english';
@@ -955,23 +1128,16 @@ app.get('/katha/:sc/:unit/:lang', async (req, res) => {
     const content = JSON.stringify(verses.map(v => v.verse_data));
     fs.writeFileSync(cacheFile, JSON.stringify({ content, verseCount: verses.length, cachedAt: Date.now() }));
     res.json({ success: true, content, verseCount: verses.length, source: 'supabase' });
-  } catch(e) { res.status(500).json({ error: e.message }); }
-});
-
-app.get('/katha/list', async (req, res) => {
-  try {
-    const rows = await sbSelect('katha_vault', '?select=scripture_id,unit_id,lang,chapter_title&order=scripture_id.asc,unit_id.asc');
-    const groups = {};
-    rows.forEach(r => { const k = `${r.scripture_id}_${r.unit_id}_${r.lang}`; groups[k] = (groups[k]||0) + 1; });
-    res.json({ success: true, count: Object.keys(groups).length, chapters: Object.entries(groups).map(([k,n]) => ({ key: k, verseCount: n })) });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[katha/:sc/:unit/:lang]', e.message);
+    res.status(500).json({ error: 'Failed to fetch katha content.' });
+  }
 });
 
 // ════════════════════════════════════════════════════════════════
 // AI CALLERS (server-side only — keys never leave server)
 // ════════════════════════════════════════════════════════════════
 async function callGemini(apiKey, prompt) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
@@ -1045,12 +1211,10 @@ async function callGroq(apiKey, prompt) {
 }
 
 async function callAI(gemKey, groqKey, prompt) {
-  // Try Gemini first (better quality)
   if (gemKey) {
     try { return { text: await callGemini(gemKey, prompt), usedApi: 'gemini' }; }
     catch(e) { if (!e.message.includes('RATE_LIMIT')) console.log('[AI] Gemini failed:', e.message.slice(0,60)); }
   }
-  // Fallback to Groq
   if (groqKey) {
     try { return { text: await callGroq(groqKey, prompt), usedApi: 'groq' }; }
     catch(e) {
@@ -1123,10 +1287,10 @@ app.post('/admin/katha/generate', adminAuth, async (req, res) => {
   if (missing.length === 0) return;
 
   (async () => {
-    const GAP       = 20000;
-    const RATE_WAIT = 45000;
+    const GAP        = 20000;
+    const RATE_WAIT  = 45000;
     const RETRY_WAIT = 6000;
-    const MAX_ATT   = 4;
+    const MAX_ATT    = 4;
     let generated = 0, failed = 0;
 
     sseLog(job, `🕉 ${scriptureId} Ch${chN} "${title}" | ${lang.toUpperCase()}`, 'info');
@@ -1174,7 +1338,6 @@ app.post('/admin/katha/generate', adminAuth, async (req, res) => {
         await new Promise(r => setTimeout(r, GAP));
       }
     }
-
     sseDone(job, `🎉 Complete! ✅ New: ${generated} | ⛔ Failed: ${failed} | Total: ${existingNums.size + generated}/${total}`);
   })().catch(e => { sseLog(job, '❌ Fatal: ' + e.message, 'err'); sseDone(job, 'Stopped: ' + e.message); });
 });
@@ -1199,10 +1362,8 @@ app.delete('/admin/katha/:sc/:unit/:lang', adminAuth, async (req, res) => {
 // ════════════════════════════════════════════════════════════════
 // ADMIN ENDPOINTS
 // ════════════════════════════════════════════════════════════════
-
 app.get('/admin/config', adminAuth, (req, res) => {
   const safe = { ...CFG };
-  // Mask sensitive values
   if (safe.razorpayKeySecret?.length > 4) safe.razorpayKeySecret = safe.razorpayKeySecret.slice(0,4) + '***SAVED';
   if (safe.geminiKey?.length > 6)         safe.geminiKey         = safe.geminiKey.slice(0,8)         + '***SAVED';
   if (safe.groqKey?.length > 6)           safe.groqKey           = safe.groqKey.slice(0,8)           + '***SAVED';
@@ -1225,7 +1386,7 @@ app.post('/admin/config', adminAuth, async (req, res) => {
     const val = req.body[jsKey];
     if (val !== undefined) {
       const str = typeof val === 'object' ? JSON.stringify(val) : String(val);
-      if (typeof val === 'string' && val.includes('***SAVED')) continue; // Don't overwrite with masked
+      if (typeof val === 'string' && val.includes('***SAVED')) continue;
       CFG[jsKey] = val;
       saves.push(saveConfigKey(dbKey, str));
     }
@@ -1252,28 +1413,45 @@ app.delete('/admin/config/:key', adminAuth, async (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/admin/bundles',   adminAuth, async (req, res) => { CFG.bundles   = req.body.bundles;   await saveConfigKey('bundles',   JSON.stringify(CFG.bundles));   res.json({ success: true }); });
-app.post('/admin/donations', adminAuth, async (req, res) => { CFG.donations = req.body.donations; await saveConfigKey('donations', JSON.stringify(CFG.donations)); res.json({ success: true }); });
-
-// Notifications
-app.post('/admin/notifications', adminAuth, async (req, res) => {
+app.post('/admin/bundles',   adminAuth, async (req, res) => {
   try {
-    const { title, body, target, scheduled_for } = req.body;
-    const entry = {
-      id: `notif_${Date.now()}`,
-      title: sanitize(title || '', 200),
-      body:  sanitize(body  || '', 500),
-      target: ['all','premium','free'].includes(target) ? target : 'all',
-      scheduled_for: scheduled_for || new Date().toISOString(),
-      sent_at:   new Date().toISOString(),
-      status:    'pending',
-    };
-    await sbInsert('notifications', entry);
-    res.json({ success: true, id: entry.id });
+    if (!Array.isArray(req.body.bundles)) return res.status(400).json({ error: 'bundles must be an array' });
+    CFG.bundles = req.body.bundles;
+    await saveConfigKey('bundles', JSON.stringify(CFG.bundles));
+    res.json({ success: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// Content upload
+app.post('/admin/donations', adminAuth, async (req, res) => {
+  try {
+    if (!Array.isArray(req.body.donations)) return res.status(400).json({ error: 'donations must be an array' });
+    CFG.donations = req.body.donations;
+    await saveConfigKey('donations', JSON.stringify(CFG.donations));
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/admin/notifications', adminAuth, async (req, res) => {
+  try {
+    const { title, body, target, scheduled_for } = req.body;
+    if (!title || !body) return res.status(400).json({ error: 'title and body required' });
+    const entry = {
+      id: `notif_${Date.now()}`,
+      title: sanitize(title, 200),
+      body:  sanitize(body,  500),
+      target: ['all','premium','free'].includes(target) ? target : 'all',
+      scheduled_for: scheduled_for || new Date().toISOString(),
+      sent_at: new Date().toISOString(),
+      status: 'pending',
+    };
+    await sbInsert('notifications', entry);
+    res.json({ success: true, id: entry.id });
+  } catch(e) {
+    console.error('[admin/notifications]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.post('/admin/upload', adminAuth, upload.single('file'), async (req, res) => {
   try {
     const { title, type, topics, trustLevel, textContent } = req.body;
@@ -1301,19 +1479,35 @@ app.post('/admin/upload', adminAuth, upload.single('file'), async (req, res) => 
     };
     await sbInsert('uploads', entry);
     res.json({ success: true, upload: { id: entry.id, title: entry.title, chunkCount: entry.chunk_count, charCount: entry.char_count } });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/upload]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.get('/admin/uploads', adminAuth, async (req, res) => {
-  const rows = await sbSelect('uploads', '?order=uploaded_at.desc');
-  res.json({ success: true, uploads: rows.map(u => ({ id: u.id, title: u.title, type: u.type, chunkCount: u.chunk_count, charCount: u.char_count, active: u.active, uploadedAt: u.uploaded_at, topics: u.topics })) });
+  try {
+    const rows = await sbSelect('uploads', '?order=uploaded_at.desc');
+    res.json({ success: true, uploads: rows.map(u => ({ id: u.id, title: u.title, type: u.type, chunkCount: u.chunk_count, charCount: u.char_count, active: u.active, uploadedAt: u.uploaded_at, topics: u.topics })) });
+  } catch(e) {
+    console.error('[admin/uploads]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
-app.patch('/admin/uploads/:id',  adminAuth, async (req, res) => { await sbUpdate('uploads', `?id=eq.${req.params.id}`, req.body); res.json({ success: true }); });
-app.delete('/admin/uploads/:id', adminAuth, async (req, res) => { await sbDelete('uploads', `?id=eq.${req.params.id}`); res.json({ success: true }); });
+app.patch('/admin/uploads/:id',  adminAuth, async (req, res) => {
+  try {
+    await sbUpdate('uploads', `?id=eq.${req.params.id}`, req.body);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.delete('/admin/uploads/:id', adminAuth, async (req, res) => {
+  try {
+    await sbDelete('uploads', `?id=eq.${req.params.id}`);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
 
-// ════════════════════════════════════════════════════════════════
-// BOOKS (Library Manager)
-// ════════════════════════════════════════════════════════════════
+// ─── BOOKS ────────────────────────────────────────────────────
 app.get('/admin/books', adminAuth, async (req, res) => {
   try {
     const rows = await sbSelect('books', '?order=display_order.asc,created_at.desc').catch(()=>[]);
@@ -1324,19 +1518,19 @@ app.post('/admin/books', adminAuth, async (req, res) => {
   try {
     const entry = {
       id: `bk_${Date.now()}`,
-      title: sanitize(req.body.title || 'Untitled', 200),
-      author: sanitize(req.body.author || 'Unknown', 100),
-      language: sanitize(req.body.language || 'hindi', 50),
-      category: sanitize(req.body.category || 'general', 50),
-      cover_url: sanitize(req.body.cover_url || '', 500),
-      description: sanitize(req.body.description || '', 1000),
-      is_premium: !!req.body.is_premium,
-      is_featured: !!req.body.is_featured,
+      title:        sanitize(req.body.title || 'Untitled', 200),
+      author:       sanitize(req.body.author || 'Unknown', 100),
+      language:     sanitize(req.body.language || 'hindi', 50),
+      category:     sanitize(req.body.category || 'general', 50),
+      cover_url:    sanitize(req.body.cover_url || '', 500),
+      description:  sanitize(req.body.description || '', 1000),
+      is_premium:   !!req.body.is_premium,
+      is_featured:  !!req.body.is_featured,
       external_url: sanitize(req.body.external_url || '', 500),
-      read_url: sanitize(req.body.read_url || '', 500),
-      tags: req.body.tags ? req.body.tags.split(',').map(t=>sanitize(t.trim(), 50)) : [],
-      display_order: parseInt(req.body.display_order) || 0,
-      created_at: new Date().toISOString()
+      read_url:     sanitize(req.body.read_url || '', 500),
+      tags:         req.body.tags ? req.body.tags.split(',').map(t=>sanitize(t.trim(), 50)) : [],
+      display_order:parseInt(req.body.display_order) || 0,
+      created_at:   new Date().toISOString()
     };
     await sbInsert('books', entry);
     res.json({ success: true, book: entry });
@@ -1345,33 +1539,45 @@ app.post('/admin/books', adminAuth, async (req, res) => {
 app.patch('/admin/books/:id', adminAuth, async (req, res) => {
   try {
     const patch = { ...req.body };
-    delete patch.id; 
+    delete patch.id;
     await sbUpdate('books', `?id=eq.${req.params.id}`, patch);
     res.json({ success: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 app.delete('/admin/books/:id', adminAuth, async (req, res) => {
-  await sbDelete('books', `?id=eq.${req.params.id}`);
-  res.json({ success: true });
+  try {
+    await sbDelete('books', `?id=eq.${req.params.id}`);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// Users
+// ─── USERS ────────────────────────────────────────────────────
 app.get('/admin/users', adminAuth, async (req, res) => {
-  const { search, plan } = req.query;
-  let q = '?order=last_active.desc&limit=500';
-  if (plan && plan !== 'all') q += `&plan=eq.${sanitize(plan, 20)}`;
-  let rows = await sbSelect('users', q);
-  if (search) {
-    const s = sanitize(search, 100).toLowerCase();
-    rows = rows.filter(u =>
-      (u.name||'').toLowerCase().includes(s) ||
-      (u.phone||'').includes(s) ||
-      (u.email||'').toLowerCase().includes(s)
-    );
+  try {
+    const { search, plan } = req.query;
+    let q = '?order=last_active.desc&limit=500';
+    if (plan && plan !== 'all') q += `&plan=eq.${sanitize(plan, 20)}`;
+    let rows = await sbSelect('users', q);
+    if (search) {
+      const s = sanitize(search, 100).toLowerCase();
+      rows = rows.filter(u =>
+        (u.name||'').toLowerCase().includes(s) ||
+        (u.phone||'').includes(s) ||
+        (u.email||'').toLowerCase().includes(s)
+      );
+    }
+    res.json({ success: true, users: rows, total: rows.length });
+  } catch(e) {
+    console.error('[admin/users]', e.message);
+    res.status(500).json({ error: e.message });
   }
-  res.json({ success: true, users: rows, total: rows.length });
 });
-app.patch('/admin/users/:id', adminAuth, async (req, res) => { await sbUpdate('users', `?id=eq.${req.params.id}`, req.body); res.json({ success: true }); });
+app.patch('/admin/users/:id', adminAuth, async (req, res) => {
+  try {
+    await sbUpdate('users', `?id=eq.${req.params.id}`, req.body);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
 app.patch('/admin/users/ban/toggle', adminAuth, async (req, res) => {
   try {
     const { phone, ban } = req.body;
@@ -1383,17 +1589,24 @@ app.patch('/admin/users/ban/toggle', adminAuth, async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// Transactions
+// ─── TRANSACTIONS ─────────────────────────────────────────────
 app.get('/admin/transactions', adminAuth, async (req, res) => {
-  const rows = await sbSelect('payments', '?order=created_at.desc&limit=200');
-  const paid = rows.filter(r => r.status === 'paid');
-  res.json({ success: true, transactions: rows, total: rows.length, totalRevenue: paid.reduce((s,t) => s+(t.amount||0), 0) });
+  try {
+    const rows = await sbSelect('payments', '?order=created_at.desc&limit=200');
+    const paid = rows.filter(r => r.status === 'paid');
+    res.json({ success: true, transactions: rows, total: rows.length, totalRevenue: paid.reduce((s,t) => s+(t.amount||0), 0) });
+  } catch(e) {
+    console.error('[admin/transactions]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 app.post('/admin/payments/approve', adminAuth, async (req, res) => {
   try {
     const { phone, planId, amount, transactionId } = req.body;
     const cleanPhone = sanitize(phone || '', 20);
-    const cleanPlan = sanitize(planId || 'pro', 50);
+    const cleanPlan  = sanitize(planId || 'pro', 50);
+    if (!cleanPhone) return res.status(400).json({ error: 'Phone required' });
+    if (!VALID_PLANS.includes(cleanPlan)) return res.status(400).json({ error: 'Invalid plan' });
     const payId = `m_app_${Date.now()}`;
     await sbInsert('payments', {
       id: payId, phone: cleanPhone, plan_id: cleanPlan,
@@ -1405,26 +1618,44 @@ app.post('/admin/payments/approve', adminAuth, async (req, res) => {
     await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { plan: cleanPlan });
     await auditLog('PAYMENT_APPROVED', 'admin', cleanPhone, `Plan: ${cleanPlan}, Amount: ${amount}`);
     res.json({ success: true });
+  } catch(e) {
+    console.error('[admin/payments/approve]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── FEEDBACK (admin) ─────────────────────────────────────────
+app.get('/admin/feedback', adminAuth, async (req, res) => {
+  try {
+    const rows = await sbSelect('feedback', '?order=created_at.desc');
+    res.json({ success: true, feedback: rows, total: rows.length, pending: rows.filter(f => f.status === 'pending').length });
+  } catch(e) {
+    console.error('[admin/feedback]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+app.patch('/admin/feedback/:id',  adminAuth, async (req, res) => {
+  try {
+    await sbUpdate('feedback', `?id=eq.${req.params.id}`, req.body);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.delete('/admin/feedback/:id', adminAuth, async (req, res) => {
+  try {
+    await sbDelete('feedback', `?id=eq.${req.params.id}`);
+    res.json({ success: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// Feedback
-app.get('/admin/feedback', adminAuth, async (req, res) => {
-  const rows = await sbSelect('feedback', '?order=created_at.desc');
-  res.json({ success: true, feedback: rows, total: rows.length, pending: rows.filter(f => f.status === 'pending').length });
-});
-app.patch('/admin/feedback/:id',  adminAuth, async (req, res) => { await sbUpdate('feedback', `?id=eq.${req.params.id}`, req.body); res.json({ success: true }); });
-app.delete('/admin/feedback/:id', adminAuth, async (req, res) => { await sbDelete('feedback', `?id=eq.${req.params.id}`); res.json({ success: true }); });
-
-// Exports
+// ─── EXPORTS ──────────────────────────────────────────────────
 app.get('/admin/export/feedback', adminAuth, async (req, res) => {
   try {
     const rows = await sbSelect('feedback', '?order=created_at.desc');
     let csv = 'ID,Date,Phone,Question,Reason,Status,Notes\n';
     rows.forEach(r => {
-      const q = (r.question||'').replace(/"/g,'""');
+      const q  = (r.question||'').replace(/"/g,'""');
       const re = (r.reason||'').replace(/"/g,'""');
-      const n = (r.notes||'').replace(/"/g,'""');
+      const n  = (r.notes||'').replace(/"/g,'""');
       csv += `"${r.id}","${r.created_at}","${r.phone}","${q}","${re}","${r.status}","${n}"\n`;
     });
     res.header('Content-Type', 'text/csv');
@@ -1433,7 +1664,7 @@ app.get('/admin/export/feedback', adminAuth, async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// Stats
+// ─── STATS ────────────────────────────────────────────────────
 app.get('/admin/stats', adminAuth, async (req, res) => {
   try {
     const [users, payments, feedback, katha, uploads] = await Promise.all([
@@ -1447,62 +1678,62 @@ app.get('/admin/stats', adminAuth, async (req, res) => {
     const chapters = new Set(katha.map(v => `${v.scripture_id}_${v.unit_id}_${v.lang}`));
     const today    = new Date().toDateString();
     res.json({ success: true, stats: {
-      totalUsers:       users.length,
-      premiumUsers:     users.filter(u => u.plan !== 'free').length,
-      freeUsers:        users.filter(u => u.plan === 'free').length,
-      newToday:         users.filter(u => new Date(u.created_at).toDateString() === today).length,
-      totalTransactions:payments.length,
-      paidTransactions: paid.length,
-      totalRevenue:     paid.reduce((s,t) => s+(t.amount||0), 0),
-      kathaChapters:    chapters.size,
-      totalVerses:      katha.length,
-      activeUploads:    uploads.filter(u => u.active).length,
-      pendingFeedback:  feedback.filter(f => f.status === 'pending').length,
-      totalFeedback:    feedback.length,
+      totalUsers:        users.length,
+      premiumUsers:      users.filter(u => u.plan !== 'free').length,
+      freeUsers:         users.filter(u => u.plan === 'free').length,
+      newToday:          users.filter(u => new Date(u.created_at).toDateString() === today).length,
+      totalTransactions: payments.length,
+      paidTransactions:  paid.length,
+      totalRevenue:      paid.reduce((s,t) => s+(t.amount||0), 0),
+      kathaChapters:     chapters.size,
+      totalVerses:       katha.length,
+      activeUploads:     uploads.filter(u => u.active).length,
+      pendingFeedback:   feedback.filter(f => f.status === 'pending').length,
+      totalFeedback:     feedback.length,
       db: 'supabase',
     }});
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/stats]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
-// Analytics Deep
 app.get('/admin/analytics/deep', adminAuth, async (req, res) => {
   try {
     const [users, payments, katha] = await Promise.all([
-      sbSelect('users', '?select=plan,created_at,last_active').catch(() => []),
-      sbSelect('payments', '?select=status,amount,created_at').catch(() => []),
-      sbSelect('katha_vault', '?select=scripture_id').catch(() => []),
+      sbSelect('users',    '?select=plan,created_at,last_active').catch(() => []),
+      sbSelect('payments', '?select=status,amount,created_at').catch(()   => []),
+      sbSelect('katha_vault', '?select=scripture_id').catch(()            => []),
     ]);
-    
-    const now = Date.now();
+    const now   = Date.now();
     const dayMs = 86400000;
-    
-    const dau = users.filter(u => now - new Date(u.last_active).getTime() < dayMs).length;
-    const wau = users.filter(u => now - new Date(u.last_active).getTime() < dayMs * 7).length;
-    const mau = users.filter(u => now - new Date(u.last_active).getTime() < dayMs * 30).length;
-    
-    const premium = users.filter(u => u.plan !== 'free').length;
+    const dau   = users.filter(u => now - new Date(u.last_active).getTime() < dayMs).length;
+    const wau   = users.filter(u => now - new Date(u.last_active).getTime() < dayMs * 7).length;
+    const mau   = users.filter(u => now - new Date(u.last_active).getTime() < dayMs * 30).length;
+    const premium   = users.filter(u => u.plan !== 'free').length;
     const retention = users.length ? Math.round((mau / users.length) * 100) : 0;
-    
-    // Revenue trends (last 7 days)
     const rev7 = [0,0,0,0,0,0,0];
     payments.filter(p => p.status === 'paid').forEach(p => {
       const daysAgo = Math.floor((now - new Date(p.created_at).getTime()) / dayMs);
       if (daysAgo < 7 && daysAgo >= 0) rev7[6 - daysAgo] += (p.amount || 0);
     });
-
     res.json({ success: true, dau, wau, mau, premium, retention, revenue7: rev7, topKatha: katha.length });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/analytics/deep]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
-// Reading Intelligence
 app.get('/admin/analytics/reading', adminAuth, async (req, res) => {
   try {
     const rows = await sbSelect('reading_progress', '?limit=100').catch(() => []);
     res.json({ success: true, readingData: rows });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/analytics/reading]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
-// Deep Health
 app.get('/admin/health/deep', adminAuth, async (req, res) => {
   const configured = !!(SUPABASE_URL && SUPABASE_SERVICE_KEY);
   let connected = false;
@@ -1517,31 +1748,28 @@ app.get('/admin/health/deep', adminAuth, async (req, res) => {
   });
 });
 
-// Audit Logs
 app.get('/admin/audit', adminAuth, async (req, res) => {
   try {
     const rows = await sbSelect('audit_logs', '?order=created_at.desc&limit=100').catch(()=>[]);
     res.json({ success: true, logs: rows });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/audit]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
-// DB status
 app.get('/admin/db-status', adminAuth, async (req, res) => {
   const configured = !!(SUPABASE_URL && SUPABASE_SERVICE_KEY);
   let connected = false;
   try { await sbSelect('admin_settings', '?limit=1'); connected = true; } catch {}
   res.json({
     success: true, database: 'Supabase PostgreSQL',
-    supabaseUrl:   SUPABASE_URL ? SUPABASE_URL.replace(/eyJ.*/, '***') : 'NOT SET',
+    supabaseUrl: SUPABASE_URL ? SUPABASE_URL.replace(/eyJ.*/, '***') : 'NOT SET',
     configured, connected,
   });
 });
 
-// ════════════════════════════════════════════════════════════════
-// PHASE 3: GROWTH & MARKETING
-// ════════════════════════════════════════════════════════════════
-
-// Push Notifications
+// ─── PUSH NOTIFICATIONS ───────────────────────────────────────
 app.post('/admin/notifications/push', adminAuth, async (req, res) => {
   try {
     const { title, body, target } = req.body;
@@ -1557,16 +1785,23 @@ app.post('/admin/notifications/push', adminAuth, async (req, res) => {
     await sbInsert('push_campaigns', entry);
     await auditLog('PUSH_SENT', 'admin', entry.target_group, `Title: ${entry.title}`);
     res.json({ success: true, campaign: entry });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/notifications/push]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
+
 app.get('/admin/notifications/push', adminAuth, async (req, res) => {
   try {
     const rows = await sbSelect('push_campaigns', '?order=sent_at.desc').catch(()=>[]);
     res.json({ success: true, campaigns: rows });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/notifications/push GET]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
-// Marketing Coupons
+// ─── COUPONS ──────────────────────────────────────────────────
 app.post('/admin/marketing/coupons', adminAuth, async (req, res) => {
   try {
     const { code, discount_pct, max_uses, expiry_date } = req.body;
@@ -1584,32 +1819,84 @@ app.post('/admin/marketing/coupons', adminAuth, async (req, res) => {
     await sbInsert('coupons', entry);
     await auditLog('COUPON_CREATED', 'admin', cleanCode, `${entry.discount_pct}% off`);
     res.json({ success: true, coupon: entry });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/marketing/coupons]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 app.get('/admin/marketing/coupons', adminAuth, async (req, res) => {
   try {
     const rows = await sbSelect('coupons', '?order=created_at.desc').catch(()=>[]);
     res.json({ success: true, coupons: rows });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[admin/marketing/coupons GET]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 app.delete('/admin/marketing/coupons/:id', adminAuth, async (req, res) => {
-  await sbDelete('coupons', `?id=eq.${req.params.id}`);
-  await auditLog('COUPON_DELETED', 'admin', req.params.id, '');
-  res.json({ success: true });
+  try {
+    await sbDelete('coupons', `?id=eq.${req.params.id}`);
+    await auditLog('COUPON_DELETED', 'admin', req.params.id, '');
+    res.json({ success: true });
+  } catch(e) {
+    console.error('[admin/marketing/coupons DELETE]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
-// ════════════════════════════════════════════════════════════════
-// PANCHANG API (FINAL CORRECT)
-// ════════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════
-// REPLACE the entire /api/panchang/today route in server.js
-// ═══════════════════════════════════════════════════════════════
 
-// ── PASTE THESE CONSTANTS before the route (at top of file near other constants) ──
+// ─── BULK NOTIFICATIONS ───────────────────────────────────────
+app.post('/admin/send-bulk-notification', adminAuth, async (req, res) => {
+  try {
+    const { title, body } = req.body;
+    if (!title || !body) return res.status(400).json({ error: 'title and body required' });
+    const users = await sbSelect('users', '?select=push_token');
+    let sent = 0;
+    for (const u of users) {
+      if (!u.push_token) continue;
+      await fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to: u.push_token, sound: 'default', title, body }),
+      }).catch(e => console.warn('[bulk-notif] send failed:', e.message));
+      sent++;
+    }
+    res.json({ success: true, sent });
+  } catch (e) {
+    console.error('[admin/send-bulk-notification]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
 
-const VAAR_EN_ARR = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const VAAR_HI_ARR = ['रविवार','सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार'];
-const VAAR_DEITY_EN = ['Surya Dev','Shiva Ji','Hanuman Ji','Ganesh Ji','Vishnu Ji','Lakshmi Mata','Shani Dev'];
-const VAAR_DEITY_HI = ['सूर्य देव','शिव जी','हनुमान जी','गणेश जी','विष्णु जी','लक्ष्मी माता','शनि देव'];
+app.post('/send-notification', async (req, res) => {
+  try {
+    const { pushToken, title, body } = req.body;
+    if (!pushToken) return res.json({ success: false, error: "No token" });
+    const message = {
+      to: pushToken,
+      sound: 'default',
+      title: sanitize(title || "DharmaSetu", 200),
+      body:  sanitize(body  || "🙏 Daily wisdom awaits you", 500),
+    };
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(message),
+    });
+    const data = await response.json();
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error('[send-notification]', err.message);
+    res.json({ success: false });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// PANCHANG
+// ════════════════════════════════════════════════════════════════
+const VAAR_EN_ARR     = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const VAAR_HI_ARR     = ['रविवार','सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार'];
+const VAAR_DEITY_EN   = ['Surya Dev','Shiva Ji','Hanuman Ji','Ganesh Ji','Vishnu Ji','Lakshmi Mata','Shani Dev'];
+const VAAR_DEITY_HI   = ['सूर्य देव','शिव जी','हनुमान जी','गणेश जी','विष्णु जी','लक्ष्मी माता','शनि देव'];
 const VAAR_MANTRA_ARR = [
   'ॐ घृणि सूर्याय नमः',
   'ॐ नमः शिवाय',
@@ -1619,43 +1906,36 @@ const VAAR_MANTRA_ARR = [
   'ॐ श्रीं महालक्ष्म्यै नमः',
   'ॐ शं शनैश्चराय नमः',
 ];
-
-// Rahu Kaal slot (1-indexed, which 1/8th part of the day)
 const RAHU_SLOT = [8, 2, 7, 5, 6, 4, 3];
 
 function buildFullPanchang(raw) {
-  const date = new Date();
-  const dayIndex = date.getDay(); // 0 = Sunday
-
-  // ── paksha ─────────────────────────────────────────────────
-  const tithiHi = raw.tithi || '';
-  const paksha = ['पूर्णिमा','15','Purnima'].some(t => tithiHi.includes(t))
+  const date     = new Date();
+  const dayIndex = date.getDay();
+  const tithiHi  = raw.tithi || '';
+  const paksha   = ['पूर्णिमा','15','Purnima'].some(t => tithiHi.includes(t))
     ? 'Purnima Paksha'
     : ['अमावस्या','Amavasya'].some(t => tithiHi.includes(t))
       ? 'Amavasya Paksha'
       : (() => {
-          // Simple heuristic: if tithi number 1-15 it's Shukla, else Krishna
           const match = tithiHi.match(/\d+/);
           if (!match) return 'Shukla Paksha';
           return parseInt(match[0]) <= 15 ? 'Shukla Paksha' : 'Krishna Paksha';
         })();
 
-  // ── vaar ───────────────────────────────────────────────────
-  const vaar = VAAR_HI_ARR[dayIndex] + ' / ' + VAAR_EN_ARR[dayIndex];
-  const vaarDeity = VAAR_DEITY_EN[dayIndex] + ' (' + VAAR_DEITY_HI[dayIndex] + ')';
+  const vaar       = VAAR_HI_ARR[dayIndex] + ' / ' + VAAR_EN_ARR[dayIndex];
+  const vaarDeity  = VAAR_DEITY_EN[dayIndex] + ' (' + VAAR_DEITY_HI[dayIndex] + ')';
   const vaarMantra = VAAR_MANTRA_ARR[dayIndex];
 
-  // ── auspiciousLabel ────────────────────────────────────────
   const tithi = (raw.tithi || '').toLowerCase();
   const yoga  = (raw.yoga  || '').toLowerCase();
-  const GOOD_YOGAS   = ['siddhi','shubha','shiva','brahma','priti','saubhagya','vriddhi','harshana'];
-  const BAD_YOGAS    = ['vishkambha','ganda','vajra','vyatipata','parigha','vaidhriti','atiganda','shula'];
-  const GOOD_TITHIS  = ['purnima','tritiya','panchami','saptami','dashami','ekadashi','dwadashi'];
-  const BAD_TITHIS   = ['amavasya','chaturdashi','ashtami'];
-  const isGoodYoga   = GOOD_YOGAS.some(g => yoga.includes(g));
-  const isBadYoga    = BAD_YOGAS.some(b => yoga.includes(b));
-  const isGoodTithi  = GOOD_TITHIS.some(g => tithi.includes(g));
-  const isBadTithi   = BAD_TITHIS.some(b => tithi.includes(b));
+  const GOOD_YOGAS  = ['siddhi','shubha','shiva','brahma','priti','saubhagya','vriddhi','harshana'];
+  const BAD_YOGAS   = ['vishkambha','ganda','vajra','vyatipata','parigha','vaidhriti','atiganda','shula'];
+  const GOOD_TITHIS = ['purnima','tritiya','panchami','saptami','dashami','ekadashi','dwadashi'];
+  const BAD_TITHIS  = ['amavasya','chaturdashi','ashtami'];
+  const isGoodYoga  = GOOD_YOGAS.some(g => yoga.includes(g));
+  const isBadYoga   = BAD_YOGAS.some(b => yoga.includes(b));
+  const isGoodTithi = GOOD_TITHIS.some(g => tithi.includes(g));
+  const isBadTithi  = BAD_TITHIS.some(b => tithi.includes(b));
   const auspiciousScore = (isGoodYoga ? 2 : 0) + (isGoodTithi ? 1 : 0) - (isBadYoga ? 2 : 0) - (isBadTithi ? 1 : 0);
   const auspiciousLabel = auspiciousScore >= 2
     ? '✨ अत्यंत शुभ दिन'
@@ -1665,66 +1945,47 @@ function buildFullPanchang(raw) {
         ? '⚠️ सावधानी रखें'
         : '⚖️ सामान्य दिन';
 
-  // ── vikramSamvat ───────────────────────────────────────────
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
+  const year         = date.getFullYear();
+  const month        = date.getMonth() + 1;
   const vikramSamvat = month >= 4 ? year + 57 : year + 56;
 
-  // ── rahuKaal (from sunrise/sunset) ────────────────────────
   let rahuKaal = 'Unavailable';
   try {
     if (raw.sunrise && raw.sunset) {
       const [srH, srM] = raw.sunrise.split(':').map(Number);
       const [ssH, ssM] = raw.sunset.split(':').map(Number);
-      const totalMin = (ssH * 60 + ssM) - (srH * 60 + srM);
-      const partMin  = totalMin / 8;
-      const slot     = RAHU_SLOT[dayIndex] - 1;
-      const startMin = srH * 60 + srM + slot * partMin;
-      const endMin   = startMin + partMin;
+      const totalMin   = (ssH * 60 + ssM) - (srH * 60 + srM);
+      const partMin    = totalMin / 8;
+      const slot       = RAHU_SLOT[dayIndex] - 1;
+      const startMin   = srH * 60 + srM + slot * partMin;
+      const endMin     = startMin + partMin;
       const fmt = m => `${String(Math.floor(m/60)).padStart(2,'0')}:${String(Math.round(m%60)).padStart(2,'0')}`;
       rahuKaal = `${fmt(startMin)} – ${fmt(endMin)}`;
     }
   } catch (_) {}
 
-  // ── specialEvents ──────────────────────────────────────────
   const specialEvents = [];
   const tithiLower = (raw.tithi || '').toLowerCase();
-  if (tithiLower.includes('ekadashi')) {
-    specialEvents.push({ text: '🌿 एकादशी — विष्णु व्रत · Fast for Lord Vishnu', color: '#27AE60' });
-  }
-  if (tithiLower.includes('purnima')) {
-    specialEvents.push({ text: '🌕 पूर्णिमा — Full moon, highly auspicious', color: '#F4A261' });
-  }
-  if (tithiLower.includes('amavasya')) {
-    specialEvents.push({ text: '🌑 अमावस्या — Pitru Tarpan day', color: '#9B59B6' });
-  }
-  if (tithiLower.includes('chaturthi')) {
-    specialEvents.push({ text: '🐘 चतुर्थी — Ganesh Puja', color: '#E8620A' });
-  }
+  if (tithiLower.includes('ekadashi'))  specialEvents.push({ text: '🌿 एकादशी — विष्णु व्रत · Fast for Lord Vishnu', color: '#27AE60' });
+  if (tithiLower.includes('purnima'))   specialEvents.push({ text: '🌕 पूर्णिमा — Full moon, highly auspicious', color: '#F4A261' });
+  if (tithiLower.includes('amavasya')) specialEvents.push({ text: '🌑 अमावस्या — Pitru Tarpan day', color: '#9B59B6' });
+  if (tithiLower.includes('chaturthi'))specialEvents.push({ text: '🐘 चतुर्थी — Ganesh Puja', color: '#E8620A' });
   if (dayIndex === 1) specialEvents.push({ text: '🔱 Somvar — Shiva Abhishek', color: '#6B21A8' });
   if (dayIndex === 2) specialEvents.push({ text: '🏹 Mangalvar — Hanuman Chalisa', color: '#E74C3C' });
   if (dayIndex === 4) specialEvents.push({ text: '🪷 Guruvar — Vishnu Puja', color: '#F39C12' });
   if (dayIndex === 5) specialEvents.push({ text: '✨ Shukravar — Lakshmi Puja', color: '#F4A261' });
 
   return {
-    // Original fields (from Prokerala)
-    tithi:      raw.tithi      || 'Unknown',
-    nakshatra:  raw.nakshatra  || 'Unknown',
-    yoga:       raw.yoga       || 'Unknown',
-    karana:     raw.karana     || 'Unknown',
-    weekday:    raw.weekday    || VAAR_EN_ARR[dayIndex],
-    sunrise:    raw.sunrise    || '06:00',
-    sunset:     raw.sunset     || '18:30',
-    // Derived fields (what the frontend needs)
-    paksha,
-    vaar,
-    vaarDeity,
-    vaarMantra,
-    auspiciousLabel,
+    tithi:     raw.tithi     || 'Unknown',
+    nakshatra: raw.nakshatra || 'Unknown',
+    yoga:      raw.yoga      || 'Unknown',
+    karana:    raw.karana    || 'Unknown',
+    weekday:   raw.weekday   || VAAR_EN_ARR[dayIndex],
+    sunrise:   raw.sunrise   || '06:00',
+    sunset:    raw.sunset    || '18:30',
+    paksha, vaar, vaarDeity, vaarMantra, auspiciousLabel,
     auspiciousColor: auspiciousScore >= 2 ? '#27AE60' : auspiciousScore <= -2 ? '#E74C3C' : '#C9830A',
-    specialEvents,
-    vikramSamvat,
-    rahuKaal,
+    specialEvents, vikramSamvat, rahuKaal,
     abhijit: (() => {
       try {
         const [srH, srM] = (raw.sunrise||'06:00').split(':').map(Number);
@@ -1740,15 +2001,13 @@ function buildFullPanchang(raw) {
   };
 }
 
-// ── LOCAL FALLBACK (used when Prokerala fails) ─────────────────
 function getFallbackPanchang() {
-  const date = new Date();
+  const date     = new Date();
   const dayIndex = date.getDay();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
+  const year     = date.getFullYear();
   const TITHIS_EN = ['Pratipada','Dwitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami',
     'Ashtami','Navami','Dashami','Ekadashi','Dwadashi','Trayodashi','Chaturdashi','Purnima'];
-  const NAKS_EN = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu',
+  const NAKS_EN   = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu',
     'Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati'];
   const dayOfYear = Math.floor((date - new Date(year, 0, 0)) / 86400000);
   return buildFullPanchang({
@@ -1762,48 +2021,30 @@ function getFallbackPanchang() {
   });
 }
 
-// ══════════════════════════════════════════════════════════════
-// REPLACE YOUR EXISTING /api/panchang/today ROUTE WITH THIS:
-// ══════════════════════════════════════════════════════════════
 app.get("/api/panchang/today", async (req, res) => {
   try {
     let { lat, lng, city } = req.query;
-
-// 🌍 NEW: If city is provided, convert to lat/lng
-if ((!lat || !lng) && city) {
-  const coords = await getCoordinatesFromCity(city);
-
-  if (coords) {
-    lat = coords.lat;
-    lng = coords.lng;
-  }
-}
-
+    if ((!lat || !lng) && city) {
+      const coords = await getCoordinatesFromCity(city);
+      if (coords) { lat = coords.lat; lng = coords.lng; }
+    }
     if (!lat || !lng) {
       return res.json({ success: true, data: getFallbackPanchang(), source: 'fallback_no_coords' });
     }
-
     const date = new Date().toISOString().split("T")[0];
-    const key = `${lat}|${lng}|${date}`;
-
-    // ── Cache hit ──────────────────────────────────────────────
+    const key  = `${lat}|${lng}|${date}`;
     if (PANCHANG_CACHE[key] && Date.now() - PANCHANG_CACHE[key].time < CACHE_TTL) {
       return res.json({ success: true, data: PANCHANG_CACHE[key].data, cached: true });
     }
-
-    // ── Rate limit ─────────────────────────────────────────────
     if (!canCallAPI()) {
-      const fallback = getFallbackPanchang();
-      return res.json({ success: true, data: fallback, source: 'fallback_rate_limit' });
+      return res.json({ success: true, data: getFallbackPanchang(), source: 'fallback_rate_limit' });
     }
-
-    // ── Prokerala API call ─────────────────────────────────────
     let rawData = null;
     try {
-      const token = await getProkeralaToken();
-      const url = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=lahiri&coordinates=${lat},${lng}&datetime=${date}T00:00:00+05:30`;
+      const token  = await getProkeralaToken();
+      const url    = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=lahiri&coordinates=${lat},${lng}&datetime=${date}T00:00:00+05:30`;
       const apiRes = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-      const json = await apiRes.json();
+      const json   = await apiRes.json();
       if (json?.data) {
         rawData = {
           sunrise:   json.data.sunrise  || '',
@@ -1818,239 +2059,34 @@ if ((!lat || !lng) && city) {
     } catch (apiErr) {
       console.error("Prokerala API error:", apiErr.message);
     }
-
-    // ── Build full response (API data or fallback) ─────────────
     const fullData = rawData ? buildFullPanchang(rawData) : getFallbackPanchang();
-
-    // ── Cache it ───────────────────────────────────────────────
     PANCHANG_CACHE[key] = { data: fullData, time: Date.now() };
-
     res.json({ success: true, data: fullData, source: rawData ? 'prokerala' : 'fallback' });
-
   } catch (err) {
     console.error("Panchang route error:", err.message);
-    // NEVER crash — always return something usable
     res.json({ success: true, data: getFallbackPanchang(), source: 'fallback_error' });
   }
 });
 
-app.post('/send-notification', async (req, res) => {
-  try {
-    const { pushToken, title, body } = req.body;
-
-    if (!pushToken) {
-      return res.json({ success: false, error: "No token" });
-    }
-
-    const message = {
-      to: pushToken,
-      sound: 'default',
-      title: title || "DharmaSetu",
-      body: body || "🙏 Daily wisdom awaits you",
-    };
-
-    const response = await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(message),
-    });
-
-    const data = await response.json();
-
-    console.log("Push response:", data);
-
-    res.json({ success: true, data });
-
-  } catch (err) {
-    console.log("Push error:", err);
-    res.json({ success: false });
-  }
-});
-app.post('/admin/send-bulk-notification', adminAuth, async (req, res) => {
-  try {
-    const { title, body } = req.body;
-
-    const users = await sbSelect('users', '?select=push_token');
-
-    let sent = 0;
-
-    for (const u of users) {
-      if (!u.push_token) continue;
-
-      await fetch('https://exp.host/--/api/v2/push/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: u.push_token,
-          sound: 'default',
-          title,
-          body,
-        }),
-      });
-
-      sent++;
-    }
-
-    res.json({ success: true, sent });
-
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-app.post('/ai/recommend', async (req, res) => {
-  try {
-    const { mood } = req.body;
-
-    if (!mood) {
-      return res.json({ success: false, mantra: "Gayatri Mantra" });
-    }
-
-    // 🔥 Simple AI logic (safe for now)
-    const map = {
-      peace: "Gayatri Mantra",
-      focus: "Saraswati Mantra",
-      strength: "Hanuman Mantra",
-      healing: "Maha Mrityunjaya Mantra"
-    };
-
-    const mantra = map[mood] || "Gayatri Mantra";
-
-    res.json({
-      success: true,
-      mantra
-    });
-
-  } catch (err) {
-    console.log("AI error:", err);
-    res.json({
-      success: false,
-      mantra: "Gayatri Mantra"
-    });
-  }
-});
-// ── GET USER BY PHONE (used by login.js for returning users) ──
-app.get('/user/get', async (req, res) => {
-  try {
-    const phone = sanitize(req.query.phone || '', 20);
-    if (!phone) return res.status(400).json({ error: 'Phone required' });
-
-    const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
-    if (!users.length) return res.json({ user: null });
-
-    const u = users[0];
-    res.json({
-      user: {
-        phone: u.phone,
-        name: u.name,
-        rashi: u.rashi,
-        nakshatra: u.nakshatra,
-        deity: u.deity,
-        language: u.language || 'hindi',
-        plan: u.plan || 'free',
-        pts: u.pts || 0,
-        streak: u.streak || 0,
-        birth_city: u.birth_city || '',
-        dob: u.dob || '',
-        firebase_uid: u.firebase_uid || '',
-        push_token: u.push_token || '',
-        lagna: u.lagna || '',
-        mantra: u.mantra || '',
-      }
-    });
-  } catch (e) {
-    console.error('[user/get]', e.message);
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// ── PAYMENT CONFIG (hyphen version for app compatibility) ──────
-app.get('/payment-config', (req, res) => {
-  res.json({
-    success: true,
-    phonepeUPI:          CFG.phonepeUPI || '',
-    razorpayKeyId:       CFG.razorpayKeyId || '',
-    subscriptionPayment: CFG.subscriptionPayment || 'upi',
-    donationPayment:     CFG.donationPayment || 'upi',
-    hasRazorpay:         !!(CFG.razorpayKeyId && CFG.razorpayKeySecret),
-  });
-});
-// ─── 404 Handler ─────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// 404 HANDLER
+// ════════════════════════════════════════════════════════════════
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-
-// ─── Error Handler ────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// GLOBAL ERROR HANDLER
+// ════════════════════════════════════════════════════════════════
 app.use((err, req, res, next) => {
-  console.error('[Server Error]', err.message);
+  console.error('[Server Error]', err.stack || err.message);
+  if (res.headersSent) return next(err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-app.post('/api/dharmic-insight', async (req, res) => {
-  try {
-    const { moodHistory, panchang } = req.body;
-
-    const lastMood = moodHistory?.[0]?.mood || "neutral";
-    const tithi = panchang?.tithi || "";
-    const vaar = panchang?.vaar || "";
-
-    // 🧠 PROMPT
-    const prompt = `
-You are a dharmic AI guide based on Bhagavad Gita and Sanatan Dharma.
-
-User Mood: ${lastMood}
-Tithi: ${tithi}
-Vaar: ${vaar}
-
-Give:
-1. Short title
-2. 3 bullet guidance points
-
-Tone: Spiritual, practical, grounded in dharma.
-`;
-
-    // 🔥 FREE AI (Groq / OpenAI style)
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.EXPO_PUBLIC_GROQ_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "llama3-70b-8192",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.7
-      })
-    });
-
-    const data = await response.json();
-
-    const text = data.choices?.[0]?.message?.content || "";
-
-    // Simple parsing
-    const lines = text.split('\n').filter(l => l.trim());
-
-    res.json({
-      title: lines[0] || "Dharmic Guidance",
-      guidance: lines.slice(1, 4)
-    });
-
-  } catch (e) {
-    console.log("AI error:", e);
-
-    res.json({
-      title: "Stay Balanced",
-      guidance: [
-        "Focus on your duty",
-        "Chant a simple mantra",
-        "Stay calm and aware"
-      ]
-    });
-  }
-});
 // ─── LAUNCH ──────────────────────────────────────────────────
 app.listen(PORT, async () => {
-  console.log(`\n🕉 DharmaSetu Backend v9 SECURE — port ${PORT}`);
+  console.log(`\n🕉 DharmaSetu Backend v10 SECURE — port ${PORT}`);
   console.log(`   ${new Date().toISOString()}`);
   console.log(`   Supabase: ${SUPABASE_URL ? '✅ configured' : '❌ NOT configured'}`);
   await initDB();
