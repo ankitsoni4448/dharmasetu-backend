@@ -346,31 +346,84 @@ textarea{resize:vertical;min-height:65px}
 
 <!-- ═══ BOOKS ═══ -->
 <div id="sec-books" class="sec">
-  <h2>📚 Book Library Manager</h2>
-  <p class="psub">Manage Dharmic books, PDFs, and external links.</p>
+  <h2>📚 Dharmic Library Manager</h2>
+  <p class="psub">Add and manage books, PDFs, and external links. Supports 100GB+ via Google Drive initially.</p>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="stat"><div class="stat-l">Total Books</div><div class="stat-v" id="bk-total">—</div></div>
+    <div class="stat"><div class="stat-l">Active</div><div class="stat-v" style="color:var(--green)" id="bk-active">—</div></div>
+    <div class="stat"><div class="stat-l">Premium Only</div><div class="stat-v" style="color:var(--gold)" id="bk-prem-count">—</div></div>
+  </div>
   <div class="g2">
     <div class="card">
       <h3>➕ Add New Book</h3>
-      <label>Title</label><input type="text" id="bk-title" placeholder="e.g. Bhagavad Gita (Gita Press)"/>
+      <label>Title (English)</label><input type="text" id="bk-title" placeholder="e.g. Bhagavad Gita (Gita Press)"/>
+      <label>Title (Hindi)</label><input type="text" id="bk-title-hi" placeholder="भगवद्गीता"/>
       <div class="g2">
-        <div><label>Author</label><input type="text" id="bk-author" placeholder="Vyasa"/></div>
-        <div><label>Language</label><select id="bk-lang"><option value="hindi">Hindi</option><option value="english">English</option><option value="sanskrit">Sanskrit</option></select></div>
+        <div><label>Author</label><input type="text" id="bk-author" placeholder="Vyasa / Gita Press"/></div>
+        <div><label>Source</label><input type="text" id="bk-source" placeholder="Gita Press, BORI..."/></div>
       </div>
-      <label>Category</label><input type="text" id="bk-cat" placeholder="Scripture, Philosophy..."/>
-      <label>Cover Image URL</label><input type="text" id="bk-cover" placeholder="https://.../cover.jpg"/>
-      <label>PDF Download Link (Google Drive / S3)</label><input type="text" id="bk-pdf" placeholder="https://drive.google.com/file/d/..."/>
-      <label>Short Description</label><textarea id="bk-desc" rows="3" placeholder="Book description..."></textarea>
-      <div class="g2" style="margin-top:10px">
+      <div class="g2">
+        <div><label>Language</label>
+          <select id="bk-lang">
+            <option value="hindi">Hindi</option>
+            <option value="english">English</option>
+            <option value="sanskrit">Sanskrit</option>
+            <option value="marathi">Marathi</option>
+            <option value="gujarati">Gujarati</option>
+          </select>
+        </div>
+        <div><label>Category</label>
+          <select id="bk-cat">
+            <option value="vedas">Vedas</option>
+            <option value="upanishads">Upanishads</option>
+            <option value="puranas">Puranas</option>
+            <option value="gita">Gita</option>
+            <option value="ramayana">Ramayana</option>
+            <option value="mahabharata">Mahabharata</option>
+            <option value="smritis">Smritis</option>
+            <option value="stotras">Stotras</option>
+            <option value="modern">Modern</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <label>Tags (comma separated)</label><input type="text" id="bk-tags" placeholder="krishna,gita,advaita"/>
+      <label>PDF / Google Drive Link</label><input type="text" id="bk-pdf" placeholder="https://drive.google.com/file/d/..."/>
+      <label>Thumbnail URL (optional)</label><input type="text" id="bk-thumb" placeholder="https://.../cover.jpg"/>
+      <label>Pages (optional)</label><input type="number" id="bk-pages" placeholder="720"/>
+      <label>Short Description (English)</label><textarea id="bk-desc" rows="2" placeholder="Brief description..."></textarea>
+      <label>Short Description (Hindi)</label><textarea id="bk-desc-hi" rows="2" placeholder="संक्षिप्त विवरण..."></textarea>
+      <label>Admin Notes</label><input type="text" id="bk-notes" placeholder="Internal notes for admin..."/>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
         <label style="display:flex;align-items:center;gap:6px;margin:0"><input type="checkbox" id="bk-prem" style="width:auto"/> Premium Only</label>
-        <label style="display:flex;align-items:center;gap:6px;margin:0"><input type="checkbox" id="bk-feat" style="width:auto"/> Featured</label>
       </div>
-      <div class="btn-row"><button class="btn btn-p" onclick="addBook()">💾 Save Book</button></div>
+      <div class="btn-row"><button class="btn btn-p" onclick="addBook()">💾 Add to Library</button></div>
+      <div id="bk-add-result" style="font-size:12px;color:var(--muted);margin-top:6px"></div>
     </div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <h3>📋 Library</h3><button class="btn btn-o btn-sm" onclick="loadBooks()">🔄 Refresh</button>
+        <h3>📋 Library</h3>
+        <div style="display:flex;gap:6px">
+          <select id="bk-filter-cat" onchange="loadBooks()" style="width:110px;font-size:11px">
+            <option value="">All Categories</option>
+            <option value="vedas">Vedas</option>
+            <option value="upanishads">Upanishads</option>
+            <option value="puranas">Puranas</option>
+            <option value="gita">Gita</option>
+            <option value="ramayana">Ramayana</option>
+            <option value="stotras">Stotras</option>
+            <option value="modern">Modern</option>
+          </select>
+          <select id="bk-filter-lang" onchange="loadBooks()" style="width:90px;font-size:11px">
+            <option value="">All Langs</option>
+            <option value="hindi">Hindi</option>
+            <option value="english">English</option>
+            <option value="sanskrit">Sanskrit</option>
+          </select>
+          <button class="btn btn-o btn-sm" onclick="loadBooks()">🔄</button>
+        </div>
       </div>
-      <div id="bk-list" style="color:var(--muted);font-size:12px;max-height:600px;overflow-y:auto">Loading...</div>
+      <div id="bk-list" style="color:var(--muted);font-size:12px;max-height:620px;overflow-y:auto">Loading...</div>
     </div>
   </div>
 </div>
@@ -436,20 +489,6 @@ textarea{resize:vertical;min-height:65px}
   <div class="card"><h3>📋 All Generated Chapters</h3><button class="btn btn-o btn-sm" onclick="kgListAll()" style="margin-bottom:9px">🔄 Refresh</button><div id="kg-all" style="font-size:12px;color:var(--muted)">Click Refresh</div></div>
 </div>
 
-<!-- ═══ FEEDBACK ═══ -->
-<div id="sec-feedback" class="sec">
-  <h2>🛡️ AI Feedback & Corrections</h2>
-  <p class="psub">Every 👎 from users saves here permanently. Correct wrong answers. Changes logged.</p>
-  <div class="alert ag">✅ Feedback saves directly to Supabase feedback table. Never lost.</div>
-  <div class="g3" style="margin-bottom:14px">
-    <div class="stat"><div class="stat-l">Total</div><div class="stat-v" id="fb-t">—</div></div>
-    <div class="stat"><div class="stat-l">Pending</div><div class="stat-v" style="color:var(--red)" id="fb-p">—</div></div>
-    <div class="stat"><div class="stat-l">Corrected</div><div class="stat-v" style="color:var(--green)" id="fb-d">—</div></div>
-  </div>
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h3>Feedback Entries</h3>
-      <div>
         <a class="btn btn-o btn-sm" href="#" onclick="this.href=BACKEND+'/admin/export/feedback?key='+KEY" target="_blank">📥 Export CSV</a>
         <button class="btn btn-o btn-sm" onclick="loadFeedback()">🔄 Refresh</button>
       </div>
@@ -637,7 +676,7 @@ function show(id) {
   const sec = document.getElementById('sec-'+id);
   if (sec) sec.classList.add('active');
   event?.currentTarget?.classList.add('active');
-  const auto = { feedback:loadFeedback, users:loadUsers, transactions:loadTxns, content:loadUploads, database:loadDBStatus, overview:loadStats, books:loadBooks, analytics:loadAnalytics, reading:loadReading, health:loadHealth, audit:loadAudit };
+  const auto = { feedback:loadAIFeedback, users:loadUsers, transactions:loadTxns, content:loadUploads, database:loadDBStatus, overview:loadStats, books:loadBooks, analytics:loadAnalytics, reading:loadReading, health:loadHealth, audit:loadAudit };
   if (auto[id]) auto[id]();
 }
 
@@ -672,7 +711,7 @@ async function init() {
   await testConn();
   await loadConfig();
   await loadStats();
-  loadFeedback(); // pre-load feedback badge
+  loadAIFbStats(); // pre-load AI feedback badge
   updateCh();
 }
 
@@ -1018,51 +1057,195 @@ async function loadDBStatus(){
 
 // ─── BOOKS ───────────────────────────────────────────────────────
 async function loadBooks() {
+// ─── P2: BOOK LIBRARY ────────────────────────────────────────────
+async function loadBooks() {
   const el = document.getElementById('bk-list'); if (!el) return;
-  el.innerHTML = 'Loading from Supabase...';
-  const r = await api('GET', '/admin/books');
-  if (!r.success) { el.innerHTML = 'Error: ' + r.error; return; }
-  if (!r.books?.length) { el.innerHTML = '<div style="color:var(--muted)">No books found. Add one above.</div>'; return; }
-  el.innerHTML = `<table><tr><th>Title</th><th>Author</th><th>Cat</th><th>Lang</th><th>Access</th><th>Links</th><th>Order</th><th></th></tr>` + 
-    r.books.map(b => `<tr>
-      <td><b>${esc(b.title)}</b></td>
-      <td style="font-size:11px">${esc(b.author)}</td>
-      <td style="font-size:11px">${esc(b.category)}</td>
-      <td style="font-size:11px">${esc(b.language)}</td>
-      <td><span class="badge ${b.is_premium?'bgo':'bw'}">${b.is_premium?'Premium':'Free'}</span>${b.is_featured?'<span class="badge bg" style="margin-left:4px">Featured</span>':''}</td>
-      <td>
-        ${b.external_url ? `<a href="${esc(b.external_url)}" target="_blank" style="color:var(--saffron);font-size:11px;margin-right:5px">PDF</a>` : ''}
-        ${b.read_url ? `<a href="${esc(b.read_url)}" target="_blank" style="color:var(--green);font-size:11px">Read</a>` : ''}
+  el.innerHTML = 'Loading...';
+  const cat  = document.getElementById('bk-filter-cat')?.value  || '';
+  const lang = document.getElementById('bk-filter-lang')?.value || '';
+  let path = '/admin/library/books?page=1';
+  if (cat)  path += '&category=' + encodeURIComponent(cat);
+  if (lang) path += '&lang='     + encodeURIComponent(lang);
+  const r = await api('GET', path);
+  if (!r.success) { el.innerHTML = 'Error: ' + (r.error||''); return; }
+  const books = r.books || [];
+  // Stats
+  const tots = books.length;
+  const acts = books.filter(b=>b.is_active).length;
+  const prems= books.filter(b=>b.is_premium).length;
+  const setS = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  setS('bk-total', tots); setS('bk-active', acts); setS('bk-prem-count', prems);
+  if (!books.length) { el.innerHTML = '<div class="alert ab">No books yet. Add one using the form.</div>'; return; }
+  el.innerHTML = `<table><tr><th>Title</th><th>Author</th><th>Cat</th><th>Lang</th><th>Access</th><th>Status</th><th>Views</th><th></th></tr>` +
+    books.map(b => `<tr>
+      <td><b style="color:var(--cream)">${esc(b.title)}</b>${b.title_hindi?`<div style="font-size:10px;color:var(--muted)">${esc(b.title_hindi)}</div>`:''}</td>
+      <td style="font-size:11px;color:var(--muted)">${esc(b.author||'—')}</td>
+      <td><span class="badge bb" style="font-size:9px">${esc(b.category)}</span></td>
+      <td style="font-size:10px;color:var(--muted)">${esc(b.language)}</td>
+      <td><span class="badge ${b.is_premium?'bgo':'bg'}">${b.is_premium?'⭐ Premium':'Free'}</span></td>
+      <td><span class="badge ${b.is_active?'bg':'br'}">${b.is_active?'Active':'Hidden'}</span>
+          <span class="badge ${b.indexing_status==='indexed'?'bg':b.indexing_status==='error'?'br':'bw'}" style="margin-left:3px;font-size:9px">${b.indexing_status||'pending'}</span></td>
+      <td style="font-size:11px;color:var(--muted)">👁️ ${b.views||0}</td>
+      <td style="white-space:nowrap">
+        ${b.file_url?`<a href="${esc(b.file_url)}" target="_blank" class="btn btn-o btn-sm" style="margin-right:3px">🔗 PDF</a>`:''}
+        <button class="btn btn-sm" style="background:rgba(231,76,60,.15);color:#E74C3C;border:1px solid rgba(231,76,60,.3)" onclick="delBook('${b.id}')">🗑</button>
       </td>
-      <td style="font-size:11px">${b.display_order||0}</td>
-      <td><button class="btn btn-r btn-sm" onclick="delBook('${b.id}')">🗑</button></td>
-    </tr>`).join('') + `</table>`;
+    </tr>`).join('') + '</table>';
 }
+
 async function addBook() {
+  const res = document.getElementById('bk-add-result');
   const body = {
-    title: document.getElementById('bk-title').value,
-    author: document.getElementById('bk-author').value,
-    language: document.getElementById('bk-lang').value,
-    category: document.getElementById('bk-cat').value,
-    cover_url: document.getElementById('bk-cover').value,
-    external_url: document.getElementById('bk-pdf').value,
-    description: document.getElementById('bk-desc').value,
-    is_premium: document.getElementById('bk-prem').checked,
-    is_featured: document.getElementById('bk-feat').checked,
+    title:             document.getElementById('bk-title').value.trim(),
+    title_hindi:       document.getElementById('bk-title-hi')?.value.trim()   || '',
+    author:            document.getElementById('bk-author').value.trim(),
+    source:            document.getElementById('bk-source')?.value.trim()     || '',
+    language:          document.getElementById('bk-lang').value,
+    category:          document.getElementById('bk-cat').value,
+    tags:              document.getElementById('bk-tags')?.value.trim()       || '',
+    file_url:          document.getElementById('bk-pdf').value.trim(),
+    thumbnail_url:     document.getElementById('bk-thumb')?.value.trim()      || '',
+    page_count:        document.getElementById('bk-pages')?.value             || null,
+    description:       document.getElementById('bk-desc').value.trim(),
+    description_hindi: document.getElementById('bk-desc-hi')?.value.trim()   || '',
+    admin_notes:       document.getElementById('bk-notes')?.value.trim()      || '',
+    is_premium:        document.getElementById('bk-prem').checked,
   };
-  if (!body.title) return toast('Title required', true);
-  const r = await api('POST', '/admin/books', body);
+  if (!body.title)    { toast('Title required', true); return; }
+  if (!body.language) { toast('Language required', true); return; }
+  if (!body.category) { toast('Category required', true); return; }
+  if (res) res.textContent = '⏳ Saving...';
+  const r = await api('POST', '/admin/library/books', body);
   if (r.success) {
-    toast('Book saved!');
-    ['title','author','cat','cover','pdf','desc'].forEach(id => { const el=document.getElementById('bk-'+id); if(el)el.value=''; });
+    toast('📚 Book added to Dharmic Library!');
+    if (res) res.textContent = '✅ Saved: ' + r.book.title;
+    ['bk-title','bk-title-hi','bk-author','bk-source','bk-tags','bk-pdf','bk-thumb','bk-pages','bk-desc','bk-desc-hi','bk-notes'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('bk-prem').checked = false;
     loadBooks();
-  } else toast('Error: ' + r.error, true);
+  } else {
+    toast('Error: ' + (r.error||'Unknown'), true);
+    if (res) res.textContent = '❌ Error: ' + r.error;
+  }
 }
+
 async function delBook(id) {
-  if (!confirm('Delete book?')) return;
-  const r = await api('DELETE', '/admin/books/'+id);
-  r.success ? toast('Book deleted') : toast('Failed', true);
+  if (!confirm('Remove book from library?')) return;
+  const r = await api('DELETE', '/admin/library/books/' + id);
+  r.success ? toast('Book removed') : toast('Failed: ' + r.error, true);
   loadBooks();
+}
+
+// ─── P2: AI FEEDBACK MODERATION ──────────────────────────────────
+async function loadAIFbStats() {
+  const r = await api('GET', '/admin/feedback/ai/stats');
+  if (!r.success) return;
+  const s = r.stats;
+  const set = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  set('afb-total',   s.total       || 0);
+  set('afb-pending', s.pending     || 0);
+  set('afb-up',      s.thumbsUp    || 0);
+  set('afb-rate',    (s.approvalRate||0) + '%');
+  // Update badge
+  if (s.pending > 0) {
+    const b = document.getElementById('fb-count-badge');
+    if (b) { b.textContent = s.pending; b.style.display = ''; }
+  }
+}
+
+async function loadAIFeedback() {
+  const el = document.getElementById('afb-list'); if (!el) return;
+  el.innerHTML = 'Loading...';
+  const reviewed = document.getElementById('afb-filter')?.value;
+  const rating   = document.getElementById('afb-rating')?.value;
+  let path = '/admin/feedback/ai?page=1';
+  if (reviewed !== '' && reviewed !== undefined) path += '&reviewed=' + reviewed;
+  if (rating)  path += '&rating=' + rating;
+  const r = await api('GET', path);
+  if (!r.success) { el.innerHTML = 'Error: ' + (r.error||''); return; }
+  await loadAIFbStats();
+  const items = r.items || [];
+  if (!items.length) { el.innerHTML = '<div class="alert ab">No feedback in this filter. Try changing filters.</div>'; return; }
+  el.innerHTML = items.map(fb => {
+    const isUp  = fb.rating === 'up';
+    const reviewed = fb.admin_reviewed;
+    return `<div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;background:rgba(255,255,255,.02)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge ${isUp?'bg':'br'}">${isUp?'👍 Thumbs Up':'👎 Thumbs Down'}</span>
+          <span class="badge ${reviewed?'bgo':'bw'}">${reviewed ? '✅ Reviewed ('+fb.admin_action+')' : '⏳ Pending'}</span>
+          <span class="badge bb" style="font-size:9px">${esc(fb.language||'hindi')}</span>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">${fb.created_at?.slice(0,16).replace('T',' ')} · ${esc(fb.phone||'anon')}</span>
+      </div>
+      <div style="font-size:12px;margin-bottom:6px"><b style="color:var(--gold)">Q:</b> ${esc(fb.question||'').slice(0,200)}</div>
+      <div style="font-size:11px;color:rgba(253,246,237,.6);margin-bottom:${fb.reason?'6px':'12px'}">${esc(fb.ai_answer||'').slice(0,300)}${fb.ai_answer?.length>300?'...':''}</div>
+      ${fb.reason ? `<div style="font-size:11px;color:var(--saffron);margin-bottom:10px">💬 Reason: ${esc(fb.reason)}</div>` : ''}
+      ${fb.quality_score !== undefined ? `<div style="font-size:10px;color:var(--muted);margin-bottom:8px">Quality Score: <b style="color:${fb.quality_score>=0.7?'#27AE60':'#E74C3C'}">${(fb.quality_score*100).toFixed(0)}%</b></div>` : ''}
+      ${!reviewed ? `<div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-g btn-sm" onclick="reviewFeedback('${fb.id}','approved')">✅ Approve</button>
+        <button class="btn btn-r btn-sm" onclick="reviewFeedback('${fb.id}','rejected')">❌ Reject</button>
+        <button class="btn btn-o btn-sm" onclick="correctFeedback('${fb.id}')">✏️ Correct Answer</button>
+      </div>` : (fb.approved_answer ? `<div style="font-size:11px;border:1px solid rgba(39,174,96,.25);border-radius:8px;padding:8px;color:#27AE60">✅ Corrected: ${esc(fb.approved_answer).slice(0,200)}</div>` : '')}
+    </div>`;
+  }).join('');
+}
+
+async function reviewFeedback(id, action) {
+  const r = await api('PATCH', '/admin/feedback/ai/' + id, { action });
+  r.success ? toast('Feedback ' + action + ' ✅') : toast('Error: ' + r.error, true);
+  loadAIFeedback();
+}
+
+async function correctFeedback(id) {
+  const ans = prompt('Enter the approved correct answer for this question:');
+  if (!ans || !ans.trim()) return;
+  const r = await api('PATCH', '/admin/feedback/ai/' + id, { action: 'corrected', approved_answer: ans.trim() });
+  r.success ? toast('Answer corrected & saved to Approved Answers ✅') : toast('Error: ' + r.error, true);
+  loadAIFeedback();
+}
+
+async function loadApprovedAnswers() {
+  const el = document.getElementById('aa-list'); if (!el) return;
+  el.innerHTML = 'Loading...';
+  const r = await api('GET', '/admin/approved-answers');
+  if (!r.success) { el.innerHTML = 'Error: ' + (r.error||''); return; }
+  const answers = r.answers || [];
+  if (!answers.length) { el.innerHTML = '<div class="alert ab">No approved answers yet. Add one or correct a feedback entry above.</div>'; return; }
+  el.innerHTML = `<table><tr><th>Question Pattern</th><th>Approved Answer</th><th>Ref</th><th>Lang</th><th>Category</th><th>Uses</th></tr>` +
+    answers.map(a => `<tr>
+      <td style="font-size:11px">${esc(a.question_pattern||'').slice(0,80)}</td>
+      <td style="font-size:11px;color:rgba(253,246,237,.7)">${esc(a.approved_answer||'').slice(0,100)}...</td>
+      <td style="font-size:10px;color:var(--saffron)">${esc(a.scripture_ref||'—')}</td>
+      <td style="font-size:10px"><span class="badge bw">${esc(a.language)}</span></td>
+      <td style="font-size:10px"><span class="badge bb">${esc(a.category)}</span></td>
+      <td style="font-size:10px;color:var(--muted)">${a.use_count||0}</td>
+    </tr>`).join('') + '</table>';
+}
+
+function showAddApprovedAnswer() {
+  const f = document.getElementById('aa-add-form');
+  if (f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+async function saveApprovedAnswer() {
+  const body = {
+    question_pattern: document.getElementById('aa-q').value.trim(),
+    approved_answer:  document.getElementById('aa-a').value.trim(),
+    scripture_ref:    document.getElementById('aa-ref').value.trim(),
+    language:         document.getElementById('aa-lang').value,
+    category:         document.getElementById('aa-cat').value,
+  };
+  if (!body.question_pattern || !body.approved_answer)
+    return toast('Question pattern and answer required', true);
+  const r = await api('POST', '/admin/approved-answers', body);
+  if (r.success) {
+    toast('Approved answer saved ✅');
+    ['aa-q','aa-a','aa-ref'].forEach(id => { const e=document.getElementById(id); if(e) e.value=''; });
+    document.getElementById('aa-add-form').style.display = 'none';
+    loadApprovedAnswers();
+  } else toast('Error: ' + r.error, true);
 }
 
 // ─── PAYMENT APPROVAL ────────────────────────────────────────────

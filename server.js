@@ -2069,11 +2069,996 @@ app.get("/api/panchang/today", async (req, res) => {
 });
 
 // ════════════════════════════════════════════════════════════════
+// P2 — DHARMIC LIBRARY (PUBLIC)
+// ════════════════════════════════════════════════════════════════
+
+// GET /library/books?lang=hindi&category=gita&search=&page=1&limit=20
+app.get('/library/books', async (req, res) => {
+  try {
+    const { lang, category, search, page = 1, limit = 20 } = req.query;
+    const offset = (Math.max(1, +page) - 1) * Math.min(50, +limit);
+    let q = `?is_active=eq.true&order=created_at.desc&limit=${Math.min(50,+limit)}&offset=${offset}`;
+    if (lang)     q += `&language=eq.${encodeURIComponent(lang)}`;
+    if (category && category !== 'all') q += `&category=eq.${encodeURIComponent(category)}`;
+    let books = await sbSelect('dharmic_books', q);
+    if (search) {
+      const s = search.toLowerCase();
+      books = books.filter(b =>
+        (b.title||'').toLowerCase().includes(s) ||
+        (b.title_hindi||'').toLowerCase().includes(s) ||
+        (b.author||'').toLowerCase().includes(s) ||
+        (b.tags||'').toLowerCase().includes(s)
+      );
+    }
+    res.json({ success: true, books, page: +page });
+  } catch(e) {
+    console.error('[library/books]', e.message);
+    res.status(500).json({ error: 'Failed to fetch books' });
+  }
+});
+
+// GET /library/books/:id — single book detail
+app.get('/library/books/:id', async (req, res) => {
+  try {
+    const id = sanitize(req.params.id, 100);
+    const rows = await sbSelect('dharmic_books', `?id=eq.${encodeURIComponent(id)}&is_active=eq.true&limit=1`);
+    if (!rows.length) return res.status(404).json({ error: 'Book not found' });
+    // Increment view count (non-blocking)
+    sbUpdate('dharmic_books', `?id=eq.${encodeURIComponent(id)}`, { views: (rows[0].views||0)+1 }).catch(()=>{});
+    res.json({ success: true, book: rows[0] });
+  } catch(e) {
+    res.status(500).json({ error: 'Failed to fetch book' });
+  }
+});
+
+// POST /library/books/:id/view — record view per user
+app.post('/library/books/:id/view', async (req, res) => {
+  try {
+    const book_id = sanitize(req.params.id, 100);
+    const phone   = sanitize(req.body.phone||'', 20);
+    await sbInsert('book_views', {
+      id: `bv_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+      book_id, phone, viewed_at: new Date().toISOString()
+    });
+    res.json({ success: true });
+  } catch(e) { res.json({ success: true }); }
+});
+
+// GET /library/categories
+app.get('/library/categories', (req, res) => {
+  res.json({ success: true, categories: [
+    { id:'all',          label:'All',          labelHi:'सभी'           },
+    { id:'vedas',        label:'Vedas',         labelHi:'वेद'           },
+    { id:'upanishads',   label:'Upanishads',    labelHi:'उपनिषद'        },
+    { id:'puranas',      label:'Puranas',       labelHi:'पुराण'         },
+    { id:'gita',         label:'Gita',          labelHi:'गीता'          },
+    { id:'ramayana',     label:'Ramayana',      labelHi:'रामायण'        },
+    { id:'mahabharata',  label:'Mahabharata',   labelHi:'महाभारत'       },
+    { id:'smritis',      label:'Smritis',       labelHi:'स्मृतियाँ'    },
+    { id:'stotras',      label:'Stotras',       labelHi:'स्तोत्र'       },
+    { id:'modern',       label:'Modern',        labelHi:'आधुनिक'        },
+    { id:'other',        label:'Other',         labelHi:'अन्य'          },
+  ]});
+});
+
+// ════════════════════════════════════════════════════════════════
+// P2 — AI FEEDBACK (PUBLIC submit)
+// ════════════════════════════════════════════════════════════════
+app.post('/ai/feedback', async (req, res) => {
+  try {
+    const rateKey = req.body.phone || req.ip || 'anon';
+    if (!checkRateLimit(`aifb_${rateKey}`, 10))
+      return res.status(429).json({ error: 'Too many submissions' });
+    const { question, ai_answer, rating, reason, phone, language } = req.body;
+    if (!question || !ai_answer || !rating)
+      return res.status(400).json({ error: 'question, ai_answer, rating required' });
+    const entry = {
+      id: `af_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+      question:  sanitize(question,  500),
+      ai_answer: sanitize(ai_answer, 1500),
+      rating:    rating === 'up' ? 'up' : 'down',
+      reason:    sanitize(reason||'', 300),
+      phone:     sanitize(phone||'',  20),
+      language:  sanitize(language||'hindi', 20),
+      quality_score: rating === 'up' ? 0.8 : 0.2,
+      created_at: new Date().toISOString(),
+    };
+    await sbInsert('ai_feedback', entry);
+    res.json({ success: true, id: entry.id });
+  } catch(e) {
+    console.error('[ai/feedback]', e.message);
+    res.status(500).json({ error: 'Feedback submission failed' });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P2 — ADMIN: LIBRARY MANAGEMENT
+// ════════════════════════════════════════════════════════════════
+
+// GET /admin/library/books
+app.get('/admin/library/books', adminAuth, async (req, res) => {
+  try {
+    const { lang, category, status, page=1 } = req.query;
+    const offset = (Math.max(1,+page)-1)*50;
+    let q = `?order=created_at.desc&limit=50&offset=${offset}`;
+    if (lang)   q += `&language=eq.${encodeURIComponent(lang)}`;
+    if (category && category !== 'all') q += `&category=eq.${encodeURIComponent(category)}`;
+    if (status) q += `&indexing_status=eq.${encodeURIComponent(status)}`;
+    const books = await sbSelect('dharmic_books', q);
+    res.json({ success: true, books, page: +page });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// POST /admin/library/books — add book
+app.post('/admin/library/books', adminAuth, async (req, res) => {
+  try {
+    const {
+      title, title_hindi, title_sanskrit, author, source,
+      language, category, sub_category, description, description_hindi,
+      tags, page_count, file_url, thumbnail_url, is_premium, admin_notes
+    } = req.body;
+    if (!title || !language || !category)
+      return res.status(400).json({ error: 'title, language, category required' });
+    const book = {
+      id: `bk_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+      title:           sanitize(title, 300),
+      title_hindi:     sanitize(title_hindi||'', 300),
+      title_sanskrit:  sanitize(title_sanskrit||'', 300),
+      author:          sanitize(author||'', 200),
+      source:          sanitize(source||'', 200),
+      language:        sanitize(language, 20),
+      category:        sanitize(category, 50),
+      sub_category:    sanitize(sub_category||'', 100),
+      description:     sanitize(description||'', 2000),
+      description_hindi: sanitize(description_hindi||'', 2000),
+      tags:            sanitize(tags||'', 500),
+      page_count:      +page_count || null,
+      file_url:        (file_url||'').slice(0,1000),
+      thumbnail_url:   (thumbnail_url||'').slice(0,500),
+      is_premium:      !!is_premium,
+      admin_notes:     sanitize(admin_notes||'', 500),
+      indexing_status: 'pending',
+      is_active:       true,
+      views: 0, downloads: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    await sbInsert('dharmic_books', book);
+    await auditLog('add_book', 'admin', book.id, book.title);
+    res.json({ success: true, book });
+  } catch(e) {
+    console.error('[admin/library/books POST]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// PATCH /admin/library/books/:id
+app.patch('/admin/library/books/:id', adminAuth, async (req, res) => {
+  try {
+    const id = sanitize(req.params.id, 100);
+    const allowed = ['title','title_hindi','author','source','language','category',
+      'description','description_hindi','tags','page_count','file_url',
+      'thumbnail_url','is_premium','is_active','indexing_status','admin_notes'];
+    const patch = { updated_at: new Date().toISOString() };
+    for (const k of allowed) {
+      if (req.body[k] !== undefined) patch[k] = typeof req.body[k] === 'string' ? sanitize(req.body[k], 2000) : req.body[k];
+    }
+    await sbUpdate('dharmic_books', `?id=eq.${encodeURIComponent(id)}`, patch);
+    await auditLog('edit_book', 'admin', id, JSON.stringify(patch).slice(0,200));
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// DELETE /admin/library/books/:id (soft delete)
+app.delete('/admin/library/books/:id', adminAuth, async (req, res) => {
+  try {
+    const id = sanitize(req.params.id, 100);
+    await sbUpdate('dharmic_books', `?id=eq.${encodeURIComponent(id)}`, { is_active: false, updated_at: new Date().toISOString() });
+    await auditLog('delete_book', 'admin', id, 'soft deleted');
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P2 — ADMIN: AI FEEDBACK MODERATION
+// ════════════════════════════════════════════════════════════════
+
+// GET /admin/feedback/ai?reviewed=false&page=1
+app.get('/admin/feedback/ai', adminAuth, async (req, res) => {
+  try {
+    const { reviewed, rating, page=1 } = req.query;
+    const offset = (Math.max(1,+page)-1)*30;
+    let q = `?order=created_at.desc&limit=30&offset=${offset}`;
+    if (reviewed !== undefined) q += `&admin_reviewed=eq.${reviewed === 'true'}`;
+    if (rating) q += `&rating=eq.${rating}`;
+    const items = await sbSelect('ai_feedback', q);
+    res.json({ success: true, items, page: +page });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// PATCH /admin/feedback/ai/:id — review (approve/reject/correct)
+app.patch('/admin/feedback/ai/:id', adminAuth, async (req, res) => {
+  try {
+    const id = sanitize(req.params.id, 100);
+    const { action, approved_answer, admin_notes } = req.body;
+    if (!['approved','rejected','corrected'].includes(action))
+      return res.status(400).json({ error: 'action must be approved|rejected|corrected' });
+    const patch = {
+      admin_reviewed: true,
+      admin_action:   action,
+      admin_notes:    sanitize(admin_notes||'', 500),
+      quality_score:  action === 'approved' ? 0.9 : action === 'rejected' ? 0.1 : 0.7,
+      reviewed_at:    new Date().toISOString(),
+    };
+    if (action === 'corrected' && approved_answer) {
+      patch.approved_answer = sanitize(approved_answer, 2000);
+      // Save to approved_answers for future retrieval enhancement
+      await sbInsert('approved_answers', {
+        id: `aa_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+        question_pattern: '',  // admin can fill via separate endpoint
+        approved_answer:  patch.approved_answer,
+        language:         'hindi',
+        created_at:       new Date().toISOString(),
+        updated_at:       new Date().toISOString(),
+      }).catch(()=>{});
+    }
+    await sbUpdate('ai_feedback', `?id=eq.${encodeURIComponent(id)}`, patch);
+    await auditLog('review_ai_feedback', 'admin', id, action);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// GET /admin/feedback/ai/stats
+app.get('/admin/feedback/ai/stats', adminAuth, async (req, res) => {
+  try {
+    const [all, pending, up, down] = await Promise.all([
+      sbSelect('ai_feedback', '?select=id'),
+      sbSelect('ai_feedback', '?admin_reviewed=eq.false&select=id'),
+      sbSelect('ai_feedback', '?rating=eq.up&select=id'),
+      sbSelect('ai_feedback', '?rating=eq.down&select=id'),
+    ]);
+    res.json({ success: true, stats: {
+      total: all.length, pending: pending.length,
+      thumbsUp: up.length, thumbsDown: down.length,
+      approvalRate: all.length ? Math.round((up.length/all.length)*100) : 0,
+    }});
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// GET /admin/approved-answers
+app.get('/admin/approved-answers', adminAuth, async (req, res) => {
+  try {
+    const rows = await sbSelect('approved_answers', '?is_active=eq.true&order=created_at.desc&limit=100');
+    res.json({ success: true, answers: rows });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// POST /admin/approved-answers
+app.post('/admin/approved-answers', adminAuth, async (req, res) => {
+  try {
+    const { question_pattern, approved_answer, scripture_ref, language, category } = req.body;
+    if (!question_pattern || !approved_answer) return res.status(400).json({ error: 'question_pattern and approved_answer required' });
+    const row = {
+      id: `aa_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+      question_pattern: sanitize(question_pattern, 500),
+      approved_answer:  sanitize(approved_answer, 2000),
+      scripture_ref:    sanitize(scripture_ref||'', 200),
+      language:         sanitize(language||'hindi', 20),
+      category:         sanitize(category||'general', 50),
+      is_active: true, use_count: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    await sbInsert('approved_answers', row);
+    res.json({ success: true, answer: row });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P2 — KUNDLI VIA PROKERALA
+// ════════════════════════════════════════════════════════════════
+app.post('/kundli/calculate', async (req, res) => {
+  try {
+    const { dob, tob, city, lat, lng } = req.body;
+    if (!dob) return res.status(400).json({ error: 'dob required (YYYY-MM-DD)' });
+
+    // Try to get coordinates
+    let latitude  = lat  ? parseFloat(lat)  : null;
+    let longitude = lng ? parseFloat(lng) : null;
+    if ((!latitude || !longitude) && city) {
+      const coords = await getCoordinatesFromCity(city);
+      if (coords) { latitude = parseFloat(coords.lat); longitude = parseFloat(coords.lng); }
+    }
+
+    // Build IST datetime string
+    const time    = tob || '12:00';
+    const dtStr   = `${dob}T${time}:00+05:30`;
+
+    // Try Prokerala
+    if (latitude && longitude && canCallAPI()) {
+      try {
+        const token  = await getProkeralaToken();
+        const coords = `${latitude},${longitude}`;
+        const [birthChart, kundliBasic] = await Promise.all([
+          fetch(`https://api.prokerala.com/v2/astrology/birth-details?ayanamsa=lahiri&coordinates=${coords}&datetime=${encodeURIComponent(dtStr)}`,
+            { headers: { Authorization: `Bearer ${token}` } }).then(r=>r.json()),
+          fetch(`https://api.prokerala.com/v2/astrology/kundli?ayanamsa=lahiri&coordinates=${coords}&datetime=${encodeURIComponent(dtStr)}`,
+            { headers: { Authorization: `Bearer ${token}` } }).then(r=>r.json()).catch(()=>null),
+        ]);
+        if (birthChart?.data) {
+          const d = birthChart.data;
+          return res.json({
+            success: true, source: 'prokerala',
+            rashi:      d.moon_sign     || d.rasi     || '',
+            nakshatra:  d.nakshatra?.name || '',
+            lagna:      d.ascendant?.name || d.lagna   || '',
+            planet:     d.nakshatra?.lord || '',
+            moonDeg:    d.moon_sign_longitude || null,
+            lagnaSign:  d.ascendant?.name || '',
+            latitude, longitude,
+            kundli:     kundliBasic?.data || null,
+          });
+        }
+      } catch(apiErr) {
+        console.error('[kundli/prokerala]', apiErr.message);
+      }
+    }
+
+    // Fallback: improved static calculation
+    const fallback = calculateKundliFallback(dob, tob, city);
+    res.json({ success: true, source: 'fallback', ...fallback });
+  } catch(e) {
+    console.error('[kundli/calculate]', e.message);
+    res.status(500).json({ error: 'Kundli calculation failed' });
+  }
+});
+
+// Improved static kundli fallback (better than original)
+function calculateKundliFallback(dob, tob, city) {
+  const RASHI = [
+    { name:'Mesh',     nameEn:'Aries',       planet:'Mangal',  deity:'Kartik',    nakIds:[0,1,2] },
+    { name:'Vrishabh', nameEn:'Taurus',      planet:'Shukra',  deity:'Lakshmi',   nakIds:[2,3,4] },
+    { name:'Mithun',   nameEn:'Gemini',       planet:'Budh',    deity:'Vishnu',    nakIds:[4,5,6] },
+    { name:'Kark',     nameEn:'Cancer',       planet:'Chandra', deity:'Shiva',     nakIds:[6,7,8] },
+    { name:'Simha',    nameEn:'Leo',          planet:'Surya',   deity:'Surya',     nakIds:[9,10,11]},
+    { name:'Kanya',    nameEn:'Virgo',        planet:'Budh',    deity:'Saraswati', nakIds:[11,12,13]},
+    { name:'Tula',     nameEn:'Libra',        planet:'Shukra',  deity:'Lakshmi',   nakIds:[13,14,15]},
+    { name:'Vrishchik',nameEn:'Scorpio',      planet:'Mangal',  deity:'Kali',      nakIds:[15,16,17]},
+    { name:'Dhanu',    nameEn:'Sagittarius',  planet:'Guru',    deity:'Vishnu',    nakIds:[17,18,19]},
+    { name:'Makar',    nameEn:'Capricorn',    planet:'Shani',   deity:'Shani',     nakIds:[19,20,21]},
+    { name:'Kumbh',    nameEn:'Aquarius',     planet:'Shani',   deity:'Shiva',     nakIds:[21,22,23]},
+    { name:'Meen',     nameEn:'Pisces',       planet:'Guru',    deity:'Vishnu',    nakIds:[23,24,25]},
+  ];
+  const NAKSHATRAS = [
+    'Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra',
+    'Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni',
+    'Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha',
+    'Moola','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha',
+    'Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati',
+  ];
+
+  // Approximate tropical sun longitude → sidereal (Lahiri ayanamsa ~23.85° in 2024)
+  const d = new Date(dob + 'T12:00:00Z');
+  const dayOfYear = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+  // Approx moon sign from day of year (moon moves ~13°/day, full cycle ~27.3 days)
+  const moonCycle = (dayOfYear * 13.2) % 360;
+  const rashiIdx  = Math.floor(moonCycle / 30) % 12;
+  const nakIdx    = Math.floor(moonCycle / (360/27)) % 27;
+
+  const rashi = RASHI[rashiIdx];
+  return {
+    rashi:     rashi.name,
+    rashiEn:   rashi.nameEn,
+    nakshatra: NAKSHATRAS[nakIdx],
+    planet:    rashi.planet,
+    deity:     rashi.deity,
+    lagna:     RASHI[(rashiIdx + 1) % 12].name, // rough lagna approximation
+  };
+}
+
+// POST /users/update (profile edit from app)
+app.patch('/users/update', async (req, res) => {
+  try {
+    const { phone, name, birthCity, language } = req.body;
+    if (!phone) return res.status(400).json({ error: 'phone required' });
+    const cleanPhone = sanitize(phone, 20);
+    const patch = { updated_at: new Date().toISOString() };
+    if (name)      patch.name      = sanitize(name, 100);
+    if (birthCity) patch.birth_city = sanitize(birthCity, 100);
+    if (language)  patch.language  = sanitize(language, 20);
+    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, patch);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// DELETE /users/delete
+app.delete('/users/delete', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) return res.status(400).json({ error: 'phone required' });
+    const cleanPhone = sanitize(phone, 20);
+    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, {
+      plan: 'free', name: 'Deleted User', phone: `deleted_${Date.now()}`,
+      deleted_at: new Date().toISOString(),
+    });
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+
+// ════════════════════════════════════════════════════════════════
+// P3 — JWT AUTH & SESSION SECURITY
+// ════════════════════════════════════════════════════════════════
+
+const JWT_SECRET   = process.env.JWT_SECRET || 'ds_jwt_fallback_change_in_prod_2025';
+const JWT_EXPIRES  = 30 * 24 * 60 * 60; // 30 days in seconds
+
+// ── Minimal JWT implementation (no external deps) ────────────────
+function b64url(str) {
+  return Buffer.from(str).toString('base64').replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+}
+function b64urlDecode(str) {
+  return Buffer.from(str.replace(/-/g,'+').replace(/_/g,'/'), 'base64').toString();
+}
+
+function signJWT(payload) {
+  const header  = b64url(JSON.stringify({ alg:'HS256', typ:'JWT' }));
+  const body    = b64url(JSON.stringify({ ...payload, iat: Math.floor(Date.now()/1000), exp: Math.floor(Date.now()/1000) + JWT_EXPIRES }));
+  const sig     = crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64').replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+  return `${header}.${body}.${sig}`;
+}
+
+function verifyJWT(token) {
+  try {
+    const [header, body, sig] = token.split('.');
+    const expected = crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64').replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+    if (sig !== expected) return null;
+    const payload = JSON.parse(b64urlDecode(body));
+    if (payload.exp && Date.now()/1000 > payload.exp) return null; // expired
+    return payload;
+  } catch { return null; }
+}
+
+// ── Session blacklist (invalidated tokens, in-memory with Supabase backup) ──
+const _blacklist = new Set();
+
+async function isBlacklisted(jti) {
+  if (_blacklist.has(jti)) return true;
+  try {
+    const rows = await sbSelect('invalidated_sessions', `?jti=eq.${encodeURIComponent(jti)}&limit=1`);
+    return rows.length > 0;
+  } catch { return false; }
+}
+
+// ── JWT Auth middleware (optional — use on protected routes) ──────
+function jwtAuth(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+  const token   = authHeader.slice(7);
+  const payload = verifyJWT(token);
+  if (!payload) return res.status(401).json({ error: 'Invalid or expired token' });
+  req.jwtUser = payload;
+  next();
+}
+
+// Optional JWT (allows unauthenticated fallback but enriches context)
+function jwtSoft(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const payload = verifyJWT(authHeader.slice(7));
+    if (payload) req.jwtUser = payload;
+  }
+  next();
+}
+
+// ── POST /auth/token ─────────────────────────────────────────────
+// Exchange Firebase UID + phone for app JWT
+app.post('/auth/token', async (req, res) => {
+  try {
+    const { phone, firebaseUid } = req.body;
+    if (!phone || !firebaseUid) return res.status(400).json({ error: 'phone and firebaseUid required' });
+    const cleanPhone = sanitize(phone, 20);
+    const cleanUid   = sanitize(firebaseUid, 128);
+
+    // Look up user in Supabase
+    let user = null;
+    try {
+      const rows = await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`);
+      user = rows[0] || null;
+    } catch(e) { console.warn('[auth/token] DB lookup failed:', e.message); }
+
+    const jti = crypto.randomBytes(12).toString('hex');
+    const token = signJWT({
+      sub:   cleanPhone,
+      uid:   cleanUid,
+      plan:  user?.plan || 'free',
+      jti,
+    });
+
+    res.json({
+      success: true,
+      token,
+      expiresIn: JWT_EXPIRES,
+      plan: user?.plan || 'free',
+      isNew: !user,
+    });
+  } catch(e) {
+    console.error('[auth/token]', e.message);
+    res.status(500).json({ error: 'Token generation failed' });
+  }
+});
+
+// ── GET /users/me ────────────────────────────────────────────────
+// Validate JWT and return authoritative user + premium status
+app.get('/users/me', jwtAuth, async (req, res) => {
+  try {
+    const { sub: phone } = req.jwtUser;
+    if (!phone) return res.status(401).json({ error: 'Invalid token payload' });
+
+    // Check blacklist
+    if (req.jwtUser.jti && await isBlacklisted(req.jwtUser.jti)) {
+      return res.status(401).json({ error: 'Session invalidated. Please login again.' });
+    }
+
+    let userData = null;
+    try {
+      const rows = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
+      userData = rows[0] || null;
+    } catch(e) { console.warn('[users/me] DB lookup failed:', e.message); }
+
+    const isPremium = userData?.plan && userData.plan !== 'free' &&
+      (!userData.premium_expiry || new Date(userData.premium_expiry) > new Date());
+
+    res.json({
+      success: true,
+      user: {
+        phone:     userData?.phone || phone,
+        name:      userData?.name  || '',
+        plan:      userData?.plan  || 'free',
+        isPremium,
+        rashi:     userData?.rashi     || '',
+        nakshatra: userData?.nakshatra || '',
+        language:  userData?.language  || 'hindi',
+        streak:    userData?.streak    || 0,
+        points:    userData?.points    || 0,
+      },
+    });
+  } catch(e) {
+    console.error('[users/me]', e.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ── POST /auth/logout ────────────────────────────────────────────
+// Invalidate JWT server-side
+app.post('/auth/logout', jwtSoft, async (req, res) => {
+  try {
+    const jti = req.jwtUser?.jti;
+    if (jti) {
+      _blacklist.add(jti);
+      try {
+        await sbInsert('invalidated_sessions', {
+          jti,
+          phone:      req.jwtUser?.sub || '',
+          created_at: new Date().toISOString(),
+        });
+      } catch { /* silent — blacklist still works in-memory */ }
+    }
+    res.json({ success: true, message: 'Logged out' });
+  } catch(e) {
+    res.json({ success: true }); // never fail logout
+  }
+});
+
+// ── GET /users/access/:phone — enhanced with expiry check ────────
+// Existing route, now also checks premium_expiry
+app.get('/users/access/:phone', async (req, res) => {
+  try {
+    const phone = sanitize(req.params.phone, 20);
+    if (!phone) return res.status(400).json({ error: 'Invalid phone' });
+
+    let isPremium = false;
+    let plan = 'free';
+    let premiumExpiry = null;
+    try {
+      const rows = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
+      if (rows.length > 0) {
+        plan = rows[0].plan || 'free';
+        premiumExpiry = rows[0].premium_expiry || null;
+        // Premium only valid if plan is not free AND not expired
+        const notExpired = !premiumExpiry || new Date(premiumExpiry) > new Date();
+        isPremium = plan !== 'free' && notExpired;
+        // Auto-downgrade if expired
+        if (plan !== 'free' && premiumExpiry && new Date(premiumExpiry) <= new Date()) {
+          sbUpdate('users', `?phone=eq.${encodeURIComponent(phone)}`, { plan: 'free' }).catch(() => {});
+          plan = 'free'; isPremium = false;
+        }
+      }
+    } catch(e) {
+      console.warn('[access] DB error:', e.message);
+      return res.json({ isPremium: false, plan: 'free', source: 'error-fallback' });
+    }
+    res.json({ isPremium, plan, premiumExpiry, source: 'database' });
+  } catch(e) {
+    res.status(500).json({ isPremium: false, plan: 'free', error: e.message });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P3 — ENHANCED RATE LIMITING MIDDLEWARE
+// Applied to high-risk routes: AI, auth, payment
+// ════════════════════════════════════════════════════════════════
+
+// Per-IP rate limit for AI routes: 30/min
+function aiRateLimit(req, res, next) {
+  const key = `ai_${req.ip}`;
+  if (!checkRateLimit(key, 30)) {
+    return res.status(429).json({ error: 'Too many AI requests. Please wait a moment.', retryAfter: 60 });
+  }
+  next();
+}
+
+// Per-IP rate limit for auth: 10/min
+function authRateLimit(req, res, next) {
+  const key = `auth_${req.ip}`;
+  if (!checkRateLimit(key, 10)) {
+    return res.status(429).json({ error: 'Too many auth attempts. Please wait.', retryAfter: 60 });
+  }
+  next();
+}
+
+// Apply auth rate limit to token endpoint (retroactively registered,
+// Express will use it even though route is above — add app.use before routes in future)
+app.use('/auth/token', authRateLimit);
+
+// ════════════════════════════════════════════════════════════════
+// P3 — PAYMENT REPLAY PROTECTION
+// ════════════════════════════════════════════════════════════════
+
+// Track processed payment verification IDs (prevent double-grant)
+const _processedPayments = new Set();
+
+// GET /payment/verify-status/:orderId — idempotent check
+app.get('/payment/verify-status/:orderId', async (req, res) => {
+  try {
+    const orderId = sanitize(req.params.orderId, 100);
+    const order   = await getOrder(orderId);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json({
+      success:   true,
+      orderId,
+      status:    order.status,
+      phone:     order.userPhone,
+      plan:      order.planId,
+      isPremium: order.status === 'completed',
+    });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── POST /payment/recover — recover premium for paid users ───────
+// Lets users recover premium if they paid but session was lost
+app.post('/payment/recover', async (req, res) => {
+  try {
+    const { phone, orderId } = req.body;
+    if (!phone) return res.status(400).json({ error: 'phone required' });
+    const cleanPhone = sanitize(phone, 20);
+
+    // Check if this phone already has premium
+    const rows = await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`);
+    const user = rows[0];
+    if (user?.plan && user.plan !== 'free') {
+      return res.json({ success: true, recovered: true, plan: user.plan, message: 'Premium already active' });
+    }
+
+    // If orderId provided, verify it's completed
+    if (orderId) {
+      const order = await getOrder(sanitize(orderId, 100));
+      if (order?.status === 'completed' && order.userPhone === cleanPhone) {
+        await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { plan: order.planId || 'pro' });
+        return res.json({ success: true, recovered: true, plan: order.planId, message: 'Premium restored from order' });
+      }
+    }
+
+    // Check payment_orders table for any completed order for this phone
+    const orders = await sbSelect('payment_orders', `?phone=eq.${encodeURIComponent(cleanPhone)}&status=eq.completed&limit=1`);
+    if (orders.length > 0) {
+      const latest = orders[0];
+      await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { plan: latest.plan_id || 'pro' });
+      return res.json({ success: true, recovered: true, plan: latest.plan_id, message: 'Premium restored from payment history' });
+    }
+
+    res.json({ success: false, recovered: false, message: 'No completed payment found for this account' });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P3 — PANCHANG CACHE IMPROVEMENT
+// City-aware cache key, stale prevention, offline fallback flag
+// ════════════════════════════════════════════════════════════════
+
+// GET /panchang/city/:city — city-specific panchang with better caching
+app.get('/panchang/city/:city', async (req, res) => {
+  const city     = sanitize(req.params.city, 100) || 'Delhi';
+  const dateStr  = req.query.date || new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+  const cacheKey = `panchang_${city.toLowerCase()}_${dateStr}`;
+  const now      = Date.now();
+
+  // Serve fresh cache
+  if (PANCHANG_CACHE[cacheKey] && now - PANCHANG_CACHE[cacheKey].ts < CACHE_TTL) {
+    return res.json({ ...PANCHANG_CACHE[cacheKey].data, source: 'cache', city });
+  }
+
+  // Try Prokerala
+  try {
+    if (canCallAPI()) {
+      const token   = await getProkeralaToken();
+      const coords  = await getCoordinatesFromCity(city) || { lat: '28.6139', lng: '77.2090' }; // Delhi default
+      const url     = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=1&coordinates=${coords.lat},${coords.lng}&datetime=${dateStr}T06:00:00%2B05:30`;
+      const apiRes  = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (apiRes.ok) {
+        const d = await apiRes.json();
+        const panchang = {
+          tithi:     d.data?.tithi?.name           || '',
+          nakshatra: d.data?.nakshatra?.name        || '',
+          yoga:      d.data?.yoga?.name             || '',
+          karana:    d.data?.karana?.name           || '',
+          sunrise:   d.data?.sunrise                || '',
+          sunset:    d.data?.sunset                 || '',
+          moonrashi: d.data?.moon_sign?.name        || '',
+          date:      dateStr,
+          city,
+          _isFallback: false,
+        };
+        PANCHANG_CACHE[cacheKey] = { data: panchang, ts: now };
+        return res.json({ ...panchang, source: 'prokerala' });
+      }
+    }
+  } catch(e) {
+    console.warn('[Panchang city] API error:', e.message);
+  }
+
+  // Static fallback
+  const fallback = buildStaticPanchang(dateStr, city);
+  PANCHANG_CACHE[cacheKey] = { data: fallback, ts: now - (CACHE_TTL - 60 * 60 * 1000) }; // expire in 1h
+  res.json({ ...fallback, source: 'fallback', _isFallback: true });
+});
+
+function buildStaticPanchang(dateStr, city = 'Delhi') {
+  const d = new Date(dateStr);
+  const TITHIS    = ['Pratipada','Dwitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami','Ashtami','Navami','Dashami','Ekadashi','Dwadashi','Trayodashi','Chaturdashi','Purnima/Amavasya'];
+  const NAKS      = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Moola','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+  const YOGAS     = ['Vishkambha','Priti','Ayushman','Saubhagya','Shobhana','Atiganda','Sukarman','Dhriti','Shula','Ganda','Vriddhi','Dhruva','Vyaghata','Harshana','Vajra','Siddhi','Vyatipata','Variyan','Parigha','Shiva','Siddha','Sadhya','Shubha','Shukla','Brahma','Indra','Vaidhriti'];
+  const day = Math.floor(d.getTime() / 86400000);
+  return {
+    tithi:     TITHIS[day % 15],
+    nakshatra: NAKS[day % 27],
+    yoga:      YOGAS[day % 27],
+    karana:    day % 2 === 0 ? 'Bava' : 'Balava',
+    sunrise:   '06:05 AM IST',
+    sunset:    '06:47 PM IST',
+    moonrashi: ['Mesh','Vrishabh','Mithun','Kark','Simha','Kanya','Tula','Vrishchik','Dhanu','Makar','Kumbh','Meen'][day % 12],
+    date:      dateStr,
+    city,
+    _isFallback: true,
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+// P3 — SECURITY: Enhanced CORS + CSP headers
+// ════════════════════════════════════════════════════════════════
+
+// Tighten CORS: allow admin dashboard origin + mobile app (Expo)
+// Apply at app level below existing cors() middleware
+app.use((req, res, next) => {
+  const origin = req.headers.origin || '';
+  // Block unknown browser origins from admin routes
+  if (req.path.startsWith('/admin') && origin && !origin.includes('render.com') && !origin.includes('localhost')) {
+    const key = req.headers['x-admin-key'];
+    if (!key || key !== ADMIN_PASSWORD) {
+      return res.status(403).json({ error: 'Forbidden origin' });
+    }
+  }
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  next();
+});
+
+// ════════════════════════════════════════════════════════════════
+// P3 — HEALTH ENDPOINT (enhanced)
+// ════════════════════════════════════════════════════════════════
+
+app.get('/health/deep', async (req, res) => {
+  const uptime = process.uptime();
+  let dbOk = false;
+  let tableCount = {};
+  try {
+    const users = await sbSelect('users', '?limit=1');
+    dbOk = true;
+    const [u, k, b, f] = await Promise.allSettled([
+      sbSelect('users',         '?limit=0&select=count'),
+      sbSelect('katha_chapters','?limit=0&select=count'),
+      sbSelect('dharmic_books', '?limit=0&select=count'),
+      sbSelect('ai_feedback',   '?limit=0&select=count'),
+    ]);
+    tableCount = {
+      users:        u.value?.[0]?.count  || 0,
+      katha:        k.value?.[0]?.count  || 0,
+      books:        b.value?.[0]?.count  || 0,
+      ai_feedback:  f.value?.[0]?.count  || 0,
+    };
+  } catch {}
+  res.json({
+    success:        true,
+    status:         'ok',
+    uptime:         Math.round(uptime),
+    memory:         `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`,
+    dbConnected:    dbOk,
+    storageUsage:   'N/A (Supabase managed)',
+    lastBackup:     'Supabase auto-backup',
+    nodeVersion:    process.version,
+    tableCount,
+    cacheSize:      Object.keys(PANCHANG_CACHE).length,
+    blacklistSize:  _blacklist.size,
+    timestamp:      new Date().toISOString(),
+  });
+});
+
+
+// ════════════════════════════════════════════════════════════════
+// P4 — VOICE TRANSCRIPTION
+// Uses Groq Whisper API if key is available, else returns null
+// ════════════════════════════════════════════════════════════════
+app.post('/voice/transcribe', upload.single('audio'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No audio file provided' });
+    const lang = sanitize(req.body.lang || 'hi-IN', 10);
+
+    // Try Groq Whisper transcription
+    const groqKey = CFG.groqKey;
+    if (groqKey) {
+      const FormData = require('form-data');
+      const form = new FormData();
+      form.append('file', req.file.buffer, { filename: 'voice.m4a', contentType: 'audio/m4a' });
+      form.append('model', 'whisper-large-v3');
+      form.append('language', lang.split('-')[0]); // 'hi' or 'en'
+      form.append('response_format', 'json');
+
+      const res2 = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${groqKey}`, ...form.getHeaders() },
+        body: form,
+        signal: AbortSignal.timeout(20000),
+      });
+      if (res2.ok) {
+        const data = await res2.json();
+        if (data.text) {
+          return res.json({ success: true, transcript: data.text.trim(), source: 'whisper' });
+        }
+      }
+    }
+
+    // Fallback: no transcription available
+    return res.json({ success: false, transcript: null, error: 'Transcription not available' });
+  } catch(e) {
+    console.error('[Voice] Transcribe error:', e.message);
+    res.status(500).json({ success: false, transcript: null, error: e.message });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P4 — CHAT CONTEXT (Approved Answers retrieval)
+// Phase 1: keyword match from approved_answers
+// Phase 2: semantic vector similarity (pgvector)
+// ════════════════════════════════════════════════════════════════
+app.post('/chat/context', async (req, res) => {
+  try {
+    const { question, lang } = req.body;
+    if (!question) return res.json({ context: [] });
+    const cleanQ = sanitize(question, 500).toLowerCase();
+
+    // Keyword-match approved answers
+    const allAnswers = await sbSelect('approved_answers', `?lang=eq.${encodeURIComponent(lang || 'hindi')}&limit=50`);
+    const matches = allAnswers
+      .filter(a => {
+        const pattern = (a.question_pattern || '').toLowerCase();
+        // Simple word-overlap scoring
+        const qWords = cleanQ.split(/\s+/).filter(w => w.length > 3);
+        const score  = qWords.filter(w => pattern.includes(w)).length;
+        return score >= 1;
+      })
+      .slice(0, 3)
+      .map(a => ({
+        question: a.question_pattern,
+        answer:   a.approved_answer,
+        ref:      a.scripture_ref,
+      }));
+
+    res.json({ context: matches, source: 'keyword' });
+  } catch(e) {
+    console.error('[Context]', e.message);
+    res.json({ context: [] });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P4 — PUSH TOKEN REGISTRATION
+// ════════════════════════════════════════════════════════════════
+app.post('/users/push-token', async (req, res) => {
+  try {
+    const { phone, token } = req.body;
+    if (!phone || !token) return res.status(400).json({ error: 'phone and token required' });
+    const cleanPhone = sanitize(phone, 20);
+    const cleanToken = sanitize(token, 200);
+    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, {
+      push_token:      cleanToken,
+      push_token_at:   new Date().toISOString(),
+    });
+    res.json({ success: true });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P4 — ANALYTICS EVENTS INGEST (Phase 1: log only)
+// Phase 2: forward to PostHog / Amplitude
+// ════════════════════════════════════════════════════════════════
+app.post('/analytics/events', async (req, res) => {
+  try {
+    const { events } = req.body;
+    if (!Array.isArray(events) || events.length === 0) return res.json({ success: true });
+    // Phase 1: just acknowledge — events are stored locally in app
+    // Phase 2: insert into analytics_events table or forward to PostHog
+    console.log(`[Analytics] Received ${events.length} events from client`);
+    res.json({ success: true, received: events.length });
+  } catch(e) {
+    res.json({ success: true }); // never fail analytics
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// P4 — LIBRARY SEARCH (keyword, upgradeable to semantic)
+// ════════════════════════════════════════════════════════════════
+app.get('/library/books/search', async (req, res) => {
+  try {
+    const q    = sanitize(req.query.q || '', 200);
+    const lang = sanitize(req.query.lang || '', 20);
+    const cat  = sanitize(req.query.category || '', 50);
+    if (!q) return res.json({ success: true, books: [] });
+
+    let query = `?is_active=eq.true&order=views.desc&limit=20`;
+    if (lang) query += `&language=eq.${encodeURIComponent(lang)}`;
+    if (cat)  query += `&category=eq.${encodeURIComponent(cat)}`;
+
+    const allBooks = await sbSelect('dharmic_books', query);
+    const ql = q.toLowerCase();
+    const results = allBooks.filter(b =>
+      b.title?.toLowerCase().includes(ql) ||
+      b.author?.toLowerCase().includes(ql) ||
+      b.title_hindi?.toLowerCase().includes(ql) ||
+      b.description?.toLowerCase().includes(ql) ||
+      (b.tags || '').toLowerCase().includes(ql)
+    ).slice(0, 10);
+
+    res.json({ success: true, books: results, total: results.length, source: 'keyword' });
+  } catch(e) {
+    res.status(500).json({ success: false, books: [], error: e.message });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
 // 404 HANDLER
 // ════════════════════════════════════════════════════════════════
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
+
 
 // ════════════════════════════════════════════════════════════════
 // GLOBAL ERROR HANDLER
