@@ -15,7 +15,10 @@ const crypto  = require('crypto');
 require('dotenv').config();
 
 // ─── ENVIRONMENT ─────────────────────────────────────────────────
-const ADMIN_PASSWORD       = process.env.ADMIN_PASSWORD       || 'DharmaSetu@Admin2025';
+const ADMIN_PASSWORD       = process.env.ADMIN_PASSWORD       || '';
+if (!ADMIN_PASSWORD) {
+  console.warn('[⚠️ SECURITY] ADMIN_PASSWORD env var is not set. Admin endpoints will reject all requests.');
+}
 const SUPABASE_URL         = (process.env.SUPABASE_URL        || '').replace(/\/$/, '');
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
 
@@ -372,8 +375,21 @@ async function getCoordinatesFromCity(city) {
 const app  = express();
 const PORT = process.env.PORT || 10000;
 
+// CORS: allow no-origin requests (React Native mobile app sends no Origin header)
+// and only the backend's own Render domain for admin portal browser access.
+// This blocks unauthorized browser-based cross-origin API calls.
 app.use(cors({
-  origin: '*',
+  origin: function(origin, callback) {
+    // React Native / curl / mobile apps have no origin — always allow
+    if (!origin) return callback(null, true);
+    // Allow the backend's own domain (admin dashboard)
+    const ALLOWED = [
+      process.env.ALLOWED_ORIGIN || 'https://dharmasetu-backend-2c65.onrender.com',
+    ];
+    if (ALLOWED.includes(origin)) return callback(null, true);
+    // Block all other browser origins
+    callback(new Error(`CORS: origin '${origin}' not allowed`));
+  },
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization','x-admin-key','apikey'],
 }));
