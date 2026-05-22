@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DharmaSetu Content Manifest",
+  "type": "object",
+  "required": ["schemaVersion", "source", "items"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "generatedAt": { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["id", "title", "sourceType", "sourceUrl"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "sourceType": { "type": "string" },
+        "sourceUrl": { "type": "string" },
+        "driveFolderId": { "type": "string" },
+        "category": { "type": "string" },
+        "language": { "type": "string" }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "fileUrl"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "titleHindi": { "type": "string" },
+          "titleSanskrit": { "type": "string" },
+          "author": { "type": "string" },
+          "source": { "type": "string" },
+          "language": { "type": "string" },
+          "category": { "type": "string" },
+          "subCategory": { "type": "string" },
+          "description": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "contentType": { "type": "string" },
+          "fileUrl": { "type": "string" },
+          "driveFileId": { "type": "string" },
+          "thumbnailUrl": { "type": "string" },
+          "fileSizeBytes": { "type": "integer" },
+          "offlineManifestUrl": { "type": "string" },
+          "checksum": { "type": "string" },
+          "scriptureGroup": { "type": "string" }
+        }
+      }
+    }
+  }
+}

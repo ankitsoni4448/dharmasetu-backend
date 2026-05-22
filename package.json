@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "manifest:drive": "node scripts/generate_drive_manifest.js",
+    "ingest:content": "node scripts/ingest_content_manifest.js",
+    "ingest:mantras": "node scripts/ingest_mantra_manifest.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.104.1",

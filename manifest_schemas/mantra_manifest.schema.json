@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DharmaSetu Mantra Manifest",
+  "type": "object",
+  "required": ["schemaVersion", "items"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "generatedAt": { "type": "string" },
+    "source": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "sanskritText"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "deity": { "type": "string" },
+          "purpose": { "type": "string" },
+          "language": { "type": "string" },
+          "difficulty": { "type": "string" },
+          "scriptureSource": { "type": "string" },
+          "sanskritText": { "type": "string" },
+          "transliteration": { "type": "string" },
+          "meaningHi": { "type": "string" },
+          "meaningEn": { "type": "string" },
+          "audioUrl": { "type": "string" },
+          "audioDownloadable": { "type": "boolean" },
+          "offlinePackId": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

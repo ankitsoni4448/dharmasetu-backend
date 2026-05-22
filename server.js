@@ -11,6 +11,14 @@ const fs      = require('fs');
 const path    = require('path');
 const https   = require('https');
 const crypto  = require('crypto');
+const {
+  normalizeContentItem,
+  normalizeMantra,
+  normalizeSource,
+  validateContentManifest,
+  validateMantraManifest,
+} = require('./scripts/manifest_utils');
+const { getSupabaseServiceRoleKey } = require('./scripts/supabase_service_role');
 
 require('dotenv').config();
 
@@ -20,10 +28,15 @@ if (!ADMIN_PASSWORD) {
   console.warn('[⚠️ SECURITY] ADMIN_PASSWORD env var is not set. Admin endpoints will reject all requests.');
 }
 const SUPABASE_URL         = (process.env.SUPABASE_URL        || '').replace(/\/$/, '');
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
+let SUPABASE_SERVICE_KEY = '';
+try {
+  SUPABASE_SERVICE_KEY = getSupabaseServiceRoleKey({ required: false }).key;
+} catch (e) {
+  console.warn('[⚠️ WARN] Invalid Supabase service role configuration:', e.message);
+}
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  console.warn('[⚠️ WARN] Supabase not configured. Add SUPABASE_URL and SUPABASE_SERVICE_KEY to env vars.');
+  console.warn('[⚠️ WARN] Supabase not configured. Add SUPABASE_URL and backend-only SUPABASE_SERVICE_ROLE_KEY to env vars.');
 }
 
 // ─── IN-MEMORY ORDER STORE (fallback when Supabase unavailable) ──
@@ -2157,9 +2170,235 @@ app.get('/library/categories', (req, res) => {
   ]});
 });
 
+app.get('/library/sources', async (req, res) => {
+  const fallbackSources = [
+    { id:'sanatan_granth_1', title:'Sanatan Granth 1', source_type:'drive_folder', drive_folder_id:'1ON1J2MeyN0nj4SRHBzH6gXqIG85w6jNB', category:'other', language:'mixed', ingestion_status:'pending_manifest' },
+    { id:'sanatan_granth_2', title:'Sanatan Granth 2', source_type:'drive_folder', drive_folder_id:'1Hf4ufz1w_d8iLOjGYfPgVE4vtdLzRAVx', category:'other', language:'mixed', ingestion_status:'pending_manifest' },
+    { id:'vishnu_sahasranam_course', title:'Vishnu Sahasranam Full Course', source_type:'drive_folder', drive_folder_id:'1KRVLrFliErgqseogu4GHEM67zwOZUOJ4', category:'courses', language:'mixed', ingestion_status:'pending_manifest' },
+    { id:'additional_dharmic_content', title:'Additional Dharmic Content', source_type:'drive_folder', drive_folder_id:'1-XXBzjjLAd6H65Kl63dIKHaN1UIzfDW9', category:'other', language:'mixed', ingestion_status:'pending_manifest' },
+  ];
+  try {
+    const rows = await sbSelect('content_sources', '?is_active=eq.true&order=title.asc');
+    res.json({ success: true, sources: rows.length ? rows : fallbackSources, source: rows.length ? 'supabase' : 'fallback' });
+  } catch(e) {
+    res.json({ success: true, sources: fallbackSources, source: 'fallback' });
+  }
+});
+
+app.get('/library/manifest', async (req, res) => {
+  const startTime = Date.now();
+  const reqId = `lm_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
+  
+  try {
+    const { sourceId = '', category = '', lang = '', search = '', page = 1, limit = 30 } = req.query;
+    const safeLimit = Math.min(60, Math.max(1, +limit || 30));
+    const offset = (Math.max(1, +page || 1) - 1) * safeLimit;
+    
+    console.log(`[${reqId}] /library/manifest hit`, { sourceId, category, lang, search, page, limit: safeLimit });
+    
+    const [sources, categories] = await Promise.all([
+      sbSelect('content_sources', '?is_active=eq.true&order=title.asc').catch(() => []),
+      Promise.resolve([
+        'all','vedas','upanishads','puranas','gita','ramayana','mahabharata','stotras','courses','other'
+      ]),
+    ]);
+
+    let q = `?is_active=eq.true&order=created_at.desc&limit=${safeLimit}&offset=${offset}`;
+    if (sourceId) q += `&source_id=eq.${encodeURIComponent(sanitize(sourceId, 100))}`;
+    if (category && category !== 'all') q += `&category=eq.${encodeURIComponent(sanitize(category, 50))}`;
+    if (lang && lang !== 'all') q += `&language=eq.${encodeURIComponent(sanitize(lang, 30))}`;
+
+    console.log(`[${reqId}] Query string: ${q}`);
+    
+    let items = await sbSelect('dharmic_books', q);
+    console.log(`[${reqId}] Fetched ${items.length} books from Supabase`);
+    
+    if (search) {
+      const needle = sanitize(search, 120).toLowerCase();
+      items = items.filter(b => [
+        b.title, b.title_hindi, b.title_sanskrit, b.author, b.source,
+        b.language, b.category, b.sub_category, b.description, b.tags, b.search_text,
+      ].filter(Boolean).join(' ').toLowerCase().includes(needle));
+      console.log(`[${reqId}] Filtered to ${items.length} books by search: "${search}"`);
+    }
+    
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    
+    const responseTime = Date.now() - startTime;
+    console.log(`[${reqId}] ✅ Success in ${responseTime}ms | items: ${items.length} | sources: ${sources.length}`);
+    
+    res.json({
+      success: true,
+      schemaVersion: 1,
+      generatedAt: new Date().toISOString(),
+      sources,
+      categories,
+      page: +page || 1,
+      limit: safeLimit,
+      hasMore: items.length === safeLimit,
+      items,
+      _meta: { requestId: reqId, responseTime }
+    });
+  } catch(e) {
+    const responseTime = Date.now() - startTime;
+    console.error(`[${reqId}] ❌ Error in ${responseTime}ms: ${e.message}`);
+    console.error(`[${reqId}] Stack:`, e.stack);
+    res.status(500).json({ 
+      success: false, 
+      items: [], 
+      sources: [], 
+      categories: ['all','vedas','upanishads','puranas','gita','ramayana','mahabharata','stotras','courses','other'],
+      error: 'Manifest unavailable',
+      _meta: { requestId: reqId, errorMessage: e.message }
+    });
+  }
+});
+
+app.get('/katha/catalog', async (req, res) => {
+  const startTime = Date.now();
+  const reqId = `kc_${Date.now()}_${Math.random().toString(36).slice(2,5)}`;
+  
+  try {
+    const { lang = '', category = '', search = '' } = req.query;
+    
+    console.log(`[${reqId}] /katha/catalog hit`, { lang, category, search });
+    
+    let q = '?order=scripture_id.asc,unit_id.asc&limit=500';
+    if (lang) q += `&lang=eq.${encodeURIComponent(sanitize(lang, 20))}`;
+    if (category) q += `&category=eq.${encodeURIComponent(sanitize(category, 50))}`;
+    
+    console.log(`[${reqId}] Query string: ${q}`);
+    
+    let chapters = await sbSelect('katha_chapters', q).catch(e => {
+      console.warn(`[${reqId}] katha_chapters query failed: ${e.message}, trying fallback`);
+      return null;
+    });
+    
+    if (!chapters || chapters.length === 0) {
+      console.log(`[${reqId}] katha_chapters empty, fetching from katha_vault fallback`);
+      const rows = await sbSelect('katha_vault', '?select=scripture_id,unit_id,lang,chapter_title&order=scripture_id.asc,unit_id.asc').catch(e => {
+        console.warn(`[${reqId}] katha_vault query failed: ${e.message}`);
+        return [];
+      });
+      
+      const groups = {};
+      rows.forEach(r => {
+        const key = `${r.scripture_id}_${r.unit_id}_${r.lang}`;
+        groups[key] = groups[key] || { 
+          scripture_id: r.scripture_id, 
+          unit_id: String(r.unit_id), 
+          lang: r.lang, 
+          chapter_title: r.chapter_title, 
+          generated_count: 0 
+        };
+        groups[key].generated_count += 1;
+      });
+      chapters = Object.values(groups);
+      console.log(`[${reqId}] Built fallback: ${chapters.length} chapters from ${rows.length} verses`);
+    } else {
+      console.log(`[${reqId}] Fetched ${chapters.length} chapters from katha_chapters`);
+    }
+    
+    if (search) {
+      const needle = sanitize(search, 120).toLowerCase();
+      chapters = chapters.filter(c => [
+        c.scripture_id, c.unit_id, c.lang, c.chapter_title, c.category, c.search_text,
+      ].filter(Boolean).join(' ').toLowerCase().includes(needle));
+      console.log(`[${reqId}] Filtered to ${chapters.length} chapters by search: "${search}"`);
+    }
+    
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    
+    const responseTime = Date.now() - startTime;
+    console.log(`[${reqId}] ✅ Success in ${responseTime}ms | chapters: ${chapters.length}`);
+    
+    res.json({ 
+      success: true, 
+      chapters, 
+      count: chapters.length,
+      _meta: { requestId: reqId, responseTime }
+    });
+  } catch(e) {
+    const responseTime = Date.now() - startTime;
+    console.error(`[${reqId}] ❌ Error in ${responseTime}ms: ${e.message}`);
+    console.error(`[${reqId}] Stack:`, e.stack);
+    res.json({ 
+      success: true, 
+      chapters: [], 
+      count: 0, 
+      source: 'error_fallback',
+      _meta: { requestId: reqId, errorMessage: e.message }
+    });
+  }
+});
+
+app.get('/mantras', async (req, res) => {
+  try {
+    const {
+      deity = '', purpose = '', language = '', difficulty = '',
+      scriptureSource = '', search = '', page = 1, limit = 50,
+    } = req.query;
+    const safeLimit = Math.min(100, Math.max(1, +limit || 50));
+    const offset = (Math.max(1, +page || 1) - 1) * safeLimit;
+    let q = `?is_active=eq.true&order=title.asc&limit=${safeLimit}&offset=${offset}`;
+    if (deity) q += `&deity=eq.${encodeURIComponent(sanitize(deity, 80))}`;
+    if (purpose) q += `&purpose=eq.${encodeURIComponent(sanitize(purpose, 80))}`;
+    if (language) q += `&language=eq.${encodeURIComponent(sanitize(language, 40))}`;
+    if (difficulty) q += `&difficulty=eq.${encodeURIComponent(sanitize(difficulty, 40))}`;
+    if (scriptureSource) q += `&scripture_source=eq.${encodeURIComponent(sanitize(scriptureSource, 120))}`;
+
+    let mantras = await sbSelect('mantra_catalog', q);
+    if (search) {
+      const needle = sanitize(search, 120).toLowerCase();
+      mantras = mantras.filter(m => [
+        m.title, m.deity, m.purpose, m.scripture_source, m.sanskrit_text,
+        m.transliteration, m.meaning_hi, m.meaning_en, m.search_text,
+      ].filter(Boolean).join(' ').toLowerCase().includes(needle));
+    }
+    res.json({ success: true, mantras, page: +page || 1, count: mantras.length, source: 'supabase' });
+  } catch(e) {
+    res.json({ success: true, mantras: [], page: +(req.query.page || 1), count: 0, source: 'not_configured' });
+  }
+});
+
 // ════════════════════════════════════════════════════════════════
 // P2 — AI FEEDBACK (PUBLIC submit)
 // ════════════════════════════════════════════════════════════════
+app.post('/admin/library/ingest/manifest', adminAuth, async (req, res) => {
+  try {
+    const manifest = req.body?.manifest || req.body;
+    const errors = validateContentManifest(manifest);
+    if (errors.length) return res.status(400).json({ success: false, errors });
+
+    const source = normalizeSource({ ...manifest.source, ingestionStatus: 'indexed' });
+    source.last_ingested_at = new Date().toISOString();
+    const books = (manifest.items || []).map(item => normalizeContentItem(item, source));
+
+    await sbUpsert('content_sources', source, 'id');
+    for (const book of books) await sbUpsert('dharmic_books', book, 'id');
+
+    res.json({ success: true, sourceId: source.id, ingested: books.length });
+  } catch(e) {
+    console.error('[admin/library/ingest/manifest]', e.message);
+    res.status(500).json({ success: false, error: 'Content manifest ingestion failed' });
+  }
+});
+
+app.post('/admin/mantras/ingest/manifest', adminAuth, async (req, res) => {
+  try {
+    const manifest = req.body?.manifest || req.body;
+    const errors = validateMantraManifest(manifest);
+    if (errors.length) return res.status(400).json({ success: false, errors });
+
+    const rows = (manifest.items || []).map(normalizeMantra);
+    for (const row of rows) await sbUpsert('mantra_catalog', row, 'id');
+    res.json({ success: true, ingested: rows.length });
+  } catch(e) {
+    console.error('[admin/mantras/ingest/manifest]', e.message);
+    res.status(500).json({ success: false, error: 'Mantra manifest ingestion failed' });
+  }
+});
+
 app.post('/ai/feedback', async (req, res) => {
   try {
     const rateKey = req.body.phone || req.ip || 'anon';
