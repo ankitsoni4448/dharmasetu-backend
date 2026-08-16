@@ -11,6 +11,7 @@ const fs      = require('fs');
 const path    = require('path');
 const https   = require('https');
 const crypto  = require('crypto');
+const { Webhook } = require('standardwebhooks');
 const {
   normalizeContentItem,
   normalizeMantra,
@@ -37,6 +38,150 @@ try {
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   console.warn('[⚠️ WARN] Supabase not configured. Add SUPABASE_URL and backend-only SUPABASE_SERVICE_ROLE_KEY to env vars.');
+}
+
+const SUPABASE_SEND_SMS_HOOK_SECRET = process.env.SUPABASE_SEND_SMS_HOOK_SECRET || '';
+const MSG91_AUTH_KEY = process.env.MSG91_AUTH_KEY || '';
+const MSG91_SMS_TEMPLATE_ID = process.env.MSG91_SMS_TEMPLATE_ID || '';
+const MSG91_OTP_VARIABLE = process.env.MSG91_OTP_VARIABLE || 'VAR1';
+const SMS_HOOK_REQUIRED_CONFIG = {
+  SUPABASE_SEND_SMS_HOOK_SECRET,
+  MSG91_AUTH_KEY,
+  MSG91_SMS_TEMPLATE_ID,
+};
+
+for (const [name, value] of Object.entries(SMS_HOOK_REQUIRED_CONFIG)) {
+  if (!value) console.warn(`[SMS Hook] configuration missing: ${name}`);
+}
+if (SUPABASE_SEND_SMS_HOOK_SECRET && !/^v1,whsec_[A-Za-z0-9+/=]+$/.test(SUPABASE_SEND_SMS_HOOK_SECRET)) {
+  console.warn('[SMS Hook] configuration invalid: SUPABASE_SEND_SMS_HOOK_SECRET');
+}
+if (!/^[A-Za-z][A-Za-z0-9_]{0,31}$/.test(MSG91_OTP_VARIABLE)) {
+  console.warn('[SMS Hook] configuration invalid: MSG91_OTP_VARIABLE');
+}
+
+let supabaseSmsHookVerifier = null;
+if (SUPABASE_SEND_SMS_HOOK_SECRET) {
+  try {
+    const signingSecret = SUPABASE_SEND_SMS_HOOK_SECRET.slice('v1,whsec_'.length);
+    supabaseSmsHookVerifier = new Webhook(signingSecret);
+  } catch {
+    console.warn('[SMS Hook] configuration invalid: SUPABASE_SEND_SMS_HOOK_SECRET');
+  }
+}
+
+const SMS_HOOK_PROVIDER_TIMEOUT_MS = 4000;
+const SMS_HOOK_DEDUPE_TTL_MS = 10 * 60 * 1000;
+const smsHookCompleted = new Map();
+const smsHookInFlight = new Map();
+
+function smsHookConfigReady() {
+  return Object.values(SMS_HOOK_REQUIRED_CONFIG).every(Boolean)
+    && /^v1,whsec_[A-Za-z0-9+/=]+$/.test(SUPABASE_SEND_SMS_HOOK_SECRET)
+    && /^[A-Za-z][A-Za-z0-9_]{0,31}$/.test(MSG91_OTP_VARIABLE)
+    && supabaseSmsHookVerifier;
+}
+
+function pruneSmsHookDedupe(now = Date.now()) {
+  for (const [webhookId, sentAt] of smsHookCompleted.entries()) {
+    if (now - sentAt > SMS_HOOK_DEDUPE_TTL_MS) smsHookCompleted.delete(webhookId);
+  }
+}
+
+async function sendSupabaseOtpViaMsg91(phoneDigits, otp) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), SMS_HOOK_PROVIDER_TIMEOUT_MS);
+  try {
+    const recipient = { mobiles: phoneDigits, [MSG91_OTP_VARIABLE]: otp };
+    const response = await fetch('https://control.msg91.com/api/v5/flow', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        authkey: MSG91_AUTH_KEY,
+      },
+      body: JSON.stringify({
+        template_id: MSG91_SMS_TEMPLATE_ID,
+        short_url: '0',
+        realTimeResponse: '1',
+        recipients: [recipient],
+      }),
+      signal: controller.signal,
+    });
+
+    const responseText = await response.text();
+    let providerResult = null;
+    try { providerResult = JSON.parse(responseText); } catch {}
+
+    const accepted = response.ok
+      && providerResult?.type?.toLowerCase() === 'success'
+      && typeof providerResult.message === 'string'
+      && providerResult.message.length > 0;
+    if (!accepted) {
+      const error = new Error('MSG91 rejected the SMS request');
+      error.providerStatus = response.status;
+      throw error;
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function handleSupabaseSendSmsHook(req, res) {
+  const hasSignatureHeaders = req.headers['webhook-id']
+    && req.headers['webhook-timestamp']
+    && req.headers['webhook-signature'];
+  if (!hasSignatureHeaders) {
+    console.warn('[SMS Hook] rejected request with invalid or missing signature');
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  if (!smsHookConfigReady()) {
+    console.error('[SMS Hook] unavailable: server configuration is incomplete or invalid');
+    return res.status(500).json({ error: 'SMS service unavailable' });
+  }
+
+  if (!Buffer.isBuffer(req.body)) {
+    return res.status(400).json({ error: 'Invalid request body' });
+  }
+
+  let event;
+  try {
+    event = supabaseSmsHookVerifier.verify(req.body, req.headers);
+  } catch {
+    console.warn('[SMS Hook] rejected request with invalid or missing signature');
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const phone = event?.user?.phone;
+  const otp = event?.sms?.otp;
+  if (typeof phone !== 'string' || !/^\+91[6-9]\d{9}$/.test(phone)) {
+    return res.status(400).json({ error: 'Invalid phone number' });
+  }
+  if (typeof otp !== 'string' || !/^\d{6}$/.test(otp)) {
+    return res.status(400).json({ error: 'Invalid OTP' });
+  }
+
+  const webhookId = req.headers['webhook-id'];
+  pruneSmsHookDedupe();
+  if (smsHookCompleted.has(webhookId)) return res.status(200).json({ success: true });
+
+  try {
+    let delivery = smsHookInFlight.get(webhookId);
+    if (!delivery) {
+      delivery = sendSupabaseOtpViaMsg91(phone.slice(1), otp);
+      smsHookInFlight.set(webhookId, delivery);
+    }
+    await delivery;
+    smsHookCompleted.set(webhookId, Date.now());
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    const status = error.name === 'AbortError' ? 'timeout' : (error.providerStatus || 'network');
+    console.error(`[SMS Hook] MSG91 delivery failed: ${status}`);
+    return res.status(502).json({ error: 'SMS provider failed' });
+  } finally {
+    smsHookInFlight.delete(webhookId);
+  }
 }
 
 // ─── IN-MEMORY ORDER STORE (fallback when Supabase unavailable) ──
@@ -409,6 +554,18 @@ app.use(cors({
 
 // Raw body for webhook MUST come before json parser
 app.use('/payment/webhook', express.raw({ type: '*/*' }));
+app.post(
+  '/auth/send-sms-hook',
+  express.raw({ type: 'application/json', limit: '20kb' }),
+  handleSupabaseSendSmsHook
+);
+app.use('/auth/send-sms-hook', (error, _req, res, next) => {
+  if (!error) return next();
+  if (error.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'Request body too large' });
+  }
+  return res.status(400).json({ error: 'Invalid request body' });
+});
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
