@@ -676,11 +676,12 @@ Tone: Spiritual, practical, grounded in dharma.`;
 // ════════════════════════════════════════════════════════════════
 app.post('/users/register', async (req, res) => {
   try {
-    const { phone, name, email, rashi, nakshatra, deity, language, birthCity, dob, firebaseUid, pushToken } = req.body;
-    if (!phone && !firebaseUid) return res.status(400).json({ error: 'phone or firebaseUid required' });
+    const { phone, name, email, rashi, nakshatra, deity, language, birthCity, dob, authUserId, pushToken } = req.body;
+    if (!phone && !authUserId) return res.status(400).json({ error: 'phone or authUserId required' });
 
     const cleanPhone = sanitize(phone || '', 20);
     const cleanName  = sanitize(name  || 'DharmaSetu User', 100);
+    const cleanAuthUserId = sanitize(authUserId || '', 128);
 
     const existing = cleanPhone ? await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`) : [];
 
@@ -690,11 +691,13 @@ app.post('/users/register', async (req, res) => {
       if (language)  updated.language = language;
       if (email)     updated.email = sanitize(email, 200);
       if (pushToken) updated.push_token = pushToken;
+      // Keep using the existing legacy-named database column until a controlled schema phase.
+      if (cleanAuthUserId) updated.firebase_uid = cleanAuthUserId;
       await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, updated);
       return res.json({ success: true, user: { ...existing[0], ...updated }, isNew: false });
     }
 
-    const id = `u_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
+    const id = cleanAuthUserId || `u_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
     const newUser = {
       id, phone: cleanPhone, name: cleanName,
       created_at: new Date().toISOString(), last_active: new Date().toISOString(),
@@ -702,7 +705,6 @@ app.post('/users/register', async (req, res) => {
     };
     if (pushToken)  newUser.push_token  = pushToken;
     if (email)      newUser.email       = sanitize(email, 200);
-    if (firebaseUid)newUser.firebase_uid= firebaseUid;
     if (rashi)      newUser.rashi       = rashi;
     if (nakshatra)  newUser.nakshatra   = nakshatra;
     if (deity)      newUser.deity       = deity;
@@ -778,7 +780,7 @@ app.get('/user/get', async (req, res) => {
         streak: u.streak || 0,
         birth_city: u.birth_city || '',
         dob: u.dob || '',
-        firebase_uid: u.firebase_uid || '',
+        auth_user_id: u.firebase_uid || '',
         push_token: u.push_token || '',
         lagna: u.lagna || '',
         mantra: u.mantra || '',
@@ -2808,41 +2810,10 @@ function jwtSoft(req, res, next) {
   next();
 }
 
-// ── POST /auth/token ─────────────────────────────────────────────
-// Exchange Firebase UID + phone for app JWT
-app.post('/auth/token', async (req, res) => {
-  try {
-    const { phone, firebaseUid } = req.body;
-    if (!phone || !firebaseUid) return res.status(400).json({ error: 'phone and firebaseUid required' });
-    const cleanPhone = sanitize(phone, 20);
-    const cleanUid   = sanitize(firebaseUid, 128);
-
-    // Look up user in Supabase
-    let user = null;
-    try {
-      const rows = await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`);
-      user = rows[0] || null;
-    } catch(e) { console.warn('[auth/token] DB lookup failed:', e.message); }
-
-    const jti = crypto.randomBytes(12).toString('hex');
-    const token = signJWT({
-      sub:   cleanPhone,
-      uid:   cleanUid,
-      plan:  user?.plan || 'free',
-      jti,
-    });
-
-    res.json({
-      success: true,
-      token,
-      expiresIn: JWT_EXPIRES,
-      plan: user?.plan || 'free',
-      isNew: !user,
-    });
-  } catch(e) {
-    console.error('[auth/token]', e.message);
-    res.status(500).json({ error: 'Token generation failed' });
-  }
+// The former Firebase UID exchange endpoint is intentionally retired.
+// Future protected backend routes must validate the caller's Supabase JWT.
+app.post('/auth/token', (_req, res) => {
+  res.status(410).json({ error: 'Legacy token exchange retired; use Supabase Auth session.' });
 });
 
 // ── GET /users/me ────────────────────────────────────────────────
