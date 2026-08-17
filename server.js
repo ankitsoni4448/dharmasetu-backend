@@ -11,6 +11,7 @@ const fs      = require('fs');
 const path    = require('path');
 const https   = require('https');
 const crypto  = require('crypto');
+const { createClient } = require('@supabase/supabase-js');
 const { Webhook } = require('standardwebhooks');
 const {
   normalizeContentItem,
@@ -38,6 +39,22 @@ try {
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   console.warn('[⚠️ WARN] Supabase not configured. Add SUPABASE_URL and backend-only SUPABASE_SERVICE_ROLE_KEY to env vars.');
+}
+
+const supabaseAuth = SUPABASE_URL && SUPABASE_SERVICE_KEY
+  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, { auth: { persistSession: false, autoRefreshToken: false } })
+  : null;
+
+async function requireSupabaseUser(req, res, next) {
+  const authorization = req.headers.authorization || '';
+  const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+  if (!token || !supabaseAuth) return res.status(401).json({ error: 'Authentication required' });
+  const { data, error } = await supabaseAuth.auth.getUser(token);
+  if (error || !data.user) return res.status(401).json({ error: 'Invalid or expired session' });
+  req.authUser = data.user;
+  req.authPhone = (data.user.phone || '').replace(/^\+91/, '');
+  if (!/^\d{10}$/.test(req.authPhone)) return res.status(401).json({ error: 'Authenticated phone unavailable' });
+  next();
 }
 
 const SUPABASE_SEND_SMS_HOOK_SECRET = process.env.SUPABASE_SEND_SMS_HOOK_SECRET || '';
@@ -831,14 +848,14 @@ Tone: Spiritual, practical, grounded in dharma.`;
 // ════════════════════════════════════════════════════════════════
 // USERS
 // ════════════════════════════════════════════════════════════════
-app.post('/users/register', async (req, res) => {
+app.post('/users/register', requireSupabaseUser, async (req, res) => {
   try {
     const { phone, name, email, rashi, nakshatra, deity, language, birthCity, dob, authUserId, pushToken } = req.body;
     if (!phone && !authUserId) return res.status(400).json({ error: 'phone or authUserId required' });
 
-    const cleanPhone = sanitize(phone || '', 20);
+    const cleanPhone = req.authPhone;
     const cleanName  = sanitize(name  || 'DharmaSetu User', 100);
-    const cleanAuthUserId = sanitize(authUserId || '', 128);
+    const cleanAuthUserId = req.authUser.id;
 
     const existing = cleanPhone ? await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`) : [];
 
@@ -900,10 +917,11 @@ app.post('/users/activity', async (req, res) => {
   }
 });
 
-app.get('/users/access/:phone', async (req, res) => {
+app.get('/users/access/:phone', requireSupabaseUser, async (req, res) => {
   try {
     const phone = sanitize(req.params.phone || '', 20);
     if (!phone) return res.status(400).json({ error: 'Phone required' });
+    if (phone !== req.authPhone) return res.status(403).json({ error: 'Forbidden' });
     const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
     if (!users.length) {
       return res.json({ success: true, plan: 'free', isPremium: false });
@@ -917,9 +935,23 @@ app.get('/users/access/:phone', async (req, res) => {
   }
 });
 
-app.get('/user/get', async (req, res) => {
+app.get('/users/me/access', requireSupabaseUser, async (req, res) => {
   try {
-    const phone = sanitize(req.query.phone || '', 20);
+    const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(req.authPhone)}&limit=1`);
+    const user = users[0];
+    const expiry = user?.premium_expiry || null;
+    const active = !expiry || new Date(expiry) > new Date();
+    const plan = user?.plan && user.plan !== 'free' && active ? user.plan : 'free';
+    res.json({ success: true, plan, isPremium: plan !== 'free', premiumExpiry: expiry });
+  } catch (e) {
+    console.error('[users/me/access]', e.message);
+    res.status(500).json({ error: 'Failed to fetch access info.' });
+  }
+});
+
+app.get('/user/get', requireSupabaseUser, async (req, res) => {
+  try {
+    const phone = req.authPhone;
     if (!phone) return res.status(400).json({ error: 'Phone required' });
     const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(phone)}&limit=1`);
     if (!users.length) return res.json({ user: null });
@@ -1007,18 +1039,14 @@ app.get('/payment-config', (req, res) => {
 // ─── UPI ORDER CREATE (SECURE) ────────────────────────────────
 // Creates a server-side order record. planId is stored server-side.
 // Client receives only an orderId to use in /payment/confirm.
-app.post('/payment/upi/create', async (req, res) => {
+app.post('/payment/upi/create', requireSupabaseUser, async (req, res) => {
   try {
-    const { phone, planId } = req.body;
-
-    if (!phone || typeof phone !== 'string' || phone.trim().length < 5) {
-      return res.status(400).json({ error: 'Valid phone number required' });
-    }
+    const { planId } = req.body;
     if (!planId || !VALID_PLANS.includes(planId)) {
       return res.status(400).json({ error: 'Invalid plan. Must be one of: ' + VALID_PLANS.join(', ') });
     }
 
-    const cleanPhone = sanitize(phone, 20);
+    const cleanPhone = req.authPhone;
     const cleanPlan  = sanitize(planId, 50);
     const plan = CFG.bundles.find(b => b.id === cleanPlan && b.active);
     if (!plan) {
@@ -1052,7 +1080,7 @@ app.post('/payment/upi/create', async (req, res) => {
 
 // ─── PAYMENT CONFIRM (SECURE) ─────────────────────────────────
 // planId is NEVER accepted from client. Fetched from server-side order store.
-app.post('/payment/confirm', async (req, res) => {
+app.post('/payment/confirm', requireSupabaseUser, async (req, res) => {
   try {
     const { orderId, paymentId } = req.body;
 
@@ -1070,6 +1098,7 @@ app.post('/payment/confirm', async (req, res) => {
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
+    if (order.userPhone !== req.authPhone) return res.status(403).json({ error: 'Order does not belong to this account' });
     if (order.status === 'completed') {
       // Idempotent: already processed, return success
       return res.json({ success: true, message: 'Already processed', plan: order.planId });
@@ -1078,40 +1107,7 @@ app.post('/payment/confirm', async (req, res) => {
       return res.status(400).json({ error: 'Order is not in pending state' });
     }
 
-    // Validate plan from server-side order (never from client)
-    if (!VALID_PLANS.includes(order.planId)) {
-      return res.status(400).json({ error: 'Invalid plan in order' });
-    }
-
-    // Mark order completed (prevents duplicate confirmation)
-    await markOrderCompleted(cleanOrderId);
-
-    // Record payment
-    const payRecordId = `upi_pay_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
-    await sbInsert('payments', {
-      id:           payRecordId,
-      phone:        order.userPhone,
-      plan_id:      order.planId,
-      amount:       order.amount,
-      status:       'paid',
-      payment_type: 'subscription',
-      payment_via:  'upi',
-      payment_id:   sanitize(paymentId || 'upi_manual', 100),
-      order_ref:    cleanOrderId,
-      paid_at:      new Date().toISOString(),
-      created_at:   new Date().toISOString(),
-    }).catch(e => console.warn('[payment/confirm] Payment record insert failed:', e.message));
-
-    // Upgrade user
-    if (order.userPhone) {
-      await sbUpdate(
-        'users',
-        `?phone=eq.${encodeURIComponent(order.userPhone)}`,
-        { plan: order.planId }
-      );
-    }
-
-    res.json({ success: true, plan: order.planId, message: 'Payment confirmed and plan upgraded.' });
+    res.json({ success: true, status: 'pending', message: 'Payment verification is pending.' });
   } catch (e) {
     console.error('[payment/confirm]', e.message);
     res.status(500).json({ error: 'Payment confirmation failed.' });
@@ -1119,9 +1115,10 @@ app.post('/payment/confirm', async (req, res) => {
 });
 
 // ─── RAZORPAY ORDER CREATE ─────────────────────────────────────
-app.post('/payment/razorpay/order', async (req, res) => {
+app.post('/payment/razorpay/order', requireSupabaseUser, async (req, res) => {
   try {
-    const { planId, phone } = req.body;
+    const { planId } = req.body;
+    const phone = req.authPhone;
 
     if (!planId || !VALID_PLANS.includes(planId)) {
       return res.status(400).json({ error: 'Invalid plan' });
@@ -1174,9 +1171,9 @@ app.post('/payment/razorpay/order', async (req, res) => {
 });
 
 // ─── RAZORPAY VERIFY ──────────────────────────────────────────
-app.post('/payment/verify', async (req, res) => {
+app.post('/payment/verify', requireSupabaseUser, async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, phone } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({ error: 'Missing payment fields' });
@@ -1192,7 +1189,9 @@ app.post('/payment/verify', async (req, res) => {
       .update(body.toString())
       .digest("hex");
 
-    if (expectedSignature !== razorpay_signature) {
+    const supplied = Buffer.from(razorpay_signature, 'utf8');
+    const expected = Buffer.from(expectedSignature, 'utf8');
+    if (supplied.length !== expected.length || !crypto.timingSafeEqual(supplied, expected)) {
       return res.status(400).json({ success: false, message: "Invalid payment signature" });
     }
 
@@ -1219,7 +1218,8 @@ app.post('/payment/verify', async (req, res) => {
       { status: 'paid', payment_id: razorpay_payment_id, paid_at: new Date().toISOString() }
     );
 
-    const cleanPhone = sanitize(phone || '', 20);
+    const cleanPhone = sanitize(existingPayment.phone || '', 20);
+    if (cleanPhone !== req.authPhone) return res.status(403).json({ error: 'Order does not belong to this account' });
     if (cleanPhone) {
       await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { plan: planId });
     }
@@ -1790,11 +1790,16 @@ app.get('/admin/transactions', adminAuth, async (req, res) => {
 });
 app.post('/admin/payments/approve', adminAuth, async (req, res) => {
   try {
-    const { phone, planId, amount, transactionId } = req.body;
-    const cleanPhone = sanitize(phone || '', 20);
-    const cleanPlan  = sanitize(planId || 'pro', 50);
-    if (!cleanPhone) return res.status(400).json({ error: 'Phone required' });
-    if (!VALID_PLANS.includes(cleanPlan)) return res.status(400).json({ error: 'Invalid plan' });
+    const { orderId, transactionId } = req.body;
+    if (!orderId) return res.status(400).json({ error: 'Order ID required' });
+    const order = await getOrder(sanitize(orderId, 100));
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    if (order.status === 'completed') return res.json({ success: true, alreadyProcessed: true });
+    if (order.status !== 'pending') return res.status(400).json({ error: 'Order is not pending' });
+    const cleanPhone = order.userPhone;
+    const cleanPlan = order.planId;
+    const amount = order.amount;
+    if (!VALID_PLANS.includes(cleanPlan)) return res.status(400).json({ error: 'Invalid order plan' });
     const payId = `m_app_${Date.now()}`;
     await sbInsert('payments', {
       id: payId, phone: cleanPhone, plan_id: cleanPlan,
@@ -1804,6 +1809,7 @@ app.post('/admin/payments/approve', adminAuth, async (req, res) => {
       paid_at: new Date().toISOString(), created_at: new Date().toISOString()
     });
     await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, { plan: cleanPlan });
+    await markOrderCompleted(order.orderId);
     await auditLog('PAYMENT_APPROVED', 'admin', cleanPhone, `Plan: ${cleanPlan}, Amount: ${amount}`);
     res.json({ success: true });
   } catch(e) {
@@ -2819,8 +2825,11 @@ app.post('/kundli/calculate', async (req, res) => {
     }
 
     // Fallback: improved static calculation
-    const fallback = calculateKundliFallback(dob, tob, city);
-    res.json({ success: true, source: 'fallback', ...fallback });
+    return res.status(503).json({
+      success: false,
+      code: 'KUNDLI_PROVIDER_UNAVAILABLE',
+      error: 'Production Kundli calculation is currently unavailable.',
+    });
   } catch(e) {
     console.error('[kundli/calculate]', e.message);
     res.status(500).json({ error: 'Kundli calculation failed' });
@@ -2887,16 +2896,7 @@ app.patch('/users/update', async (req, res) => {
 
 // DELETE /users/delete
 app.delete('/users/delete', async (req, res) => {
-  try {
-    const { phone } = req.body;
-    if (!phone) return res.status(400).json({ error: 'phone required' });
-    const cleanPhone = sanitize(phone, 20);
-    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, {
-      plan: 'free', name: 'Deleted User', phone: `deleted_${Date.now()}`,
-      deleted_at: new Date().toISOString(),
-    });
-    res.json({ success: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  res.status(501).json({ error: 'Account deletion is not available yet.' });
 });
 
 
@@ -3037,10 +3037,11 @@ app.post('/auth/logout', jwtSoft, async (req, res) => {
 
 // ── GET /users/access/:phone — enhanced with expiry check ────────
 // Existing route, now also checks premium_expiry
-app.get('/users/access/:phone', async (req, res) => {
+app.get('/users/access/:phone', requireSupabaseUser, async (req, res) => {
   try {
     const phone = sanitize(req.params.phone, 20);
     if (!phone) return res.status(400).json({ error: 'Invalid phone' });
+    if (phone !== req.authPhone) return res.status(403).json({ error: 'Forbidden' });
 
     let isPremium = false;
     let plan = 'free';
@@ -3104,16 +3105,16 @@ app.use('/auth/token', authRateLimit);
 const _processedPayments = new Set();
 
 // GET /payment/verify-status/:orderId — idempotent check
-app.get('/payment/verify-status/:orderId', async (req, res) => {
+app.get('/payment/verify-status/:orderId', requireSupabaseUser, async (req, res) => {
   try {
     const orderId = sanitize(req.params.orderId, 100);
     const order   = await getOrder(orderId);
     if (!order) return res.status(404).json({ error: 'Order not found' });
+    if (order.userPhone !== req.authPhone) return res.status(403).json({ error: 'Order does not belong to this account' });
     res.json({
       success:   true,
       orderId,
       status:    order.status,
-      phone:     order.userPhone,
       plan:      order.planId,
       isPremium: order.status === 'completed',
     });
@@ -3124,11 +3125,10 @@ app.get('/payment/verify-status/:orderId', async (req, res) => {
 
 // ── POST /payment/recover — recover premium for paid users ───────
 // Lets users recover premium if they paid but session was lost
-app.post('/payment/recover', async (req, res) => {
+app.post('/payment/recover', requireSupabaseUser, async (req, res) => {
   try {
-    const { phone, orderId } = req.body;
-    if (!phone) return res.status(400).json({ error: 'phone required' });
-    const cleanPhone = sanitize(phone, 20);
+    const { orderId } = req.body;
+    const cleanPhone = req.authPhone;
 
     // Check if this phone already has premium
     const rows = await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`);
