@@ -21,6 +21,7 @@ const {
   validateMantraManifest,
 } = require('./scripts/manifest_utils');
 const { getSupabaseServiceRoleKey } = require('./scripts/supabase_service_role');
+const { normalizeIndianAuthPhone } = require('./utils/phone');
 
 require('dotenv').config();
 
@@ -48,12 +49,13 @@ const supabaseAuth = SUPABASE_URL && SUPABASE_SERVICE_KEY
 async function requireSupabaseUser(req, res, next) {
   const authorization = req.headers.authorization || '';
   const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
-  if (!token || !supabaseAuth) return res.status(401).json({ error: 'Authentication required' });
+  if (!token || !supabaseAuth) return res.status(401).json({ error: 'AUTH_REQUIRED' });
   const { data, error } = await supabaseAuth.auth.getUser(token);
-  if (error || !data.user) return res.status(401).json({ error: 'Invalid or expired session' });
+  if (error || !data.user) return res.status(401).json({ error: 'AUTH_REQUIRED' });
   req.authUser = data.user;
-  req.authPhone = (data.user.phone || '').replace(/^\+91/, '');
-  if (!/^\d{10}$/.test(req.authPhone)) return res.status(401).json({ error: 'Authenticated phone unavailable' });
+  req.authUserId = data.user.id;
+  req.authPhone = normalizeIndianAuthPhone(data.user.phone);
+  if (!req.authPhone) return res.status(401).json({ error: 'AUTH_REQUIRED' });
   next();
 }
 
@@ -215,6 +217,7 @@ let CFG = {
   subscriptionPayment: 'upi', donationPayment: 'upi',
   premiumPrice: 249, basicPrice: 99, nriPrice: 499,
   freeQuestionsLimit: 3, freeFactCheckLimit: 3,
+  basicQuestionsLimit: 30, basicFactCheckLimit: 15,
   maintenanceMode: false, appVersion: '1.0.0',
   featureFlags: {
     dharmaChat:         { enabled: true,  isPremium: false, label: 'DharmaChat AI' },
@@ -363,6 +366,45 @@ async function sbDelete(table, query) {
   return sbRest('DELETE', table, null, query);
 }
 
+function resolveEffectiveEntitlement(user = {}) {
+  const basePlan = ['basic', 'pro'].includes(user.plan) ? user.plan : 'free';
+  const expiry = user.admin_override_expires_at || null;
+  const overrideValid = ['basic', 'pro', 'full'].includes(user.admin_override)
+    && (!expiry || new Date(expiry) > new Date());
+  const effectivePlan = overrideValid
+    ? (user.admin_override === 'full' ? 'pro' : user.admin_override)
+    : basePlan;
+  const paid = effectivePlan === 'basic' || effectivePlan === 'pro';
+  const pro = effectivePlan === 'pro';
+  const limits = effectivePlan === 'free'
+    ? { dharmaQuestionsPerDay: CFG.freeQuestionsLimit, factChecksPerDay: CFG.freeFactCheckLimit }
+    : effectivePlan === 'basic'
+      ? { dharmaQuestionsPerDay: CFG.basicQuestionsLimit, factChecksPerDay: CFG.basicFactCheckLimit }
+      : { dharmaQuestionsPerDay: null, factChecksPerDay: null };
+  return {
+    basePlan,
+    effectivePlan,
+    adminOverride: { active: overrideValid, level: overrideValid ? user.admin_override : null, expiresAt: expiry },
+    features: {
+      dharmaChat: CFG.featureFlags.dharmaChat?.enabled !== false,
+      factCheck: CFG.featureFlags.factCheck?.enabled !== false,
+      kundli: CFG.featureFlags.myKundli?.enabled !== false,
+      mantraLibrary: CFG.featureFlags.mantraLibrary?.enabled !== false,
+      saveAnswer: paid && CFG.featureFlags.saveAnswer?.enabled !== false,
+      kathaDownload: paid && CFG.featureFlags.kathaVaultDownload?.enabled !== false,
+      peaceMode: pro && CFG.featureFlags.peaceMode?.enabled !== false,
+      voicePersona: pro && CFG.featureFlags.voicePersona?.enabled !== false,
+      unlimitedQuestions: pro && CFG.featureFlags.unlimitedQuestions?.enabled !== false,
+    },
+    limits,
+  };
+}
+
+async function getAuthenticatedUserRecord(req) {
+  const rows = await sbSelect('users', `?phone=eq.${encodeURIComponent(req.authPhone)}&limit=1`);
+  return rows[0] || null;
+}
+
 // ─── AUDIT LOGGER ─────────────────────────────────────────────
 async function auditLog(action, adminUser, target, details) {
   try {
@@ -466,6 +508,9 @@ async function loadConfigFromDB() {
     if (map.premium_price)        CFG.premiumPrice        = +map.premium_price;
     if (map.basic_price)          CFG.basicPrice          = +map.basic_price;
     if (map.free_questions_limit) CFG.freeQuestionsLimit  = +map.free_questions_limit;
+    if (map.free_factcheck_limit) CFG.freeFactCheckLimit  = +map.free_factcheck_limit;
+    if (map.basic_questions_limit) CFG.basicQuestionsLimit = +map.basic_questions_limit;
+    if (map.basic_factcheck_limit) CFG.basicFactCheckLimit = +map.basic_factcheck_limit;
     if (map.maintenance_mode)     CFG.maintenanceMode     = map.maintenance_mode === 'true';
     if (map.app_version)          CFG.appVersion          = map.app_version;
     if (map.feature_flags)        try { CFG.featureFlags  = JSON.parse(map.feature_flags); } catch {}
@@ -607,7 +652,7 @@ app.use((req, res, next) => {
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
 function adminAuth(req, res, next) {
-  const key = req.headers['x-admin-key'] || req.query.key;
+  const key = req.headers['x-admin-key'];
   if (!key || key !== ADMIN_PASSWORD) {
     logError('Auth', 'Unauthorized admin access attempt', { ip: req.ip, path: req.path });
     return res.status(401).json({ error: 'Unauthorized' });
@@ -683,6 +728,8 @@ app.get('/config', (req, res) => {
     nriPrice:            CFG.nriPrice,
     freeQuestionsLimit:  CFG.freeQuestionsLimit,
     freeFactCheckLimit:  CFG.freeFactCheckLimit,
+    basicQuestionsLimit: CFG.basicQuestionsLimit,
+    basicFactCheckLimit: CFG.basicFactCheckLimit,
     maintenanceMode:     CFG.maintenanceMode,
     appVersion:          CFG.appVersion,
     bundles:             CFG.bundles.filter(b => b.active),
@@ -725,10 +772,10 @@ app.post('/ai/chat', async (req, res) => {
   }
 });
 
-app.post('/ai/dharma-chat', async (req, res) => {
+app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
   try {
-    const { messages, userProfile, mode, phone } = req.body;
-    const rateKey = phone || req.ip || 'anon';
+    const { messages, userProfile, mode } = req.body;
+    const rateKey = req.authUser.id;
     if (!checkRateLimit(`chat_${rateKey}`, 15)) {
       return res.status(429).json({ error: 'RATE_LIMIT' });
     }
@@ -745,9 +792,46 @@ app.post('/ai/dharma-chat', async (req, res) => {
       return res.status(400).json({ error: 'Invalid request' });
     }
 
-    const u = userProfile || {};
-    const lang = u.language || 'hindi';
+    const userRecord = await getAuthenticatedUserRecord(req);
+    if (!userRecord) return res.status(403).json({ error: 'PROFILE_NOT_FOUND' });
+    const entitlement = resolveEffectiveEntitlement(userRecord);
     const isFC = mode === 'factcheck';
+    const featureName = isFC ? 'factCheck' : 'dharmaChat';
+    if (!entitlement.features[featureName]) {
+      return res.status(403).json({ error: 'FEATURE_DISABLED' });
+    }
+    if (!CFG.geminiKey && !CFG.groqKey) {
+      return res.status(503).json({ error: 'AI_PROVIDER_CONFIGURATION_ERROR' });
+    }
+    const usageKind = isFC ? 'factcheck' : 'dharma';
+    const limit = isFC ? entitlement.limits.factChecksPerDay : entitlement.limits.dharmaQuestionsPerDay;
+    let reservation;
+    try {
+      reservation = await sbRest('POST', 'rpc/reserve_ai_usage', {
+        p_user_id: req.authUser.id, p_kind: usageKind, p_limit: limit,
+      });
+    } catch (quotaError) {
+      console.error('[AI/dharma-chat] quota infrastructure unavailable');
+      return res.status(503).json({ error: 'QUOTA_INFRASTRUCTURE_UNAVAILABLE' });
+    }
+    const quota = Array.isArray(reservation.data) ? reservation.data[0] : reservation.data;
+    if (!quota?.allowed) {
+      return res.status(403).json({
+        error: 'QUESTION_LIMIT_REACHED',
+        limit,
+        used: quota?.used ?? limit,
+        remaining: 0,
+        resetTimezone: 'Asia/Kolkata',
+      });
+    }
+    const reservationId = quota.reservation_id;
+    if (!reservationId) {
+      console.error('[AI/dharma-chat] quota reservation missing identifier');
+      return res.status(503).json({ error: 'QUOTA_INFRASTRUCTURE_UNAVAILABLE' });
+    }
+
+    const u = { ...userProfile, ...userRecord };
+    const lang = u.language || 'hindi';
     const langRule = {
       hindi:   'तुम्हें केवल और केवल शुद्ध हिंदी में जवाब देना है। एक भी अंग्रेजी शब्द नहीं।',
       english: 'Reply ONLY in pure English. No Hindi, no Hinglish.',
@@ -774,16 +858,39 @@ ${isFC ? '⚡ FACT CHECK MODE: Start with "VERDICT: TRUE/FALSE/MISLEADING" then 
 
 📝 FORMAT: Max 300 words. Include SHASTRIYA: reference. Be warm, specific, practical.`;
 
-    if (!CFG.geminiKey && !CFG.groqKey) {
-      return res.status(503).json({ error: 'AI not configured' });
-    }
     const histText = cleanMessages.slice(-8).map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
     const fullPrompt = `${systemPrompt}\n\nConversation:\n${histText}`;
-    const result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt);
-    res.json({ success: true, text: result.text, usedApi: result.usedApi });
+    try {
+      const result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt);
+      try {
+        const consumption = await sbRest('POST', 'rpc/consume_ai_usage', {
+          p_user_id: req.authUser.id, p_reservation_id: reservationId,
+        });
+        if (consumption.data !== true) throw new Error('reservation was not consumable');
+      } catch {
+        await sbRest('POST', 'rpc/release_ai_usage', {
+          p_user_id: req.authUser.id, p_reservation_id: reservationId,
+        }).catch(() => {});
+        console.error('[AI/dharma-chat] quota consumption unavailable');
+        return res.status(503).json({ error: 'QUOTA_INFRASTRUCTURE_UNAVAILABLE' });
+      }
+      res.json({ success: true, text: result.text, usedApi: result.usedApi, remaining: quota.remaining, entitlement });
+    } catch (providerError) {
+      await sbRest('POST', 'rpc/release_ai_usage', {
+        p_user_id: req.authUser.id, p_reservation_id: reservationId,
+      }).catch(() => {});
+      const providerMessage = String(providerError?.message || '');
+      const code = /timeout|timed out|abort/i.test(providerMessage)
+        ? 'AI_TIMEOUT'
+        : providerError?.code === 'AI_PROVIDER_RATE_LIMIT'
+          ? 'AI_PROVIDER_RATE_LIMIT'
+          : 'AI_PROVIDER_UNAVAILABLE';
+      console.error('[AI/dharma-chat] provider failure:', code);
+      return res.status(code === 'AI_TIMEOUT' ? 504 : code === 'AI_PROVIDER_RATE_LIMIT' ? 429 : 503).json({ error: code });
+    }
   } catch(e) {
-    console.error('[AI/dharma-chat]', e.message);
-    res.status(500).json({ error: 'AI service error. Please try again.' });
+    console.error('[AI/dharma-chat] service failure:', e.message);
+    res.status(500).json({ error: 'SERVER_ERROR' });
   }
 });
 
@@ -937,12 +1044,10 @@ app.get('/users/access/:phone', requireSupabaseUser, async (req, res) => {
 
 app.get('/users/me/access', requireSupabaseUser, async (req, res) => {
   try {
-    const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(req.authPhone)}&limit=1`);
-    const user = users[0];
-    const expiry = user?.premium_expiry || null;
-    const active = !expiry || new Date(expiry) > new Date();
-    const plan = user?.plan && user.plan !== 'free' && active ? user.plan : 'free';
-    res.json({ success: true, plan, isPremium: plan !== 'free', premiumExpiry: expiry });
+    const user = await getAuthenticatedUserRecord(req);
+    if (!user) return res.status(404).json({ error: 'User profile not found' });
+    const entitlement = resolveEffectiveEntitlement(user);
+    res.json({ success: true, plan: entitlement.effectivePlan, isPremium: entitlement.effectivePlan !== 'free', ...entitlement });
   } catch (e) {
     console.error('[users/me/access]', e.message);
     res.status(500).json({ error: 'Failed to fetch access info.' });
@@ -1336,7 +1441,7 @@ async function callGemini(apiKey, prompt) {
         { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
       ],
     });
-    const timer = setTimeout(() => reject(new Error('Gemini timeout')), 40000);
+    const timer = setTimeout(() => reject(new Error('Gemini timeout')), 20000);
     const opts = {
       hostname: 'generativelanguage.googleapis.com',
       path: `/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
@@ -1373,7 +1478,7 @@ async function callGroq(apiKey, prompt) {
       ],
       temperature: 0.75, max_tokens: 1200,
     });
-    const timer = setTimeout(() => reject(new Error('Groq timeout')), 40000);
+    const timer = setTimeout(() => reject(new Error('Groq timeout')), 20000);
     const opts = {
       hostname: 'api.groq.com', path: '/openai/v1/chat/completions', method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}`, 'Content-Length': Buffer.byteLength(body) },
@@ -1399,17 +1504,21 @@ async function callGroq(apiKey, prompt) {
 }
 
 async function callAI(gemKey, groqKey, prompt) {
+  let geminiRateLimited = false;
   if (gemKey) {
     try { return { text: await callGemini(gemKey, prompt), usedApi: 'gemini' }; }
-    catch(e) { if (!e.message.includes('RATE_LIMIT')) console.log('[AI] Gemini failed:', e.message.slice(0,60)); }
+    catch(e) {
+      geminiRateLimited = e.message.includes('RATE_LIMIT');
+      if (!geminiRateLimited) console.log('[AI] Gemini request failed');
+    }
   }
   if (groqKey) {
     try { return { text: await callGroq(groqKey, prompt), usedApi: 'groq' }; }
     catch(e) {
-      if (e.message.includes('RATE_LIMIT') && gemKey) {
-        console.log('[AI] Both rate limited — waiting 40s');
-        await new Promise(r => setTimeout(r, 40000));
-        try { return { text: await callGemini(gemKey, prompt), usedApi: 'gemini-retry' }; } catch {}
+      if (e.message.includes('RATE_LIMIT') && (!gemKey || geminiRateLimited)) {
+        const rateError = new Error('AI providers rate limited');
+        rateError.code = 'AI_PROVIDER_RATE_LIMIT';
+        throw rateError;
       }
       throw new Error('All AI failed: ' + e.message.slice(0,80));
     }
@@ -1565,7 +1674,8 @@ app.post('/admin/config', adminAuth, async (req, res) => {
     razorpayKeyId: 'razorpay_key_id', razorpayKeySecret: 'razorpay_key_secret',
     subscriptionPayment: 'subscription_payment', donationPayment: 'donation_payment',
     premiumPrice: 'premium_price', basicPrice: 'basic_price',
-    freeQuestionsLimit: 'free_questions_limit',
+    freeQuestionsLimit: 'free_questions_limit', freeFactCheckLimit: 'free_factcheck_limit',
+    basicQuestionsLimit: 'basic_questions_limit', basicFactCheckLimit: 'basic_factcheck_limit',
     maintenanceMode: 'maintenance_mode', appVersion: 'app_version',
     featureFlags: 'feature_flags', bundles: 'bundles', donations: 'donations',
   };
@@ -1754,17 +1864,42 @@ app.get('/admin/users', adminAuth, async (req, res) => {
         (u.email||'').toLowerCase().includes(s)
       );
     }
-    res.json({ success: true, users: rows, total: rows.length });
+    const users = rows.map(user => ({ ...user, entitlement: resolveEffectiveEntitlement(user) }));
+    res.json({ success: true, users, total: users.length });
   } catch(e) {
     console.error('[admin/users]', e.message);
     res.status(500).json({ error: e.message });
   }
 });
 app.patch('/admin/users/:id', adminAuth, async (req, res) => {
+  res.status(410).json({ error: 'Direct plan editing is disabled. Use the entitlement override endpoint.' });
+});
+app.patch('/admin/users/:id/entitlement', adminAuth, async (req, res) => {
   try {
-    await sbUpdate('users', `?id=eq.${req.params.id}`, req.body);
-    res.json({ success: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+    const level = req.body.level == null ? null : sanitize(req.body.level, 20);
+    if (level !== null && !['basic', 'pro', 'full'].includes(level)) {
+      return res.status(400).json({ error: 'Invalid override level' });
+    }
+    let expiresAt = null;
+    if (req.body.expiresAt) {
+      const parsed = new Date(req.body.expiresAt);
+      if (Number.isNaN(parsed.getTime()) || parsed <= new Date()) return res.status(400).json({ error: 'Expiry must be in the future' });
+      expiresAt = parsed.toISOString();
+    }
+    const patch = {
+      admin_override: level,
+      admin_override_expires_at: level ? expiresAt : null,
+      admin_override_reason: level ? sanitize(req.body.reason || 'Complimentary access', 200) : null,
+      admin_override_updated_at: new Date().toISOString(),
+    };
+    await sbUpdate('users', `?id=eq.${encodeURIComponent(req.params.id)}`, patch);
+    await auditLog(level ? 'ENTITLEMENT_OVERRIDE_GRANTED' : 'ENTITLEMENT_OVERRIDE_REMOVED', 'admin', req.params.id, level ? `Level: ${level}; expiry: ${expiresAt || 'none'}` : 'Override removed');
+    const rows = await sbSelect('users', `?id=eq.${encodeURIComponent(req.params.id)}&limit=1`);
+    res.json({ success: true, entitlement: resolveEffectiveEntitlement(rows[0] || {}) });
+  } catch (e) {
+    console.error('[admin/users/entitlement]', e.message);
+    res.status(500).json({ error: 'Failed to update entitlement override' });
+  }
 });
 app.patch('/admin/users/ban/toggle', adminAuth, async (req, res) => {
   try {

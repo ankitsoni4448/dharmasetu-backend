@@ -665,7 +665,7 @@ textarea{resize:vertical;min-height:65px}
 <script>
 // ─── CONFIG ───────────────────────────────────────────────────────
 let BACKEND = 'https://dharmasetu-backend-2c65.onrender.com';
-let KEY = localStorage.getItem('ds_admin_key') || 'DharmaSetu@Admin2025';
+let KEY = sessionStorage.getItem('ds_admin_key') || '';
 let CFG_LOCAL = {}, BUNDLES = [], DONS = [], FLAGS = {}, PAYMETH = { subscription:'upi', donation:'upi' };
 let sseConn = null;
 
@@ -706,6 +706,10 @@ function esc(s) { return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 
 // ─── INIT ─────────────────────────────────────────────────────────
 async function init() {
+  if (!KEY) {
+    KEY = prompt('Enter admin access key') || '';
+    if (KEY) sessionStorage.setItem('ds_admin_key', KEY);
+  }
   document.getElementById('sb-url').textContent = BACKEND.replace('https://','').slice(0,30);
   setInterval(()=>{ const t=new Date().toLocaleTimeString(); document.getElementById('sb-time').textContent=t; const lt=document.getElementById('live-t'); if(lt)lt.textContent=t; },1000);
   await testConn();
@@ -1028,9 +1032,13 @@ async function loadUsers(){
   const r=await api('GET',`/admin/users?search=${encodeURIComponent(s)}&plan=${p}`);
   const cnt=document.getElementById('u-count');if(cnt)cnt.textContent=r.total?`${r.total} user${r.total>1?'s':''} found`:'';
   if(!r.users?.length){el.innerHTML='<div style="color:var(--muted);font-size:12px">No users yet. They appear after signing up in the mobile app.</div>';return;}
+  el.innerHTML=`<table><tr><th>Name</th><th>Phone</th><th>Base Plan</th><th>Effective Plan</th><th>Admin Override</th><th>Expiry</th><th>Access Control</th></tr>${r.users.map(u=>`<tr><td><b>${esc(u.name)}</b><div style="font-size:10px;color:var(--muted)">${u.created_at?.slice(0,10)||''}</div></td><td style="font-family:monospace;font-size:11px">${esc(u.phone||'—')}</td><td>${u.entitlement?.basePlan||'free'}</td><td><span class="badge bgo">${u.entitlement?.effectivePlan||'free'}</span></td><td>${u.entitlement?.adminOverride?.active?esc(u.entitlement.adminOverride.level):'None'}</td><td style="font-size:10px">${u.entitlement?.adminOverride?.expiresAt?.slice(0,10)||'No expiry'}</td><td><div class="btn-row"><button class="btn btn-g btn-sm" onclick="grantComplimentary('${u.id}',7)">Grant Complimentary Full Access — 7 days</button><button class="btn btn-p btn-sm" onclick="grantComplimentary('${u.id}',0)">Grant Complimentary Full Access — No expiry</button><button class="btn btn-r btn-sm" onclick="removeComplimentary('${u.id}')">Remove Complimentary Access</button></div></td></tr>`).join('')}</table>`;
+  return;
   el.innerHTML=`<table><tr><th>Name</th><th>Phone</th><th>Rashi</th><th>Language</th><th>Plan</th><th>Last Active</th><th></th></tr>${r.users.map(u=>`<tr><td><b>${esc(u.name)}</b>${u.email?`<div style="font-size:10px;color:var(--muted)">${esc(u.email)}</div>`:''}</td><td style="font-family:monospace;font-size:11px">${esc(u.phone||'—')}</td><td><span class="badge bb">${u.rashi||'—'}</span></td><td>${u.language||'—'}</td><td><span class="badge ${u.plan==='pro'?'bgo':u.plan==='basic'?'bo':'bw'}">${u.plan||'free'}</span></td><td style="font-size:10px;color:var(--muted)">${timeAgo(u.last_active)}</td><td><select style="font-size:10px;padding:2px 5px;width:70px" onchange="changeUserPlan('${u.id}',this.value)"><option ${u.plan==='free'?'selected':''} value="free">Free</option><option ${u.plan==='basic'?'selected':''} value="basic">Basic</option><option ${u.plan==='pro'?'selected':''} value="pro">Pro</option></select></td></tr>`).join('')}</table>`;
 }
 async function changeUserPlan(id,plan){await api('PATCH','/admin/users/'+id,{plan});toast('Plan → '+plan);}
+async function grantComplimentary(id,days){const expiresAt=days?new Date(Date.now()+days*86400000).toISOString():null;const r=await api('PATCH',`/admin/users/${id}/entitlement`,{level:'full',expiresAt,reason:'Complimentary full access'});r.success?toast('Complimentary Full Access granted'):toast(r.error||'Failed',true);loadUsers();}
+async function removeComplimentary(id){if(!confirm('Remove complimentary access and restore the base plan?'))return;const r=await api('PATCH',`/admin/users/${id}/entitlement`,{level:null});r.success?toast('Complimentary access removed'):toast(r.error||'Failed',true);loadUsers();}
 function exportCSV(){api('GET','/admin/users?plan=all').then(r=>{if(!r.users?.length){toast('No users',true);return;}const rows=[['Name','Phone','Email','Rashi','Plan','Language','City','DOB','Created','Last Active']];r.users.forEach(u=>rows.push([u.name||'',u.phone||'',u.email||'',u.rashi||'',u.plan||'free',u.language||'',u.birth_city||'',u.dob||'',u.created_at?.slice(0,10)||'',u.last_active?.slice(0,10)||'']));const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='dharmasetu_users.csv';a.click();toast('CSV exported!');});}
 
 // ─── TRANSACTIONS ────────────────────────────────────────────────
