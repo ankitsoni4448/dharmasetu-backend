@@ -693,14 +693,42 @@ function toast(msg, err=false) {
   clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-async function api(method, path, body, form=false) {
+function setAdminSessionExpiredUI() {
+  const el=document.getElementById('db-conn');
+  if(el){el.className='db-pill db-err';el.textContent='● Admin sign-in required';}
+  const alert=document.getElementById('ov-alert');
+  if(alert){alert.className='alert ar';alert.textContent='Admin session expired. Please sign in again.';}
+}
+
+function promptAdminKey(message='Enter admin access key') {
+  const entered=prompt(message) || '';
+  if(!entered) return false;
+  KEY=entered;
+  sessionStorage.setItem('ds_admin_key',KEY);
+  return true;
+}
+
+async function api(method, path, body, form=false, retried=false) {
   const opts = { method, headers:{ 'x-admin-key':KEY } };
   if (form) opts.body = body;
   else if (body) { opts.headers['Content-Type']='application/json'; opts.body=JSON.stringify(body); }
   try {
     const r = await fetch(BACKEND+path, opts);
     const d = await r.json();
+    if(r.status===401) {
+      KEY='';
+      sessionStorage.removeItem('ds_admin_key');
+      setAdminSessionExpiredUI();
+      if(!retried && promptAdminKey('Admin session expired. Please sign in again.')) {
+        return api(method,path,body,form,true);
+      }
+      return { success:false,error:'ADMIN_SESSION_EXPIRED' };
+    }
     if (!r.ok && !d.success) console.error('[API]', method, path, d.error||d);
+    if(r.ok) {
+      const el=document.getElementById('db-conn');
+      if(el){el.className='db-pill db-ok';el.textContent='● Admin authenticated';}
+    }
     return d;
   } catch(e) { console.error('[API err]', e.message); return { error: e.message }; }
 }
@@ -712,8 +740,7 @@ function esc(s) { return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 // ─── INIT ─────────────────────────────────────────────────────────
 async function init() {
   if (!KEY) {
-    KEY = prompt('Enter admin access key') || '';
-    if (KEY) sessionStorage.setItem('ds_admin_key', KEY);
+    promptAdminKey();
   }
   document.getElementById('sb-url').textContent = BACKEND.replace('https://','').slice(0,30);
   setInterval(()=>{ const t=new Date().toLocaleTimeString(); document.getElementById('sb-time').textContent=t; const lt=document.getElementById('live-t'); if(lt)lt.textContent=t; },1000);
@@ -731,7 +758,7 @@ async function testConn() {
     const r = await fetch(BACKEND+'/health');
     if (r.ok) {
       const d = await r.json();
-      el.className='db-pill db-ok'; el.textContent='● Connected';
+      el.className='db-pill db-ok'; el.textContent='● Backend connected';
       const oa=document.getElementById('ov-alert');
       if(oa){ oa.className='alert '+(d.supabaseConfigured?'ag':'ar'); oa.textContent=d.supabaseConfigured?`✅ Backend live | Supabase: ${d.db} | Users: ${d.tables?.users||0} | Katha: ${d.tables?.katha||0}`:`✅ Backend live | ⚠️ Supabase NOT configured — add SUPABASE_URL and SUPABASE_SERVICE_KEY to Render env vars`; }
       const cb=document.getElementById('chk-backend'); if(cb) cb.textContent='✅ Backend live on Render';
