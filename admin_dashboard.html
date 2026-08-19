@@ -162,7 +162,7 @@ textarea{resize:vertical;min-height:65px}
   <div class="alert ag">✅ Keys saved to Supabase — survive Render restarts. Never put keys in app code.</div>
   <div class="card">
     <h3>🤖 AI Keys (Both Required)</h3>
-    <label>Gemini API Key — Primary (gemini-2.0-flash, FREE)</label>
+    <label>Gemini API Key — Primary</label>
     <div class="key-field">
       <input type="password" id="k-gem" placeholder="AIzaSy... — from aistudio.google.com/apikey"/>
       <button class="btn btn-o btn-sm" onclick="togglePwd('k-gem')">👁</button>
@@ -170,7 +170,10 @@ textarea{resize:vertical;min-height:65px}
     </div>
     <div id="gem-status" class="key-missing">Not saved yet</div>
 
-    <label>Groq API Key — Fallback (llama-3.3-70b, FREE)</label>
+    <label>Gemini Model</label>
+    <input type="text" id="m-gem" value="gemini-3.6-flash" maxlength="128"/>
+
+    <label>Groq API Key — Fallback</label>
     <div class="key-field">
       <input type="password" id="k-groq" placeholder="gsk_... — from console.groq.com"/>
       <button class="btn btn-o btn-sm" onclick="togglePwd('k-groq')">👁</button>
@@ -178,12 +181,14 @@ textarea{resize:vertical;min-height:65px}
     </div>
     <div id="groq-status" class="key-missing">Not saved yet</div>
 
+    <label>Groq Fallback Model</label>
+    <input type="text" id="m-groq" value="openai/gpt-oss-120b" maxlength="128"/>
+
     <div class="alert ao" style="margin-top:12px;font-size:12px">
-      💡 Gemini 2.0 Flash: FREE at <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--saffron)">aistudio.google.com/apikey</a><br>
-      💡 Groq LLaMA 70B: FREE at <a href="https://console.groq.com/keys" target="_blank" style="color:var(--saffron)">console.groq.com/keys</a>
+      Provider keys remain server-side. Model IDs are controlled only by authenticated administrators.
     </div>
     <div class="btn-row">
-      <button class="btn btn-p" onclick="saveAPIKeys()">💾 Save Both Keys to Supabase</button>
+      <button class="btn btn-p" onclick="saveAPIKeys()">💾 Save AI Configuration</button>
       <button class="btn btn-o" onclick="testAI()">🧪 Test AI Now</button>
     </div>
     <div id="ai-test-result" style="font-size:12px;color:var(--muted);margin-top:8px"></div>
@@ -754,11 +759,13 @@ function applyConfig(c) {
   set('pp-nri',c.nriPrice); set('pp-fq',c.freeQuestionsLimit);
   set('p-upi', c.phonepeUPI||'');
   set('p-rzp-id', c.razorpayKeyId||'');
+  set('m-gem',c.geminiModel||'gemini-3.6-flash');
+  set('m-groq',c.groqModel||'openai/gpt-oss-120b');
 
   // Key status indicators
   const gemSt=document.getElementById('gem-status'), groqSt=document.getElementById('groq-status');
-  if(gemSt) { gemSt.className=c.geminiKey?'key-saved':'key-missing'; gemSt.textContent=c.geminiKey?('✅ Saved: '+c.geminiKey.slice(0,8)+'...'):'❌ Not saved yet — enter key above'; }
-  if(groqSt) { groqSt.className=c.groqKey?'key-saved':'key-missing'; groqSt.textContent=c.groqKey?('✅ Saved: '+c.groqKey.slice(0,8)+'...'):'❌ Not saved yet — enter key above'; }
+  if(gemSt) { gemSt.className=c.geminiConfigured?'key-saved':'key-missing'; gemSt.textContent=c.geminiConfigured?'✅ Configured':'❌ Missing'; }
+  if(groqSt) { groqSt.className=c.groqConfigured?'key-saved':'key-missing'; groqSt.textContent=c.groqConfigured?'✅ Configured':'❌ Missing'; }
 
   // UPI status
   const us=document.getElementById('upi-status'); if(us) us.textContent=c.phonepeUPI?'✅ Saved: '+c.phonepeUPI:'⚠️ Not saved. Enter UPI ID above.'; if(us) us.style.color=c.phonepeUPI?'#27AE60':'rgba(253,246,237,.4)';
@@ -808,11 +815,11 @@ async function loadStats() {
 async function saveAPIKeys() {
   const gem=document.getElementById('k-gem').value.trim();
   const groq=document.getElementById('k-groq').value.trim();
-  if (!gem && !groq) { toast('Enter at least one key',true); return; }
-  const body={};
+  const geminiModel=document.getElementById('m-gem').value.trim();
+  const groqModel=document.getElementById('m-groq').value.trim();
+  const body={geminiModel,groqModel};
   if(gem && !gem.includes('***')) body.geminiKey=gem;
   if(groq && !groq.includes('***')) body.groqKey=groq;
-  if(!Object.keys(body).length) { toast('Keys already saved (show *** = saved)',true); return; }
   const r = await api('POST','/admin/config',body);
   if(r.success) { toast('Keys saved to Supabase permanently! ✅'); document.getElementById('k-gem').value=''; document.getElementById('k-groq').value=''; applyConfig(r.config); }
   else toast('Failed: '+r.error,true);
@@ -828,8 +835,8 @@ async function deleteKey(name) {
 async function testAI() {
   const el=document.getElementById('ai-test-result');
   el.textContent='Testing...'; el.style.color='var(--muted)';
-  const r = await api('POST','/ai/chat',{prompt:'Reply with exactly: DHARMASETU_OK'});
-  if(r.success) { el.textContent='✅ AI working! Response: "'+r.text.slice(0,30)+'" via '+r.usedApi; el.style.color='#27AE60'; toast('AI test passed!'); }
+  const r = await api('GET','/admin/ai/health');
+  if(r.success) { el.textContent=`Gemini: ${r.gemini.status} (${r.gemini.model}) | Groq: ${r.groq.status} (${r.groq.model})`; el.style.color=(r.gemini.status==='healthy'||r.groq.status==='healthy')?'#27AE60':'#E74C3C'; toast('AI health check complete'); }
   else { el.textContent='❌ '+r.error; el.style.color='#E74C3C'; toast('AI test failed',true); }
 }
 
@@ -1063,8 +1070,6 @@ async function loadDBStatus(){
   if(tables&&r.connected){const r2=await fetch(BACKEND+'/health');const d=await r2.json();if(d.tables)tables.innerHTML=Object.entries(d.tables).map(([k,v])=>`<div><b style="color:var(--saffron)">${k}:</b> ${v} rows</div>`).join('');}
 }
 
-// ─── BOOKS ───────────────────────────────────────────────────────
-async function loadBooks() {
 // ─── P2: BOOK LIBRARY ────────────────────────────────────────────
 async function loadBooks() {
   const el = document.getElementById('bk-list'); if (!el) return;

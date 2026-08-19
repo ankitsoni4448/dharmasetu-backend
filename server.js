@@ -211,8 +211,19 @@ const TMP = '/tmp/ds';
 if (!fs.existsSync(TMP)) fs.mkdirSync(TMP, { recursive: true });
 
 // ─── IN-MEMORY CONFIG ─────────────────────────────────────────
+const DEFAULT_AI_MODELS = Object.freeze({
+  gemini: 'gemini-3.6-flash',
+  groq: 'openai/gpt-oss-120b',
+});
+
+function isValidAIModelId(value) {
+  return typeof value === 'string'
+    && /^[A-Za-z0-9][A-Za-z0-9._/-]{0,127}$/.test(value.trim());
+}
+
 let CFG = {
   geminiKey: '', groqKey: '',
+  geminiModel: DEFAULT_AI_MODELS.gemini, groqModel: DEFAULT_AI_MODELS.groq,
   phonepeUPI: '', razorpayKeyId: '', razorpayKeySecret: '',
   subscriptionPayment: 'upi', donationPayment: 'upi',
   premiumPrice: 249, basicPrice: 99, nriPrice: 499,
@@ -500,6 +511,10 @@ async function loadConfigFromDB() {
 
     if (map.gemini_key)           CFG.geminiKey           = map.gemini_key;
     if (map.groq_key)             CFG.groqKey             = map.groq_key;
+    if (isValidAIModelId(map.gemini_model)) CFG.geminiModel = map.gemini_model.trim();
+    else if (map.gemini_model) console.warn('[AI Config] Ignoring invalid gemini_model');
+    if (isValidAIModelId(map.groq_model)) CFG.groqModel = map.groq_model.trim();
+    else if (map.groq_model) console.warn('[AI Config] Ignoring invalid groq_model');
     if (map.phonepe_upi)          CFG.phonepeUPI          = map.phonepe_upi;
     if (map.razorpay_key_id)      CFG.razorpayKeyId       = map.razorpay_key_id;
     if (map.razorpay_key_secret)  CFG.razorpayKeySecret   = map.razorpay_key_secret;
@@ -527,13 +542,20 @@ async function saveConfigKey(key, value) {
   } catch(e) { console.error('[Config] Save failed:', key, e.message); }
 }
 
+function logAIConfig() {
+  console.log(`[AI Config] Gemini: ${CFG.geminiKey ? 'configured' : 'missing'}, model=${CFG.geminiModel}`);
+  console.log(`[AI Config] Groq: ${CFG.groqKey ? 'configured' : 'missing'}, model=${CFG.groqModel}`);
+}
+
 async function initDB() {
   console.log('[DB] Connecting to Supabase...');
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     console.log('[DB] ⚠️  NOT CONFIGURED.');
+    logAIConfig();
     return;
   }
   await loadConfigFromDB();
+  logAIConfig();
   console.log('[DB] ✅ Supabase connected');
 }
 
@@ -879,12 +901,8 @@ ${isFC ? '⚡ FACT CHECK MODE: Start with "VERDICT: TRUE/FALSE/MISLEADING" then 
       await sbRest('POST', 'rpc/release_ai_usage', {
         p_user_id: req.authUser.id, p_reservation_id: reservationId,
       }).catch(() => {});
-      const providerMessage = String(providerError?.message || '');
-      const code = /timeout|timed out|abort/i.test(providerMessage)
-        ? 'AI_TIMEOUT'
-        : providerError?.code === 'AI_PROVIDER_RATE_LIMIT'
-          ? 'AI_PROVIDER_RATE_LIMIT'
-          : 'AI_PROVIDER_UNAVAILABLE';
+      const code = ['AI_PROVIDER_CONFIGURATION_ERROR','AI_PROVIDER_RATE_LIMIT','AI_TIMEOUT']
+        .includes(providerError?.code) ? providerError.code : 'AI_PROVIDER_UNAVAILABLE';
       console.error('[AI/dharma-chat] provider failure:', code);
       return res.status(code === 'AI_TIMEOUT' ? 504 : code === 'AI_PROVIDER_RATE_LIMIT' ? 429 : 503).json({ error: code });
     }
@@ -1430,101 +1448,141 @@ app.get('/katha/:sc/:unit/:lang', async (req, res) => {
 // ════════════════════════════════════════════════════════════════
 // AI CALLERS (server-side only — keys never leave server)
 // ════════════════════════════════════════════════════════════════
-async function callGemini(apiKey, prompt) {
+function providerFailure(provider, model, category, status = 0) {
+  const error = new Error(`${provider} ${category}`);
+  Object.assign(error, { provider, model, category, status });
+  return error;
+}
+
+function classifyProviderStatus(status, raw = '') {
+  if (status === 401 || status === 403) return 'INVALID_API_KEY';
+  if (status === 404) return 'MODEL_NOT_FOUND';
+  if (status === 410 || /deprecated|decommissioned|retired/i.test(raw)) return 'MODEL_DEPRECATED';
+  if (status === 429) return 'RATE_LIMIT';
+  if (status >= 500) return 'PROVIDER_SERVER_ERROR';
+  return 'NETWORK_ERROR';
+}
+
+function logProviderResult(provider, model, status, category, elapsedMs) {
+  const outcome = status ? `HTTP ${status}` : category;
+  console.log(`[AI] ${provider} ${model} -> ${outcome}${category && status !== 200 ? ` ${category}` : ''} (${elapsedMs}ms)`);
+}
+
+async function callGemini(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1200, temperature = 0.75 } = {}) {
+  const model = CFG.geminiModel;
+  const startedAt = Date.now();
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.75, maxOutputTokens: 1200 },
+      generationConfig: { temperature, maxOutputTokens },
       safetySettings: [
         { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_NONE' },
         { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_NONE' },
         { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
       ],
     });
-    const timer = setTimeout(() => reject(new Error('Gemini timeout')), 20000);
+    let req;
+    const timer = setTimeout(() => {
+      req?.destroy();
+      reject(providerFailure('Gemini', model, 'PROVIDER_TIMEOUT'));
+    }, timeoutMs);
     const opts = {
       hostname: 'generativelanguage.googleapis.com',
-      path: `/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      path: `/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
     };
-    const req = https.request(opts, res => {
+    req = https.request(opts, res => {
       let raw = '';
       res.on('data', c => raw += c);
       res.on('end', () => {
         clearTimeout(timer);
         try {
+          if (res.statusCode !== 200) return reject(providerFailure('Gemini', model, classifyProviderStatus(res.statusCode, raw), res.statusCode));
           const d = JSON.parse(raw);
-          if (res.statusCode === 429) return reject(new Error('RATE_LIMIT'));
-          if (res.statusCode !== 200) return reject(new Error(`Gemini ${res.statusCode}`));
           const text = d?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!text) return reject(new Error(`Gemini empty — reason: ${d?.candidates?.[0]?.finishReason||'unknown'}`));
+          if (!text) return reject(providerFailure('Gemini', model, 'EMPTY_RESPONSE', res.statusCode));
+          logProviderResult('Gemini', model, res.statusCode, '', Date.now() - startedAt);
           resolve(text);
-        } catch(e) { reject(e); }
+        } catch(e) { reject(e.category ? e : providerFailure('Gemini', model, 'NETWORK_ERROR', res.statusCode)); }
       });
     });
-    req.on('error', e => { clearTimeout(timer); reject(e); });
+    req.on('error', () => { clearTimeout(timer); reject(providerFailure('Gemini', model, 'NETWORK_ERROR')); });
     req.write(body); req.end();
   });
 }
 
-async function callGroq(apiKey, prompt) {
+async function callGroq(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1200, temperature = 0.75 } = {}) {
+  const model = CFG.groqModel;
+  const startedAt = Date.now();
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model,
       messages: [
         { role: 'system', content: 'You are DharmaSetu, a Vedic AI guide. Reply with structured JSON when asked for JSON. Otherwise reply in the requested language.' },
         { role: 'user',   content: prompt },
       ],
-      temperature: 0.75, max_tokens: 1200,
+      temperature, max_tokens: maxOutputTokens,
     });
-    const timer = setTimeout(() => reject(new Error('Groq timeout')), 20000);
+    let req;
+    const timer = setTimeout(() => {
+      req?.destroy();
+      reject(providerFailure('Groq', model, 'PROVIDER_TIMEOUT'));
+    }, timeoutMs);
     const opts = {
       hostname: 'api.groq.com', path: '/openai/v1/chat/completions', method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}`, 'Content-Length': Buffer.byteLength(body) },
     };
-    const req = https.request(opts, res => {
+    req = https.request(opts, res => {
       let raw = '';
       res.on('data', c => raw += c);
       res.on('end', () => {
         clearTimeout(timer);
         try {
-          if (res.statusCode === 429) return reject(new Error('RATE_LIMIT'));
-          if (res.statusCode !== 200) return reject(new Error(`Groq ${res.statusCode}`));
+          if (res.statusCode !== 200) return reject(providerFailure('Groq', model, classifyProviderStatus(res.statusCode, raw), res.statusCode));
           const d = JSON.parse(raw);
           const text = d?.choices?.[0]?.message?.content;
-          if (!text) return reject(new Error('Groq empty'));
+          if (!text) return reject(providerFailure('Groq', model, 'EMPTY_RESPONSE', res.statusCode));
+          logProviderResult('Groq', model, res.statusCode, '', Date.now() - startedAt);
           resolve(text);
-        } catch(e) { reject(e); }
+        } catch(e) { reject(e.category ? e : providerFailure('Groq', model, 'NETWORK_ERROR', res.statusCode)); }
       });
     });
-    req.on('error', e => { clearTimeout(timer); reject(e); });
+    req.on('error', () => { clearTimeout(timer); reject(providerFailure('Groq', model, 'NETWORK_ERROR')); });
     req.write(body); req.end();
   });
 }
 
 async function callAI(gemKey, groqKey, prompt) {
-  let geminiRateLimited = false;
+  const failures = [];
   if (gemKey) {
+    const startedAt = Date.now();
     try { return { text: await callGemini(gemKey, prompt), usedApi: 'gemini' }; }
     catch(e) {
-      geminiRateLimited = e.message.includes('RATE_LIMIT');
-      if (!geminiRateLimited) console.log('[AI] Gemini request failed');
+      failures.push(e);
+      logProviderResult('Gemini', CFG.geminiModel, e.status, e.category || 'NETWORK_ERROR', Date.now() - startedAt);
     }
   }
   if (groqKey) {
+    const startedAt = Date.now();
     try { return { text: await callGroq(groqKey, prompt), usedApi: 'groq' }; }
     catch(e) {
-      if (e.message.includes('RATE_LIMIT') && (!gemKey || geminiRateLimited)) {
-        const rateError = new Error('AI providers rate limited');
-        rateError.code = 'AI_PROVIDER_RATE_LIMIT';
-        throw rateError;
-      }
-      throw new Error('All AI failed: ' + e.message.slice(0,80));
+      failures.push(e);
+      logProviderResult('Groq', CFG.groqModel, e.status, e.category || 'NETWORK_ERROR', Date.now() - startedAt);
     }
   }
-  if (gemKey) { return { text: await callGemini(gemKey, prompt), usedApi: 'gemini-only' }; }
-  throw new Error('No AI keys configured');
+  const categories = failures.map(e => e.category);
+  const error = new Error('AI provider request failed');
+  if (!gemKey && !groqKey || categories.length > 0 && categories.every(c => ['INVALID_API_KEY','MODEL_NOT_FOUND','MODEL_DEPRECATED'].includes(c))) {
+    error.code = 'AI_PROVIDER_CONFIGURATION_ERROR';
+  } else if (categories.length > 0 && categories.every(c => c === 'RATE_LIMIT')) {
+    error.code = 'AI_PROVIDER_RATE_LIMIT';
+  } else if (categories.length > 0 && categories.every(c => c === 'PROVIDER_TIMEOUT')) {
+    error.code = 'AI_TIMEOUT';
+  } else {
+    error.code = 'AI_PROVIDER_UNAVAILABLE';
+  }
+  throw error;
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1662,14 +1720,17 @@ app.delete('/admin/katha/:sc/:unit/:lang', adminAuth, async (req, res) => {
 app.get('/admin/config', adminAuth, (req, res) => {
   const safe = { ...CFG };
   if (safe.razorpayKeySecret?.length > 4) safe.razorpayKeySecret = safe.razorpayKeySecret.slice(0,4) + '***SAVED';
-  if (safe.geminiKey?.length > 6)         safe.geminiKey         = safe.geminiKey.slice(0,8)         + '***SAVED';
-  if (safe.groqKey?.length > 6)           safe.groqKey           = safe.groqKey.slice(0,8)           + '***SAVED';
+  safe.geminiConfigured = !!safe.geminiKey;
+  safe.groqConfigured = !!safe.groqKey;
+  safe.geminiKey = safe.geminiKey ? '***SAVED' : '';
+  safe.groqKey = safe.groqKey ? '***SAVED' : '';
   res.json({ success: true, config: safe });
 });
 
 app.post('/admin/config', adminAuth, async (req, res) => {
   const keyMap = {
     geminiKey: 'gemini_key', groqKey: 'groq_key',
+    geminiModel: 'gemini_model', groqModel: 'groq_model',
     phonepeUPI: 'phonepe_upi',
     razorpayKeyId: 'razorpay_key_id', razorpayKeySecret: 'razorpay_key_secret',
     subscriptionPayment: 'subscription_payment', donationPayment: 'donation_payment',
@@ -1679,13 +1740,18 @@ app.post('/admin/config', adminAuth, async (req, res) => {
     maintenanceMode: 'maintenance_mode', appVersion: 'app_version',
     featureFlags: 'feature_flags', bundles: 'bundles', donations: 'donations',
   };
+  for (const key of ['geminiModel','groqModel']) {
+    if (req.body[key] !== undefined && !isValidAIModelId(req.body[key])) {
+      return res.status(400).json({ error: 'INVALID_AI_MODEL' });
+    }
+  }
   const saves = [];
   for (const [jsKey, dbKey] of Object.entries(keyMap)) {
     const val = req.body[jsKey];
     if (val !== undefined) {
       const str = typeof val === 'object' ? JSON.stringify(val) : String(val);
       if (typeof val === 'string' && val.includes('***SAVED')) continue;
-      CFG[jsKey] = val;
+      CFG[jsKey] = jsKey.endsWith('Model') ? String(val).trim() : val;
       saves.push(saveConfigKey(dbKey, str));
     }
   }
@@ -1693,9 +1759,39 @@ app.post('/admin/config', adminAuth, async (req, res) => {
   await auditLog('CONFIG_CHANGED', 'admin', 'System Settings', `Updated ${saves.length} keys`);
   const safe = { ...CFG };
   if (safe.razorpayKeySecret?.length > 4) safe.razorpayKeySecret = safe.razorpayKeySecret.slice(0,4) + '***SAVED';
-  if (safe.geminiKey?.length > 6)         safe.geminiKey         = safe.geminiKey.slice(0,8)         + '***SAVED';
-  if (safe.groqKey?.length > 6)           safe.groqKey           = safe.groqKey.slice(0,8)           + '***SAVED';
+  safe.geminiConfigured = !!safe.geminiKey;
+  safe.groqConfigured = !!safe.groqKey;
+  safe.geminiKey = safe.geminiKey ? '***SAVED' : '';
+  safe.groqKey = safe.groqKey ? '***SAVED' : '';
+  logAIConfig();
   res.json({ success: true, config: safe, saved: saves.length });
+});
+
+app.get('/admin/ai/health', adminAuth, async (req, res) => {
+  const check = async (provider, configured, model, call) => {
+    if (!configured) return { configured: false, model, status: 'missing_key' };
+    const startedAt = Date.now();
+    try {
+      await call();
+      return { configured: true, model, status: 'healthy' };
+    } catch (error) {
+      logProviderResult(provider, model, error.status, error.category || 'NETWORK_ERROR', Date.now() - startedAt);
+      const statuses = {
+        INVALID_API_KEY: 'invalid_key', MODEL_NOT_FOUND: 'model_not_found',
+        MODEL_DEPRECATED: 'model_deprecated', RATE_LIMIT: 'rate_limited',
+        PROVIDER_TIMEOUT: 'timeout', EMPTY_RESPONSE: 'provider_error',
+        PROVIDER_SERVER_ERROR: 'provider_error', NETWORK_ERROR: 'provider_error',
+      };
+      return { configured: true, model, status: statuses[error.category] || 'provider_error' };
+    }
+  };
+  const [gemini, groq] = await Promise.all([
+    check('Gemini', !!CFG.geminiKey, CFG.geminiModel,
+      () => callGemini(CFG.geminiKey, 'Reply only with OK', { timeoutMs: 5000, maxOutputTokens: 16, temperature: 0 })),
+    check('Groq', !!CFG.groqKey, CFG.groqModel,
+      () => callGroq(CFG.groqKey, 'Reply only with OK', { timeoutMs: 5000, maxOutputTokens: 16, temperature: 0 })),
+  ]);
+  res.json({ success: true, gemini, groq });
 });
 
 app.delete('/admin/config/:key', adminAuth, async (req, res) => {
