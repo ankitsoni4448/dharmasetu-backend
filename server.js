@@ -47,6 +47,7 @@ const supabaseAuth = SUPABASE_URL && SUPABASE_SERVICE_KEY
   : null;
 
 async function requireSupabaseUser(req, res, next) {
+  const authStartedAt = Date.now();
   const authorization = req.headers.authorization || '';
   const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
   if (!token || !supabaseAuth) return res.status(401).json({ error: 'AUTH_REQUIRED' });
@@ -56,6 +57,8 @@ async function requireSupabaseUser(req, res, next) {
   req.authUserId = data.user.id;
   req.authPhone = normalizeIndianAuthPhone(data.user.phone);
   if (!req.authPhone) return res.status(401).json({ error: 'AUTH_REQUIRED' });
+  req.authDurationMs = Date.now() - authStartedAt;
+  req.authStartedAt = authStartedAt;
   next();
 }
 
@@ -795,6 +798,12 @@ app.post('/ai/chat', async (req, res) => {
 });
 
 app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
+  const totalStartedAt = req.authStartedAt || Date.now();
+  const timing = { auth: req.authDurationMs || 0, profile: 0, quotaReserve: 0, provider: 0, quotaConsume: 0 };
+  const logTiming = (outcome) => console.log(
+    `[AI Timing] auth=${timing.auth}ms profile=${timing.profile}ms quotaReserve=${timing.quotaReserve}ms ` +
+    `provider=${timing.provider}ms quotaConsume=${timing.quotaConsume}ms total=${Date.now() - totalStartedAt}ms outcome=${outcome}`
+  );
   try {
     const { messages, userProfile, mode } = req.body;
     const rateKey = req.authUser.id;
@@ -814,7 +823,9 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
       return res.status(400).json({ error: 'Invalid request' });
     }
 
+    const profileStartedAt = Date.now();
     const userRecord = await getAuthenticatedUserRecord(req);
+    timing.profile = Date.now() - profileStartedAt;
     if (!userRecord) return res.status(403).json({ error: 'PROFILE_NOT_FOUND' });
     const entitlement = resolveEffectiveEntitlement(userRecord);
     const isFC = mode === 'factcheck';
@@ -828,16 +839,21 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     const usageKind = isFC ? 'factcheck' : 'dharma';
     const limit = isFC ? entitlement.limits.factChecksPerDay : entitlement.limits.dharmaQuestionsPerDay;
     let reservation;
+    const quotaReserveStartedAt = Date.now();
     try {
       reservation = await sbRest('POST', 'rpc/reserve_ai_usage', {
         p_user_id: req.authUser.id, p_kind: usageKind, p_limit: limit,
       });
     } catch (quotaError) {
+      timing.quotaReserve = Date.now() - quotaReserveStartedAt;
+      logTiming('quota_unavailable');
       console.error('[AI/dharma-chat] quota infrastructure unavailable');
       return res.status(503).json({ error: 'QUOTA_INFRASTRUCTURE_UNAVAILABLE' });
     }
+    timing.quotaReserve = Date.now() - quotaReserveStartedAt;
     const quota = Array.isArray(reservation.data) ? reservation.data[0] : reservation.data;
     if (!quota?.allowed) {
+      logTiming('limit_reached');
       return res.status(403).json({
         error: 'QUESTION_LIMIT_REACHED',
         limit,
@@ -855,59 +871,64 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     const u = { ...userProfile, ...userRecord };
     const lang = u.language || 'hindi';
     const langRule = {
-      hindi:   'तुम्हें केवल और केवल शुद्ध हिंदी में जवाब देना है। एक भी अंग्रेजी शब्द नहीं।',
-      english: 'Reply ONLY in pure English. No Hindi, no Hinglish.',
-      marathi: 'फक्त मराठीत उत्तर द्या.',
-      gujarati:'ફક્ત ગુજરાતીમાં જ જવાબ આપો.',
+      hindi: 'केवल स्वाभाविक और शुद्ध हिन्दी में उत्तर दें। आवश्यक होने पर प्रासंगिक संस्कृत उद्धरण दे सकते हैं।',
+      english: 'Reply only in clear, natural English.',
+      marathi: 'फक्त स्वाभाविक मराठीत उत्तर द्या.',
+      gujarati: 'ફક્ત સ્વાભાવિક ગુજરાતીમાં જવાબ આપો.',
     }[lang] || 'Reply in clear English.';
 
-    const systemPrompt = `तुम DharmaSetu हो — एक expert Vedic guide।
+    const systemPrompt = `You are DharmaSetu, a careful guide to Sanatan Dharma.
 
-🌐 LANGUAGE: ${langRule}
-${isFC ? '⚡ FACT CHECK MODE: Start with "VERDICT: TRUE/FALSE/MISLEADING" then prove with scripture.\n' : ''}
-👤 USER: ${u.name || 'Seeker'} | राशि: ${u.rashi || 'Unknown'} | नक्षत्र: ${u.nakshatra || 'Unknown'} | इष्ट देव: ${u.deity || 'Unknown'}
+LANGUAGE: ${langRule}
+${isFC ? 'FACT CHECK MODE: Begin with VERDICT: TRUE, FALSE, MISLEADING, or UNCERTAIN. Explain when evidence is incomplete or source-dependent.\n' : ''}
+USER: ${u.name || 'Seeker'} | राशि: ${u.rashi || 'Unknown'} | नक्षत्र: ${u.nakshatra || 'Unknown'} | इष्ट देव: ${u.deity || 'Unknown'}
 
-🎯 EXPERTISE:
-1. Jyotish Expert — personal Rashi/Nakshatra analysis with specific remedies
-2. Scripture Expert — Vedas, Gita, Ramayana, Upanishads
-3. ONLY answer about: Sanatan Dharma, Jyotish, Hindu philosophy, scripture, deities, festivals, personal guidance through dharmic lens
-4. For other topics: "DharmaSetu केवल सनातन धर्म के लिए है 🙏"
+SCOPE:
+1. Answer about Sanatan Dharma, Hindu philosophy, scripture, deities, festivals, and practical dharmic guidance.
+2. Clearly distinguish scripture-backed statements from general guidance or interpretation.
+3. Give an exact scripture citation only when confident it is correct; otherwise state uncertainty and do not invent one.
+4. Do not invent Jyotish or astronomical conclusions. If required birth data is missing, say personalized analysis is unavailable.
+5. For unrelated topics, politely explain that DharmaSetu focuses on Sanatan Dharma.
 
-⚠️ VERIFIED FACTS:
-- Shambuka got moksha — colonial lie debunked
-- Aryan Invasion Theory: False (Rakhigarhi DNA 2019)
-- Gita 4.13: varna by guna+karma, NOT birth
-
-📝 FORMAT: Max 300 words. Include SHASTRIYA: reference. Be warm, specific, practical.`;
+FORMAT: Maximum 300 words. Use light Markdown only for helpful headings, emphasis, or short lists. Be warm, specific, and practical.`;
 
     const histText = cleanMessages.slice(-8).map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
     const fullPrompt = `${systemPrompt}\n\nConversation:\n${histText}`;
+    const providerStartedAt = Date.now();
     try {
       const result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt);
+      timing.provider = Date.now() - providerStartedAt;
       try {
+        const quotaConsumeStartedAt = Date.now();
         const consumption = await sbRest('POST', 'rpc/consume_ai_usage', {
           p_user_id: req.authUser.id, p_reservation_id: reservationId,
         });
+        timing.quotaConsume = Date.now() - quotaConsumeStartedAt;
         if (consumption.data !== true) throw new Error('reservation was not consumable');
       } catch {
         await sbRest('POST', 'rpc/release_ai_usage', {
           p_user_id: req.authUser.id, p_reservation_id: reservationId,
         }).catch(() => {});
         console.error('[AI/dharma-chat] quota consumption unavailable');
+        logTiming('quota_consume_unavailable');
         return res.status(503).json({ error: 'QUOTA_INFRASTRUCTURE_UNAVAILABLE' });
       }
+      logTiming(`success_${result.usedApi}`);
       res.json({ success: true, text: result.text, usedApi: result.usedApi, remaining: quota.remaining, entitlement });
     } catch (providerError) {
+      if (!timing.provider) timing.provider = Date.now() - providerStartedAt;
       await sbRest('POST', 'rpc/release_ai_usage', {
         p_user_id: req.authUser.id, p_reservation_id: reservationId,
       }).catch(() => {});
       const code = ['AI_PROVIDER_CONFIGURATION_ERROR','AI_PROVIDER_RATE_LIMIT','AI_TIMEOUT']
         .includes(providerError?.code) ? providerError.code : 'AI_PROVIDER_UNAVAILABLE';
       console.error('[AI/dharma-chat] provider failure:', code);
+      logTiming('provider_failure');
       return res.status(code === 'AI_TIMEOUT' ? 504 : code === 'AI_PROVIDER_RATE_LIMIT' ? 429 : 503).json({ error: code });
     }
   } catch(e) {
     console.error('[AI/dharma-chat] service failure:', e.message);
+    logTiming('service_failure');
     res.status(500).json({ error: 'SERVER_ERROR' });
   }
 });
@@ -1493,6 +1514,7 @@ async function callGemini(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens =
       headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
     };
     req = https.request(opts, res => {
+      res.setEncoding('utf8');
       let raw = '';
       res.on('data', c => raw += c);
       res.on('end', () => {
@@ -1502,6 +1524,7 @@ async function callGemini(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens =
           const d = JSON.parse(raw);
           const text = d?.candidates?.[0]?.content?.parts?.[0]?.text;
           if (!text) return reject(providerFailure('Gemini', model, 'EMPTY_RESPONSE', res.statusCode));
+          if (text.includes('\uFFFD')) console.warn(`[AI] Gemini ${model} response contains Unicode replacement character`);
           logProviderResult('Gemini', model, res.statusCode, '', Date.now() - startedAt);
           resolve(text);
         } catch(e) { reject(e.category ? e : providerFailure('Gemini', model, 'NETWORK_ERROR', res.statusCode)); }
@@ -1534,6 +1557,7 @@ async function callGroq(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}`, 'Content-Length': Buffer.byteLength(body) },
     };
     req = https.request(opts, res => {
+      res.setEncoding('utf8');
       let raw = '';
       res.on('data', c => raw += c);
       res.on('end', () => {
@@ -1543,6 +1567,7 @@ async function callGroq(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1
           const d = JSON.parse(raw);
           const text = d?.choices?.[0]?.message?.content;
           if (!text) return reject(providerFailure('Groq', model, 'EMPTY_RESPONSE', res.statusCode));
+          if (text.includes('\uFFFD')) console.warn(`[AI] Groq ${model} response contains Unicode replacement character`);
           logProviderResult('Groq', model, res.statusCode, '', Date.now() - startedAt);
           resolve(text);
         } catch(e) { reject(e.category ? e : providerFailure('Groq', model, 'NETWORK_ERROR', res.statusCode)); }
