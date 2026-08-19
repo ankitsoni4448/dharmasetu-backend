@@ -22,6 +22,10 @@ const {
 } = require('./scripts/manifest_utils');
 const { getSupabaseServiceRoleKey } = require('./scripts/supabase_service_role');
 const { normalizeIndianAuthPhone } = require('./utils/phone');
+const {
+  INTENT, classifyFactCheckIntent, classifyClaimType,
+  normalizeMarkdown, enforceUnverifiedCitationSafety,
+} = require('./utils/aiSafety');
 
 require('dotenv').config();
 
@@ -799,9 +803,10 @@ app.post('/ai/chat', async (req, res) => {
 
 app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
   const totalStartedAt = req.authStartedAt || Date.now();
-  const timing = { auth: req.authDurationMs || 0, profile: 0, quotaReserve: 0, provider: 0, quotaConsume: 0 };
+  const timing = { auth: req.authDurationMs || 0, profile: 0, entitlement: 0, retrieval: 0, quotaReserve: 0, provider: 0, quotaConsume: 0 };
   const logTiming = (outcome) => console.log(
-    `[AI Timing] auth=${timing.auth}ms profile=${timing.profile}ms quotaReserve=${timing.quotaReserve}ms ` +
+    `[AI Timing] mode=${req.body?.mode === 'factcheck' ? 'factcheck' : 'dharma'} auth=${timing.auth}ms profile=${timing.profile}ms ` +
+    `entitlement=${timing.entitlement}ms retrieval=${timing.retrieval}ms quotaReserve=${timing.quotaReserve}ms ` +
     `provider=${timing.provider}ms quotaConsume=${timing.quotaConsume}ms total=${Date.now() - totalStartedAt}ms outcome=${outcome}`
   );
   try {
@@ -827,8 +832,16 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     const userRecord = await getAuthenticatedUserRecord(req);
     timing.profile = Date.now() - profileStartedAt;
     if (!userRecord) return res.status(403).json({ error: 'PROFILE_NOT_FOUND' });
+    const entitlementStartedAt = Date.now();
     const entitlement = resolveEffectiveEntitlement(userRecord);
+    timing.entitlement = Date.now() - entitlementStartedAt;
     const isFC = mode === 'factcheck';
+    const factCheckIntent = isFC ? classifyFactCheckIntent(lastMsg) : null;
+    const nonClaimIntents = new Set([INTENT.INFORMATION_REQUEST, INTENT.OPINION, INTENT.PERSONAL_ADVICE, INTENT.INSUFFICIENT_CONTEXT]);
+    if (isFC && nonClaimIntents.has(factCheckIntent)) {
+      logTiming('not_fact_checkable');
+      return res.json({ success: true, intent: factCheckIntent, verdict: 'NOT_A_FACT_CHECKABLE_CLAIM', nonFactCheckable: true });
+    }
     const featureName = isFC ? 'factCheck' : 'dharmaChat';
     if (!entitlement.features[featureName]) {
       return res.status(403).json({ error: 'FEATURE_DISABLED' });
@@ -877,10 +890,17 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
       gujarati: 'ફક્ત સ્વાભાવિક ગુજરાતીમાં જવાબ આપો.',
     }[lang] || 'Reply in clear English.';
 
+    const claimType = isFC ? classifyClaimType(lastMsg) : null;
+    const factCheckRule = isFC
+      ? factCheckIntent === INTENT.RELIGIOUS_BELIEF_OR_TRADITION
+        ? 'FACT CHECK CONTRACT: This is a faith/tradition statement. Use VERDICT: RELIGIOUS_TRADITION. Respectfully separate theological tradition from modern historical evidence.'
+        : `FACT CHECK CONTRACT: This is a ${claimType} claim. No authoritative evidence was retrieved for this request, so use VERDICT: UNVERIFIED. Never invent sources, patent numbers, quotations, studies, or legal records. Explain what authoritative source is required.`
+      : 'DHARMACHAT CONTRACT: Answer and explain normally. Never prefix the answer with VERDICT. Use scripture quotations or exact verse numbers only when supplied as verified context; otherwise qualify the limitation.';
+
     const systemPrompt = `You are DharmaSetu, a careful guide to Sanatan Dharma.
 
 LANGUAGE: ${langRule}
-${isFC ? 'FACT CHECK MODE: Begin with VERDICT: TRUE, FALSE, MISLEADING, or UNCERTAIN. Explain when evidence is incomplete or source-dependent.\n' : ''}
+${factCheckRule}
 USER: ${u.name || 'Seeker'} | राशि: ${u.rashi || 'Unknown'} | नक्षत्र: ${u.nakshatra || 'Unknown'} | इष्ट देव: ${u.deity || 'Unknown'}
 
 SCOPE:
@@ -890,14 +910,27 @@ SCOPE:
 4. Do not invent Jyotish or astronomical conclusions. If required birth data is missing, say personalized analysis is unavailable.
 5. For unrelated topics, politely explain that DharmaSetu focuses on Sanatan Dharma.
 
-FORMAT: Maximum 300 words. Use light Markdown only for helpful headings, emphasis, or short lists. Be warm, specific, and practical.`;
+${isFC ? `FACT CHECK FORMAT:
+VERDICT: <status>
+दावा: <claim>
+साक्ष्य क्या कहते हैं: <evidence limitations>
+स्रोत: <retrieved authoritative sources, or "स्रोत उपलब्ध नहीं">
+विश्वसनीयता: Low/Medium/High
+Why confidence: <one short reason>. Never use percentage confidence.` : ''}
+
+FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful headings, emphasis, or short lists. Be warm, specific, and practical.`;
 
     const histText = cleanMessages.slice(-8).map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
     const fullPrompt = `${systemPrompt}\n\nConversation:\n${histText}`;
     const providerStartedAt = Date.now();
     try {
-      const result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt);
+      const result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt, {
+        maxOutputTokens: isFC ? 700 : 1000,
+        temperature: isFC ? 0.2 : 0.65,
+      });
       timing.provider = Date.now() - providerStartedAt;
+      const guarded = enforceUnverifiedCitationSafety(result.text, []);
+      result.text = normalizeMarkdown(guarded.text);
       try {
         const quotaConsumeStartedAt = Date.now();
         const consumption = await sbRest('POST', 'rpc/consume_ai_usage', {
@@ -914,7 +947,13 @@ FORMAT: Maximum 300 words. Use light Markdown only for helpful headings, emphasi
         return res.status(503).json({ error: 'QUOTA_INFRASTRUCTURE_UNAVAILABLE' });
       }
       logTiming(`success_${result.usedApi}`);
-      res.json({ success: true, text: result.text, usedApi: result.usedApi, remaining: quota.remaining, entitlement });
+      res.json({
+        success: true, text: result.text, usedApi: result.usedApi, model: result.model,
+        finishReason: result.finishReason, incomplete: result.truncated,
+        intent: factCheckIntent,
+        verdict: isFC ? (factCheckIntent === INTENT.RELIGIOUS_BELIEF_OR_TRADITION ? 'RELIGIOUS_TRADITION' : 'UNVERIFIED') : null,
+        remaining: quota.remaining, entitlement,
+      });
     } catch (providerError) {
       if (!timing.provider) timing.provider = Date.now() - providerStartedAt;
       await sbRest('POST', 'rpc/release_ai_usage', {
@@ -1522,11 +1561,13 @@ async function callGemini(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens =
         try {
           if (res.statusCode !== 200) return reject(providerFailure('Gemini', model, classifyProviderStatus(res.statusCode, raw), res.statusCode));
           const d = JSON.parse(raw);
-          const text = d?.candidates?.[0]?.content?.parts?.[0]?.text;
+          const candidate = d?.candidates?.[0];
+          const text = candidate?.content?.parts?.map(part => part?.text || '').join('');
           if (!text) return reject(providerFailure('Gemini', model, 'EMPTY_RESPONSE', res.statusCode));
           if (text.includes('\uFFFD')) console.warn(`[AI] Gemini ${model} response contains Unicode replacement character`);
           logProviderResult('Gemini', model, res.statusCode, '', Date.now() - startedAt);
-          resolve(text);
+          const finishReason = candidate?.finishReason || 'UNKNOWN';
+          resolve({ text, finishReason, truncated: finishReason === 'MAX_TOKENS', model });
         } catch(e) { reject(e.category ? e : providerFailure('Gemini', model, 'NETWORK_ERROR', res.statusCode)); }
       });
     });
@@ -1565,11 +1606,13 @@ async function callGroq(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1
         try {
           if (res.statusCode !== 200) return reject(providerFailure('Groq', model, classifyProviderStatus(res.statusCode, raw), res.statusCode));
           const d = JSON.parse(raw);
-          const text = d?.choices?.[0]?.message?.content;
+          const choice = d?.choices?.[0];
+          const text = choice?.message?.content;
           if (!text) return reject(providerFailure('Groq', model, 'EMPTY_RESPONSE', res.statusCode));
           if (text.includes('\uFFFD')) console.warn(`[AI] Groq ${model} response contains Unicode replacement character`);
           logProviderResult('Groq', model, res.statusCode, '', Date.now() - startedAt);
-          resolve(text);
+          const finishReason = choice?.finish_reason || 'unknown';
+          resolve({ text, finishReason, truncated: finishReason === 'length', model });
         } catch(e) { reject(e.category ? e : providerFailure('Groq', model, 'NETWORK_ERROR', res.statusCode)); }
       });
     });
@@ -1578,11 +1621,11 @@ async function callGroq(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1
   });
 }
 
-async function callAI(gemKey, groqKey, prompt) {
+async function callAI(gemKey, groqKey, prompt, options = {}) {
   const failures = [];
   if (gemKey) {
     const startedAt = Date.now();
-    try { return { text: await callGemini(gemKey, prompt), usedApi: 'gemini' }; }
+    try { return { ...await callGemini(gemKey, prompt, options), usedApi: 'gemini' }; }
     catch(e) {
       failures.push(e);
       logProviderResult('Gemini', CFG.geminiModel, e.status, e.category || 'NETWORK_ERROR', Date.now() - startedAt);
@@ -1590,7 +1633,7 @@ async function callAI(gemKey, groqKey, prompt) {
   }
   if (groqKey) {
     const startedAt = Date.now();
-    try { return { text: await callGroq(groqKey, prompt), usedApi: 'groq' }; }
+    try { return { ...await callGroq(groqKey, prompt, options), usedApi: 'groq' }; }
     catch(e) {
       failures.push(e);
       logProviderResult('Groq', CFG.groqModel, e.status, e.category || 'NETWORK_ERROR', Date.now() - startedAt);
@@ -2820,12 +2863,12 @@ app.post('/admin/mantras/ingest/manifest', adminAuth, async (req, res) => {
   }
 });
 
-app.post('/ai/feedback', async (req, res) => {
+app.post('/ai/feedback', requireSupabaseUser, async (req, res) => {
   try {
-    const rateKey = req.body.phone || req.ip || 'anon';
+    const rateKey = req.authUser.id;
     if (!checkRateLimit(`aifb_${rateKey}`, 10))
       return res.status(429).json({ error: 'Too many submissions' });
-    const { question, ai_answer, rating, reason, phone, language } = req.body;
+    const { question, ai_answer, rating, reason, language, feature, message_id, provider, model, mode, latency_ms } = req.body;
     if (!question || !ai_answer || !rating)
       return res.status(400).json({ error: 'question, ai_answer, rating required' });
     const entry = {
@@ -2834,12 +2877,19 @@ app.post('/ai/feedback', async (req, res) => {
       ai_answer: sanitize(ai_answer, 1500),
       rating:    rating === 'up' ? 'up' : 'down',
       reason:    sanitize(reason||'', 300),
-      phone:     sanitize(phone||'',  20),
+      phone:     '',
       language:  sanitize(language||'hindi', 20),
+      user_id: req.authUser.id,
+      feature: feature === 'fact_check' ? 'fact_check' : 'dharma_chat',
+      message_id: sanitize(message_id || '', 100),
+      provider: sanitize(provider || '', 30),
+      model: sanitize(model || '', 100),
+      mode: mode === 'factcheck' ? 'factcheck' : 'dharma',
+      latency_ms: Math.max(0, Math.min(Number(latency_ms) || 0, 300000)),
       quality_score: rating === 'up' ? 0.8 : 0.2,
       created_at: new Date().toISOString(),
     };
-    await sbInsert('ai_feedback', entry);
+    await sbUpsert('ai_feedback', entry, 'user_id,message_id');
     res.json({ success: true, id: entry.id });
   } catch(e) {
     console.error('[ai/feedback]', e.message);
@@ -2942,11 +2992,17 @@ app.delete('/admin/library/books/:id', adminAuth, async (req, res) => {
 // GET /admin/feedback/ai?reviewed=false&page=1
 app.get('/admin/feedback/ai', adminAuth, async (req, res) => {
   try {
-    const { reviewed, rating, page=1 } = req.query;
+    const { reviewed, rating, feature, date, page=1 } = req.query;
     const offset = (Math.max(1,+page)-1)*30;
     let q = `?order=created_at.desc&limit=30&offset=${offset}`;
     if (reviewed !== undefined) q += `&admin_reviewed=eq.${reviewed === 'true'}`;
     if (rating) q += `&rating=eq.${rating}`;
+    if (feature) q += `&feature=eq.${encodeURIComponent(sanitize(feature, 30))}`;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date || '')) {
+      const nextDate = new Date(`${date}T00:00:00.000Z`);
+      nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+      q += `&created_at=gte.${date}T00:00:00.000Z&created_at=lt.${nextDate.toISOString()}`;
+    }
     const items = await sbSelect('ai_feedback', q);
     res.json({ success: true, items, page: +page });
   } catch(e) { res.status(500).json({ error: e.message }); }

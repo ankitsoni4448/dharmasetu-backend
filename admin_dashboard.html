@@ -204,27 +204,16 @@ textarea{resize:vertical;min-height:65px}
     <div class="sr" style="border-bottom:none;padding:0 0 12px 0">
       <div class="sr-l">Feedback Logs</div>
       <div class="btn-row" style="margin-top:0">
-        <button class="btn btn-o btn-sm" onclick="fetchFeedback()">🔄 Refresh</button>
+        <button class="btn btn-o btn-sm" onclick="loadAIFeedback()">🔄 Refresh</button>
       </div>
     </div>
     
-    <div style="overflow-x:auto">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>User</th>
-            <th>Type</th>
-            <th>Question & Answer</th>
-            <th>Reason / Comment</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="fb-table">
-          <tr><td colspan="6" style="text-align:center;color:var(--muted)">Loading feedback...</td></tr>
-        </tbody>
-      </table>
+    <div class="btn-row" style="margin-bottom:12px">
+      <select id="afb-rating" onchange="loadAIFeedback()"><option value="">All reactions</option><option value="down">Thumbs down</option><option value="up">Thumbs up</option></select>
+      <select id="afb-feature" onchange="loadAIFeedback()"><option value="">All features</option><option value="dharma_chat">DharmaChat</option><option value="fact_check">Fact Check</option></select>
+      <input id="afb-date" type="date" onchange="loadAIFeedback()" aria-label="Feedback date" />
     </div>
+    <div id="afb-list" style="color:var(--muted);font-size:12px">Loading feedback...</div>
   </div>
 </div>
 
@@ -1195,13 +1184,17 @@ async function loadAIFbStats() {
 }
 
 async function loadAIFeedback() {
-  const el = document.getElementById('afb-list'); if (!el) return;
+  const el = document.getElementById('afb-list') || document.getElementById('fb-list'); if (!el) return;
   el.innerHTML = 'Loading...';
   const reviewed = document.getElementById('afb-filter')?.value;
   const rating   = document.getElementById('afb-rating')?.value;
+  const feature  = document.getElementById('afb-feature')?.value;
+  const date     = document.getElementById('afb-date')?.value;
   let path = '/admin/feedback/ai?page=1';
   if (reviewed !== '' && reviewed !== undefined) path += '&reviewed=' + reviewed;
   if (rating)  path += '&rating=' + rating;
+  if (feature) path += '&feature=' + feature;
+  if (date) path += '&date=' + date;
   const r = await api('GET', path);
   if (!r.success) { el.innerHTML = 'Error: ' + (r.error||''); return; }
   await loadAIFbStats();
@@ -1217,8 +1210,9 @@ async function loadAIFeedback() {
           <span class="badge ${reviewed?'bgo':'bw'}">${reviewed ? '✅ Reviewed ('+fb.admin_action+')' : '⏳ Pending'}</span>
           <span class="badge bb" style="font-size:9px">${esc(fb.language||'hindi')}</span>
         </div>
-        <span style="font-size:10px;color:var(--muted)">${fb.created_at?.slice(0,16).replace('T',' ')} · ${esc(fb.phone||'anon')}</span>
+        <span style="font-size:10px;color:var(--muted)">${fb.created_at?.slice(0,16).replace('T',' ')} · ${esc((fb.user_id||'anonymous').slice(0,8))}</span>
       </div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:6px">${esc(fb.feature||'dharma_chat')} · ${esc(fb.mode||'dharma')} · ${esc(fb.provider||'unknown')}/${esc(fb.model||'unknown')} · ${Number(fb.latency_ms||0)}ms</div>
       <div style="font-size:12px;margin-bottom:6px"><b style="color:var(--gold)">Q:</b> ${esc(fb.question||'').slice(0,200)}</div>
       <div style="font-size:11px;color:rgba(253,246,237,.6);margin-bottom:${fb.reason?'6px':'12px'}">${esc(fb.ai_answer||'').slice(0,300)}${fb.ai_answer?.length>300?'...':''}</div>
       ${fb.reason ? `<div style="font-size:11px;color:var(--saffron);margin-bottom:10px">💬 Reason: ${esc(fb.reason)}</div>` : ''}
