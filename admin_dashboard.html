@@ -79,6 +79,10 @@ textarea{resize:vertical;min-height:65px}
 .key-field{position:relative;display:flex;gap:6px;align-items:center}
 .key-field input{flex:1}
 .key-saved{color:#27AE60;font-size:11px;font-weight:700}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:10000;padding:24px;overflow:auto}
+.modal-ov.open{display:flex;align-items:flex-start;justify-content:center}
+.modal-box{width:min(820px,100%);background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin:auto}
+.modal-read{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:9px;padding:10px;white-space:pre-wrap;max-height:150px;overflow:auto;color:rgba(253,246,237,.72);line-height:1.55}
 .key-missing{color:#E74C3C;font-size:11px}
 .pay-opt{flex:1;padding:12px;border-radius:10px;border:2px solid var(--border);text-align:center;cursor:pointer;transition:all .15s}
 .pay-opt.on{border-color:var(--saffron);background:rgba(232,98,10,.1)}
@@ -656,9 +660,28 @@ textarea{resize:vertical;min-height:65px}
 </div><!-- end main -->
 <div class="toast-wrap"><div class="toast" id="toast"></div></div>
 
+<div id="correction-modal" class="modal-ov" role="dialog" aria-modal="true" aria-labelledby="correction-title">
+  <div class="modal-box">
+    <h2 id="correction-title">✏️ Review AI Correction</h2>
+    <label>Question</label><div id="correction-question" class="modal-read"></div>
+    <label>Original AI Answer</label><div id="correction-original" class="modal-read"></div>
+    <label>User Feedback</label><div id="correction-feedback" class="modal-read"></div>
+    <label>Corrected Answer</label><textarea id="correction-answer" rows="9" placeholder="Write the complete corrected answer..."></textarea>
+    <label>Source / Evidence</label><textarea id="correction-source" rows="3" placeholder="Verified source, edition, verse, URL, or evidence note"></textarea>
+    <div class="g2">
+      <div><label>Source Type</label><select id="correction-source-type"><option value="">Unspecified</option><option value="SCRIPTURE">Scripture</option><option value="PATENT">Patent</option><option value="SCIENTIFIC">Scientific</option><option value="GOVERNMENT_OR_LEGAL">Government/Legal</option><option value="HISTORICAL">Historical</option><option value="CURRENT_NEWS">Current News</option><option value="GENERAL">General</option></select></div>
+      <div><label>Verification</label><select id="correction-verification"><option value="unverified">Unverified</option><option value="verified">Verified</option><option value="rejected">Rejected</option></select></div>
+    </div>
+    <label>Internal Note</label><textarea id="correction-note" rows="3"></textarea>
+    <div class="btn-row" style="justify-content:flex-end"><button class="btn btn-o" onclick="closeCorrectionModal()">Cancel</button><button class="btn btn-p" onclick="saveCorrection(false)">Save Draft</button><button class="btn btn-g" onclick="saveCorrection(true)">Publish Correction</button></div>
+  </div>
+</div>
+
 <script>
 // ─── CONFIG ───────────────────────────────────────────────────────
 let BACKEND = 'https://dharmasetu-backend-2c65.onrender.com';
+let AI_FEEDBACK_BY_ID = {};
+let ACTIVE_CORRECTION_ID = '';
 let KEY = sessionStorage.getItem('ds_admin_key') || '';
 let CFG_LOCAL = {}, BUNDLES = [], DONS = [], FLAGS = {}, PAYMETH = { subscription:'upi', donation:'upi' };
 let sseConn = null;
@@ -1199,6 +1222,7 @@ async function loadAIFeedback() {
   if (!r.success) { el.innerHTML = 'Error: ' + (r.error||''); return; }
   await loadAIFbStats();
   const items = r.items || [];
+  AI_FEEDBACK_BY_ID = Object.fromEntries(items.map(item => [item.id, item]));
   if (!items.length) { el.innerHTML = '<div class="alert ab">No feedback in this filter. Try changing filters.</div>'; return; }
   el.innerHTML = items.map(fb => {
     const isUp  = fb.rating === 'up';
@@ -1216,12 +1240,12 @@ async function loadAIFeedback() {
       <div style="font-size:12px;margin-bottom:6px"><b style="color:var(--gold)">Q:</b> ${esc(fb.question||'').slice(0,200)}</div>
       <div style="font-size:11px;color:rgba(253,246,237,.6);margin-bottom:${fb.reason?'6px':'12px'}">${esc(fb.ai_answer||'').slice(0,300)}${fb.ai_answer?.length>300?'...':''}</div>
       ${fb.reason ? `<div style="font-size:11px;color:var(--saffron);margin-bottom:10px">💬 Reason: ${esc(fb.reason)}</div>` : ''}
-      ${fb.quality_score !== undefined ? `<div style="font-size:10px;color:var(--muted);margin-bottom:8px">Quality Score: <b style="color:${fb.quality_score>=0.7?'#27AE60':'#E74C3C'}">${(fb.quality_score*100).toFixed(0)}%</b></div>` : ''}
+      <div style="font-size:10px;color:var(--muted);margin-bottom:8px">User Rating: <b style="color:${isUp?'#27AE60':'#E74C3C'}">${isUp?'Positive':'Negative'}</b></div>
       ${!reviewed ? `<div style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="btn btn-g btn-sm" onclick="reviewFeedback('${fb.id}','approved')">✅ Approve</button>
         <button class="btn btn-r btn-sm" onclick="reviewFeedback('${fb.id}','rejected')">❌ Reject</button>
         <button class="btn btn-o btn-sm" onclick="correctFeedback('${fb.id}')">✏️ Correct Answer</button>
-      </div>` : (fb.approved_answer ? `<div style="font-size:11px;border:1px solid rgba(39,174,96,.25);border-radius:8px;padding:8px;color:#27AE60">✅ Corrected: ${esc(fb.approved_answer).slice(0,200)}</div>` : '')}
+      </div>` : (fb.corrected_answer ? `<div style="font-size:11px;border:1px solid rgba(39,174,96,.25);border-radius:8px;padding:8px;color:#27AE60">✅ Corrected (${esc(fb.verification_status||'unverified')}): ${esc(fb.corrected_answer).slice(0,200)}</div>` : '')}
     </div>`;
   }).join('');
 }
@@ -1233,11 +1257,25 @@ async function reviewFeedback(id, action) {
 }
 
 async function correctFeedback(id) {
-  const ans = prompt('Enter the approved correct answer for this question:');
-  if (!ans || !ans.trim()) return;
-  const r = await api('PATCH', '/admin/feedback/ai/' + id, { action: 'corrected', approved_answer: ans.trim() });
-  r.success ? toast('Answer corrected & saved to Approved Answers ✅') : toast('Error: ' + r.error, true);
-  loadAIFeedback();
+  const fb = AI_FEEDBACK_BY_ID[id]; if (!fb) return toast('Feedback record unavailable', true);
+  ACTIVE_CORRECTION_ID = id;
+  document.getElementById('correction-question').textContent = fb.question || '—';
+  document.getElementById('correction-original').textContent = fb.ai_answer || '—';
+  document.getElementById('correction-feedback').textContent = `${fb.rating||'—'} | ${fb.reason||'No reason'} | ${fb.mode||'—'} | ${fb.provider||'—'}/${fb.model||'—'} | ${Number(fb.latency_ms||0)}ms`;
+  document.getElementById('correction-answer').value = fb.corrected_answer || '';
+  document.getElementById('correction-source').value = fb.source_reference || '';
+  document.getElementById('correction-source-type').value = fb.source_type || '';
+  document.getElementById('correction-verification').value = fb.verification_status || 'unverified';
+  document.getElementById('correction-note').value = fb.admin_notes || '';
+  document.getElementById('correction-modal').classList.add('open');
+}
+function closeCorrectionModal(){document.getElementById('correction-modal').classList.remove('open');ACTIVE_CORRECTION_ID='';}
+async function saveCorrection(publish){
+  const answer=document.getElementById('correction-answer').value.trim();if(!answer)return toast('Corrected answer required',true);
+  const body={action:publish?'corrected':'correction_draft',corrected_answer:answer,source_reference:document.getElementById('correction-source').value.trim(),source_type:document.getElementById('correction-source-type').value,verification_status:document.getElementById('correction-verification').value,admin_notes:document.getElementById('correction-note').value.trim()};
+  const r=await api('PATCH','/admin/feedback/ai/'+ACTIVE_CORRECTION_ID,body);
+  if(!r.success)return toast('Error: '+(r.error||'Unknown'),true);
+  toast(publish?'Correction published':'Draft saved');closeCorrectionModal();loadAIFeedback();
 }
 
 async function loadApprovedAnswers() {

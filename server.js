@@ -26,6 +26,8 @@ const {
   INTENT, classifyFactCheckIntent, classifyClaimType,
   normalizeMarkdown, enforceUnverifiedCitationSafety,
 } = require('./utils/aiSafety');
+const { completeProviderAnswer, chooseOutputBudget } = require('./utils/answerCompletion');
+const { NOTIFICATION_TYPES, SAFE_NOTIFICATION_ROUTES } = require('./utils/notificationSafety');
 
 require('dotenv').config();
 
@@ -803,11 +805,14 @@ app.post('/ai/chat', async (req, res) => {
 
 app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
   const totalStartedAt = req.authStartedAt || Date.now();
-  const timing = { auth: req.authDurationMs || 0, profile: 0, entitlement: 0, retrieval: 0, quotaReserve: 0, provider: 0, quotaConsume: 0 };
+  const timing = { auth: req.authDurationMs || 0, profile: 0, entitlement: 0, retrieval: 0, quotaReserve: 0, provider: 0, continuation: 0, quotaConsume: 0 };
+  let timingProvider = 'none';
+  let timingModel = 'none';
   const logTiming = (outcome) => console.log(
-    `[AI Timing] mode=${req.body?.mode === 'factcheck' ? 'factcheck' : 'dharma'} auth=${timing.auth}ms profile=${timing.profile}ms ` +
+    `[AI Timing] mode=${req.body?.mode === 'factcheck' ? 'factcheck' : 'dharma'} provider=${timingProvider} model=${timingModel} auth=${timing.auth}ms profile=${timing.profile}ms ` +
     `entitlement=${timing.entitlement}ms retrieval=${timing.retrieval}ms quotaReserve=${timing.quotaReserve}ms ` +
-    `provider=${timing.provider}ms quotaConsume=${timing.quotaConsume}ms total=${Date.now() - totalStartedAt}ms outcome=${outcome}`
+    `provider=${timing.provider}ms continuation=${timing.continuation}ms quotaConsume=${timing.quotaConsume}ms ` +
+    `total=${Date.now() - totalStartedAt}ms outcome=${outcome}`
   );
   try {
     const { messages, userProfile, mode } = req.body;
@@ -924,11 +929,35 @@ FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful h
     const fullPrompt = `${systemPrompt}\n\nConversation:\n${histText}`;
     const providerStartedAt = Date.now();
     try {
-      const result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt, {
-        maxOutputTokens: isFC ? 700 : 1000,
+      const outputBudget = chooseOutputBudget(lastMsg, isFC);
+      let result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt, {
+        maxOutputTokens: outputBudget,
         temperature: isFC ? 0.2 : 0.65,
       });
       timing.provider = Date.now() - providerStartedAt;
+      timingProvider = result.usedApi;
+      timingModel = result.model;
+      const continuationStartedAt = Date.now();
+      const continuationRequired = result.truncated === true;
+      try {
+        result = await completeProviderAnswer(result, async initial => {
+        const continuationPrompt = `${fullPrompt}\n\nPARTIAL ANSWER ALREADY GENERATED:\n${initial.text}\n\n` +
+          `Continue exactly where the partial answer ended. Do not repeat prior text. Preserve the same language, mode, formatting, ` +
+          `and evidence restrictions. Do not add unverified citations. Finish the original answer concisely.`;
+        const options = { timeoutMs: 15000, maxOutputTokens: 600, temperature: isFC ? 0.15 : 0.5 };
+        if (initial.usedApi === 'gemini' && CFG.geminiKey) {
+          return { ...await callGemini(CFG.geminiKey, continuationPrompt, options), usedApi: 'gemini' };
+        }
+        if (initial.usedApi === 'groq' && CFG.groqKey) {
+          return { ...await callGroq(CFG.groqKey, continuationPrompt, options), usedApi: 'groq' };
+        }
+        const error = new Error('Original provider unavailable for continuation');
+        error.code = 'AI_INCOMPLETE_RESPONSE';
+        throw error;
+        });
+      } finally {
+        timing.continuation = continuationRequired ? (result.continuationMs || Date.now() - continuationStartedAt) : 0;
+      }
       const guarded = enforceUnverifiedCitationSafety(result.text, []);
       result.text = normalizeMarkdown(guarded.text);
       try {
@@ -949,7 +978,7 @@ FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful h
       logTiming(`success_${result.usedApi}`);
       res.json({
         success: true, text: result.text, usedApi: result.usedApi, model: result.model,
-        finishReason: result.finishReason, incomplete: result.truncated,
+        finishReason: result.finishReason, incomplete: false,
         intent: factCheckIntent,
         verdict: isFC ? (factCheckIntent === INTENT.RELIGIOUS_BELIEF_OR_TRADITION ? 'RELIGIOUS_TRADITION' : 'UNVERIFIED') : null,
         remaining: quota.remaining, entitlement,
@@ -959,7 +988,7 @@ FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful h
       await sbRest('POST', 'rpc/release_ai_usage', {
         p_user_id: req.authUser.id, p_reservation_id: reservationId,
       }).catch(() => {});
-      const code = ['AI_PROVIDER_CONFIGURATION_ERROR','AI_PROVIDER_RATE_LIMIT','AI_TIMEOUT']
+      const code = ['AI_PROVIDER_CONFIGURATION_ERROR','AI_PROVIDER_RATE_LIMIT','AI_TIMEOUT','AI_INCOMPLETE_RESPONSE']
         .includes(providerError?.code) ? providerError.code : 'AI_PROVIDER_UNAVAILABLE';
       console.error('[AI/dharma-chat] provider failure:', code);
       logTiming('provider_failure');
@@ -2886,7 +2915,6 @@ app.post('/ai/feedback', requireSupabaseUser, async (req, res) => {
       model: sanitize(model || '', 100),
       mode: mode === 'factcheck' ? 'factcheck' : 'dharma',
       latency_ms: Math.max(0, Math.min(Number(latency_ms) || 0, 300000)),
-      quality_score: rating === 'up' ? 0.8 : 0.2,
       created_at: new Date().toISOString(),
     };
     await sbUpsert('ai_feedback', entry, 'user_id,message_id');
@@ -3012,27 +3040,39 @@ app.get('/admin/feedback/ai', adminAuth, async (req, res) => {
 app.patch('/admin/feedback/ai/:id', adminAuth, async (req, res) => {
   try {
     const id = sanitize(req.params.id, 100);
-    const { action, approved_answer, admin_notes } = req.body;
-    if (!['approved','rejected','corrected'].includes(action))
-      return res.status(400).json({ error: 'action must be approved|rejected|corrected' });
+    const { action, corrected_answer, approved_answer, admin_notes, source_reference, source_type, verification_status } = req.body;
+    if (!['approved','rejected','correction_draft','corrected'].includes(action))
+      return res.status(400).json({ error: 'Invalid correction action' });
+    const answer = corrected_answer || approved_answer || '';
+    const verification = ['unverified','verified','rejected'].includes(verification_status) ? verification_status : 'unverified';
     const patch = {
-      admin_reviewed: true,
+      admin_reviewed: action !== 'correction_draft',
       admin_action:   action,
       admin_notes:    sanitize(admin_notes||'', 500),
-      quality_score:  action === 'approved' ? 0.9 : action === 'rejected' ? 0.1 : 0.7,
-      reviewed_at:    new Date().toISOString(),
+      source_reference: sanitize(source_reference || '', 1000),
+      source_type: sanitize(source_type || '', 50),
+      verification_status: action === 'rejected' ? 'rejected' : verification,
+      correction_updated_at: new Date().toISOString(),
+      reviewed_at:    action === 'correction_draft' ? null : new Date().toISOString(),
     };
-    if (action === 'corrected' && approved_answer) {
-      patch.approved_answer = sanitize(approved_answer, 2000);
-      // Save to approved_answers for future retrieval enhancement
+    if (['correction_draft','corrected'].includes(action)) {
+      if (!answer.trim()) return res.status(400).json({ error: 'Corrected answer required' });
+      patch.corrected_answer = sanitize(answer, 4000);
+    }
+    if (action === 'corrected' && verification === 'verified') {
+      const original = await sbSelect('ai_feedback', `?id=eq.${encodeURIComponent(id)}&select=question,language&limit=1`);
       await sbInsert('approved_answers', {
         id: `aa_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
-        question_pattern: '',  // admin can fill via separate endpoint
-        approved_answer:  patch.approved_answer,
-        language:         'hindi',
+        question_pattern: sanitize(original[0]?.question || '', 500),
+        approved_answer:  patch.corrected_answer,
+        scripture_ref: patch.source_reference,
+        language: sanitize(original[0]?.language || 'hindi', 20),
+        category: patch.source_type || 'general',
+        is_active: true,
+        use_count: 0,
         created_at:       new Date().toISOString(),
         updated_at:       new Date().toISOString(),
-      }).catch(()=>{});
+      });
     }
     await sbUpdate('ai_feedback', `?id=eq.${encodeURIComponent(id)}`, patch);
     await auditLog('review_ai_feedback', 'admin', id, action);
@@ -3209,6 +3249,80 @@ app.patch('/users/update', async (req, res) => {
 // DELETE /users/delete
 app.delete('/users/delete', async (req, res) => {
   res.status(501).json({ error: 'Account deletion is not available yet.' });
+});
+
+app.get('/notifications/unread-count', requireSupabaseUser, async (req, res) => {
+  try {
+    const rows = await sbSelect('user_notifications', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&read_at=is.null&select=id,expires_at&limit=100`);
+    const now = Date.now();
+    res.json({ success: true, count: rows.filter(row => !row.expires_at || Date.parse(row.expires_at) > now).length });
+  } catch (error) {
+    console.error('[notifications/unread-count]', error.message);
+    res.status(500).json({ error: 'NOTIFICATIONS_UNAVAILABLE' });
+  }
+});
+
+app.get('/notifications', requireSupabaseUser, async (req, res) => {
+  try {
+    const limit = Math.min(Math.max(Number(req.query.limit) || 50, 1), 100);
+    const rows = await sbSelect('user_notifications', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&order=created_at.desc&limit=${limit}`);
+    const now = Date.now();
+    res.json({ success: true, notifications: rows.filter(row => !row.expires_at || Date.parse(row.expires_at) > now) });
+  } catch (error) {
+    console.error('[notifications]', error.message);
+    res.status(500).json({ error: 'NOTIFICATIONS_UNAVAILABLE' });
+  }
+});
+
+app.patch('/notifications/:id/read', requireSupabaseUser, async (req, res) => {
+  try {
+    const id = sanitize(req.params.id, 100);
+    const rows = await sbSelect('user_notifications', `?id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(req.authUser.id)}&select=id&limit=1`);
+    if (!rows.length) return res.status(404).json({ error: 'NOTIFICATION_NOT_FOUND' });
+    await sbRest('PATCH', 'user_notifications', { read_at: new Date().toISOString() }, `?id=eq.${encodeURIComponent(id)}&user_id=eq.${encodeURIComponent(req.authUser.id)}`);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[notifications/read]', error.message);
+    res.status(500).json({ error: 'NOTIFICATIONS_UNAVAILABLE' });
+  }
+});
+
+app.post('/notifications/read-all', requireSupabaseUser, async (req, res) => {
+  try {
+    await sbRest('PATCH', 'user_notifications', { read_at: new Date().toISOString() }, `?user_id=eq.${encodeURIComponent(req.authUser.id)}&read_at=is.null`);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[notifications/read-all]', error.message);
+    res.status(500).json({ error: 'NOTIFICATIONS_UNAVAILABLE' });
+  }
+});
+
+app.post('/admin/user-notifications', adminAuth, async (req, res) => {
+  try {
+    const { user_id, target, type, title, body, data, priority, expires_at, action_route, action_label } = req.body;
+    if (!title || !body) return res.status(400).json({ error: 'title and body required' });
+    if (!NOTIFICATION_TYPES.has(type)) return res.status(400).json({ error: 'Invalid notification type' });
+    const safeRoute = action_route ? sanitize(action_route, 100) : null;
+    if (safeRoute && !SAFE_NOTIFICATION_ROUTES.has(safeRoute)) return res.status(400).json({ error: 'Unsafe action route' });
+    let userIds = [];
+    if (target === 'all') userIds = (await sbSelect('users', '?select=id&limit=10000')).map(user => user.id).filter(Boolean);
+    else if (user_id) userIds = [user_id];
+    if (!userIds.length) return res.status(400).json({ error: 'No notification recipients' });
+    const createdAt = new Date().toISOString();
+    const rows = userIds.map(userId => ({
+      id: crypto.randomUUID(), user_id: userId, type,
+      title: sanitize(title, 200), body: sanitize(body, 1000),
+      data: data && typeof data === 'object' && !Array.isArray(data) ? data : {},
+      priority: ['low','normal','high'].includes(priority) ? priority : 'normal',
+      expires_at: expires_at || null, action_route: safeRoute,
+      action_label: sanitize(action_label || '', 100), created_at: createdAt,
+    }));
+    await sbInsert('user_notifications', rows);
+    res.json({ success: true, created: rows.length });
+  } catch (error) {
+    console.error('[admin/user-notifications]', error.message);
+    res.status(500).json({ error: 'NOTIFICATION_CREATE_FAILED' });
+  }
 });
 
 
