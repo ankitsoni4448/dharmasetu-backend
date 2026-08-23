@@ -42,17 +42,21 @@ test('provider HTTP failures are safely classified', () => {
   assert.equal(classifyStatus(503), 'PROVIDER_UNAVAILABLE');
 });
 
-test('basic generation reuses one token and fetches the two legacy modules', async () => {
+test('basic generation reuses one token and fetches all strict core modules', async () => {
   const urls = [];
   const fetchImpl = async url => {
     urls.push(String(url));
     if (String(url).endsWith('/token')) return response({ json: { access_token: 'token', expires_in: 3600 } });
+    if (/\/chart\?/.test(String(url))) return response({ text: '<svg xmlns="http://www.w3.org/2000/svg" />' });
     return response({ json: { status: 'ok', data: { source: String(url) } } });
   };
   const result = await fetchBasicKundli(input, { env, fetchImpl });
   assert.equal(urls.filter(url => url.endsWith('/token')).length, 1);
   assert.match(result.modules.birthDetails.source, /birth-details/);
   assert.match(result.modules.basicKundli.source, /\/kundli\?/);
+  assert.match(result.modules.planetPosition.source, /planet-position/);
+  assert.match(result.modules.planetPosition.source, /planets=0%2C1%2C2%2C3%2C4%2C5%2C6%2C100%2C101%2C102/);
+  assert.equal(result.moduleStatus.d1, 'READY');
 });
 
 test('deep generation is disabled unless backend configuration explicitly enables it', async () => {
@@ -88,6 +92,19 @@ test('missing required deep module rejects KUNDLI_READY generation', async () =>
   await assert.rejects(fetchPrimaryKundli(input, {
     env: { ...env, PROKERALA_DEEP_KUNDLI_ENABLED: 'true' }, fetchImpl: deepFetch({ failPattern: /kundli\/advanced/ }),
   }), error => error.code === 'PROVIDER_PLAN_REQUIRED');
+});
+
+test('provider 429 is classified and prevents uncontrolled follow-on scheduling', async () => {
+  let providerCalls = 0;
+  const fetchImpl = async url => {
+    if (String(url).endsWith('/token')) return response({ json: { access_token: 'token', expires_in: 3600 } });
+    providerCalls += 1;
+    return response({ ok: false, status: 429 });
+  };
+  await assert.rejects(fetchPrimaryKundli(input, {
+    env: { ...env, PROKERALA_DEEP_KUNDLI_ENABLED: 'true' }, fetchImpl, concurrency: 1,
+  }), error => error.code === 'PROVIDER_RATE_LIMITED');
+  assert.equal(providerCalls, 1);
 });
 
 test('module timeout is classified without returning a fabricated result', async () => {

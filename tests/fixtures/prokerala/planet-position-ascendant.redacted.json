@@ -1,0 +1,20 @@
+{
+  "planet_position": [
+    {
+      "id": 100,
+      "name": "Ascendant",
+      "rasi": { "id": 1, "name": "Mesha" },
+      "longitude": 12.5,
+      "degree": 12.5,
+      "is_retrograde": false
+    },
+    {
+      "id": 0,
+      "name": "Sun",
+      "rasi": { "id": 10, "name": "Makara" },
+      "longitude": 280.25,
+      "degree": 10.25,
+      "is_retrograde": false
+    }
+  ]
+}

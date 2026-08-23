@@ -65,13 +65,15 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
     kundli.moon_sign, kundli.chandra_rasi, nakshatraDetails.chandra_rasi);
   const ascendant = first(details.lagna, details.ascendant, kundli.lagna, kundli.ascendant);
   const planetPosition = providerBundle.planetPosition || {};
-  const planets = findPlanetRows(planetPosition, kundli, details).filter(row => PLANETS.includes(row.name.toLowerCase()));
+  const providerPositions = findPlanetRows(planetPosition, kundli, details);
+  const ascendantPosition = providerPositions.find(row => row.name.toLowerCase() === 'ascendant');
+  const planets = providerPositions.filter(row => PLANETS.includes(row.name.toLowerCase()));
   const charts = kundli.charts || kundli.chart || {};
   const dasha = first(kundli.dasha, kundli.dasha_periods, details.dasha, details.dasha_periods) || null;
 
   const core = {
     rashi: text(moonSign),
-    lagna: text(ascendant),
+    lagna: text(first(ascendant, ascendantPosition?.sign)),
     nakshatra: text(nakshatra),
     nakshatraPada: finite(first(nakshatra?.pada, details.nakshatra_pada, kundli.nakshatra_pada)),
   };
@@ -96,6 +98,11 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
     precision: birthProfile.birth_time_certainty === 'EXACT' ? 'FULL' : 'REDUCED',
     core,
     overview: core,
+    providerEvidence: {
+      lagna: ascendantPosition?.sign ? { module: 'planetPosition', planetId: 100 } : ascendant ? { module: 'birthDetailsOrKundli' } : null,
+      rashi: moonSign ? { module: 'birthDetailsOrKundli' } : null,
+      nakshatra: nakshatra ? { module: 'birthDetailsOrKundli' } : null,
+    },
     planets,
     charts: {
       d1: first(providerBundle.d1, charts.d1, charts.rasi, kundli.rasi_chart, kundli.birth_chart),
@@ -109,6 +116,28 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
     moduleStatus: providerBundle.moduleStatus || {},
     precisionWarnings,
   };
+}
+
+function validateKundliReadiness(normalized = {}, birthProfile = {}, { deepEnabled = false } = {}) {
+  const missingFields = [];
+  if (!text(normalized.core?.lagna)) missingFields.push('lagna');
+  if (!text(normalized.core?.rashi)) missingFields.push('rashi');
+  if (!text(normalized.core?.nakshatra)) missingFields.push('nakshatra');
+  if (!Number.isInteger(Number(normalized.core?.nakshatraPada)) || Number(normalized.core.nakshatraPada) < 1 || Number(normalized.core.nakshatraPada) > 4) missingFields.push('nakshatra_pada');
+  if (normalized.charts?.d1?.format !== 'svg' || !text(normalized.charts.d1.content)) missingFields.push('d1');
+  if (!Array.isArray(normalized.planets) || normalized.planets.length === 0) missingFields.push('planets');
+  if (normalized.calculation?.provider !== 'prokerala') missingFields.push('calculation.provider');
+  if (!text(normalized.calculation?.providerApiVersion)) missingFields.push('calculation.provider_api_version');
+  if (!text(normalized.calculation?.calculationVersion)) missingFields.push('calculation.calculation_version');
+  if (normalized.calculation?.ayanamsha !== 'lahiri') missingFields.push('calculation.ayanamsha');
+  if (!text(birthProfile.input_fingerprint) || normalized.inputFingerprint !== birthProfile.input_fingerprint) missingFields.push('input_fingerprint');
+  if (!Number.isInteger(Number(birthProfile.profile_version)) || normalized.birthProfileVersion !== Number(birthProfile.profile_version)) missingFields.push('birth_profile_version');
+  const requiredModules = deepEnabled ? ['birthDetails', 'advancedKundli', 'planetPosition', 'd1']
+    : ['birthDetails', 'basicKundli', 'planetPosition', 'd1'];
+  for (const moduleName of requiredModules) {
+    if (normalized.moduleStatus?.[moduleName] !== 'READY') missingFields.push(`module.${moduleName}`);
+  }
+  return { valid: missingFields.length === 0, error: missingFields.length ? 'KUNDLI_CORE_INCOMPLETE' : null, missingFields };
 }
 
 function compactContext(normalized = {}) {
@@ -174,5 +203,5 @@ function compareReference(actual, expected, toleranceDegrees = 0.1) {
 
 module.exports = {
   CALCULATION_STANDARD, normalizeProviderChart, compactContext,
-  validateAuthoritativeBirthProfile, circularLongitudeDelta, compareReference,
+  validateAuthoritativeBirthProfile, validateKundliReadiness, circularLongitudeDelta, compareReference,
 };

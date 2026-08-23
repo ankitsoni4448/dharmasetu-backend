@@ -3,13 +3,14 @@
 const BASE_URL = 'https://api.prokerala.com/v2';
 const TOKEN_URL = 'https://api.prokerala.com/token';
 const LAHIRI_AYANAMSA = 1;
-const MODULE_STATE = Object.freeze({ READY: 'READY', UNAVAILABLE: 'UNAVAILABLE', FAILED: 'FAILED', NOT_APPLICABLE: 'NOT_APPLICABLE', NOT_REQUESTED: 'NOT_REQUESTED' });
+const MODULE_STATE = Object.freeze({ READY: 'READY', UNAVAILABLE: 'UNAVAILABLE', FAILED: 'FAILED', RATE_LIMITED: 'RATE_LIMITED', NOT_APPLICABLE: 'NOT_APPLICABLE', NOT_REQUESTED: 'NOT_REQUESTED' });
 
 const MODULES = Object.freeze({
   birthDetails: { path: '/astrology/birth-details', credits: 50, required: true, type: 'json' },
   basicKundli: { path: '/astrology/kundli', credits: 50, required: true, type: 'json', deep: false },
   advancedKundli: { path: '/astrology/kundli/advanced', credits: 300, required: true, type: 'json' },
-  planetPosition: { path: '/astrology/planet-position', credits: 30, required: true, type: 'json' },
+  planetPosition: { path: '/astrology/planet-position', credits: 30, required: true, type: 'json',
+    query: { planets: '0,1,2,3,4,5,6,100,101,102' } },
   d1: { path: '/astrology/chart', credits: 50, required: true, type: 'svg', chartType: 'rasi' },
   d9: { path: '/astrology/chart', credits: 50, required: false, type: 'svg', chartType: 'navamsa' },
   bhava: { path: '/astrology/chart', credits: 50, required: false, type: 'svg', chartType: 'bhava' },
@@ -86,6 +87,7 @@ async function requestModule(name, input, options = {}) {
   try {
     const token = await getToken({ env: options.env, fetchImpl: options.fetchImpl, signal: controller.signal });
     const params = new URLSearchParams(commonParams(input));
+    for (const [key, value] of Object.entries(module.query || {})) params.set(key, value);
     if (module.chartType) {
       params.set('chart_type', module.chartType); params.set('chart_style', 'north-indian'); params.set('format', 'svg');
     }
@@ -120,13 +122,17 @@ async function fetchPrimaryKundli(input, options = {}) {
   const names = DEEP_MODULE_NAMES;
   const moduleStatus = Object.fromEntries(names.map(name => [name, MODULE_STATE.NOT_REQUESTED]));
   const modules = {};
+  let rateLimited = false;
   try {
     await mapLimit(names, options.concurrency || 3, async name => {
+      if (rateLimited) return;
       try {
         modules[name] = await requestModule(name, input, { ...options, signal: overall.signal });
         moduleStatus[name] = MODULE_STATE.READY;
       } catch (error) {
-        moduleStatus[name] = error.code === 'MODULE_UNAVAILABLE' || error.code === 'PROVIDER_PLAN_REQUIRED' ? MODULE_STATE.UNAVAILABLE : MODULE_STATE.FAILED;
+        if (error.code === 'PROVIDER_RATE_LIMITED') rateLimited = true;
+        moduleStatus[name] = error.code === 'PROVIDER_RATE_LIMITED' ? MODULE_STATE.RATE_LIMITED
+          : error.code === 'MODULE_UNAVAILABLE' || error.code === 'PROVIDER_PLAN_REQUIRED' ? MODULE_STATE.UNAVAILABLE : MODULE_STATE.FAILED;
         modules[name] = null;
         if (MODULES[name].required) { overall.abort(); throw error; }
       }
@@ -136,13 +142,16 @@ async function fetchPrimaryKundli(input, options = {}) {
 }
 
 async function fetchBasicKundli(input, options = {}) {
-  const [birthDetails, basicKundli] = await Promise.all([
+  const [birthDetails, basicKundli, planetPosition, d1] = await Promise.all([
     requestModule('birthDetails', input, options),
     requestModule('basicKundli', input, options),
+    requestModule('planetPosition', input, options),
+    requestModule('d1', input, options),
   ]);
   return {
-    modules: { birthDetails, basicKundli },
-    moduleStatus: { birthDetails: MODULE_STATE.READY, basicKundli: MODULE_STATE.READY },
+    modules: { birthDetails, basicKundli, planetPosition, d1 },
+    moduleStatus: { birthDetails: MODULE_STATE.READY, basicKundli: MODULE_STATE.READY,
+      planetPosition: MODULE_STATE.READY, d1: MODULE_STATE.READY },
     generatedAt: new Date().toISOString(), provider: 'prokerala', providerApiVersion: 'v2',
   };
 }

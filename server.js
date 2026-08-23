@@ -34,6 +34,7 @@ const {
   normalizeProviderChart,
   compactContext: compactNormalizedJyotishContext,
   validateAuthoritativeBirthProfile,
+  validateKundliReadiness,
 } = require('./utils/kundliLifecycle');
 const {
   fetchBasicKundli,
@@ -2056,7 +2057,10 @@ app.post('/account/kundli/generate', requireSupabaseUser, async (req, res) => {
     const existing = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
     if (existing?.status === 'KUNDLI_READY' && existing.input_fingerprint === birth.input_fingerprint
       && existing.calculation_version === calculationVersion) {
-      return res.json({ success: true, reused: true, status: 'KUNDLI_READY', context: existing.compact_context });
+      const storedReadiness = validateKundliReadiness(existing.chart_data?.normalized, birth, { deepEnabled });
+      if (storedReadiness.valid) {
+        return res.json({ success: true, reused: true, status: 'KUNDLI_READY', context: existing.compact_context });
+      }
     }
     if (!canCallAPI()) return res.status(503).json({ error: 'KUNDLI_PROVIDER_UNAVAILABLE' });
     const offset = formatUtcOffset(birth.utc_offset_minutes);
@@ -2073,8 +2077,16 @@ app.post('/account/kundli/generate', requireSupabaseUser, async (req, res) => {
       moduleStatus: providerResult.moduleStatus,
       generatedAt: providerResult.generatedAt,
     });
+    const readiness = validateKundliReadiness(normalized, birth, { deepEnabled });
+    if (!readiness.valid) {
+      await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birth.profile_version,
+        input_fingerprint: birth.input_fingerprint, status: 'PROVIDER_UNAVAILABLE', provider: 'prokerala',
+        calculation_version: calculationVersion, ayanamsha: CALCULATION_STANDARD.ayanamsha,
+        chart_data: null, compact_context: null, failure_code: 'KUNDLI_CORE_INCOMPLETE',
+        generated_at: null, updated_at: new Date().toISOString() }, 'user_id');
+      return res.status(502).json({ error: 'KUNDLI_CORE_INCOMPLETE', missing_fields: readiness.missingFields });
+    }
     const context = compactNormalizedJyotishContext(normalized);
-    if (!context.rashi && !context.lagna && !context.nakshatra) throw new Error('KUNDLI_PROVIDER_INVALID_RESPONSE');
     const now = new Date().toISOString();
     await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birth.profile_version,
       input_fingerprint: birth.input_fingerprint, status: 'KUNDLI_READY', provider: 'prokerala',

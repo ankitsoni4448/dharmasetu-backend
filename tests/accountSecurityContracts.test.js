@@ -13,6 +13,8 @@ assert.match(server, /req\.authUser\.id/);
 assert.match(server, /x-confirm-account-deletion/);
 assert.match(server, /supabaseAuth\.auth\.admin\.deleteUser\(req\.authUser\.id/);
 assert.match(server, /RECENT_REAUTHENTICATION_REQUIRED/);
+assert.match(server, /validateKundliReadiness\(existing\.chart_data\?\.normalized/);
+assert.match(server, /KUNDLI_CORE_INCOMPLETE/);
 assert.match(server, /app\.patch\('\/users\/update', requireSupabaseUser/);
 assert.match(server, /app\.post\('\/kundli\/calculate', requireSupabaseUser/);
 assert.match(server, /app\.post\('\/users\/activity', requireSupabaseUser/);
