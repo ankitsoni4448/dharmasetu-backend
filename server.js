@@ -29,6 +29,17 @@ const {
 const { completeProviderAnswer, chooseOutputBudget } = require('./utils/answerCompletion');
 const { NOTIFICATION_TYPES, SAFE_NOTIFICATION_ROUTES } = require('./utils/notificationSafety');
 const { validateOnboarding, birthInputFingerprint, formatUtcOffset } = require('./utils/accountLifecycle');
+const {
+  CALCULATION_STANDARD,
+  normalizeProviderChart,
+  compactContext: compactNormalizedJyotishContext,
+  validateAuthoritativeBirthProfile,
+} = require('./utils/kundliLifecycle');
+const {
+  fetchBasicKundli,
+  fetchPrimaryKundli,
+  ProkeralaError,
+} = require('./utils/prokeralaClient');
 
 require('dotenv').config();
 
@@ -444,10 +455,7 @@ async function resolveBirthplace(placeInput, dateOfBirth) {
     const countryCode = String(address.country_code || '').toUpperCase();
     let timezone = '';
     let utcOffsetMinutes = null;
-    if (countryCode === 'IN') {
-      timezone = 'Asia/Kolkata';
-      utcOffsetMinutes = 330;
-    } else if (process.env.TIMEZONEDB_API_KEY) {
+    if (process.env.TIMEZONEDB_API_KEY) {
       const timestamp = Math.floor(new Date(`${dateOfBirth}T12:00:00Z`).getTime() / 1000);
       const tzUrl = `https://api.timezonedb.com/v2.1/get-time-zone?key=${encodeURIComponent(process.env.TIMEZONEDB_API_KEY)}&format=json&by=position&lat=${latitude}&lng=${longitude}&time=${timestamp}`;
       const tzResponse = await fetch(tzUrl, { signal: controller.signal });
@@ -456,6 +464,12 @@ async function resolveBirthplace(placeInput, dateOfBirth) {
         timezone = tz.zoneName;
         utcOffsetMinutes = Number(tz.gmtOffset) / 60;
       }
+    }
+    // Modern India has a stable UTC+05:30 civil offset. Historical Indian
+    // offsets/DST must come from the configured historical timezone provider.
+    if (!timezone && countryCode === 'IN' && dateOfBirth >= '1946-01-01') {
+      timezone = 'Asia/Kolkata';
+      utcOffsetMinutes = 330;
     }
     if (!timezone || !Number.isInteger(utcOffsetMinutes)) return { timezoneUnresolved: true, countryCode };
     return {
@@ -2020,41 +2034,66 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
 
 app.post('/account/kundli/generate', requireSupabaseUser, async (req, res) => {
   if (!checkRateLimit(`kundli_generate_${req.authUser.id}`, 5)) return res.status(429).json({ error: 'RATE_LIMIT' });
+  const generationStartedAt = Date.now();
   try {
     const birth = (await sbSelect('birth_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
     if (!birth) return res.status(409).json({ error: 'BIRTH_PROFILE_REQUIRED' });
-    if (birth.birth_time_certainty === 'UNKNOWN' || !birth.birth_time) {
-      return res.status(409).json({ error: 'BIRTH_TIME_REQUIRED_FOR_PRECISE_KUNDLI' });
+    const birthValidation = validateAuthoritativeBirthProfile(birth);
+    if (!birthValidation.valid) {
+      const unknownTime = birthValidation.errors.includes('BIRTH_TIME_REQUIRED');
+      await sbUpdate('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, {
+        status: 'INPUT_CORRECTION_REQUIRED',
+        failure_code: unknownTime ? 'BIRTH_TIME_UNKNOWN' : birthValidation.errors[0],
+        updated_at: new Date().toISOString(),
+      }).catch(() => {});
+      return res.status(422).json({
+        error: unknownTime ? 'BIRTH_TIME_REQUIRED_FOR_PRECISE_KUNDLI' : 'KUNDLI_INPUT_CORRECTION_REQUIRED',
+        fields: birthValidation.errors,
+      });
     }
+    const deepEnabled = process.env.PROKERALA_DEEP_KUNDLI_ENABLED === 'true';
+    const calculationVersion = deepEnabled ? 'prokerala-v2-lahiri-deep-v1' : CALCULATION_STANDARD.calculationVersion;
     const existing = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
-    if (existing?.status === 'KUNDLI_READY' && existing.input_fingerprint === birth.input_fingerprint) {
+    if (existing?.status === 'KUNDLI_READY' && existing.input_fingerprint === birth.input_fingerprint
+      && existing.calculation_version === calculationVersion) {
       return res.json({ success: true, reused: true, status: 'KUNDLI_READY', context: existing.compact_context });
     }
     if (!canCallAPI()) return res.status(503).json({ error: 'KUNDLI_PROVIDER_UNAVAILABLE' });
     const offset = formatUtcOffset(birth.utc_offset_minutes);
     const datetime = `${birth.date_of_birth}T${String(birth.birth_time).slice(0,5)}:00${offset}`;
-    const token = await getProkeralaToken();
-    const coordinates = `${birth.latitude},${birth.longitude}`;
-    const [detailsResponse, kundliResponse] = await Promise.all([
-      fetch(`https://api.prokerala.com/v2/astrology/birth-details?ayanamsa=lahiri&coordinates=${coordinates}&datetime=${encodeURIComponent(datetime)}`, { headers: { Authorization: `Bearer ${token}` } }),
-      fetch(`https://api.prokerala.com/v2/astrology/kundli?ayanamsa=lahiri&coordinates=${coordinates}&datetime=${encodeURIComponent(datetime)}`, { headers: { Authorization: `Bearer ${token}` } }),
-    ]);
-    if (!detailsResponse.ok || !kundliResponse.ok) throw new Error('KUNDLI_PROVIDER_UNAVAILABLE');
-    const details = (await detailsResponse.json())?.data;
-    const chart = (await kundliResponse.json())?.data;
+    const providerStartedAt = Date.now();
+    const providerResult = deepEnabled
+      ? await fetchPrimaryKundli({ latitude: birth.latitude, longitude: birth.longitude, datetime })
+      : await fetchBasicKundli({ latitude: birth.latitude, longitude: birth.longitude, datetime });
+    const details = providerResult.modules.birthDetails;
+    const chart = deepEnabled ? providerResult.modules.advancedKundli : providerResult.modules.basicKundli;
     if (!details || !chart) throw new Error('KUNDLI_PROVIDER_INVALID_RESPONSE');
-    const context = compactJyotishContext({ ...details, ...chart }, birth);
+    const normalized = normalizeProviderChart(details, chart, birth, {
+      ...providerResult.modules,
+      moduleStatus: providerResult.moduleStatus,
+      generatedAt: providerResult.generatedAt,
+    });
+    const context = compactNormalizedJyotishContext(normalized);
+    if (!context.rashi && !context.lagna && !context.nakshatra) throw new Error('KUNDLI_PROVIDER_INVALID_RESPONSE');
     const now = new Date().toISOString();
     await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birth.profile_version,
       input_fingerprint: birth.input_fingerprint, status: 'KUNDLI_READY', provider: 'prokerala',
-      calculation_version: 'prokerala-v2-2026-08', ayanamsha: 'lahiri', chart_data: { birthDetails: details, kundli: chart },
+      calculation_version: calculationVersion, ayanamsha: CALCULATION_STANDARD.ayanamsha,
+      chart_data: { providerModules: providerResult.modules, moduleStatus: providerResult.moduleStatus, normalized },
       compact_context: context, failure_code: null, generated_at: now, updated_at: now }, 'user_id');
     await sbUpdate('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, { onboarding_status: 'KUNDLI_READY', updated_at: now });
     await sbUpdate('users', `?id=eq.${encodeURIComponent(req.authUser.id)}`, { rashi: context.rashi, nakshatra: context.nakshatra, lagna: context.lagna, updated_at: now });
-    res.json({ success: true, reused: false, status: 'KUNDLI_READY', context });
+    console.log(`[Kundli Timing] provider=${Date.now() - providerStartedAt}ms total=${Date.now() - generationStartedAt}ms reused=false`);
+    res.json({ success: true, reused: false, status: 'KUNDLI_READY', context,
+      calculationVersion, moduleStatus: providerResult.moduleStatus });
   } catch (error) {
-    console.error('[account/kundli/generate]', error.message);
-    await sbUpdate('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, { status: 'PROVIDER_UNAVAILABLE', failure_code: 'KUNDLI_PROVIDER_UNAVAILABLE', updated_at: new Date().toISOString() }).catch(() => {});
+    const failureCode = error.code === 'PROVIDER_TIMEOUT' || error.name === 'AbortError' ? 'KUNDLI_PROVIDER_TIMEOUT'
+      : error instanceof ProkeralaError && error.code === 'PROVIDER_PLAN_REQUIRED' ? 'KUNDLI_PROVIDER_PLAN_REQUIRED'
+      : error instanceof ProkeralaError && error.code === 'PROVIDER_RATE_LIMITED' ? 'KUNDLI_PROVIDER_RATE_LIMITED'
+      : error.message === 'KUNDLI_PROVIDER_INVALID_RESPONSE' ? 'KUNDLI_PROVIDER_INVALID_RESPONSE'
+      : 'KUNDLI_PROVIDER_UNAVAILABLE';
+    console.warn(`[Kundli] generation failed code=${failureCode} totalMs=${Date.now() - generationStartedAt}`);
+    await sbUpdate('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, { status: 'PROVIDER_UNAVAILABLE', failure_code: failureCode, updated_at: new Date().toISOString() }).catch(() => {});
     res.status(503).json({ error: 'KUNDLI_PROVIDER_UNAVAILABLE' });
   }
 });
