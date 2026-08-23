@@ -28,6 +28,7 @@ const {
 } = require('./utils/aiSafety');
 const { completeProviderAnswer, chooseOutputBudget } = require('./utils/answerCompletion');
 const { NOTIFICATION_TYPES, SAFE_NOTIFICATION_ROUTES } = require('./utils/notificationSafety');
+const { validateOnboarding, birthInputFingerprint, formatUtcOffset } = require('./utils/accountLifecycle');
 
 require('dotenv').config();
 
@@ -421,8 +422,82 @@ function resolveEffectiveEntitlement(user = {}) {
 }
 
 async function getAuthenticatedUserRecord(req) {
-  const rows = await sbSelect('users', `?phone=eq.${encodeURIComponent(req.authPhone)}&limit=1`);
-  return rows[0] || null;
+  const byId = await sbSelect('users', `?id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`);
+  if (byId[0]) return byId[0];
+  const byPhone = await sbSelect('users', `?phone=eq.${encodeURIComponent(req.authPhone)}&limit=1`);
+  return byPhone[0] || null;
+}
+
+async function resolveBirthplace(placeInput, dateOfBirth) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(placeInput)}`;
+    const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'DharmaSetu/1.0 (birthplace resolution)' } });
+    if (!response.ok) throw new Error('GEOCODING_UNAVAILABLE');
+    const result = (await response.json())?.[0];
+    if (!result) return null;
+    const latitude = Number(result.lat);
+    const longitude = Number(result.lon);
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+    const address = result.address || {};
+    const countryCode = String(address.country_code || '').toUpperCase();
+    let timezone = '';
+    let utcOffsetMinutes = null;
+    if (countryCode === 'IN') {
+      timezone = 'Asia/Kolkata';
+      utcOffsetMinutes = 330;
+    } else if (process.env.TIMEZONEDB_API_KEY) {
+      const timestamp = Math.floor(new Date(`${dateOfBirth}T12:00:00Z`).getTime() / 1000);
+      const tzUrl = `https://api.timezonedb.com/v2.1/get-time-zone?key=${encodeURIComponent(process.env.TIMEZONEDB_API_KEY)}&format=json&by=position&lat=${latitude}&lng=${longitude}&time=${timestamp}`;
+      const tzResponse = await fetch(tzUrl, { signal: controller.signal });
+      const tz = tzResponse.ok ? await tzResponse.json() : null;
+      if (tz?.status === 'OK' && tz.zoneName && Number.isFinite(Number(tz.gmtOffset))) {
+        timezone = tz.zoneName;
+        utcOffsetMinutes = Number(tz.gmtOffset) / 60;
+      }
+    }
+    if (!timezone || !Number.isInteger(utcOffsetMinutes)) return { timezoneUnresolved: true, countryCode };
+    return {
+      placeName: sanitize(result.display_name, 300),
+      city: sanitize(address.city || address.town || address.village || address.county || '', 100),
+      region: sanitize(address.state || address.region || '', 100),
+      country: sanitize(address.country || '', 100), countryCode,
+      latitude, longitude, timezone, utcOffsetMinutes,
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function compactJyotishContext(data, birthProfile) {
+  return {
+    birthTimeCertainty: birthProfile.birth_time_certainty,
+    rashi: data?.moon_sign || data?.rasi || '',
+    lagna: data?.ascendant?.name || data?.lagna || '',
+    nakshatra: data?.nakshatra?.name || '',
+    nakshatraPada: data?.nakshatra?.pada || null,
+    currentMahadasha: data?.dasha?.current_mahadasha?.name || null,
+    currentAntardasha: data?.dasha?.current_antardasha?.name || null,
+    precisionWarning: birthProfile.birth_time_certainty === 'EXACT' ? null : 'Birth time is not exact; time-sensitive chart interpretation may vary.',
+  };
+}
+
+async function getUserAstrologyContext(authUserId, userRecord) {
+  if (!authUserId || !userRecord) return { available: false };
+  const stored = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(authUserId)}&status=eq.KUNDLI_READY&select=compact_context,birth_profile_version,calculation_version&limit=1`).catch(() => []))[0];
+  if (stored?.compact_context) return { available: true, ...stored.compact_context,
+    birthProfileVersion: stored.birth_profile_version, calculationVersion: stored.calculation_version };
+  const context = {
+    rashi: sanitize(userRecord.rashi || '', 80),
+    nakshatra: sanitize(userRecord.nakshatra || '', 80),
+    lagna: sanitize(userRecord.lagna || '', 80),
+    birthDate: sanitize(userRecord.dob || userRecord.birth_date || '', 20),
+    birthTime: sanitize(userRecord.tob || userRecord.birth_time || '', 20),
+    birthPlace: sanitize(userRecord.birth_city || '', 100),
+  };
+  context.available = Boolean(context.rashi || context.nakshatra || context.lagna);
+  return context;
 }
 
 // ─── AUDIT LOGGER ─────────────────────────────────────────────
@@ -1108,11 +1183,10 @@ app.post('/users/register', requireSupabaseUser, async (req, res) => {
   }
 });
 
-app.post('/users/activity', async (req, res) => {
+app.post('/users/activity', requireSupabaseUser, async (req, res) => {
   try {
-    const { phone, type } = req.body;
-    if (!phone) return res.json({ success: true });
-    const cleanPhone = sanitize(phone, 20);
+    const { type } = req.body;
+    const cleanPhone = req.authPhone;
     const users = await sbSelect('users', `?phone=eq.${encodeURIComponent(cleanPhone)}&limit=1`);
     if (users.length) {
       const u = users[0];
@@ -1862,6 +1936,127 @@ app.post('/admin/config', adminAuth, async (req, res) => {
   safe.groqKey = safe.groqKey ? '***SAVED' : '';
   logAIConfig();
   res.json({ success: true, config: safe, saved: saves.length });
+});
+
+app.get('/account/me', requireSupabaseUser, async (req, res) => {
+  try {
+    const [legacyUser, profiles, births, jyotish] = await Promise.all([
+      getAuthenticatedUserRecord(req),
+      sbSelect('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`),
+      sbSelect('birth_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`),
+      sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`),
+    ]);
+    res.json({ success: true, account: { authUserId: req.authUser.id, phone: req.authPhone },
+      profile: profiles[0] || legacyUser || null, birthProfile: births[0] || null,
+      jyotishProfile: jyotish[0] || null,
+      onboardingStatus: profiles[0]?.onboarding_status || (legacyUser ? 'PROFILE_PENDING' : 'PROFILE_PENDING') });
+  } catch (error) {
+    console.error('[account/me]', error.message);
+    res.status(500).json({ error: 'ACCOUNT_RESTORE_FAILED' });
+  }
+});
+
+app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
+  if (!checkRateLimit(`onboarding_${req.authUser.id}`, 8)) return res.status(429).json({ error: 'RATE_LIMIT' });
+  try {
+    const input = {
+      name: sanitize(req.body?.name || '', 100), gender: req.body?.gender,
+      dateOfBirth: req.body?.dateOfBirth, birthTime: req.body?.birthTime || null,
+      birthTimeCertainty: req.body?.birthTimeCertainty,
+      birthplace: sanitize(req.body?.birthplace || '', 200), language: req.body?.language,
+      interests: Array.isArray(req.body?.interests) ? req.body.interests.slice(0, 20).map(v => sanitize(v, 60)).filter(Boolean) : [],
+      birthDataConsent: req.body?.birthDataConsent === true,
+    };
+    const validation = validateOnboarding(input);
+    if (!validation.valid) return res.status(400).json({ error: 'INVALID_ONBOARDING_DATA', fields: validation.errors });
+    const place = await resolveBirthplace(input.birthplace, input.dateOfBirth);
+    if (!place) return res.status(422).json({ error: 'BIRTHPLACE_UNRESOLVED' });
+    if (place.timezoneUnresolved) return res.status(422).json({ error: 'BIRTHPLACE_TIMEZONE_UNRESOLVED' });
+
+    const existingBirth = (await sbSelect('birth_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
+    const candidate = {
+      date_of_birth: input.dateOfBirth,
+      birth_time: input.birthTimeCertainty === 'UNKNOWN' ? null : input.birthTime,
+      birth_time_certainty: input.birthTimeCertainty,
+      latitude: place.latitude, longitude: place.longitude, timezone: place.timezone,
+    };
+    const fingerprint = birthInputFingerprint(candidate);
+    if (existingBirth && existingBirth.input_fingerprint !== fingerprint && req.body?.confirmBirthProfileChange !== true) {
+      return res.status(409).json({ error: 'BIRTH_PROFILE_CHANGE_CONFIRMATION_REQUIRED' });
+    }
+    const birthVersion = existingBirth
+      ? existingBirth.input_fingerprint === fingerprint ? existingBirth.profile_version : Number(existingBirth.profile_version || 1) + 1
+      : 1;
+    const now = new Date().toISOString();
+    const status = input.birthTimeCertainty === 'UNKNOWN' ? 'BIRTHPLACE_PENDING' : 'KUNDLI_PENDING';
+    const profileRow = { user_id: req.authUser.id, name: input.name, gender: input.gender, language: input.language,
+      interests: input.interests, onboarding_status: status, birth_data_consent_at: now,
+      birth_data_consent_version: '2026-08-22', updated_at: now };
+    const birthRow = { user_id: req.authUser.id, ...candidate, birthplace_input: input.birthplace,
+      place_name: place.placeName, city: place.city, region: place.region, country: place.country,
+      country_code: place.countryCode, utc_offset_minutes: place.utcOffsetMinutes,
+      profile_version: birthVersion, input_fingerprint: fingerprint, updated_at: now };
+
+    await sbUpsert('user_profiles', profileRow, 'user_id');
+    await sbUpsert('birth_profiles', birthRow, 'user_id');
+    await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birthVersion,
+      input_fingerprint: fingerprint, status: input.birthTimeCertainty === 'UNKNOWN' ? 'INPUT_CORRECTION_REQUIRED' : 'KUNDLI_PENDING',
+      chart_data: null, compact_context: null, failure_code: input.birthTimeCertainty === 'UNKNOWN' ? 'BIRTH_TIME_UNKNOWN' : null,
+      updated_at: now }, 'user_id');
+
+    const legacyUser = { phone: req.authPhone, name: input.name, language: input.language,
+      birth_city: place.city || place.placeName, dob: input.dateOfBirth, firebase_uid: req.authUser.id, last_active: now };
+    const existingLegacy = await getAuthenticatedUserRecord(req);
+    if (existingLegacy) await sbUpdate('users', `?id=eq.${encodeURIComponent(existingLegacy.id)}`, legacyUser);
+    else await sbInsert('users', { id: req.authUser.id, ...legacyUser, created_at: now, plan: 'free', streak: 0, questions: 0, pts: 0 });
+
+    res.json({ success: true, onboardingStatus: status, birthProfileVersion: birthVersion,
+      requiresKundliGeneration: input.birthTimeCertainty !== 'UNKNOWN' });
+  } catch (error) {
+    console.error('[account/onboarding]', error.message);
+    res.status(500).json({ error: 'ONBOARDING_SAVE_FAILED' });
+  }
+});
+
+app.post('/account/kundli/generate', requireSupabaseUser, async (req, res) => {
+  if (!checkRateLimit(`kundli_generate_${req.authUser.id}`, 5)) return res.status(429).json({ error: 'RATE_LIMIT' });
+  try {
+    const birth = (await sbSelect('birth_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
+    if (!birth) return res.status(409).json({ error: 'BIRTH_PROFILE_REQUIRED' });
+    if (birth.birth_time_certainty === 'UNKNOWN' || !birth.birth_time) {
+      return res.status(409).json({ error: 'BIRTH_TIME_REQUIRED_FOR_PRECISE_KUNDLI' });
+    }
+    const existing = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
+    if (existing?.status === 'KUNDLI_READY' && existing.input_fingerprint === birth.input_fingerprint) {
+      return res.json({ success: true, reused: true, status: 'KUNDLI_READY', context: existing.compact_context });
+    }
+    if (!canCallAPI()) return res.status(503).json({ error: 'KUNDLI_PROVIDER_UNAVAILABLE' });
+    const offset = formatUtcOffset(birth.utc_offset_minutes);
+    const datetime = `${birth.date_of_birth}T${String(birth.birth_time).slice(0,5)}:00${offset}`;
+    const token = await getProkeralaToken();
+    const coordinates = `${birth.latitude},${birth.longitude}`;
+    const [detailsResponse, kundliResponse] = await Promise.all([
+      fetch(`https://api.prokerala.com/v2/astrology/birth-details?ayanamsa=lahiri&coordinates=${coordinates}&datetime=${encodeURIComponent(datetime)}`, { headers: { Authorization: `Bearer ${token}` } }),
+      fetch(`https://api.prokerala.com/v2/astrology/kundli?ayanamsa=lahiri&coordinates=${coordinates}&datetime=${encodeURIComponent(datetime)}`, { headers: { Authorization: `Bearer ${token}` } }),
+    ]);
+    if (!detailsResponse.ok || !kundliResponse.ok) throw new Error('KUNDLI_PROVIDER_UNAVAILABLE');
+    const details = (await detailsResponse.json())?.data;
+    const chart = (await kundliResponse.json())?.data;
+    if (!details || !chart) throw new Error('KUNDLI_PROVIDER_INVALID_RESPONSE');
+    const context = compactJyotishContext({ ...details, ...chart }, birth);
+    const now = new Date().toISOString();
+    await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birth.profile_version,
+      input_fingerprint: birth.input_fingerprint, status: 'KUNDLI_READY', provider: 'prokerala',
+      calculation_version: 'prokerala-v2-2026-08', ayanamsha: 'lahiri', chart_data: { birthDetails: details, kundli: chart },
+      compact_context: context, failure_code: null, generated_at: now, updated_at: now }, 'user_id');
+    await sbUpdate('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, { onboarding_status: 'KUNDLI_READY', updated_at: now });
+    await sbUpdate('users', `?id=eq.${encodeURIComponent(req.authUser.id)}`, { rashi: context.rashi, nakshatra: context.nakshatra, lagna: context.lagna, updated_at: now });
+    res.json({ success: true, reused: false, status: 'KUNDLI_READY', context });
+  } catch (error) {
+    console.error('[account/kundli/generate]', error.message);
+    await sbUpdate('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, { status: 'PROVIDER_UNAVAILABLE', failure_code: 'KUNDLI_PROVIDER_UNAVAILABLE', updated_at: new Date().toISOString() }).catch(() => {});
+    res.status(503).json({ error: 'KUNDLI_PROVIDER_UNAVAILABLE' });
+  }
 });
 
 app.get('/admin/ai/health', adminAuth, async (req, res) => {
@@ -3129,22 +3324,21 @@ app.post('/admin/approved-answers', adminAuth, async (req, res) => {
 // ════════════════════════════════════════════════════════════════
 // P2 — KUNDLI VIA PROKERALA
 // ════════════════════════════════════════════════════════════════
-app.post('/kundli/calculate', async (req, res) => {
+app.post('/kundli/calculate', requireSupabaseUser, async (req, res) => {
   try {
-    const { dob, tob, city, lat, lng } = req.body;
+    const { dob, tob, city } = req.body;
     if (!dob) return res.status(400).json({ error: 'dob required (YYYY-MM-DD)' });
+    if (!tob || !/^([01]\d|2[0-3]):[0-5]\d$/.test(tob)) return res.status(400).json({ error: 'BIRTH_TIME_REQUIRED_FOR_PRECISE_KUNDLI' });
 
-    // Try to get coordinates
-    let latitude  = lat  ? parseFloat(lat)  : null;
-    let longitude = lng ? parseFloat(lng) : null;
-    if ((!latitude || !longitude) && city) {
-      const coords = await getCoordinatesFromCity(city);
-      if (coords) { latitude = parseFloat(coords.lat); longitude = parseFloat(coords.lng); }
-    }
+    if (!city) return res.status(400).json({ error: 'BIRTHPLACE_REQUIRED' });
+    const resolvedPlace = await resolveBirthplace(sanitize(city, 200), dob);
+    if (!resolvedPlace || resolvedPlace.timezoneUnresolved) return res.status(422).json({ error: 'BIRTHPLACE_TIMEZONE_UNRESOLVED' });
+    const latitude = resolvedPlace.latitude;
+    const longitude = resolvedPlace.longitude;
 
     // Build IST datetime string
-    const time    = tob || '12:00';
-    const dtStr   = `${dob}T${time}:00+05:30`;
+    const time    = tob;
+    const dtStr   = `${dob}T${time}:00${formatUtcOffset(resolvedPlace.utcOffsetMinutes)}`;
 
     // Try Prokerala
     if (latitude && longitude && canCallAPI()) {
@@ -3232,23 +3426,51 @@ function calculateKundliFallback(dob, tob, city) {
 }
 
 // POST /users/update (profile edit from app)
-app.patch('/users/update', async (req, res) => {
+app.patch('/users/update', requireSupabaseUser, async (req, res) => {
   try {
-    const { phone, name, birthCity, language } = req.body;
-    if (!phone) return res.status(400).json({ error: 'phone required' });
-    const cleanPhone = sanitize(phone, 20);
+    const { name, currentLocation, language } = req.body;
+    const cleanPhone = req.authPhone;
     const patch = { updated_at: new Date().toISOString() };
     if (name)      patch.name      = sanitize(name, 100);
-    if (birthCity) patch.birth_city = sanitize(birthCity, 100);
     if (language)  patch.language  = sanitize(language, 20);
     await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, patch);
+    const profilePatch = { updated_at: new Date().toISOString() };
+    if (name) profilePatch.name = sanitize(name, 100);
+    if (language) profilePatch.language = sanitize(language, 20);
+    if (currentLocation !== undefined) profilePatch.current_place_name = sanitize(currentLocation, 200);
+    await sbUpdate('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, profilePatch).catch(() => {});
     res.json({ success: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 // DELETE /users/delete
-app.delete('/users/delete', async (req, res) => {
-  res.status(501).json({ error: 'Account deletion is not available yet.' });
+app.delete('/users/delete', requireSupabaseUser, async (req, res) => {
+  if (!checkRateLimit(`delete_account_${req.authUser.id}`, 3)) return res.status(429).json({ error: 'RATE_LIMIT' });
+  try {
+    const lastSignIn = Date.parse(req.authUser.last_sign_in_at || '');
+    if (!Number.isFinite(lastSignIn) || Date.now() - lastSignIn > 10 * 60 * 1000) {
+      return res.status(401).json({ error: 'RECENT_REAUTHENTICATION_REQUIRED' });
+    }
+    const confirmedPhone = normalizeIndianAuthPhone(req.body?.phone);
+    if (req.body?.confirmation !== 'DELETE' || confirmedPhone !== req.authPhone || req.headers['x-confirm-account-deletion'] !== 'DELETE') {
+      return res.status(400).json({ error: 'ACCOUNT_DELETION_CONFIRMATION_REQUIRED' });
+    }
+    const deletedHash = crypto.createHash('sha256').update(`${req.authUser.id}|${req.authPhone}`).digest('hex');
+    const result = await sbRest('POST', 'rpc/delete_dharmasetu_account_data', {
+      p_user_id: req.authUser.id, p_phone: req.authPhone, p_deleted_hash: deletedHash,
+    });
+    if (result.data !== true && result.data?.[0] !== true) throw new Error('ACCOUNT_DATA_DELETION_FAILED');
+    const { error } = await supabaseAuth.auth.admin.deleteUser(req.authUser.id, false);
+    if (error) {
+      console.error('[users/delete] Auth deletion pending');
+      return res.status(500).json({ error: 'ACCOUNT_AUTH_DELETION_PENDING' });
+    }
+    await sbUpdate('account_deletion_audit', `?deleted_user_hash=eq.${encodeURIComponent(deletedHash)}`, { result: 'COMPLETE' }).catch(() => {});
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[users/delete]', error.message);
+    res.status(500).json({ error: 'ACCOUNT_DELETION_FAILED' });
+  }
 });
 
 app.get('/notifications/unread-count', requireSupabaseUser, async (req, res) => {

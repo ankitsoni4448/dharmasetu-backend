@@ -1,0 +1,23 @@
+'use strict';
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const server = fs.readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
+const migration = fs.readFileSync(path.join(__dirname, '..', 'migrations', '20260822_account_birth_jyotish_lifecycle.sql'), 'utf8');
+
+assert.match(server, /app\.get\('\/account\/me', requireSupabaseUser/);
+assert.match(server, /app\.post\('\/account\/onboarding', requireSupabaseUser/);
+assert.match(server, /app\.post\('\/account\/kundli\/generate', requireSupabaseUser/);
+assert.match(server, /app\.delete\('\/users\/delete', requireSupabaseUser/);
+assert.match(server, /req\.authUser\.id/);
+assert.match(server, /x-confirm-account-deletion/);
+assert.match(server, /supabaseAuth\.auth\.admin\.deleteUser\(req\.authUser\.id/);
+assert.match(server, /RECENT_REAUTHENTICATION_REQUIRED/);
+assert.match(server, /app\.patch\('\/users\/update', requireSupabaseUser/);
+assert.match(server, /app\.post\('\/kundli\/calculate', requireSupabaseUser/);
+assert.match(server, /app\.post\('\/users\/activity', requireSupabaseUser/);
+assert.doesNotMatch(server.match(/app\.delete\('\/users\/delete'[\s\S]*?\n\}\);/)?.[0] || '', /req\.params\.user/);
+assert.match(migration, /revoke all on function public\.delete_dharmasetu_account_data/);
+assert.match(migration, /grant execute on function public\.delete_dharmasetu_account_data[^;]+to service_role/);
+assert.match(migration, /birth_time_certainty in \('EXACT','APPROXIMATE','UNCERTAIN','UNKNOWN'\)/);
+console.log('account security contract tests: PASS');
