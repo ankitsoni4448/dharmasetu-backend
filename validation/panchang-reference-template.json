@@ -1,0 +1,26 @@
+{
+  "case_id": null,
+  "reference_status": "REFERENCE_DATA_REQUIRED",
+  "location": {
+    "city": "",
+    "latitude": null,
+    "longitude": null,
+    "timezone": "Asia/Kolkata"
+  },
+  "date": "YYYY-MM-DD",
+  "trusted_reference": {
+    "name": "",
+    "edition_or_url": "",
+    "verified_by": ""
+  },
+  "expected": {
+    "weekday": null,
+    "tithi": null,
+    "nakshatra": null,
+    "yoga": null,
+    "karana": null,
+    "sunrise": null,
+    "sunset": null,
+    "ekadashi_or_festival": null
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {"id":"datia-2026-01","city":"Datia","latitude":25.6653,"longitude":78.4609,"timezone":"Asia/Kolkata","date":"2026-01-15","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"datia-2026-08","city":"Datia","latitude":25.6653,"longitude":78.4609,"timezone":"Asia/Kolkata","date":"2026-08-24","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"gwalior-2026-01","city":"Gwalior","latitude":26.2183,"longitude":78.1828,"timezone":"Asia/Kolkata","date":"2026-01-15","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"gwalior-2026-08","city":"Gwalior","latitude":26.2183,"longitude":78.1828,"timezone":"Asia/Kolkata","date":"2026-08-24","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"delhi-2026-01","city":"Delhi","latitude":28.6139,"longitude":77.209,"timezone":"Asia/Kolkata","date":"2026-01-15","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"delhi-2026-08","city":"Delhi","latitude":28.6139,"longitude":77.209,"timezone":"Asia/Kolkata","date":"2026-08-24","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"varanasi-2026-01","city":"Varanasi","latitude":25.3176,"longitude":82.9739,"timezone":"Asia/Kolkata","date":"2026-01-15","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"varanasi-2026-08","city":"Varanasi","latitude":25.3176,"longitude":82.9739,"timezone":"Asia/Kolkata","date":"2026-08-24","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"mumbai-2026-01","city":"Mumbai","latitude":19.076,"longitude":72.8777,"timezone":"Asia/Kolkata","date":"2026-01-15","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"mumbai-2026-08","city":"Mumbai","latitude":19.076,"longitude":72.8777,"timezone":"Asia/Kolkata","date":"2026-08-24","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"bengaluru-2026-01","city":"Bengaluru","latitude":12.9716,"longitude":77.5946,"timezone":"Asia/Kolkata","date":"2026-01-15","expected":null,"status":"REFERENCE_DATA_REQUIRED"},
+  {"id":"bengaluru-2026-08","city":"Bengaluru","latitude":12.9716,"longitude":77.5946,"timezone":"Asia/Kolkata","date":"2026-08-24","expected":null,"status":"REFERENCE_DATA_REQUIRED"}
+]

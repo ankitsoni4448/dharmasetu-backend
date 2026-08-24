@@ -27,9 +27,17 @@ const { completeProviderAnswer, mergeWithoutDuplicateOverlap, likelyIncompleteEn
 
   let failedCalls = 0;
   await assert.rejects(() => completeProviderAnswer(
-    { text: 'Partial:', usedApi: 'groq', finishReason: 'length', truncated: true },
+    { text: 'Short partial:', usedApi: 'groq', finishReason: 'length', truncated: true },
     async () => { failedCalls++; return { text: 'Still...', usedApi: 'groq', finishReason: 'length' }; },
   ), error => error.code === 'AI_INCOMPLETE_RESPONSE');
+
+  const coherent = 'Love in Dharma is expressed through compassion. It asks us to respect another person without possession. It also grows through truth, patience, and responsible action.';
+  const recovered = await completeProviderAnswer(
+    { text: coherent, usedApi: 'gemini', finishReason: 'MAX_TOKENS', truncated: true },
+    async () => { throw Object.assign(new Error('timeout'), { code: 'AI_TIMEOUT' }); },
+  );
+  assert.equal(recovered.text, coherent);
+  assert.equal(recovered.usableOriginal, true);
   assert.equal(failedCalls, 1);
 
   let timeoutCalls = 0;

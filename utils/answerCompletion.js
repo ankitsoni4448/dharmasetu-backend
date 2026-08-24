@@ -18,6 +18,14 @@ function likelyIncompleteEnding(text) {
   return false;
 }
 
+function isUsableAnswer(text) {
+  const value = String(text || '').trim();
+  if (value.length < 80) return false;
+  const sentenceCount = (value.match(/[.!?\u0964\u0965](?:\s|$)/g) || []).length;
+  if (sentenceCount >= 2) return true;
+  return value.length >= 220 && !likelyIncompleteEnding(value);
+}
+
 function mergeWithoutDuplicateOverlap(firstPart, continuation) {
   const first = String(firstPart || '').trimEnd();
   const next = String(continuation || '').trimStart();
@@ -39,9 +47,22 @@ async function completeProviderAnswer(initial, continueOnce) {
     return { ...initial, text: String(initial.text || '').trim(), continuationAttempted: false, continuationMs: 0 };
   }
   const startedAt = Date.now();
-  const next = await continueOnce(initial);
+  let next;
+  try {
+    next = await continueOnce(initial);
+  } catch (error) {
+    if (isUsableAnswer(initial.text)) {
+      return { ...initial, text: String(initial.text).trim(), truncated: true, continuationAttempted: true,
+        continuationFailed: true, usableOriginal: true, continuationMs: Date.now() - startedAt };
+    }
+    throw error;
+  }
   const merged = mergeWithoutDuplicateOverlap(initial.text, next.text);
   if (isTokenLimitStop(next.usedApi, next.finishReason) || likelyIncompleteEnding(merged)) {
+    if (isUsableAnswer(initial.text)) {
+      return { ...initial, text: String(initial.text).trim(), truncated: true, continuationAttempted: true,
+        continuationFailed: true, usableOriginal: true, continuationMs: Date.now() - startedAt };
+    }
     const error = new Error('Automatic continuation did not produce a complete answer');
     error.code = 'AI_INCOMPLETE_RESPONSE';
     throw error;
@@ -63,4 +84,4 @@ function chooseOutputBudget(question, isFactCheck) {
   return deep ? 1200 : 850;
 }
 
-module.exports = { isTokenLimitStop, likelyIncompleteEnding, mergeWithoutDuplicateOverlap, completeProviderAnswer, chooseOutputBudget };
+module.exports = { isTokenLimitStop, likelyIncompleteEnding, isUsableAnswer, mergeWithoutDuplicateOverlap, completeProviderAnswer, chooseOutputBudget };
