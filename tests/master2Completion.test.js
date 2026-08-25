@@ -49,4 +49,7 @@ test('Master 2 admin and privacy contracts are server-side', () => {
   assert.match(server, /Never merge client-supplied profile or birth data/);
   assert.match(server, /ALL_GRANTH_CHUNKS_MUST_BE_VERIFIED/);
   assert.match(server, /rpc\/replace_granth_extraction/);
+  assert.match(server, /method === 'POST' && mergeDuplicates/);
+  assert.match(server, /sbRest\('POST', table, row, '', \{ mergeDuplicates: true \}\)/);
+  assert.doesNotMatch(server, /'Prefer': method === 'POST' \? 'return=representation,resolution=merge-duplicates'/);
 });

@@ -332,7 +332,7 @@ const VALID_PLANS = ['basic', 'pro'];
 // ════════════════════════════════════════════════════════════════
 // SUPABASE REST API
 // ════════════════════════════════════════════════════════════════
-async function sbRest(method, table, body = null, query = '') {
+async function sbRest(method, table, body = null, query = '', { mergeDuplicates = false } = {}) {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) throw new Error('Supabase not configured');
   const data = body ? JSON.stringify(body) : null;
   return new Promise((resolve, reject) => {
@@ -345,7 +345,9 @@ async function sbRest(method, table, body = null, query = '') {
         'apikey': SUPABASE_SERVICE_KEY,
         'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
         'Content-Type': 'application/json',
-        'Prefer': method === 'POST' ? 'return=representation,resolution=merge-duplicates' : 'return=representation',
+        'Prefer': method === 'POST' && mergeDuplicates
+          ? 'return=representation,resolution=merge-duplicates'
+          : 'return=representation',
         ...(data ? { 'Content-Length': Buffer.byteLength(data) } : {}),
       },
     };
@@ -383,7 +385,7 @@ async function sbInsert(table, row) {
   return sbRest('POST', table, row);
 }
 async function sbUpsert(table, row, matchCols = 'id') {
-  if (!matchCols) return sbRest('POST', table, row);
+  if (!matchCols) return sbRest('POST', table, row, '', { mergeDuplicates: true });
   const cols = matchCols.split(',');
   let qParts = [];
   for (const c of cols) {
@@ -396,7 +398,7 @@ async function sbUpsert(table, row, matchCols = 'id') {
     if (existing && existing.length > 0) {
       return await sbRest('PATCH', table, row, query);
     } else {
-      return await sbRest('POST', table, row);
+      return await sbRest('POST', table, row, '', { mergeDuplicates: true });
     }
   } catch(e) {
     console.error(`[sbUpsert] Failed for table ${table}:`, e.message);
