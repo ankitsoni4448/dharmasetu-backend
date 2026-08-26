@@ -3162,10 +3162,10 @@ app.get('/library/books/:id', async (req, res) => {
 });
 
 // POST /library/books/:id/view — record view per user
-app.post('/library/books/:id/view', async (req, res) => {
+app.post('/library/books/:id/view', requireSupabaseUser, async (req, res) => {
   try {
     const book_id = sanitize(req.params.id, 100);
-    const phone   = sanitize(req.body.phone||'', 20);
+    const phone   = req.authPhone;
     await sbInsert('book_views', {
       id: `bv_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
       book_id, phone, viewed_at: new Date().toISOString()
@@ -4288,7 +4288,7 @@ app.get('/health/deep', async (req, res) => {
 // P4 — VOICE TRANSCRIPTION
 // Uses Groq Whisper API if key is available, else returns null
 // ════════════════════════════════════════════════════════════════
-app.post('/voice/transcribe', upload.single('audio'), async (req, res) => {
+app.post('/voice/transcribe', requireSupabaseUser, upload.single('audio'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No audio file provided' });
     const lang = sanitize(req.body.lang || 'hi-IN', 10);
@@ -4330,7 +4330,7 @@ app.post('/voice/transcribe', upload.single('audio'), async (req, res) => {
 // Phase 1: keyword match from approved_answers
 // Phase 2: semantic vector similarity (pgvector)
 // ════════════════════════════════════════════════════════════════
-app.post('/chat/context', async (req, res) => {
+app.post('/chat/context', requireSupabaseUser, async (req, res) => {
   try {
     const { question, lang } = req.body;
     if (!question) return res.json({ context: [] });
@@ -4363,13 +4363,12 @@ app.post('/chat/context', async (req, res) => {
 // ════════════════════════════════════════════════════════════════
 // P4 — PUSH TOKEN REGISTRATION
 // ════════════════════════════════════════════════════════════════
-app.post('/users/push-token', async (req, res) => {
+app.post('/users/push-token', requireSupabaseUser, async (req, res) => {
   try {
-    const { phone, token } = req.body;
-    if (!phone || !token) return res.status(400).json({ error: 'phone and token required' });
-    const cleanPhone = sanitize(phone, 20);
+    const { token } = req.body;
+    if (!token) return res.status(400).json({ error: 'token required' });
     const cleanToken = sanitize(token, 200);
-    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, {
+    await sbUpdate('users', `?id=eq.${encodeURIComponent(req.authUserId)}`, {
       push_token:      cleanToken,
       push_token_at:   new Date().toISOString(),
     });
