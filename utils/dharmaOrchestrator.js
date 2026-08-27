@@ -8,9 +8,14 @@ const EVIDENCE_INTENTS = new Set([QUERY_INTENTS.SCRIPTURE, QUERY_INTENTS.FACT_CH
 
 function compactJyotishEvidence(context) {
   if (!context?.available) return null;
-  return { available: true, rashi: context.rashi || null, lagna: context.lagna || null,
+  return { available: true, preferredName: context.preferredName || null,
+    rashi: context.rashi || null, lagna: context.lagna || null,
     nakshatra: context.nakshatra || null, nakshatraPada: context.nakshatraPada || null,
     currentMahadasha: context.currentMahadasha || null, currentAntardasha: context.currentAntardasha || null,
+    currentMahadashaStart: context.currentMahadashaStart || null,
+    currentMahadashaEnd: context.currentMahadashaEnd || null,
+    currentAntardashaStart: context.currentAntardashaStart || null,
+    currentAntardashaEnd: context.currentAntardashaEnd || null,
     birthTimeCertainty: context.birthTimeCertainty || null, precisionWarning: context.precisionWarning || null,
     calculationVersion: context.calculationVersion || null,
     planets: Array.isArray(context.planets) ? context.planets.slice(0, 12).map(p => ({ name: p.name, sign: p.sign, house: p.house ?? null, longitude: p.longitude ?? null })) : [] };

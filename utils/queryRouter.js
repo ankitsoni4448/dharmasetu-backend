@@ -36,7 +36,8 @@ function classifyDharmaQuery(question, recentMessages = []) {
   if (PATTERNS.guidance.test(text)) return QUERY_INTENTS.SPIRITUAL_GUIDANCE;
   if (PATTERNS.general.test(text)) return QUERY_INTENTS.GENERAL_DHARMA;
   const referential = /^(?:और|यह|इसका|उसका|क्यों|कैसे|what about|why|how|and that|explain that)(?:\s|[?!.]|$)/iu.test(text);
-  if (referential && text.length < 100) {
+  const compactFollowUp = text.length < 100 && /^(?:career|करियर|नौकरी|काम|विवाह|शादी|स्वास्थ्य|धन|दशा|महादशा|अंतर्दशा|शनि|गुरु|राहु|केतु|\d{4})(?:\s|[?!.]|$)/iu.test(text);
+  if ((referential || compactFollowUp) && text.length < 100) {
     const previousUser = [...recentMessages].reverse().find(item => item?.role === 'user');
     if (previousUser?.content) return classifyDharmaQuery(previousUser.content, []);
   }
@@ -47,7 +48,7 @@ function intentInstructions(intent, context = {}) {
   switch (intent) {
     case QUERY_INTENTS.PERSONAL_JYOTISH:
       return context.jyotish?.available
-        ? 'Use only CALCULATED JYOTISH FACTS supplied as evidence. Separate calculated facts from traditional interpretation; never guarantee outcomes.'
+        ? 'Begin directly with the relevant CALCULATED JYOTISH FACTS supplied as evidence. Use the saved name naturally when helpful, do not ask again for birth details, and relate the current dasha dates and relevant placements to the question. Separate facts from traditional interpretation; calibrate uncertainty and never guarantee outcomes.'
         : 'No verified saved Jyotish context is available. Do not infer or invent chart facts.';
     case QUERY_INTENTS.PANCHANG:
     case QUERY_INTENTS.FESTIVAL_CALENDAR:

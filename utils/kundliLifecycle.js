@@ -154,6 +154,10 @@ function compactContext(normalized = {}) {
     nakshatraPada: normalized.core?.nakshatraPada || null,
     currentMahadasha: text(first(dasha.current_mahadasha, dasha.mahadasha, dasha.current?.mahadasha, currentMaha)),
     currentAntardasha: text(first(dasha.current_antardasha, dasha.antardasha, dasha.current?.antardasha, currentAntar)),
+    currentMahadashaStart: text(first(dasha.current_mahadasha?.start, currentMaha?.start)),
+    currentMahadashaEnd: text(first(dasha.current_mahadasha?.end, currentMaha?.end)),
+    currentAntardashaStart: text(first(dasha.current_antardasha?.start, currentAntar?.start)),
+    currentAntardashaEnd: text(first(dasha.current_antardasha?.end, currentAntar?.end)),
     precisionWarning: normalized.birthTimeCertainty === 'EXACT' ? null
       : 'Birth time is not exact; time-sensitive chart interpretation may vary.',
   };

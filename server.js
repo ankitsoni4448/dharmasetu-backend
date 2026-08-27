@@ -26,7 +26,7 @@ const {
   INTENT, classifyFactCheckIntent, classifyClaimType,
   normalizeMarkdown, enforceUnverifiedCitationSafety,
 } = require('./utils/aiSafety');
-const { completeProviderAnswer, chooseOutputBudget } = require('./utils/answerCompletion');
+const { completeProviderAnswer, chooseOutputBudget, needsContinuation } = require('./utils/answerCompletion');
 const { NOTIFICATION_TYPES, SAFE_NOTIFICATION_ROUTES } = require('./utils/notificationSafety');
 const { QUERY_INTENTS, classifyDharmaQuery } = require('./utils/queryRouter');
 const { buildEvidencePack, buildCuratedEvidencePack } = require('./utils/sourcePolicy');
@@ -513,19 +513,21 @@ function compactJyotishContext(data, birthProfile) {
 
 async function getUserAstrologyContext(authUserId, userRecord) {
   if (!authUserId || !userRecord) return { available: false };
-  const stored = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(authUserId)}&status=eq.KUNDLI_READY&select=compact_context,birth_profile_version,calculation_version&limit=1`).catch(() => []))[0];
-  if (stored?.compact_context) return { available: true, ...stored.compact_context,
-    birthProfileVersion: stored.birth_profile_version, calculationVersion: stored.calculation_version };
-  const context = {
-    rashi: sanitize(userRecord.rashi || '', 80),
-    nakshatra: sanitize(userRecord.nakshatra || '', 80),
-    lagna: sanitize(userRecord.lagna || '', 80),
-    birthDate: sanitize(userRecord.dob || userRecord.birth_date || '', 20),
-    birthTime: sanitize(userRecord.tob || userRecord.birth_time || '', 20),
-    birthPlace: sanitize(userRecord.birth_city || '', 100),
-  };
-  context.available = Boolean(context.rashi || context.nakshatra || context.lagna);
-  return context;
+  const stored = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(authUserId)}&status=eq.KUNDLI_READY&select=compact_context,chart_data,birth_profile_version,calculation_version&limit=1`).catch(() => []))[0];
+  if (stored?.compact_context) {
+    const normalized = stored.chart_data?.normalized || {};
+    return { available: true, preferredName: sanitize(userRecord.name || '', 100) || null,
+      ...stored.compact_context, ...compactNormalizedJyotishContext(normalized),
+      planets: Array.isArray(normalized.planets) ? normalized.planets.slice(0, 12).map(planet => ({
+        name: sanitize(planet.name || '', 40), sign: sanitize(planet.sign || '', 40) || null,
+        house: Number.isFinite(Number(planet.house)) ? Number(planet.house) : null,
+        longitude: Number.isFinite(Number(planet.longitude)) ? Number(planet.longitude) : null,
+      })) : [],
+      birthProfileVersion: stored.birth_profile_version, calculationVersion: stored.calculation_version };
+  }
+  // Personal guidance requires the authenticated user's authoritative READY chart.
+  // Legacy profile labels and raw birth inputs are not a safe substitute.
+  return { available: false, status: 'KUNDLI_CONTEXT_NOT_READY' };
 }
 
 // ─── AUDIT LOGGER ─────────────────────────────────────────────
@@ -908,14 +910,17 @@ app.post('/ai/chat', async (req, res) => {
 
 app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
   const totalStartedAt = req.authStartedAt || Date.now();
-  const timing = { auth: req.authDurationMs || 0, profile: 0, entitlement: 0, retrieval: 0, quotaReserve: 0, provider: 0, continuation: 0, quotaConsume: 0 };
+  const timing = { auth: req.authDurationMs || 0, profile: 0, entitlement: 0, intent: 0,
+    jyotishContext: 0, rag: 0, curated: 0, provider: 0, continuation: 0,
+    validation: 0, quotaReserve: 0, quotaConsume: 0 };
   let timingProvider = 'none';
   let timingModel = 'none';
   const logTiming = (outcome) => console.log(
     `[AI Timing] mode=${req.body?.mode === 'factcheck' ? 'factcheck' : 'dharma'} provider=${timingProvider} model=${timingModel} auth=${timing.auth}ms profile=${timing.profile}ms ` +
-    `entitlement=${timing.entitlement}ms retrieval=${timing.retrieval}ms quotaReserve=${timing.quotaReserve}ms ` +
+    `entitlement=${timing.entitlement}ms intent=${timing.intent}ms jyotishContext=${timing.jyotishContext}ms ` +
+    `rag=${timing.rag}ms curated=${timing.curated}ms quotaReserve=${timing.quotaReserve}ms ` +
     `provider=${timing.provider}ms continuation=${timing.continuation}ms quotaConsume=${timing.quotaConsume}ms ` +
-    `total=${Date.now() - totalStartedAt}ms outcome=${outcome}`
+    `validation=${timing.validation}ms total=${Date.now() - totalStartedAt}ms outcome=${outcome}`
   );
   try {
     const { messages, mode, panchangLocation } = req.body;
@@ -944,7 +949,9 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     const entitlement = resolveEffectiveEntitlement(userRecord);
     timing.entitlement = Date.now() - entitlementStartedAt;
     const isFC = mode === 'factcheck';
+    const intentStartedAt = Date.now();
     const queryIntent = isFC ? QUERY_INTENTS.FACT_CHECK : classifyDharmaQuery(lastMsg, cleanMessages.slice(0, -1));
+    timing.intent = Date.now() - intentStartedAt;
     const needsPanchang = [QUERY_INTENTS.PANCHANG, QUERY_INTENTS.FESTIVAL_CALENDAR].includes(queryIntent);
     if (needsPanchang && (!Number.isFinite(Number(panchangLocation?.latitude)) || !Number.isFinite(Number(panchangLocation?.longitude)) || !panchangLocation?.timezone)) {
       return res.status(400).json({ error: 'PANCHANG_LOCATION_REQUIRED' });
@@ -996,9 +1003,14 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
 
     // Authenticated backend data is authoritative. Never merge client-supplied profile or birth data.
     const u = { ...userRecord };
-    const contextStartedAt = Date.now();
+    const jyotishStartedAt = Date.now();
     const astrologyContext = queryIntent === QUERY_INTENTS.PERSONAL_JYOTISH
       ? await getUserAstrologyContext(req.authUser.id, userRecord) : { available: false };
+    timing.jyotishContext = Date.now() - jyotishStartedAt;
+    if (queryIntent === QUERY_INTENTS.PERSONAL_JYOTISH && !astrologyContext.available) {
+      await sbRest('POST', 'rpc/release_ai_usage', { p_user_id: req.authUser.id, p_reservation_id: reservationId }).catch(() => {});
+      return res.status(409).json({ error: 'KUNDLI_CONTEXT_NOT_READY' });
+    }
     let panchangContext = null;
     if (needsPanchang) {
       const latitude = Number(panchangLocation.latitude); const longitude = Number(panchangLocation.longitude);
@@ -1015,6 +1027,7 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     }
     let verifiedEvidence = [];
     let curatedEvidence = [];
+    const ragStartedAt = Date.now();
     if ([QUERY_INTENTS.SCRIPTURE, QUERY_INTENTS.FACT_CHECK, QUERY_INTENTS.SCIENCE_AND_DHARMA].includes(queryIntent)) {
       try {
         const retrieval = await sbRest('POST', 'rpc/search_verified_granth_chunks', { p_query: lastMsg, p_limit: 6 });
@@ -1023,15 +1036,22 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
         verifiedEvidence = [];
       }
     }
+    timing.rag = Date.now() - ragStartedAt;
+    const curatedStartedAt = Date.now();
     try {
-      if ([QUERY_INTENTS.PERSONAL_JYOTISH, QUERY_INTENTS.PANCHANG, QUERY_INTENTS.FESTIVAL_CALENDAR].includes(queryIntent)) throw Object.assign(new Error('CURATED_CONTEXT_NOT_REQUIRED'), { expected: true });
+      const curatedIntents = new Set([
+        QUERY_INTENTS.SCRIPTURE, QUERY_INTENTS.MANTRA, QUERY_INTENTS.RITUAL_PUJA,
+        QUERY_INTENTS.SPIRITUAL_GUIDANCE, QUERY_INTENTS.GENERAL_DHARMA,
+        QUERY_INTENTS.SCIENCE_AND_DHARMA, QUERY_INTENTS.FACT_CHECK,
+      ]);
+      if (!curatedIntents.has(queryIntent)) throw Object.assign(new Error('CURATED_CONTEXT_NOT_REQUIRED'), { expected: true });
       const rows = await sbSelect('curated_knowledge_artifacts', '?verification_status=eq.VERIFIED&order=reviewed_at.desc&limit=50');
       const words = lastMsg.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(word => word.length > 3);
       curatedEvidence = buildCuratedEvidencePack(rows.map(row => ({ ...row,
         _score: words.filter(word => `${row.question || ''} ${row.answer || ''}`.toLowerCase().includes(word)).length }))
         .filter(row => row._score > 0).sort((a, b) => b._score - a._score));
     } catch { curatedEvidence = []; }
-    timing.retrieval = Date.now() - contextStartedAt;
+    timing.curated = Date.now() - curatedStartedAt;
     const lang = u.language || 'hindi';
     const langRule = {
       hindi: 'केवल स्वाभाविक और शुद्ध हिन्दी में उत्तर दें। आवश्यक होने पर प्रासंगिक संस्कृत उद्धरण दे सकते हैं।',
@@ -1084,26 +1104,28 @@ Why confidence: <one short reason>. Never use percentage confidence.` : ''}
 
 FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful headings, emphasis, or short lists. Be warm, specific, and practical.`;
 
-    const histText = cleanMessages.slice(-8).map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`).join('\n');
+    const histText = cleanMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content.slice(0, 700)}`).join('\n');
     const fullPrompt = `${systemPrompt}\n\nConversation:\n${histText}`;
     const providerStartedAt = Date.now();
     try {
-      const outputBudget = chooseOutputBudget(lastMsg, isFC);
+      const outputBudget = chooseOutputBudget(lastMsg, isFC, queryIntent);
       let result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt, {
         maxOutputTokens: outputBudget,
         temperature: isFC ? 0.2 : 0.65,
+        primaryTimeoutMs: 12000,
+        fallbackTimeoutMs: 10000,
       });
       timing.provider = Date.now() - providerStartedAt;
       timingProvider = result.usedApi;
       timingModel = result.model;
       const continuationStartedAt = Date.now();
-      const continuationRequired = result.truncated === true;
+      const continuationRequired = needsContinuation(result);
       try {
         result = await completeProviderAnswer(result, async initial => {
         const continuationPrompt = `${fullPrompt}\n\nPARTIAL ANSWER ALREADY GENERATED:\n${initial.text}\n\n` +
           `Continue exactly where the partial answer ended. Do not repeat prior text. Preserve the same language, mode, formatting, ` +
           `and evidence restrictions. Do not add unverified citations. Finish the original answer concisely.`;
-        const options = { timeoutMs: 15000, maxOutputTokens: 600, temperature: isFC ? 0.15 : 0.5 };
+        const options = { timeoutMs: 8000, maxOutputTokens: 500, temperature: isFC ? 0.15 : 0.5 };
         if (initial.usedApi === 'gemini' && CFG.geminiKey) {
           return { ...await callGemini(CFG.geminiKey, continuationPrompt, options), usedApi: 'gemini' };
         }
@@ -1117,12 +1139,14 @@ FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful h
       } finally {
         timing.continuation = continuationRequired ? (result.continuationMs || Date.now() - continuationStartedAt) : 0;
       }
+      const validationStartedAt = Date.now();
       const verifiedCitationStrings = verifiedEvidence
         .filter(item => item.title && item.chapter && item.verse)
         .map(item => `${item.title} ${item.chapter}.${item.verse}`);
       const genericGuard = enforceUnverifiedCitationSafety(result.text, verifiedCitationStrings);
       const citationGuard = enforceCitationPolicy(genericGuard.text, verifiedEvidence);
       result.text = normalizeMarkdown(citationGuard.text);
+      timing.validation = Date.now() - validationStartedAt;
       try {
         const quotaConsumeStartedAt = Date.now();
         const consumption = await sbRest('POST', 'rpc/consume_ai_usage', {
@@ -1149,7 +1173,13 @@ FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful h
         metadata: { ...orchestration.metadata, provider: result.usedApi, model: result.model,
           citations: [...citationGuard.citations, ...externalResult.evidence.map(item => ({ raw: item.title, url: item.url, publisher: item.publisher }))],
           citationStatus: externalResult.evidence.length || citationGuard.citationStatus === 'VALID' ? 'VALID' : citationGuard.citationStatus,
-          answerComplete: true, latencyMs: Date.now() - totalStartedAt },
+          answerComplete: true, latencyMs: Date.now() - totalStartedAt,
+          timings: { authMs: timing.auth, profileMs: timing.profile, entitlementMs: timing.entitlement,
+            intentMs: timing.intent, jyotishContextMs: timing.jyotishContext,
+            ragMs: timing.rag, curatedMs: timing.curated, quotaReserveMs: timing.quotaReserve,
+            providerMs: timing.provider, continuationMs: timing.continuation,
+            validationMs: timing.validation, quotaConsumeMs: timing.quotaConsume },
+        },
       });
     } catch (providerError) {
       if (!timing.provider) timing.provider = Date.now() - providerStartedAt;
@@ -1819,9 +1849,15 @@ async function callGroq(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1
 
 async function callAI(gemKey, groqKey, prompt, options = {}) {
   const failures = [];
+  const primaryTimeoutMs = options.primaryTimeoutMs ?? options.timeoutMs ?? 12000;
+  const fallbackTimeoutMs = options.fallbackTimeoutMs ?? options.timeoutMs ?? 10000;
+  const providerOptions = { ...options };
+  delete providerOptions.primaryTimeoutMs;
+  delete providerOptions.fallbackTimeoutMs;
+  delete providerOptions.timeoutMs;
   if (gemKey) {
     const startedAt = Date.now();
-    try { return { ...await callGemini(gemKey, prompt, options), usedApi: 'gemini' }; }
+    try { return { ...await callGemini(gemKey, prompt, { ...providerOptions, timeoutMs: primaryTimeoutMs }), usedApi: 'gemini' }; }
     catch(e) {
       failures.push(e);
       logProviderResult('Gemini', CFG.geminiModel, e.status, e.category || 'NETWORK_ERROR', Date.now() - startedAt);
@@ -1829,7 +1865,7 @@ async function callAI(gemKey, groqKey, prompt, options = {}) {
   }
   if (groqKey) {
     const startedAt = Date.now();
-    try { return { ...await callGroq(groqKey, prompt, options), usedApi: 'groq' }; }
+    try { return { ...await callGroq(groqKey, prompt, { ...providerOptions, timeoutMs: fallbackTimeoutMs }), usedApi: 'groq' }; }
     catch(e) {
       failures.push(e);
       logProviderResult('Groq', CFG.groqModel, e.status, e.category || 'NETWORK_ERROR', Date.now() - startedAt);

@@ -23,3 +23,12 @@ test('new explicit question is not forced into previous intent', () => {
 test('short referential follow-up may inherit the previous user intent', () => {
   assert.equal(classifyDharmaQuery('और इसका अर्थ?', [{ role: 'user', content: 'गीता 2.47 समझाओ' }]), QUERY_INTENTS.SCRIPTURE);
 });
+test('terse career follow-up retains personal Jyotish context', () => {
+  assert.equal(classifyDharmaQuery('करियर?', [{ role: 'user', content: 'मेरी कुंडली में शनि कहाँ है?' }]), QUERY_INTENTS.PERSONAL_JYOTISH);
+});
+test('year follow-up retains personal Jyotish context', () => {
+  assert.equal(classifyDharmaQuery('2027 कैसा रहेगा?', [{ role: 'user', content: 'मेरी कुंडली के अनुसार करियर बताएं' }]), QUERY_INTENTS.PERSONAL_JYOTISH);
+});
+test('explicit scripture question overrides personal Jyotish history', () => {
+  assert.equal(classifyDharmaQuery('गीता 2.47 का अर्थ?', [{ role: 'user', content: 'मेरी कुंडली के अनुसार करियर बताएं' }]), QUERY_INTENTS.SCRIPTURE);
+});
