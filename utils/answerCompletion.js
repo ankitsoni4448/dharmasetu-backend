@@ -34,9 +34,9 @@ function needsContinuation(result) {
 
 function isUsableAnswer(text) {
   const value = String(text || '').trim();
-  if (value.length < 80) return false;
+  if (value.length < 40 || likelyIncompleteEnding(value)) return false;
   const sentenceCount = (value.match(/[.!?\u0964\u0965](?:\s|$)/g) || []).length;
-  return sentenceCount >= 2 || value.length >= 220 && !likelyIncompleteEnding(value);
+  return sentenceCount >= 1 || value.length >= 160;
 }
 
 function mergeWithoutDuplicateOverlap(firstPart, continuation) {

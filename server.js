@@ -27,6 +27,8 @@ const {
   normalizeMarkdown, enforceUnverifiedCitationSafety,
 } = require('./utils/aiSafety');
 const { completeProviderAnswer, chooseOutputBudget, needsContinuation } = require('./utils/answerCompletion');
+const { estimatePromptTokens, isFastConversationalQuery, providerGenerationLimit,
+  runProviderFallback } = require('./utils/providerReliability');
 const { NOTIFICATION_TYPES, SAFE_NOTIFICATION_ROUTES } = require('./utils/notificationSafety');
 const { QUERY_INTENTS, classifyDharmaQuery } = require('./utils/queryRouter');
 const { buildEvidencePack, buildCuratedEvidencePack } = require('./utils/sourcePolicy');
@@ -949,6 +951,7 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     const entitlement = resolveEffectiveEntitlement(userRecord);
     timing.entitlement = Date.now() - entitlementStartedAt;
     const isFC = mode === 'factcheck';
+    const fastPath = isFastConversationalQuery(lastMsg, isFC ? 'factcheck' : 'dharma');
     const intentStartedAt = Date.now();
     const queryIntent = isFC ? QUERY_INTENTS.FACT_CHECK : classifyDharmaQuery(lastMsg, cleanMessages.slice(0, -1));
     timing.intent = Date.now() - intentStartedAt;
@@ -1030,8 +1033,10 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     const ragStartedAt = Date.now();
     if ([QUERY_INTENTS.SCRIPTURE, QUERY_INTENTS.FACT_CHECK, QUERY_INTENTS.SCIENCE_AND_DHARMA].includes(queryIntent)) {
       try {
-        const retrieval = await sbRest('POST', 'rpc/search_verified_granth_chunks', { p_query: lastMsg, p_limit: 6 });
-        verifiedEvidence = buildEvidencePack(Array.isArray(retrieval.data) ? retrieval.data : []);
+        const evidenceLimit = isFC ? 3 : 4;
+        const retrieval = await sbRest('POST', 'rpc/search_verified_granth_chunks', { p_query: lastMsg, p_limit: evidenceLimit });
+        verifiedEvidence = buildEvidencePack(Array.isArray(retrieval.data) ? retrieval.data : [], evidenceLimit)
+          .map(item => ({ ...item, text: item.text.slice(0, isFC ? 1600 : 2000) }));
       } catch {
         verifiedEvidence = [];
       }
@@ -1044,12 +1049,12 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
         QUERY_INTENTS.SPIRITUAL_GUIDANCE, QUERY_INTENTS.GENERAL_DHARMA,
         QUERY_INTENTS.SCIENCE_AND_DHARMA, QUERY_INTENTS.FACT_CHECK,
       ]);
-      if (!curatedIntents.has(queryIntent)) throw Object.assign(new Error('CURATED_CONTEXT_NOT_REQUIRED'), { expected: true });
-      const rows = await sbSelect('curated_knowledge_artifacts', '?verification_status=eq.VERIFIED&order=reviewed_at.desc&limit=50');
+      if (fastPath || !curatedIntents.has(queryIntent)) throw Object.assign(new Error('CURATED_CONTEXT_NOT_REQUIRED'), { expected: true });
+      const rows = await sbSelect('curated_knowledge_artifacts', '?verification_status=eq.VERIFIED&order=reviewed_at.desc&limit=20');
       const words = lastMsg.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(word => word.length > 3);
       curatedEvidence = buildCuratedEvidencePack(rows.map(row => ({ ...row,
         _score: words.filter(word => `${row.question || ''} ${row.answer || ''}`.toLowerCase().includes(word)).length }))
-        .filter(row => row._score > 0).sort((a, b) => b._score - a._score));
+        .filter(row => row._score > 0).sort((a, b) => b._score - a._score), isFC ? 2 : 3);
     } catch { curatedEvidence = []; }
     timing.curated = Date.now() - curatedStartedAt;
     const lang = u.language || 'hindi';
@@ -1079,7 +1084,7 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
       mode: isFC ? 'factcheck' : 'dharma', jyotish: astrologyContext, panchang: panchangContext,
       evidence: verifiedEvidence, curatedEvidence, language: lang });
 
-    const systemPrompt = `You are DharmaSetu, a careful guide to Sanatan Dharma.
+    const fullSystemPrompt = `You are DharmaSetu, a careful guide to Sanatan Dharma.
 
 LANGUAGE: ${langRule}
 ${factCheckRule}
@@ -1104,15 +1109,22 @@ Why confidence: <one short reason>. Never use percentage confidence.` : ''}
 
 FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful headings, emphasis, or short lists. Be warm, specific, and practical.`;
 
-    const histText = cleanMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content.slice(0, 700)}`).join('\n');
+    const systemPrompt = fastPath
+      ? `You are DharmaSetu, a warm Sanatan Dharma assistant. ${langRule} Reply naturally and briefly. Do not invent scripture citations, personal facts, or current religious-calendar values.`
+      : fullSystemPrompt;
+    const historyLimit = fastPath ? 1 : 6;
+    const historyChars = fastPath ? 200 : 700;
+    const histText = cleanMessages.slice(-historyLimit).map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content.slice(0, historyChars)}`).join('\n');
     const fullPrompt = `${systemPrompt}\n\nConversation:\n${histText}`;
+    const promptChars = fullPrompt.length;
+    const promptTokenEstimate = estimatePromptTokens(fullPrompt);
     const providerStartedAt = Date.now();
     try {
       const outputBudget = chooseOutputBudget(lastMsg, isFC, queryIntent);
       let result = await callAI(CFG.geminiKey, CFG.groqKey, fullPrompt, {
         maxOutputTokens: outputBudget,
         temperature: isFC ? 0.2 : 0.65,
-        primaryTimeoutMs: 12000,
+        primaryTimeoutMs: 20000,
         fallbackTimeoutMs: 10000,
       });
       timing.provider = Date.now() - providerStartedAt;
@@ -1162,7 +1174,7 @@ FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful h
         logTiming('quota_consume_unavailable');
         return res.status(503).json({ error: 'QUOTA_INFRASTRUCTURE_UNAVAILABLE' });
       }
-      console.log(`[AI Request] mode=${isFC ? 'factcheck' : 'dharma'} provider=${result.usedApi} model=${result.model} finishReason=${result.finishReason} usableChars=${result.text.length} continuationUsed=${Boolean(result.continuationAttempted)} providerMs=${timing.provider} totalMs=${Date.now() - totalStartedAt} result=${result.usableOriginal ? 'usable_original' : 'complete'}`);
+      console.log(`[AI Request] mode=${isFC ? 'factcheck' : 'dharma'} fastPath=${fastPath} provider=${result.usedApi} model=${result.model} promptChars=${promptChars} promptTokenEstimate=${promptTokenEstimate} finishReason=${result.finishReason} usableChars=${result.text.length} continuationUsed=${Boolean(result.continuationAttempted)} providerMs=${timing.provider} totalMs=${Date.now() - totalStartedAt} result=${result.usableOriginal ? 'usable_original' : 'complete'}`);
       logTiming(`success_${result.usedApi}`);
       res.json({
         success: true, text: result.text, usedApi: result.usedApi, model: result.model,
@@ -1188,7 +1200,10 @@ FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful h
       }).catch(() => {});
       const code = ['AI_PROVIDER_CONFIGURATION_ERROR','AI_PROVIDER_RATE_LIMIT','AI_TIMEOUT','AI_INCOMPLETE_RESPONSE']
         .includes(providerError?.code) ? providerError.code : 'AI_PROVIDER_UNAVAILABLE';
-      console.error('[AI/dharma-chat] provider failure:', code);
+      const safeFailures = Array.isArray(providerError?.failures)
+        ? providerError.failures.map(item => `${item.provider || 'provider'}=${item.category || 'NETWORK_ERROR'}:${item.status || 0}`).join(',')
+        : providerError?.category || code;
+      console.error(`[AI/dharma-chat] provider failure code=${code} failures=${safeFailures}`);
       logTiming('provider_failure');
       return res.status(code === 'AI_TIMEOUT' ? 504 : code === 'AI_PROVIDER_RATE_LIMIT' ? 429 : 503).json({ error: code });
     }
@@ -1734,33 +1749,41 @@ app.get('/katha/:sc/:unit/:lang', async (req, res) => {
 // ════════════════════════════════════════════════════════════════
 // AI CALLERS (server-side only — keys never leave server)
 // ════════════════════════════════════════════════════════════════
-function providerFailure(provider, model, category, status = 0) {
+function providerFailure(provider, model, category, status = 0, metadata = {}) {
   const error = new Error(`${provider} ${category}`);
-  Object.assign(error, { provider, model, category, status });
+  Object.assign(error, { provider, model, category, status, ...metadata });
   return error;
 }
 
 function classifyProviderStatus(status, raw = '') {
+  if (/context.{0,30}(?:limit|length)|too many (?:input )?tokens|request too large/i.test(raw)) return 'CONTEXT_LIMIT';
+  if (/safety|blocked|content policy|moderation/i.test(raw)) return 'SAFETY_BLOCK';
   if (status === 401 || status === 403) return 'INVALID_API_KEY';
   if (status === 404) return 'MODEL_NOT_FOUND';
   if (status === 410 || /deprecated|decommissioned|retired/i.test(raw)) return 'MODEL_DEPRECATED';
   if (status === 429) return 'RATE_LIMIT';
-  if (status >= 500) return 'PROVIDER_SERVER_ERROR';
+  if (status >= 500) return 'HTTP_5XX';
+  if (status >= 400) return 'HTTP_4XX';
   return 'NETWORK_ERROR';
 }
 
-function logProviderResult(provider, model, status, category, elapsedMs) {
+function logProviderResult(provider, model, status, category, elapsedMs, metadata = {}) {
   const outcome = status ? `HTTP ${status}` : category;
-  console.log(`[AI] ${provider} ${model} -> ${outcome}${category && status !== 200 ? ` ${category}` : ''} (${elapsedMs}ms)`);
+  console.log(`[AI Provider] provider=${provider} model=${model} status=${status || 0} category=${category || 'SUCCESS'} elapsedMs=${elapsedMs} ` +
+    `finishReason=${metadata.finishReason || 'none'} answerChars=${metadata.answerChars || 0} promptChars=${metadata.promptChars || 0} ` +
+    `promptTokenEstimate=${metadata.promptTokenEstimate || 0} timeoutMs=${metadata.timeoutMs || 0} outcome=${outcome}`);
 }
 
 async function callGemini(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1200, temperature = 0.75 } = {}) {
   const model = CFG.geminiModel;
   const startedAt = Date.now();
   return new Promise((resolve, reject) => {
+    const generationConfig = { maxOutputTokens: providerGenerationLimit(maxOutputTokens, 'gemini') };
+    if (/^gemini-3(?:\.|-)/i.test(model)) generationConfig.thinkingConfig = { thinkingLevel: 'low' };
+    else generationConfig.temperature = temperature;
     const body = JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature, maxOutputTokens },
+      generationConfig,
       safetySettings: [
         { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_NONE' },
         { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_NONE' },
@@ -1770,7 +1793,8 @@ async function callGemini(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens =
     let req;
     const timer = setTimeout(() => {
       req?.destroy();
-      reject(providerFailure('Gemini', model, 'PROVIDER_TIMEOUT'));
+      reject(providerFailure('Gemini', model, 'PROVIDER_TIMEOUT', 0, { elapsedMs: Date.now() - startedAt,
+        promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs }));
     }, timeoutMs);
     const opts = {
       hostname: 'generativelanguage.googleapis.com',
@@ -1785,19 +1809,26 @@ async function callGemini(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens =
       res.on('end', () => {
         clearTimeout(timer);
         try {
-          if (res.statusCode !== 200) return reject(providerFailure('Gemini', model, classifyProviderStatus(res.statusCode, raw), res.statusCode));
+          if (res.statusCode !== 200) return reject(providerFailure('Gemini', model, classifyProviderStatus(res.statusCode, raw), res.statusCode,
+            { elapsedMs: Date.now() - startedAt, promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs }));
           const d = JSON.parse(raw);
           const candidate = d?.candidates?.[0];
-          const text = candidate?.content?.parts?.map(part => part?.text || '').join('');
-          if (!text) return reject(providerFailure('Gemini', model, 'EMPTY_RESPONSE', res.statusCode));
-          if (text.includes('\uFFFD')) console.warn(`[AI] Gemini ${model} response contains Unicode replacement character`);
-          logProviderResult('Gemini', model, res.statusCode, '', Date.now() - startedAt);
           const finishReason = candidate?.finishReason || 'UNKNOWN';
+          const safetyBlocked = d?.promptFeedback?.blockReason || /SAFETY|BLOCK/i.test(finishReason);
+          if (safetyBlocked) return reject(providerFailure('Gemini', model, 'SAFETY_BLOCK', res.statusCode,
+            { elapsedMs: Date.now() - startedAt, finishReason, promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs }));
+          const text = candidate?.content?.parts?.map(part => part?.text || '').join('');
+          if (!text) return reject(providerFailure('Gemini', model, 'EMPTY_RESPONSE', res.statusCode,
+            { elapsedMs: Date.now() - startedAt, finishReason, promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs }));
+          if (text.includes('\uFFFD')) console.warn(`[AI] Gemini ${model} response contains Unicode replacement character`);
+          logProviderResult('Gemini', model, res.statusCode, '', Date.now() - startedAt, { finishReason,
+            answerChars: text.length, promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs });
           resolve({ text, finishReason, truncated: finishReason === 'MAX_TOKENS', model });
         } catch(e) { reject(e.category ? e : providerFailure('Gemini', model, 'NETWORK_ERROR', res.statusCode)); }
       });
     });
-    req.on('error', () => { clearTimeout(timer); reject(providerFailure('Gemini', model, 'NETWORK_ERROR')); });
+    req.on('error', () => { clearTimeout(timer); reject(providerFailure('Gemini', model, 'NETWORK_ERROR', 0,
+      { elapsedMs: Date.now() - startedAt, promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs })); });
     req.write(body); req.end();
   });
 }
@@ -1806,18 +1837,22 @@ async function callGroq(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1
   const model = CFG.groqModel;
   const startedAt = Date.now();
   return new Promise((resolve, reject) => {
+    const isGptOss = /^openai\/gpt-oss-/i.test(model);
     const body = JSON.stringify({
       model,
-      messages: [
+      messages: isGptOss ? [{ role: 'user', content: prompt }] : [
         { role: 'system', content: 'You are DharmaSetu, a Vedic AI guide. Reply with structured JSON when asked for JSON. Otherwise reply in the requested language.' },
         { role: 'user',   content: prompt },
       ],
-      temperature, max_tokens: maxOutputTokens,
+      temperature,
+      ...(isGptOss ? { max_completion_tokens: providerGenerationLimit(maxOutputTokens, 'groq'),
+        reasoning_effort: 'low', reasoning_format: 'hidden' } : { max_tokens: maxOutputTokens }),
     });
     let req;
     const timer = setTimeout(() => {
       req?.destroy();
-      reject(providerFailure('Groq', model, 'PROVIDER_TIMEOUT'));
+      reject(providerFailure('Groq', model, 'PROVIDER_TIMEOUT', 0, { elapsedMs: Date.now() - startedAt,
+        promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs }));
     }, timeoutMs);
     const opts = {
       hostname: 'api.groq.com', path: '/openai/v1/chat/completions', method: 'POST',
@@ -1830,59 +1865,37 @@ async function callGroq(apiKey, prompt, { timeoutMs = 20000, maxOutputTokens = 1
       res.on('end', () => {
         clearTimeout(timer);
         try {
-          if (res.statusCode !== 200) return reject(providerFailure('Groq', model, classifyProviderStatus(res.statusCode, raw), res.statusCode));
+          if (res.statusCode !== 200) return reject(providerFailure('Groq', model, classifyProviderStatus(res.statusCode, raw), res.statusCode,
+            { elapsedMs: Date.now() - startedAt, promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs }));
           const d = JSON.parse(raw);
           const choice = d?.choices?.[0];
           const text = choice?.message?.content;
-          if (!text) return reject(providerFailure('Groq', model, 'EMPTY_RESPONSE', res.statusCode));
+          if (!text) return reject(providerFailure('Groq', model, 'EMPTY_RESPONSE', res.statusCode,
+            { elapsedMs: Date.now() - startedAt, finishReason: choice?.finish_reason || 'unknown', promptChars: prompt.length,
+              promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs }));
           if (text.includes('\uFFFD')) console.warn(`[AI] Groq ${model} response contains Unicode replacement character`);
-          logProviderResult('Groq', model, res.statusCode, '', Date.now() - startedAt);
           const finishReason = choice?.finish_reason || 'unknown';
+          logProviderResult('Groq', model, res.statusCode, '', Date.now() - startedAt, { finishReason,
+            answerChars: text.length, promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs });
           resolve({ text, finishReason, truncated: finishReason === 'length', model });
         } catch(e) { reject(e.category ? e : providerFailure('Groq', model, 'NETWORK_ERROR', res.statusCode)); }
       });
     });
-    req.on('error', () => { clearTimeout(timer); reject(providerFailure('Groq', model, 'NETWORK_ERROR')); });
+    req.on('error', () => { clearTimeout(timer); reject(providerFailure('Groq', model, 'NETWORK_ERROR', 0,
+      { elapsedMs: Date.now() - startedAt, promptChars: prompt.length, promptTokenEstimate: estimatePromptTokens(prompt), timeoutMs })); });
     req.write(body); req.end();
   });
 }
 
 async function callAI(gemKey, groqKey, prompt, options = {}) {
-  const failures = [];
-  const primaryTimeoutMs = options.primaryTimeoutMs ?? options.timeoutMs ?? 12000;
-  const fallbackTimeoutMs = options.fallbackTimeoutMs ?? options.timeoutMs ?? 10000;
-  const providerOptions = { ...options };
-  delete providerOptions.primaryTimeoutMs;
-  delete providerOptions.fallbackTimeoutMs;
-  delete providerOptions.timeoutMs;
-  if (gemKey) {
-    const startedAt = Date.now();
-    try { return { ...await callGemini(gemKey, prompt, { ...providerOptions, timeoutMs: primaryTimeoutMs }), usedApi: 'gemini' }; }
-    catch(e) {
-      failures.push(e);
-      logProviderResult('Gemini', CFG.geminiModel, e.status, e.category || 'NETWORK_ERROR', Date.now() - startedAt);
-    }
-  }
-  if (groqKey) {
-    const startedAt = Date.now();
-    try { return { ...await callGroq(groqKey, prompt, { ...providerOptions, timeoutMs: fallbackTimeoutMs }), usedApi: 'groq' }; }
-    catch(e) {
-      failures.push(e);
-      logProviderResult('Groq', CFG.groqModel, e.status, e.category || 'NETWORK_ERROR', Date.now() - startedAt);
-    }
-  }
-  const categories = failures.map(e => e.category);
-  const error = new Error('AI provider request failed');
-  if (!gemKey && !groqKey || categories.length > 0 && categories.every(c => ['INVALID_API_KEY','MODEL_NOT_FOUND','MODEL_DEPRECATED'].includes(c))) {
-    error.code = 'AI_PROVIDER_CONFIGURATION_ERROR';
-  } else if (categories.length > 0 && categories.every(c => c === 'RATE_LIMIT')) {
-    error.code = 'AI_PROVIDER_RATE_LIMIT';
-  } else if (categories.length > 0 && categories.every(c => c === 'PROVIDER_TIMEOUT')) {
-    error.code = 'AI_TIMEOUT';
-  } else {
-    error.code = 'AI_PROVIDER_UNAVAILABLE';
-  }
-  throw error;
+  return runProviderFallback({ geminiKey: gemKey, groqKey, prompt, options,
+    callGemini, callGroq, models: { gemini: CFG.geminiModel, groq: CFG.groqModel },
+    onFailure: (error, model, timeoutMs) => logProviderResult(error.provider || 'provider', model,
+      error.status || 0, error.category || 'NETWORK_ERROR', error.elapsedMs || 0,
+      { finishReason: error.finishReason, answerChars: error.answerChars,
+        promptChars: error.promptChars || prompt.length,
+        promptTokenEstimate: error.promptTokenEstimate || estimatePromptTokens(prompt), timeoutMs }),
+  });
 }
 
 // ════════════════════════════════════════════════════════════════

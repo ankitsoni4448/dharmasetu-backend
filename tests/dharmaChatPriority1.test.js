@@ -30,7 +30,7 @@ test('server resolves Jyotish context from authenticated UUID, never client user
   assert.match(server, /getUserAstrologyContext\(req\.authUser\.id, userRecord\)/);
   assert.match(server, /jyotish_profiles[^\n]+user_id=eq\.\$\{encodeURIComponent\(authUserId\)\}/);
   assert.doesNotMatch(server, /getUserAstrologyContext\(req\.body/);
-  assert.match(server, /primaryTimeoutMs:\s*12000/);
+  assert.match(server, /primaryTimeoutMs:\s*20000/);
   assert.match(server, /fallbackTimeoutMs:\s*10000/);
   assert.match(server, /timeoutMs:\s*8000/);
 });

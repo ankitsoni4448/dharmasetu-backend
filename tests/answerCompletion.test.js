@@ -41,6 +41,16 @@ test('continuation failure returns only a coherent usable original', async () =>
   assert.equal(result.usableOriginal, true);
 });
 
+test('concise coherent answer is preserved when continuation is unavailable', async () => {
+  const concise = 'धर्म का सरल आधार सत्य, करुणा और उत्तरदायित्व है।';
+  const result = await completeProviderAnswer(
+    { text: concise, usedApi: 'gemini', finishReason: 'MAX_TOKENS', truncated: true },
+    async () => { throw Object.assign(new Error('timeout'), { code: 'AI_TIMEOUT' }); },
+  );
+  assert.equal(result.text, concise);
+  assert.equal(result.usableOriginal, true);
+});
+
 test('unusable continuation failure remains an explicit failure', async () => {
   await assert.rejects(() => completeProviderAnswer(
     { text: 'Partial', usedApi: 'gemini', finishReason: 'MAX_TOKENS', truncated: true },
