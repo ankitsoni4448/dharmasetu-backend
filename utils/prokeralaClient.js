@@ -6,6 +6,8 @@ const LAHIRI_AYANAMSA = 1;
 const MODULE_STATE = Object.freeze({ READY: 'READY', UNAVAILABLE: 'UNAVAILABLE', FAILED: 'FAILED', RATE_LIMITED: 'RATE_LIMITED', NOT_APPLICABLE: 'NOT_APPLICABLE', NOT_REQUESTED: 'NOT_REQUESTED' });
 
 const MODULES = Object.freeze({
+  panchang: { path: '/astrology/panchang', credits: 10, required: true, type: 'json' },
+  panchangAdvanced: { path: '/astrology/panchang/advanced', credits: 100, required: true, type: 'json' },
   birthDetails: { path: '/astrology/birth-details', credits: 50, required: true, type: 'json' },
   basicKundli: { path: '/astrology/kundli', credits: 50, required: true, type: 'json', deep: false },
   advancedKundli: { path: '/astrology/kundli/advanced', credits: 300, required: true, type: 'json' },
@@ -164,5 +166,5 @@ function expectedCredits({ language = 'en' } = {}) {
 function resetTokenCacheForTests() { tokenCache = { value: null, expiresAt: 0 }; tokenRequest = null; }
 
 module.exports = { BASE_URL, TOKEN_URL, LAHIRI_AYANAMSA, MODULES, DEEP_MODULE_NAMES, MODULE_STATE, ProkeralaError,
-  configured, capabilityMap, classifyStatus, sanitizeSvg, commonParams, requestModule, fetchPrimaryKundli,
+  configured, capabilityMap, classifyStatus, sanitizeSvg, commonParams, getToken, requestModule, fetchPrimaryKundli,
   fetchBasicKundli, expectedCredits, resetTokenCacheForTests };

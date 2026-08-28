@@ -41,6 +41,7 @@ const { verdictForEvidence } = require('./utils/factSourcePolicy');
 const { retrieveAuthoritativeEvidence } = require('./utils/authoritativeSourceRegistry');
 const { localDateInTimezone, localDateTimeWithOffset, cacheKey: panchangCacheKey, normalizeAuthoritativePanchang } = require('./utils/panchangService');
 const { normalizeFestivalEvents, unavailableFestivalResult } = require('./utils/festivalService');
+const { getDailyPanchang, getMonthlyPanchang, getYearOverview } = require('./utils/authoritativePanchangService');
 const { validateOnboarding, birthInputFingerprint, formatUtcOffset } = require('./utils/accountLifecycle');
 const {
   CALCULATION_STANDARD,
@@ -1021,8 +1022,26 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
         await sbRest('POST', 'rpc/release_ai_usage', { p_user_id: req.authUser.id, p_reservation_id: reservationId }).catch(() => {});
         return res.status(400).json({ error: 'PANCHANG_LOCATION_INVALID' });
       }
-      try { panchangContext = await getAuthoritativePanchang({ latitude, longitude,
-        timezone: sanitize(panchangLocation.timezone, 80), locationLabel: sanitize(panchangLocation.label || '', 100) || null }); }
+      try {
+        const timezone = sanitize(panchangLocation.timezone, 80); const locationLabel = sanitize(panchangLocation.label || '', 100) || null;
+        const isoDate = lastMsg.match(/\b(20\d{2}-\d{2}-\d{2})\b/)?.[1];
+        const requestedYear = Number(lastMsg.match(/\b(20\d{2})\b/)?.[1]);
+        const monthNames = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+        const monthIndex = monthNames.findIndex(name => lastMsg.toLowerCase().includes(name));
+        const base = { latitude, longitude, timezone, locationLabel };
+        if (queryIntent === QUERY_INTENTS.FESTIVAL_CALENDAR && requestedYear && monthIndex < 0) {
+          panchangContext = getYearOverview({ ...base, year: requestedYear });
+        } else if (queryIntent === QUERY_INTENTS.FESTIVAL_CALENDAR && (monthIndex >= 0 || /(?:this|next)\s+month|इस\s+महीने|अगले\s+महीने/iu.test(lastMsg))) {
+          const localToday = localDateInTimezone(new Date(), timezone);
+          let year = requestedYear || Number(localToday.slice(0, 4)); let month = monthIndex + 1 || Number(localToday.slice(5, 7));
+          if (/(?:next\s+month|अगले\s+महीने)/iu.test(lastMsg)) { month += 1; if (month === 13) { month = 1; year += 1; } }
+          panchangContext = await getMonthlyPanchang({ ...base, year, month });
+        } else {
+          let date = isoDate || localDateInTimezone(new Date(), timezone);
+          if (!isoDate && /tomorrow|कल/iu.test(lastMsg)) { const next = new Date(`${date}T12:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); date = next.toISOString().slice(0, 10); }
+          panchangContext = await getAuthoritativePanchang({ ...base, date });
+        }
+      }
       catch {
         await sbRest('POST', 'rpc/release_ai_usage', { p_user_id: req.authUser.id, p_reservation_id: reservationId }).catch(() => {});
         return res.status(503).json({ error: 'PANCHANG_TEMPORARILY_UNAVAILABLE' });
@@ -3074,97 +3093,44 @@ function getFallbackPanchang() {
   });
 }
 
-async function getAuthoritativePanchang({ latitude, longitude, timezone, locationLabel = null }) {
-  const date = localDateInTimezone(new Date(), timezone);
-  const key = panchangCacheKey({ date, latitude, longitude, timezone, provider: 'prokerala', version: 'v2' });
-  if (PANCHANG_CACHE[key] && Date.now() - PANCHANG_CACHE[key].time < CACHE_TTL) return { ...PANCHANG_CACHE[key].data, cached: true };
-  if (!canCallAPI()) throw Object.assign(new Error('PANCHANG_TEMPORARILY_UNAVAILABLE'), { code: 'PANCHANG_TEMPORARILY_UNAVAILABLE' });
-  const token = await getProkeralaToken();
-  const localDateTime = localDateTimeWithOffset(date, '06:00:00', timezone);
-  const url = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=1&coordinates=${encodeURIComponent(`${latitude},${longitude}`)}&datetime=${encodeURIComponent(localDateTime)}`;
-  const apiRes = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(12000) });
-  if (!apiRes.ok) throw Object.assign(new Error('PANCHANG_PROVIDER_ERROR'), { code: 'PANCHANG_PROVIDER_ERROR', status: apiRes.status });
-  const json = await apiRes.json(); const data = json?.data;
-  if (!data) throw Object.assign(new Error('PANCHANG_PROVIDER_MALFORMED'), { code: 'PANCHANG_PROVIDER_MALFORMED' });
-  const raw = { sunrise: data.sunrise, sunset: data.sunset, tithi: data.tithi?.name, nakshatra: data.nakshatra?.name,
-    yoga: data.yoga?.name, karana: data.karana?.name, weekday: data.vaara || data.weekday, paksha: data.paksha,
-    lunar_month: data.lunar_month, vikram_samvat: data.vikram_samvat, moonrise: data.moonrise, moonset: data.moonset,
-    rahu_kalam: data.rahu_kalam, yamaganda: data.yamaganda, gulika: data.gulika,
-    abhijit_muhurta: data.abhijit_muhurta, festivals: Array.isArray(data.festivals) ? data.festivals : [] };
-  const result = normalizeAuthoritativePanchang(raw, { date, latitude, longitude, timezone, locationLabel,
-    provider: 'prokerala', version: 'v2', generatedAt: new Date().toISOString() });
-  result.festivalEvents = normalizeFestivalEvents(raw.festivals, { localDate: date, timezone, latitude, longitude,
-    region: locationLabel, provider: 'prokerala', calculationVersion: 'v2' });
-  PANCHANG_CACHE[key] = { data: result, time: Date.now() };
-  return result;
+async function getAuthoritativePanchang({ latitude, longitude, timezone, locationLabel = null, date = null }) {
+  return getDailyPanchang({ latitude, longitude, timezone, locationLabel,
+    date: date || localDateInTimezone(new Date(), timezone) });
 }
 
-app.get("/api/panchang/today", async (req, res) => {
+async function panchangLocationFromRequest(req) {
+  let { lat, lng, city } = req.query;
+  if ((!lat || !lng) && city) { const coords = await getCoordinatesFromCity(city); if (coords) { lat = coords.lat; lng = coords.lng; } }
+  return { latitude: Number(lat), longitude: Number(lng), timezone: sanitize(req.query.timezone || 'Asia/Kolkata', 80), locationLabel: sanitize(city || req.query.label || '', 100) || null };
+}
+
+function panchangHttpError(res, error) {
+  const invalid = /^PANCHANG_(?:LOCATION|DATE|MONTH|YEAR|TIMEZONE|RANGE)/.test(error.code || error.message || '');
+  if (!invalid) console.warn(`[Panchang] ${error.code || 'PROVIDER_UNAVAILABLE'}${error.status ? ` HTTP_${error.status}` : ''}`);
+  return res.status(invalid ? 400 : 503).json({ success: false, error: invalid ? (error.code || error.message) : 'PANCHANG_TEMPORARILY_UNAVAILABLE' });
+}
+
+app.get('/api/panchang/today', async (req, res) => {
   try {
-    let { lat, lng, city } = req.query;
-    const timezone = sanitize(req.query.timezone || 'Asia/Kolkata', 80);
-    if ((!lat || !lng) && city) {
-      const coords = await getCoordinatesFromCity(city);
-      if (coords) { lat = coords.lat; lng = coords.lng; }
-    }
-    if (!lat || !lng) {
-      return res.status(503).json({ success: false, error: 'PANCHANG_LOCATION_REQUIRED' });
-    }
-    const latitude = Number(lat); const longitude = Number(lng);
-    if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
-      return res.status(400).json({ success: false, error: 'PANCHANG_LOCATION_INVALID' });
-    }
-    const date = localDateInTimezone(new Date(), timezone);
-    const key = panchangCacheKey({ date, latitude, longitude, timezone, provider: 'prokerala', version: 'v2' });
-    if (PANCHANG_CACHE[key] && Date.now() - PANCHANG_CACHE[key].time < CACHE_TTL) {
-      return res.json({ success: true, data: PANCHANG_CACHE[key].data, cached: true });
-    }
-    if (!canCallAPI()) {
-      return res.status(503).json({ success: false, error: 'PANCHANG_TEMPORARILY_UNAVAILABLE' });
-    }
-    let rawData = null;
-    try {
-      const token  = await getProkeralaToken();
-      const localDateTime = localDateTimeWithOffset(date, '06:00:00', timezone);
-      const url = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=1&coordinates=${encodeURIComponent(`${latitude},${longitude}`)}&datetime=${encodeURIComponent(localDateTime)}`;
-      const apiRes = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(12000) });
-      if (!apiRes.ok) throw Object.assign(new Error('PANCHANG_PROVIDER_ERROR'), { status: apiRes.status });
-      const json   = await apiRes.json();
-      if (json?.data) {
-        rawData = {
-          sunrise:   json.data.sunrise  || '',
-          sunset:    json.data.sunset   || '',
-          tithi:     json.data.tithi?.name     || '',
-          nakshatra: json.data.nakshatra?.name || '',
-          yoga:      json.data.yoga?.name      || '',
-          karana:    json.data.karana?.name    || '',
-          weekday:   json.data.vaara           || json.data.weekday || '',
-          paksha: json.data.paksha || '', lunar_month: json.data.lunar_month || '',
-          vikram_samvat: json.data.vikram_samvat || null, moonrise: json.data.moonrise || null,
-          moonset: json.data.moonset || null, rahu_kalam: json.data.rahu_kalam || null,
-          yamaganda: json.data.yamaganda || null, gulika: json.data.gulika || null,
-          abhijit_muhurta: json.data.abhijit_muhurta || null,
-          festivals: Array.isArray(json.data.festivals) ? json.data.festivals : [],
-        };
-      }
-    } catch (apiErr) {
-      console.error("Prokerala API error:", apiErr.message);
-    }
-    if (!rawData) return res.status(503).json({ success: false, error: 'PANCHANG_TEMPORARILY_UNAVAILABLE' });
-    const fullData = normalizeAuthoritativePanchang(rawData, { date, latitude, longitude, timezone,
-      locationLabel: city || null, provider: 'prokerala', version: 'v2', generatedAt: new Date().toISOString() });
-    try {
-      fullData.festivalEvents = normalizeFestivalEvents(rawData.festivals, { localDate: date, timezone, latitude, longitude,
-        region: city || null, provider: 'prokerala', calculationVersion: 'v2' });
-    } catch {
-      fullData.festivalEvents = unavailableFestivalResult({ localDate: date, timezone, latitude, longitude, provider: 'prokerala' }).events;
-    }
-    PANCHANG_CACHE[key] = { data: fullData, time: Date.now() };
-    res.json({ success: true, data: fullData, source: 'prokerala', cached: false });
-  } catch (err) {
-    console.error("Panchang route error:", err.message);
-    res.status(503).json({ success: false, error: 'PANCHANG_TEMPORARILY_UNAVAILABLE' });
-  }
+    const location = await panchangLocationFromRequest(req);
+    const data = await getDailyPanchang({ ...location, date: localDateInTimezone(new Date(), location.timezone) });
+    res.json({ success: true, data, source: data.metadata.provider, cached: data.metadata.cached });
+  } catch (error) { panchangHttpError(res, error); }
+});
+
+app.get('/api/panchang/day', async (req, res) => {
+  try { const data = await getDailyPanchang({ ...(await panchangLocationFromRequest(req)), date: req.query.date }); res.json({ success: true, data }); }
+  catch (error) { panchangHttpError(res, error); }
+});
+
+app.get('/api/panchang/month', async (req, res) => {
+  try { const data = await getMonthlyPanchang({ ...(await panchangLocationFromRequest(req)), year: Number(req.query.year), month: Number(req.query.month) }, { rateDelayMs: 1000 }); res.json({ success: true, data }); }
+  catch (error) { panchangHttpError(res, error); }
+});
+
+app.get('/api/panchang/year', async (req, res) => {
+  try { const data = getYearOverview({ ...(await panchangLocationFromRequest(req)), year: Number(req.query.year) }); res.json({ success: true, data }); }
+  catch (error) { panchangHttpError(res, error); }
 });
 
 // ════════════════════════════════════════════════════════════════
@@ -4209,47 +4175,14 @@ app.post('/payment/recover', requireSupabaseUser, async (req, res) => {
 
 // GET /panchang/city/:city — city-specific panchang with better caching
 app.get('/panchang/city/:city', async (req, res) => {
-  const city     = sanitize(req.params.city, 100) || 'Delhi';
-  const dateStr  = req.query.date || new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
-  const cacheKey = `panchang_${city.toLowerCase()}_${dateStr}`;
-  const now      = Date.now();
-
-  // Serve fresh cache
-  if (PANCHANG_CACHE[cacheKey] && now - PANCHANG_CACHE[cacheKey].ts < CACHE_TTL) {
-    return res.json({ ...PANCHANG_CACHE[cacheKey].data, source: 'cache', city });
-  }
-
-  // Try Prokerala
   try {
-    if (canCallAPI()) {
-      const token   = await getProkeralaToken();
-      const coords  = await getCoordinatesFromCity(city);
-      if (!coords) return res.status(503).json({ success: false, error: 'PANCHANG_LOCATION_REQUIRED' });
-      const url     = `https://api.prokerala.com/v2/astrology/panchang?ayanamsa=1&coordinates=${coords.lat},${coords.lng}&datetime=${dateStr}T06:00:00%2B05:30`;
-      const apiRes  = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-      if (apiRes.ok) {
-        const d = await apiRes.json();
-        const panchang = {
-          tithi:     d.data?.tithi?.name           || '',
-          nakshatra: d.data?.nakshatra?.name        || '',
-          yoga:      d.data?.yoga?.name             || '',
-          karana:    d.data?.karana?.name           || '',
-          sunrise:   d.data?.sunrise                || '',
-          sunset:    d.data?.sunset                 || '',
-          moonrashi: d.data?.moon_sign?.name        || '',
-          date:      dateStr,
-          city,
-          _isFallback: false,
-        };
-        PANCHANG_CACHE[cacheKey] = { data: panchang, ts: now };
-        return res.json({ ...panchang, source: 'prokerala' });
-      }
-    }
-  } catch(e) {
-    console.warn('[Panchang city] API error:', e.message);
-  }
-
-  res.status(503).json({ success: false, error: 'PANCHANG_TEMPORARILY_UNAVAILABLE', city, date: dateStr });
+    const city = sanitize(req.params.city, 100); const coords = await getCoordinatesFromCity(city);
+    if (!coords) return res.status(400).json({ success: false, error: 'PANCHANG_LOCATION_REQUIRED' });
+    const timezone = sanitize(req.query.timezone || 'Asia/Kolkata', 80);
+    const data = await getDailyPanchang({ latitude: coords.lat, longitude: coords.lng, timezone, locationLabel: city,
+      date: req.query.date || localDateInTimezone(new Date(), timezone) });
+    res.json({ success: true, data, source: data.metadata.provider, cached: data.metadata.cached });
+  } catch (error) { panchangHttpError(res, error); }
 });
 
 function buildStaticPanchang(dateStr, city = 'Delhi') {
