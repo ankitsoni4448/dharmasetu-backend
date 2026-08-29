@@ -60,12 +60,12 @@ function findPeriod(values, matcher) {
 }
 
 function normalizeProviderPanchang(raw, context) {
-  if (!raw || typeof raw !== 'object') throw new ProkeralaError('PROVIDER_MALFORMED_RESPONSE');
+  if (!raw || typeof raw !== 'object') throw new ProkeralaError('PANCHANG_NORMALIZATION_FAILED');
   const tithi = activeEntry(raw.tithi, context.datetime);
   const nakshatra = activeEntry(raw.nakshatra, context.datetime);
   const yoga = activeEntry(raw.yoga, context.datetime);
   const karana = activeEntry(raw.karana, context.datetime);
-  if (![tithi, nakshatra, yoga, karana].every(Boolean) || !raw.vaara || !raw.sunrise || !raw.sunset) throw new ProkeralaError('PROVIDER_MALFORMED_RESPONSE');
+  if (![tithi, nakshatra, yoga, karana].every(Boolean) || !raw.vaara || !raw.sunrise || !raw.sunset) throw new ProkeralaError('PANCHANG_CORE_INCOMPLETE');
   const auspicious = raw.auspicious_period || [];
   const inauspicious = raw.inauspicious_period || [];
   const explicitEvents = [...(Array.isArray(raw.events) ? raw.events : []), ...(Array.isArray(raw.festivals) ? raw.festivals : [])]
@@ -101,18 +101,36 @@ function normalizeProviderPanchang(raw, context) {
     provider: PROVIDER, calculationVersion: CALCULATION_VERSION, generatedAt: result.metadata.generatedAt });
 }
 
+function sanitizedFailure(error) {
+  const mapped = {
+    PROVIDER_RATE_LIMITED: 'PROVIDER_RATE_LIMITED',
+    PROVIDER_TIMEOUT: 'PROVIDER_TIMEOUT',
+    PROVIDER_AUTH_FAILED: 'PROVIDER_AUTH_ERROR',
+    PROVIDER_PLAN_REQUIRED: 'PROVIDER_PLAN_OR_QUOTA',
+    PROVIDER_MALFORMED_RESPONSE: 'PROVIDER_BAD_RESPONSE',
+    PROVIDER_UNAVAILABLE: 'PROVIDER_TEMPORARILY_UNAVAILABLE',
+    PANCHANG_NORMALIZATION_FAILED: 'PANCHANG_NORMALIZATION_FAILED',
+    PANCHANG_CORE_INCOMPLETE: 'PANCHANG_CORE_INCOMPLETE',
+  };
+  const code = mapped[error?.code];
+  if (!code || code === error.code) return error;
+  return Object.assign(new Error(code), { code, status: error.status || 0, cause: error });
+}
+
 async function getDailyPanchang(input, options = {}) {
   const location = validateLocation(input);
   const date = validateDate(input.date || localDateInTimezone(new Date(), location.timezone));
-  const detail = options.detail === 'basic' ? 'basic' : 'advanced';
+  const detail = options.detail === 'advanced' ? 'advanced' : 'basic';
   const cacheKey = key('day', date, location, detail);
   const cached = cacheGet(dailyCache, cacheKey, DAILY_TTL_MS);
   if (cached) return cached;
   const datetime = localDateTimeWithOffset(date, '06:00:00', location.timezone);
-  const raw = await requestModule(detail === 'advanced' ? 'panchangAdvanced' : 'panchang', { ...location, datetime }, options);
-  const value = normalizeProviderPanchang(raw, { date, datetime, location, detail });
-  dailyCache.set(cacheKey, { value, storedAt: Date.now() });
-  return value;
+  try {
+    const raw = await requestModule(detail === 'advanced' ? 'panchangAdvanced' : 'panchang', { ...location, datetime }, options);
+    const value = normalizeProviderPanchang(raw, { date, datetime, location, detail });
+    dailyCache.set(cacheKey, { value, storedAt: Date.now() });
+    return value;
+  } catch (error) { throw sanitizedFailure(error); }
 }
 
 function monthDates(year, month) {
@@ -124,23 +142,16 @@ function monthDates(year, month) {
 async function getMonthlyPanchang(input, options = {}) {
   const location = validateLocation(input); const year = Number(input.year); const month = Number(input.month);
   const dates = monthDates(year, month); if (dates.length > MAX_MONTH_DAYS) throw new Error('PANCHANG_RANGE_TOO_LARGE');
-  const cacheKey = key('month', `${year}-${month}`, location, 'basic');
-  const cached = cacheGet(monthCache, cacheKey, RANGE_TTL_MS); if (cached) return cached;
-  const days = [];
-  for (let index = 0; index < dates.length; index += 3) {
-    const batch = dates.slice(index, index + 3);
-    const settled = await Promise.allSettled(batch.map(date => getDailyPanchang({ ...location, date }, { ...options, detail: 'basic' })));
-    settled.forEach((row, offset) => days.push(row.status === 'fulfilled'
-      ? { date: batch[offset], available: true, weekday: row.value.weekday, tithi: row.value.tithi, paksha: row.value.paksha, nakshatra: row.value.nakshatra, events: row.value.events }
-      : { date: batch[offset], available: false, error: row.reason?.code || 'PANCHANG_TEMPORARILY_UNAVAILABLE' }));
-    if (index + 3 < dates.length && options.rateDelayMs) await new Promise(resolve => setTimeout(resolve, options.rateDelayMs));
-  }
-  const value = { available: days.some(day => day.available), year, month, days,
+  const days = dates.flatMap(date => {
+    const cached = cacheGet(dailyCache, key('day', date, location, 'basic'), DAILY_TTL_MS);
+    return cached ? [{ date, available: true, weekday: cached.weekday, tithi: cached.tithi, paksha: cached.paksha,
+      nakshatra: cached.nakshatra, events: cached.events }] : [];
+  });
+  return { available: true, year, month, days,
     events: days.flatMap(day => (day.events || []).map(event => ({ ...event, date: day.date }))),
-    partial: days.some(day => !day.available), location, timezone: location.timezone,
-    metadata: { provider: PROVIDER, calculationVersion: CALCULATION_VERSION, generatedAt: new Date().toISOString(), cached: false, strategy: 'bounded-31-day-lazy-month' } };
-  if (!value.partial) monthCache.set(cacheKey, { value, storedAt: Date.now() });
-  return value;
+    partial: days.length < dates.length, location, timezone: location.timezone,
+    metadata: { provider: PROVIDER, calculationVersion: CALCULATION_VERSION, generatedAt: new Date().toISOString(), cached: true,
+      strategy: 'cache-only-month-shell; zero provider fan-out' } };
 }
 
 function getYearOverview(input) {
@@ -155,5 +166,5 @@ function getYearOverview(input) {
       strategy: 'year-index-from-authoritative-month-cache; no 365-call fan-out' } };
 }
 
-module.exports = { PROVIDER, CALCULATION_VERSION, MAX_MONTH_DAYS, validDate, validateLocation, normalizeProviderPanchang,
+module.exports = { PROVIDER, CALCULATION_VERSION, MAX_MONTH_DAYS, validDate, validateLocation, normalizeProviderPanchang, sanitizedFailure,
   getDailyPanchang, getMonthlyPanchang, getYearOverview, _dailyCache: dailyCache, _monthCache: monthCache };
