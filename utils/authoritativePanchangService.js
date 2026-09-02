@@ -1,7 +1,7 @@
 'use strict';
 
 const { requestModule, ProkeralaError, LAHIRI_AYANAMSA } = require('./prokeralaClient');
-const { localDateInTimezone, localDateTimeWithOffset, normalizeCoordinate } = require('./panchangService');
+const { localDateInTimezone, localDateTimeWithOffset, canonicalLocation } = require('./panchangService');
 
 const PROVIDER = 'prokerala';
 const CALCULATION_VERSION = 'prokerala-v2-lahiri-20260827';
@@ -10,6 +10,9 @@ const RANGE_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_MONTH_DAYS = 31;
 const dailyCache = new Map();
 const monthCache = new Map();
+const inFlight = new Map();
+let sharedStore = null;
+const CALENDAR_CONVENTION = 'nirayana-sidereal';
 
 function validDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value))) return false;
@@ -18,12 +21,10 @@ function validDate(value) {
 }
 
 function validateLocation(input) {
-  const latitude = normalizeCoordinate(input.latitude, -90, 90);
-  const longitude = normalizeCoordinate(input.longitude, -180, 180);
-  if (latitude == null || longitude == null) throw Object.assign(new Error('PANCHANG_LOCATION_INVALID'), { code: 'PANCHANG_LOCATION_INVALID' });
+  const { latitude, longitude, locationKey } = canonicalLocation(input.latitude, input.longitude);
   const timezone = String(input.timezone || '');
   localDateInTimezone(new Date(), timezone);
-  return { latitude, longitude, timezone, label: String(input.locationLabel || '').slice(0, 100) || null };
+  return { latitude, longitude, locationKey, timezone, label: String(input.locationLabel || '').slice(0, 100) || null };
 }
 
 function validateDate(date) {
@@ -36,6 +37,19 @@ function validateDate(date) {
 function key(scope, value, location, detail = 'basic') {
   return [scope, value, location.latitude, location.longitude, location.timezone, LAHIRI_AYANAMSA, PROVIDER, CALCULATION_VERSION, detail].join('|');
 }
+
+function calculationIdentity(date, location) {
+  return { date, locationKey: location.locationKey, latitude: location.latitude, longitude: location.longitude,
+    timezone: location.timezone, ayanamsa: String(LAHIRI_AYANAMSA), calendarConvention: CALENDAR_CONVENTION,
+    provider: PROVIDER, calculationVersion: CALCULATION_VERSION,
+    canonicalKey: [date, location.locationKey, location.timezone, LAHIRI_AYANAMSA, CALENDAR_CONVENTION, PROVIDER, CALCULATION_VERSION].join('|') };
+}
+
+function configurePanchangStore(store) { sharedStore = store || null; }
+function storeFor(options) { return Object.prototype.hasOwnProperty.call(options, 'store') ? options.store : sharedStore; }
+function cacheValue(cacheKey, value) { dailyCache.set(cacheKey, { value, storedAt: Date.now() }); }
+function storedValue(value) { return { ...value, metadata: { ...value.metadata, cached: true, cacheLayer: 'shared' } }; }
+function warnCache(action, error, options) { (options.logger || console).warn(`[Panchang] shared cache ${action} failed: ${error?.message || 'unknown error'}`); }
 
 function cacheGet(store, cacheKey, ttl) {
   const row = store.get(cacheKey);
@@ -120,17 +134,28 @@ function sanitizedFailure(error) {
 async function getDailyPanchang(input, options = {}) {
   const location = validateLocation(input);
   const date = validateDate(input.date || localDateInTimezone(new Date(), location.timezone));
-  const detail = options.detail === 'advanced' ? 'advanced' : 'basic';
+  const detail = 'basic';
   const cacheKey = key('day', date, location, detail);
   const cached = cacheGet(dailyCache, cacheKey, DAILY_TTL_MS);
   if (cached) return cached;
-  const datetime = localDateTimeWithOffset(date, '06:00:00', location.timezone);
-  try {
-    const raw = await requestModule(detail === 'advanced' ? 'panchangAdvanced' : 'panchang', { ...location, datetime }, options);
-    const value = normalizeProviderPanchang(raw, { date, datetime, location, detail });
-    dailyCache.set(cacheKey, { value, storedAt: Date.now() });
-    return value;
-  } catch (error) { throw sanitizedFailure(error); }
+  if (inFlight.has(cacheKey)) return inFlight.get(cacheKey);
+  const task = (async () => {
+    const store = storeFor(options); const identity = calculationIdentity(date, location);
+    if (store) {
+      try { const found = await store.getDay(identity); if (found) { const value = storedValue(found); cacheValue(cacheKey, value); return value; } }
+      catch (error) { warnCache('read', error, options); }
+    }
+    const datetime = localDateTimeWithOffset(date, '06:00:00', location.timezone);
+    try {
+      const raw = await requestModule('panchang', { ...location, datetime }, options);
+      const value = normalizeProviderPanchang(raw, { date, datetime, location, detail });
+      if (store) try { await store.saveDay(identity, value); } catch (error) { warnCache('write', error, options); }
+      cacheValue(cacheKey, value);
+      return value;
+    } catch (error) { throw sanitizedFailure(error); }
+  })();
+  inFlight.set(cacheKey, task);
+  try { return await task; } finally { if (inFlight.get(cacheKey) === task) inFlight.delete(cacheKey); }
 }
 
 function monthDates(year, month) {
@@ -142,6 +167,10 @@ function monthDates(year, month) {
 async function getMonthlyPanchang(input, options = {}) {
   const location = validateLocation(input); const year = Number(input.year); const month = Number(input.month);
   const dates = monthDates(year, month); if (dates.length > MAX_MONTH_DAYS) throw new Error('PANCHANG_RANGE_TOO_LARGE');
+  const store = storeFor(options); let shared = [];
+  if (store) try { shared = await store.getMonth(calculationIdentity(dates[0], location), dates[0], dates[dates.length - 1]); }
+  catch (error) { warnCache('month read', error, options); }
+  for (const value of shared) if (value?.date) cacheValue(key('day', value.date, location, 'basic'), storedValue(value));
   const days = dates.flatMap(date => {
     const cached = cacheGet(dailyCache, key('day', date, location, 'basic'), DAILY_TTL_MS);
     return cached ? [{ date, available: true, weekday: cached.weekday, tithi: cached.tithi, paksha: cached.paksha,
@@ -166,5 +195,6 @@ function getYearOverview(input) {
       strategy: 'year-index-from-authoritative-month-cache; no 365-call fan-out' } };
 }
 
-module.exports = { PROVIDER, CALCULATION_VERSION, MAX_MONTH_DAYS, validDate, validateLocation, normalizeProviderPanchang, sanitizedFailure,
-  getDailyPanchang, getMonthlyPanchang, getYearOverview, _dailyCache: dailyCache, _monthCache: monthCache };
+module.exports = { PROVIDER, CALCULATION_VERSION, CALENDAR_CONVENTION, MAX_MONTH_DAYS, validDate, validateLocation, calculationIdentity,
+  normalizeProviderPanchang, sanitizedFailure, configurePanchangStore, getDailyPanchang, getMonthlyPanchang, getYearOverview,
+  _dailyCache: dailyCache, _monthCache: monthCache, _inFlight: inFlight };

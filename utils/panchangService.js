@@ -24,6 +24,12 @@ function normalizeCoordinate(value, min, max) {
   return Number(number.toFixed(3));
 }
 
+function canonicalLocation(latitude, longitude) {
+  const lat = normalizeCoordinate(latitude, -90, 90); const lng = normalizeCoordinate(longitude, -180, 180);
+  if (lat == null || lng == null) throw Object.assign(new Error('PANCHANG_LOCATION_INVALID'), { code: 'PANCHANG_LOCATION_INVALID' });
+  return { latitude: lat, longitude: lng, locationKey: `geo3:${lat.toFixed(3)},${lng.toFixed(3)}` };
+}
+
 function cacheKey({ date, latitude, longitude, timezone, provider = 'prokerala', version = 'v2' }) {
   const lat = normalizeCoordinate(latitude, -90, 90); const lng = normalizeCoordinate(longitude, -180, 180);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date)) || lat == null || lng == null || !timezone) throw Object.assign(new Error('PANCHANG_CONTEXT_INVALID'), { code: 'PANCHANG_CONTEXT_INVALID' });
@@ -53,4 +59,4 @@ class PanchangCache {
   set(key, value, now = Date.now()) { if (!value?.available || !value?.provider || !value?.generatedAt) throw new Error('PANCHANG_CACHE_REJECTED'); this.rows.set(key, { value: { ...value, cached: false }, storedAt: now }); }
 }
 
-module.exports = { localDateInTimezone, localDateTimeWithOffset, normalizeCoordinate, cacheKey, normalizeAuthoritativePanchang, PanchangCache };
+module.exports = { localDateInTimezone, localDateTimeWithOffset, normalizeCoordinate, canonicalLocation, cacheKey, normalizeAuthoritativePanchang, PanchangCache };

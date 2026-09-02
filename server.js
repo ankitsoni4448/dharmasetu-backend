@@ -41,7 +41,8 @@ const { verdictForEvidence } = require('./utils/factSourcePolicy');
 const { retrieveAuthoritativeEvidence } = require('./utils/authoritativeSourceRegistry');
 const { localDateInTimezone, localDateTimeWithOffset, cacheKey: panchangCacheKey, normalizeAuthoritativePanchang } = require('./utils/panchangService');
 const { normalizeFestivalEvents, unavailableFestivalResult } = require('./utils/festivalService');
-const { getDailyPanchang, getMonthlyPanchang, getYearOverview } = require('./utils/authoritativePanchangService');
+const { getDailyPanchang, getMonthlyPanchang, getYearOverview, configurePanchangStore } = require('./utils/authoritativePanchangService');
+const { createPanchangStore } = require('./utils/panchangStore');
 const { validateOnboarding, birthInputFingerprint, formatUtcOffset } = require('./utils/accountLifecycle');
 const {
   CALCULATION_STANDARD,
@@ -78,6 +79,7 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
 const supabaseAuth = SUPABASE_URL && SUPABASE_SERVICE_KEY
   ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, { auth: { persistSession: false, autoRefreshToken: false } })
   : null;
+configurePanchangStore(createPanchangStore(supabaseAuth));
 
 async function requireSupabaseUser(req, res, next) {
   const authStartedAt = Date.now();

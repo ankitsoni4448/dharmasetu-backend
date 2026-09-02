@@ -2,7 +2,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { normalizeProviderPanchang, validDate, validateLocation, getDailyPanchang, getMonthlyPanchang, getYearOverview,
-  MAX_MONTH_DAYS, _dailyCache, _monthCache } = require('../utils/authoritativePanchangService');
+  calculationIdentity, MAX_MONTH_DAYS, _dailyCache, _monthCache, _inFlight } = require('../utils/authoritativePanchangService');
 const { resetTokenCacheForTests } = require('../utils/prokeralaClient');
 
 const raw = {
@@ -57,7 +57,7 @@ function providerHarness(providerData = raw, providerStatus = 200) {
   return { calls, fetchImpl, providerCalls: () => calls.filter(url => url.includes('/v2/astrology/')) };
 }
 
-function resetPanchangCaches() { _dailyCache.clear(); _monthCache.clear(); resetTokenCacheForTests(); }
+function resetPanchangCaches() { _dailyCache.clear(); _monthCache.clear(); _inFlight.clear(); resetTokenCacheForTests(); }
 const location = { latitude: 25.9147883, longitude: 78.5662626, timezone: 'Asia/Kolkata', locationLabel: 'Test' };
 
 test('Daily defaults to one Basic request on cache miss and zero provider calls on cache hit', async () => {
@@ -69,6 +69,49 @@ test('Daily defaults to one Basic request on cache miss and zero provider calls 
   assert.doesNotMatch(harness.providerCalls()[0], /\/advanced/);
   const second = await getDailyPanchang({ ...location, date: '2026-08-29' }, { fetchImpl: harness.fetchImpl, env: {} });
   assert.equal(second.metadata.cached, true); assert.equal(harness.providerCalls().length, 1);
+});
+
+test('shared DB hit skips provider and a true miss is saved then reused', async () => {
+  resetPanchangCaches(); const harness = providerHarness(); const rows = new Map(); let saves = 0;
+  const store = { getDay: async identity => rows.get(identity.canonicalKey) || null,
+    saveDay: async (identity, value) => { saves += 1; rows.set(identity.canonicalKey, value); }, getMonth: async () => [] };
+  const options = { store, fetchImpl: harness.fetchImpl, env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } };
+  const first = await getDailyPanchang({ ...location, date: '2026-09-01' }, options);
+  assert.equal(harness.providerCalls().length, 1); assert.equal(saves, 1);
+  _dailyCache.clear();
+  const second = await getDailyPanchang({ ...location, date: '2026-09-01' }, { ...options, fetchImpl: async () => { throw new Error('provider must not run'); } });
+  assert.equal(second.date, first.date); assert.equal(second.metadata.cacheLayer, 'shared'); assert.equal(harness.providerCalls().length, 1);
+});
+
+test('concurrent same-key misses coalesce to one Basic provider request', async () => {
+  resetPanchangCaches(); const harness = providerHarness();
+  const store = { getDay: async () => null, saveDay: async () => {}, getMonth: async () => [] };
+  const input = { ...location, date: '2026-09-02' }; const options = { store, fetchImpl: harness.fetchImpl,
+    env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } };
+  const results = await Promise.all(Array.from({ length: 8 }, () => getDailyPanchang(input, options)));
+  assert.equal(harness.providerCalls().length, 1); assert.ok(results.every(result => result.date === input.date)); assert.equal(_inFlight.size, 0);
+});
+
+test('different canonical keys calculate independently and GPS jitter shares one key', async () => {
+  resetPanchangCaches(); const harness = providerHarness(); const options = { store: null, fetchImpl: harness.fetchImpl,
+    env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } };
+  await Promise.all([
+    getDailyPanchang({ ...location, latitude: 25.91461, date: '2026-09-03' }, options),
+    getDailyPanchang({ ...location, latitude: 25.91462, date: '2026-09-03' }, options),
+    getDailyPanchang({ ...location, date: '2026-09-04' }, options),
+  ]);
+  assert.equal(harness.providerCalls().length, 2);
+  const first = calculationIdentity('2026-09-03', validateLocation({ ...location, latitude: 25.91461 }));
+  const second = calculationIdentity('2026-09-03', validateLocation({ ...location, latitude: 25.91462 }));
+  assert.equal(first.canonicalKey, second.canonicalKey); assert.doesNotMatch(first.canonicalKey, /hindi|english/);
+});
+
+test('shared cache write failure still returns a valid provider response', async () => {
+  resetPanchangCaches(); const harness = providerHarness(); const warnings = [];
+  const value = await getDailyPanchang({ ...location, date: '2026-09-05' }, { store: { getDay: async () => null,
+    saveDay: async () => { throw new Error('database unavailable'); } }, logger: { warn: message => warnings.push(message) },
+    fetchImpl: harness.fetchImpl, env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } });
+  assert.equal(value.available, true); assert.equal(harness.providerCalls().length, 1); assert.equal(warnings.length, 1);
 });
 
 test('historical dates and nearby GPS preserve exact requested context through mocked Basic routing', async () => {
@@ -105,6 +148,14 @@ test('Month returns cached summaries only and makes zero provider calls', async 
   assert.match(month.metadata.strategy, /zero provider fan-out/);
 });
 
+test('Month reuses one shared-store range query and never expands missing days', async () => {
+  resetPanchangCaches(); const normalized = normalizeProviderPanchang(raw, { ...context, date: '2026-08-27', detail: 'basic' });
+  let monthReads = 0; const month = await getMonthlyPanchang({ ...location, year: 2026, month: 8 }, { store: {
+    getMonth: async (_identity, start, end) => { monthReads += 1; assert.equal(start, '2026-08-01'); assert.equal(end, '2026-08-31'); return [normalized]; }
+  }, fetchImpl: async () => { throw new Error('provider must not run'); } });
+  assert.equal(monthReads, 1); assert.equal(month.days.length, 1); assert.equal(month.days[0].date, '2026-08-27'); assert.equal(month.partial, true);
+});
+
 test('provider failures are sanitized and never cached as successful Panchang', async () => {
   for (const [status, code] of [[429, 'PROVIDER_RATE_LIMITED'], [401, 'PROVIDER_AUTH_ERROR'], [403, 'PROVIDER_PLAN_OR_QUOTA'], [503, 'PROVIDER_TEMPORARILY_UNAVAILABLE']]) {
     resetPanchangCaches(); const harness = providerHarness(raw, status);
@@ -136,12 +187,10 @@ test('timeout, malformed provider payload, and incomplete core retain diagnostic
   assert.equal(_dailyCache.size, 0);
 });
 
-test('explicit Advanced failure does not damage an independently cached Basic result', async () => {
-  resetPanchangCaches(); const basic = providerHarness(); const env = { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' };
-  await getDailyPanchang({ ...location, date: '2026-08-29' }, { fetchImpl: basic.fetchImpl, env });
-  const failingAdvanced = providerHarness(raw, 503);
-  await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-29' }, { detail: 'advanced', fetchImpl: failingAdvanced.fetchImpl, env }),
-    error => error.code === 'PROVIDER_TEMPORARILY_UNAVAILABLE');
-  const cachedBasic = await getDailyPanchang({ ...location, date: '2026-08-29' }, { fetchImpl: async () => { throw new Error('must use cache'); }, env: {} });
-  assert.equal(cachedBasic.metadata.detail, 'basic'); assert.equal(cachedBasic.metadata.cached, true);
+test('daily Panchang remains Basic even if an advanced detail option is supplied', async () => {
+  resetPanchangCaches(); const harness = providerHarness();
+  const value = await getDailyPanchang({ ...location, date: '2026-08-29' }, { detail: 'advanced', fetchImpl: harness.fetchImpl,
+    env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } });
+  assert.equal(value.metadata.detail, 'basic'); assert.equal(harness.providerCalls().length, 1);
+  assert.match(harness.providerCalls()[0], /\/astrology\/panchang\?/); assert.doesNotMatch(harness.providerCalls()[0], /advanced/);
 });
