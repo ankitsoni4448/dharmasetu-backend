@@ -1,6 +1,8 @@
 'use strict';
 
 const TABLE = 'panchang_daily_records';
+const EVENTS_TABLE = 'panchang_events';
+const EVENT_CONTENT_TABLE = 'panchang_event_content';
 
 function createPanchangStore(client, logger = console) {
   if (!client) return null;
@@ -47,7 +49,42 @@ function createPanchangStore(client, logger = console) {
     return (data || []).map(row => row.normalized_payload).filter(Boolean);
   }
 
-  return { getDay, saveDay, getMonth, logger };
+  async function getEvents(startDate, endDate = startDate, { includeContent = true } = {}) {
+    const { data: occurrences, error } = await client.from(EVENTS_TABLE).select(
+      'event_id,occurrence_date,event_type,region_code,tradition_code,importance,source,calendar_version,source_metadata'
+    ).gte('occurrence_date', startDate).lte('occurrence_date', endDate).order('occurrence_date', { ascending: true });
+    if (error) throw error;
+    const rows = occurrences || [];
+    const eventIds = [...new Set(rows.map(row => row.event_id).filter(Boolean))];
+    let content = [];
+    if (includeContent && eventIds.length) {
+      const result = await client.from(EVENT_CONTENT_TABLE).select(
+        'event_id,language_code,name,description,source,content_version,updated_at'
+      ).in('event_id', eventIds).order('updated_at', { ascending: false });
+      if (result.error) throw result.error;
+      content = result.data || [];
+    }
+    const contentByEvent = new Map();
+    for (const row of content) {
+      const languages = contentByEvent.get(row.event_id) || new Map();
+      if (!languages.has(row.language_code)) languages.set(row.language_code, row);
+      contentByEvent.set(row.event_id, languages);
+    }
+    return rows.map(row => {
+      const languages = contentByEvent.get(row.event_id) || new Map();
+      const names = Object.fromEntries([...languages].map(([language, value]) => [language, value.name]));
+      const preferred = languages.get('en') || languages.get('english') || languages.get('hi') || languages.values().next().value;
+      return {
+        eventId: row.event_id, code: row.source_metadata?.code || row.event_id, eventType: row.event_type,
+        date: row.occurrence_date, importance: row.importance, regionCode: row.region_code,
+        traditionCode: row.tradition_code, name: preferred?.name || row.source_metadata?.name || null,
+        names, shortDescription: preferred?.description || null, source: row.source,
+        calendarVersion: row.calendar_version, contentVersion: preferred?.content_version || null,
+      };
+    });
+  }
+
+  return { getDay, saveDay, getMonth, getEvents, logger };
 }
 
-module.exports = { TABLE, createPanchangStore };
+module.exports = { TABLE, EVENTS_TABLE, EVENT_CONTENT_TABLE, createPanchangStore };

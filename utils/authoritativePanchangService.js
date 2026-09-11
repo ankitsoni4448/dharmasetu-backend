@@ -2,6 +2,7 @@
 
 const { requestModule, ProkeralaError, LAHIRI_AYANAMSA } = require('./prokeralaClient');
 const { localDateInTimezone, localDateTimeWithOffset, canonicalLocation } = require('./panchangService');
+const { DERIVED_CALCULATION_VERSION, derivePanchangPeriods } = require('./panchangPeriods');
 
 const PROVIDER = 'prokerala';
 const CALCULATION_VERSION = 'prokerala-v2-lahiri-20260827';
@@ -73,13 +74,72 @@ function findPeriod(values, matcher) {
   return period((Array.isArray(values) ? values : []).find(item => matcher.test(String(item.name || ''))));
 }
 
+function hasPeriod(value) { return Boolean(value?.periods?.length || (value?.start && value?.end)); }
+
+function weekdayInTimezone(date, timezone) {
+  const instant = new Date(localDateTimeWithOffset(date, '12:00:00', timezone));
+  const name = new Intl.DateTimeFormat('en-US', { timeZone: timezone, weekday: 'short' }).format(instant);
+  return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(name);
+}
+
+function enrichDerivedPeriods(value) {
+  if (!value || typeof value !== 'object') return { value, changed: false };
+  const date = value.modernDate?.isoDate || value.date;
+  const timezone = value.modernDate?.timezone || value.timezone;
+  let weekday;
+  try { weekday = weekdayInTimezone(date, timezone); } catch { weekday = -1; }
+  const derived = derivePanchangPeriods({
+    sunrise: value.sunMoon?.sunrise || value.sunrise, sunset: value.sunMoon?.sunset || value.sunset, weekday, timezone,
+  });
+  const existingMuh = value.muhurta || {};
+  const existingAvoid = value.avoidPeriods || {};
+  const abhijit = hasPeriod(existingMuh.abhijit) ? existingMuh.abhijit : derived.abhijit;
+  const rahuKalam = hasPeriod(existingAvoid.rahuKalam) ? existingAvoid.rahuKalam : derived.rahuKalam;
+  const yamaganda = hasPeriod(existingAvoid.yamaganda) ? existingAvoid.yamaganda : derived.yamaganda;
+  const gulika = hasPeriod(existingAvoid.gulika) ? existingAvoid.gulika : derived.gulika;
+  const changed = abhijit !== existingMuh.abhijit || rahuKalam !== existingAvoid.rahuKalam ||
+    yamaganda !== existingAvoid.yamaganda || gulika !== existingAvoid.gulika;
+  if (!changed) return { value, changed: false };
+  const supportedMuh = [...(Array.isArray(existingMuh.supported) ? existingMuh.supported : [])];
+  const supportedAvoid = [...(Array.isArray(existingAvoid.supported) ? existingAvoid.supported : [])];
+  if (!hasPeriod(existingMuh.abhijit) && abhijit) supportedMuh.push({ name: 'Abhijit Muhurta', ...abhijit });
+  if (!hasPeriod(existingAvoid.rahuKalam) && rahuKalam) supportedAvoid.push({ name: 'Rahu Kalam', ...rahuKalam });
+  if (!hasPeriod(existingAvoid.yamaganda) && yamaganda) supportedAvoid.push({ name: 'Yamaganda', ...yamaganda });
+  if (!hasPeriod(existingAvoid.gulika) && gulika) supportedAvoid.push({ name: 'Gulika Kalam', ...gulika });
+  const enriched = {
+    ...value,
+    muhurta: { ...existingMuh, abhijit, supported: supportedMuh },
+    avoidPeriods: { ...existingAvoid, rahuKalam, yamaganda, gulika, supported: supportedAvoid },
+    metadata: { ...value.metadata, derivedCalculationVersion: DERIVED_CALCULATION_VERSION },
+    derivedCalculationVersion: DERIVED_CALCULATION_VERSION,
+    rahuKalam, yamaganda, gulika, abhijitMuhurta: abhijit,
+  };
+  return { value: enriched, changed: true };
+}
+
+function mergeEvents(value, storedEvents) {
+  const events = []; const seen = new Set();
+  for (const event of [...(Array.isArray(value?.events) ? value.events : []), ...(storedEvents || [])]) {
+    const id = event?.eventId ? `id:${event.eventId}:${event.date || ''}` : `name:${event?.name || ''}:${event?.type || ''}`;
+    if (!event || seen.has(id)) continue;
+    seen.add(id); events.push(event);
+  }
+  return { ...value, events, festivals: events };
+}
+
+async function eventsFor(store, startDate, endDate, options, includeContent = true) {
+  if (!store?.getEvents) return [];
+  try { return await store.getEvents(startDate, endDate, { includeContent }); }
+  catch (error) { warnCache('event read', error, options); return []; }
+}
+
 function normalizeProviderPanchang(raw, context) {
   if (!raw || typeof raw !== 'object') throw new ProkeralaError('PANCHANG_NORMALIZATION_FAILED');
   const tithi = activeEntry(raw.tithi, context.datetime);
   const nakshatra = activeEntry(raw.nakshatra, context.datetime);
   const yoga = activeEntry(raw.yoga, context.datetime);
   const karana = activeEntry(raw.karana, context.datetime);
-  if (![tithi, nakshatra, yoga, karana].every(Boolean) || !raw.vaara || !raw.sunrise || !raw.sunset) throw new ProkeralaError('PANCHANG_CORE_INCOMPLETE');
+  if (![tithi, nakshatra, yoga, karana].every(Boolean) || !raw.vaara) throw new ProkeralaError('PANCHANG_CORE_INCOMPLETE');
   const auspicious = raw.auspicious_period || [];
   const inauspicious = raw.inauspicious_period || [];
   const explicitEvents = [...(Array.isArray(raw.events) ? raw.events : []), ...(Array.isArray(raw.festivals) ? raw.festivals : [])]
@@ -98,7 +158,7 @@ function normalizeProviderPanchang(raw, context) {
       yoga: { name: yoga.name, start: yoga.start || null, end: yoga.end || null },
       karana: { name: karana.name, start: karana.start || null, end: karana.end || null },
     },
-    sunMoon: { sunrise: raw.sunrise, sunset: raw.sunset, moonrise: raw.moonrise || null, moonset: raw.moonset || null },
+    sunMoon: { sunrise: raw.sunrise || null, sunset: raw.sunset || null, moonrise: raw.moonrise || null, moonset: raw.moonset || null },
     muhurta: { abhijit: findPeriod(auspicious, /abhijit/i), brahma: findPeriod(auspicious, /brahma/i), supported: auspicious.map(period) },
     avoidPeriods: { rahuKalam: findPeriod(inauspicious, /rahu/i), yamaganda: findPeriod(inauspicious, /yamaganda/i), gulika: findPeriod(inauspicious, /gulika/i), supported: inauspicious.map(period) },
     events: [...explicitEvents, ...lunarObservances],
@@ -106,13 +166,14 @@ function normalizeProviderPanchang(raw, context) {
       calculationConvention: 'Nirayana/sidereal; location and timezone aware', calculationVersion: CALCULATION_VERSION,
       generatedAt: new Date().toISOString(), cached: false, detail: context.detail },
   };
-  return Object.assign(result, { date: result.modernDate.isoDate, weekday: result.panchang.vara, tithi: result.panchang.tithi.name,
-    nakshatra: result.panchang.nakshatra.name, yoga: result.panchang.yoga.name, karana: result.panchang.karana.name,
-    paksha: result.traditionalDate.paksha, lunarMonth: result.traditionalDate.masa, sunrise: result.sunMoon.sunrise, sunset: result.sunMoon.sunset,
-    moonrise: result.sunMoon.moonrise, moonset: result.sunMoon.moonset, rahuKalam: result.avoidPeriods.rahuKalam,
-    yamaganda: result.avoidPeriods.yamaganda, gulika: result.avoidPeriods.gulika, abhijitMuhurta: result.muhurta.abhijit,
-    festivals: result.events, location: result.modernDate.location, timezone: result.modernDate.timezone,
-    provider: PROVIDER, calculationVersion: CALCULATION_VERSION, generatedAt: result.metadata.generatedAt });
+  const enriched = enrichDerivedPeriods(result).value;
+  return Object.assign(enriched, { date: enriched.modernDate.isoDate, weekday: enriched.panchang.vara, tithi: enriched.panchang.tithi.name,
+    nakshatra: enriched.panchang.nakshatra.name, yoga: enriched.panchang.yoga.name, karana: enriched.panchang.karana.name,
+    paksha: enriched.traditionalDate.paksha, lunarMonth: enriched.traditionalDate.masa, sunrise: enriched.sunMoon.sunrise, sunset: enriched.sunMoon.sunset,
+    moonrise: enriched.sunMoon.moonrise, moonset: enriched.sunMoon.moonset, rahuKalam: enriched.avoidPeriods.rahuKalam,
+    yamaganda: enriched.avoidPeriods.yamaganda, gulika: enriched.avoidPeriods.gulika, abhijitMuhurta: enriched.muhurta.abhijit,
+    festivals: enriched.events, location: enriched.modernDate.location, timezone: enriched.modernDate.timezone,
+    provider: PROVIDER, calculationVersion: CALCULATION_VERSION, generatedAt: enriched.metadata.generatedAt });
 }
 
 function sanitizedFailure(error) {
@@ -137,12 +198,18 @@ async function getDailyPanchang(input, options = {}) {
   const detail = 'basic';
   const cacheKey = key('day', date, location, detail);
   const cached = cacheGet(dailyCache, cacheKey, DAILY_TTL_MS);
-  if (cached) return cached;
+  const store = storeFor(options);
+  if (cached) return mergeEvents(cached, await eventsFor(store, date, date, options));
   if (inFlight.has(cacheKey)) return inFlight.get(cacheKey);
   const task = (async () => {
-    const store = storeFor(options); const identity = calculationIdentity(date, location);
+    const identity = calculationIdentity(date, location);
     if (store) {
-      try { const found = await store.getDay(identity); if (found) { const value = storedValue(found); cacheValue(cacheKey, value); return value; } }
+      try { const found = await store.getDay(identity); if (found) {
+        const enriched = enrichDerivedPeriods(found);
+        if (enriched.changed) try { await store.saveDay(identity, enriched.value); } catch (error) { warnCache('enrichment write', error, options); }
+        const value = storedValue(enriched.value); cacheValue(cacheKey, value);
+        return mergeEvents(value, await eventsFor(store, date, date, options));
+      } }
       catch (error) { warnCache('read', error, options); }
     }
     const datetime = localDateTimeWithOffset(date, '06:00:00', location.timezone);
@@ -151,7 +218,7 @@ async function getDailyPanchang(input, options = {}) {
       const value = normalizeProviderPanchang(raw, { date, datetime, location, detail });
       if (store) try { await store.saveDay(identity, value); } catch (error) { warnCache('write', error, options); }
       cacheValue(cacheKey, value);
-      return value;
+      return mergeEvents(value, await eventsFor(store, date, date, options));
     } catch (error) { throw sanitizedFailure(error); }
   })();
   inFlight.set(cacheKey, task);
@@ -167,17 +234,26 @@ function monthDates(year, month) {
 async function getMonthlyPanchang(input, options = {}) {
   const location = validateLocation(input); const year = Number(input.year); const month = Number(input.month);
   const dates = monthDates(year, month); if (dates.length > MAX_MONTH_DAYS) throw new Error('PANCHANG_RANGE_TOO_LARGE');
-  const store = storeFor(options); let shared = [];
-  if (store) try { shared = await store.getMonth(calculationIdentity(dates[0], location), dates[0], dates[dates.length - 1]); }
-  catch (error) { warnCache('month read', error, options); }
-  for (const value of shared) if (value?.date) cacheValue(key('day', value.date, location, 'basic'), storedValue(value));
+  const store = storeFor(options); let shared = []; let storedEvents = [];
+  if (store) {
+    const results = await Promise.all([
+      store.getMonth(calculationIdentity(dates[0], location), dates[0], dates[dates.length - 1]).catch(error => { warnCache('month read', error, options); return []; }),
+      eventsFor(store, dates[0], dates[dates.length - 1], options, false),
+    ]);
+    [shared, storedEvents] = results;
+  }
+  for (const original of shared) {
+    const value = enrichDerivedPeriods(original).value;
+    if (value?.date) cacheValue(key('day', value.date, location, 'basic'), storedValue(value));
+  }
   const days = dates.flatMap(date => {
     const cached = cacheGet(dailyCache, key('day', date, location, 'basic'), DAILY_TTL_MS);
     return cached ? [{ date, available: true, weekday: cached.weekday, tithi: cached.tithi, paksha: cached.paksha,
       nakshatra: cached.nakshatra, events: cached.events }] : [];
   });
+  const astronomicalEvents = days.flatMap(day => (day.events || []).map(event => ({ ...event, date: day.date })));
   return { available: true, year, month, days,
-    events: days.flatMap(day => (day.events || []).map(event => ({ ...event, date: day.date }))),
+    events: mergeEvents({ events: astronomicalEvents }, storedEvents).events,
     partial: days.length < dates.length, location, timezone: location.timezone,
     metadata: { provider: PROVIDER, calculationVersion: CALCULATION_VERSION, generatedAt: new Date().toISOString(), cached: true,
       strategy: 'cache-only-month-shell; zero provider fan-out' } };
@@ -196,5 +272,5 @@ function getYearOverview(input) {
 }
 
 module.exports = { PROVIDER, CALCULATION_VERSION, CALENDAR_CONVENTION, MAX_MONTH_DAYS, validDate, validateLocation, calculationIdentity,
-  normalizeProviderPanchang, sanitizedFailure, configurePanchangStore, getDailyPanchang, getMonthlyPanchang, getYearOverview,
+  normalizeProviderPanchang, enrichDerivedPeriods, mergeEvents, sanitizedFailure, configurePanchangStore, getDailyPanchang, getMonthlyPanchang, getYearOverview,
   _dailyCache: dailyCache, _monthCache: monthCache, _inFlight: inFlight };

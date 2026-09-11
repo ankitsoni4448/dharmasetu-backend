@@ -133,8 +133,41 @@ test('historical dates and nearby GPS preserve exact requested context through m
 test('missing optional Basic fields never destroy valid core Panchang', () => {
   const result = normalizeProviderPanchang({ ...raw, moonrise: undefined, moonset: undefined,
     auspicious_period: undefined, inauspicious_period: undefined, events: undefined, festivals: undefined }, { ...context, detail: 'basic' });
-  assert.equal(result.available, true); assert.equal(result.sunMoon.moonrise, null); assert.equal(result.muhurta.abhijit, null);
+  assert.equal(result.available, true); assert.equal(result.sunMoon.moonrise, null); assert.equal(result.muhurta.abhijit.calculation, 'dharmasetu-daylight-v1');
   assert.equal(result.traditionalDate.masa, null); assert.ok(result.events.every(event => event.providerDerived));
+});
+
+test('old shared rows are enriched and upserted without any provider call', async () => {
+  resetPanchangCaches();
+  const old = normalizeProviderPanchang({ ...raw, auspicious_period: [], inauspicious_period: [] }, { ...context, date: '2026-09-10', datetime: '2026-09-10T06:00:00+05:30', detail: 'basic' });
+  old.muhurta.abhijit = null; old.avoidPeriods.rahuKalam = null; old.avoidPeriods.yamaganda = null; old.avoidPeriods.gulika = null;
+  delete old.metadata.derivedCalculationVersion; delete old.derivedCalculationVersion;
+  let saves = 0; let providerCalls = 0;
+  const store = { getDay: async () => old, saveDay: async (_identity, value) => { saves += 1; assert.equal(value.metadata.derivedCalculationVersion, 'dharmasetu-panchang-periods-v1'); },
+    getEvents: async () => [] };
+  const value = await getDailyPanchang({ ...location, date: '2026-09-10' }, { store, fetchImpl: async () => { providerCalls += 1; throw new Error('provider must not run'); } });
+  assert.equal(providerCalls, 0); assert.equal(saves, 1); assert.ok(value.muhurta.abhijit); assert.ok(value.avoidPeriods.rahuKalam);
+  assert.equal(value.calculationVersion, calculationIdentity('2026-09-10', validateLocation(location)).calculationVersion);
+});
+
+test('daily API merges stored localized event content and invents none when DB is empty', async () => {
+  resetPanchangCaches(); const base = normalizeProviderPanchang({ ...raw, events: [], festivals: [] }, { ...context, date: '2026-09-11', datetime: '2026-09-11T06:00:00+05:30', detail: 'basic' });
+  base.events = []; base.festivals = [];
+  const stored = { eventId: 'verified-event', code: 'VERIFIED_EVENT', eventType: 'VRAT', date: '2026-09-11', name: 'Verified Event', names: { hi: 'सत्यापित पर्व' } };
+  const withEvent = await getDailyPanchang({ ...location, date: '2026-09-11' }, { store: { getDay: async () => base, saveDay: async () => {}, getEvents: async () => [stored] } });
+  assert.equal(withEvent.events[0].eventId, 'verified-event'); assert.equal(withEvent.festivals[0].name, 'Verified Event');
+  resetPanchangCaches();
+  const empty = await getDailyPanchang({ ...location, date: '2026-09-11' }, { store: { getDay: async () => base, saveDay: async () => {}, getEvents: async () => [] } });
+  assert.deepEqual(empty.events, []); assert.deepEqual(empty.festivals, []);
+});
+
+test('month uses one event-range lookup and zero provider fanout', async () => {
+  resetPanchangCaches(); let eventReads = 0; let providerCalls = 0;
+  const event = { eventId: 'month-event', date: '2026-08-20', name: 'Stored Event' };
+  const month = await getMonthlyPanchang({ ...location, year: 2026, month: 8 }, { store: {
+    getMonth: async () => [], getEvents: async (start, end) => { eventReads += 1; assert.equal(start, '2026-08-01'); assert.equal(end, '2026-08-31'); return [event]; },
+  }, fetchImpl: async () => { providerCalls += 1; throw new Error('provider must not run'); } });
+  assert.equal(eventReads, 1); assert.equal(providerCalls, 0); assert.deepEqual(month.events, [event]); assert.equal(month.days.length, 0);
 });
 
 test('Month returns cached summaries only and makes zero provider calls', async () => {
@@ -165,7 +198,7 @@ test('provider failures are sanitized and never cached as successful Panchang', 
   }
 });
 
-test('timeout, malformed provider payload, and incomplete core retain diagnostic categories', async () => {
+test('timeout and malformed provider payload retain diagnostic categories while missing sun times remain safe', async () => {
   resetPanchangCaches();
   const timeoutFetch = async url => {
     if (String(url).endsWith('/token')) return jsonResponse({ access_token: 'test-token', expires_in: 3600 });
@@ -181,10 +214,11 @@ test('timeout, malformed provider payload, and incomplete core retain diagnostic
   await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-19' }, { fetchImpl: malformedFetch,
     env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } }), error => error.code === 'PROVIDER_BAD_RESPONSE');
 
-  resetPanchangCaches(); const incomplete = providerHarness({ ...raw, sunrise: null });
-  await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-19' }, { fetchImpl: incomplete.fetchImpl,
-    env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } }), error => error.code === 'PANCHANG_CORE_INCOMPLETE');
-  assert.equal(_dailyCache.size, 0);
+  resetPanchangCaches(); const incomplete = providerHarness({ ...raw, sunrise: null, sunset: null, auspicious_period: [], inauspicious_period: [] });
+  const safe = await getDailyPanchang({ ...location, date: '2026-08-19' }, { fetchImpl: incomplete.fetchImpl,
+    env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } });
+  assert.equal(safe.sunMoon.sunrise, null); assert.equal(safe.muhurta.abhijit, null);
+  assert.equal(safe.avoidPeriods.yamaganda, null);
 });
 
 test('daily Panchang remains Basic even if an advanced detail option is supplied', async () => {
