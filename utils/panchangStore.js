@@ -52,9 +52,10 @@ function createPanchangStore(client, logger = console) {
   async function getEvents(startDate, endDate = startDate, { includeContent = true } = {}) {
     const { data: occurrences, error } = await client.from(EVENTS_TABLE).select(
       'event_id,occurrence_date,event_type,region_code,tradition_code,importance,source,calendar_version,source_metadata'
-    ).gte('occurrence_date', startDate).lte('occurrence_date', endDate).order('occurrence_date', { ascending: true });
+    ).eq('source_metadata->>verification_status', 'verified')
+      .gte('occurrence_date', startDate).lte('occurrence_date', endDate).order('occurrence_date', { ascending: true });
     if (error) throw error;
-    const rows = occurrences || [];
+    const rows = (occurrences || []).filter(row => row.source_metadata?.verification_status === 'verified' && row.source_metadata?.verified === true);
     const eventIds = [...new Set(rows.map(row => row.event_id).filter(Boolean))];
     let content = [];
     if (includeContent && eventIds.length) {
@@ -74,12 +75,16 @@ function createPanchangStore(client, logger = console) {
       const languages = contentByEvent.get(row.event_id) || new Map();
       const names = Object.fromEntries([...languages].map(([language, value]) => [language, value.name]));
       const preferred = languages.get('en') || languages.get('english') || languages.get('hi') || languages.values().next().value;
+      const nameEn = names.en || names.english || row.source_metadata?.nameEn || row.source_metadata?.name || null;
+      const nameHi = names.hi || names.hindi || row.source_metadata?.nameHi || null;
       return {
-        eventId: row.event_id, code: row.source_metadata?.code || row.event_id, eventType: row.event_type,
+        eventId: row.event_id, code: row.source_metadata?.code || row.event_id, eventType: row.event_type, type: row.event_type,
         date: row.occurrence_date, importance: row.importance, regionCode: row.region_code,
-        traditionCode: row.tradition_code, name: preferred?.name || row.source_metadata?.name || null,
-        names, shortDescription: preferred?.description || null, source: row.source,
-        calendarVersion: row.calendar_version, contentVersion: preferred?.content_version || null,
+        region: row.region_code, traditionCode: row.tradition_code, tradition: row.tradition_code,
+        name: preferred?.name || nameEn || nameHi, nameEn, nameHi, names: { ...names, ...(nameEn ? { en: nameEn } : {}), ...(nameHi ? { hi: nameHi } : {}) },
+        shortDescription: preferred?.description || null, source: row.source, sourceMethod: row.source_metadata?.sourceMethod || null,
+        verified: true, verificationStatus: 'verified', endDate: row.source_metadata?.endDate || row.occurrence_date,
+        timing: row.source_metadata?.timing || null, calendarVersion: row.calendar_version, contentVersion: preferred?.content_version || null,
       };
     });
   }

@@ -1,0 +1,112 @@
+{
+  "datasetVersion": "dharmasetu-events-india-2026-v1",
+  "contentVersion": "dharmasetu-event-content-v1",
+  "year": 2026,
+  "context": { "region": "India", "timezone": "Asia/Kolkata" },
+  "events": [
+    {
+      "code": "MAHA_SHIVARATRI", "canonicalName": "Maha Shivaratri", "type": "FESTIVAL", "date": "2026-02-15",
+      "names": { "en": "Maha Shivaratri", "hi": "महाशिवरात्रि" }, "importance": 5, "region": "INDIA", "tradition": "COMMON",
+      "sourceMethod": "published-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-11",
+      "descriptions": { "en": "A major observance dedicated to Shiva.", "hi": "शिव को समर्पित एक प्रमुख पर्व।" },
+      "sources": [
+        { "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-11" },
+        { "title": "Isha Lunar Calendar 2026", "url": "https://public-isha.sadhguru.org/public/2026-Isha-Lunar-Calendar-English.pdf", "verifiedAt": "2026-09-11" }
+      ]
+    },
+    {
+      "code": "RAMA_NAVAMI", "canonicalName": "Rama Navami", "type": "FESTIVAL", "date": "2026-03-26",
+      "names": { "en": "Rama Navami", "hi": "राम नवमी" }, "importance": 5, "region": "INDIA", "tradition": "COMMON",
+      "sourceMethod": "published-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-11",
+      "descriptions": { "en": "The traditional celebration of the birth of Rama.", "hi": "भगवान राम के जन्म का पारंपरिक उत्सव।" },
+      "sources": [
+        { "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-11" },
+        { "title": "Supreme Court of India Calendar 2026", "url": "https://www.sci.gov.in/calendar/", "verifiedAt": "2026-09-11" }
+      ]
+    },
+    {
+      "code": "AJA_EKADASHI", "canonicalName": "Aja Ekadashi", "type": "VRATA", "date": "2026-09-07",
+      "names": { "en": "Aja Ekadashi", "hi": "अजा एकादशी" }, "importance": 3, "region": "INDIA", "tradition": "BAPS_SWAMINARAYAN",
+      "sourceMethod": "published-tradition-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-11",
+      "descriptions": { "en": "An Ekadashi fasting observance in the stated tradition.", "hi": "उल्लिखित परंपरा में एकादशी व्रत का दिन।" },
+      "sources": [{ "title": "BAPS September 2026 Calendar", "url": "https://www.baps.org/Calendar/2026/September.aspx", "verifiedAt": "2026-09-11" }]
+    },
+    {
+      "code": "KRISHNA_JANMASHTAMI", "canonicalName": "Krishna Janmashtami", "type": "FESTIVAL", "date": "2026-09-04",
+      "names": { "en": "Krishna Janmashtami", "hi": "कृष्ण जन्माष्टमी" }, "importance": 5, "region": "INDIA", "tradition": "COMMON",
+      "sourceMethod": "published-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-11",
+      "descriptions": { "en": "The traditional celebration of the birth of Krishna.", "hi": "भगवान कृष्ण के जन्म का पारंपरिक उत्सव।" },
+      "sources": [
+        { "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-11" },
+        { "title": "Ministry of Parliamentary Affairs Calendar 2026", "url": "https://mpa.gov.in/sites/default/files/mpacalendar2026_5.0.pdf", "verifiedAt": "2026-09-11" }
+      ]
+    },
+    {
+      "code": "PRADOSHA_2026_06_12", "canonicalName": "Pradosha Vrat", "type": "VRATA", "date": "2026-06-12",
+      "names": { "en": "Pradosha Vrat", "hi": "प्रदोष व्रत" }, "importance": 3, "region": "INDIA", "tradition": "SIVANANDA_RISHIKESH",
+      "sourceMethod": "published-ashram-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-11",
+      "descriptions": { "en": "A Pradosha observance in the stated calendar tradition.", "hi": "उल्लिखित पंचांग परंपरा में प्रदोष व्रत।" },
+      "sources": [{ "title": "Divine Life Society Calendar 2026", "url": "https://www.sivanandaonline.org/Calendar/Calendar2026/Calender2026.pdf", "verifiedAt": "2026-09-11" }]
+    },
+    {
+      "code": "AMAVASYA_2026_06_15", "canonicalName": "Amavasya", "type": "LUNAR_OBSERVANCE", "date": "2026-06-15",
+      "names": { "en": "Amavasya", "hi": "अमावस्या" }, "importance": 2, "region": "INDIA", "tradition": "SIVANANDA_RISHIKESH",
+      "sourceMethod": "published-ashram-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-11",
+      "descriptions": { "en": "The new-moon lunar observance in the stated calendar.", "hi": "उल्लिखित पंचांग में अमावस्या का चंद्र अवलोकन।" },
+      "sources": [{ "title": "Divine Life Society Calendar 2026", "url": "https://www.sivanandaonline.org/Calendar/Calendar2026/Calender2026.pdf", "verifiedAt": "2026-09-11" }]
+    },
+    {
+      "code": "PURNIMA_2026_06_29", "canonicalName": "Purnima", "type": "LUNAR_OBSERVANCE", "date": "2026-06-29",
+      "names": { "en": "Purnima", "hi": "पूर्णिमा" }, "importance": 2, "region": "INDIA", "tradition": "SIVANANDA_RISHIKESH",
+      "sourceMethod": "published-ashram-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-11",
+      "descriptions": { "en": "The full-moon lunar observance in the stated calendar.", "hi": "उल्लिखित पंचांग में पूर्णिमा का चंद्र अवलोकन।" },
+      "sources": [{ "title": "Divine Life Society Calendar 2026", "url": "https://www.sivanandaonline.org/Calendar/Calendar2026/Calender2026.pdf", "verifiedAt": "2026-09-11" }]
+    },
+    {
+      "code": "DIWALI", "canonicalName": "Diwali", "type": "FESTIVAL", "date": "2026-11-08",
+      "names": { "en": "Diwali", "hi": "दीपावली" }, "importance": 5, "region": "INDIA", "tradition": "COMMON",
+      "sourceMethod": "published-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-11",
+      "descriptions": { "en": "The principal Deepavali observance for this verified calendar date.", "hi": "इस सत्यापित तिथि पर दीपावली का प्रमुख पर्व।" },
+      "sources": [
+        { "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-11" },
+        { "title": "Ministry of Parliamentary Affairs Calendar 2026", "url": "https://mpa.gov.in/sites/default/files/mpacalendar2026_5.0.pdf", "verifiedAt": "2026-09-11" },
+        { "title": "Isha Lunar Calendar 2026", "url": "https://public-isha.sadhguru.org/public/2026-Isha-Lunar-Calendar-English.pdf", "verifiedAt": "2026-09-11" }
+      ]
+    },
+    {
+      "code": "HOLIKA_DAHAN", "canonicalName": "Holika Dahan", "type": "FESTIVAL", "date": "2026-03-03",
+      "names": { "en": "Holika Dahan", "hi": "होलिका दहन" }, "importance": 5, "region": "INDIA", "tradition": "CIVIL_CALENDAR",
+      "sourceMethod": "official-government-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12",
+      "descriptions": { "en": "The bonfire observance held on the eve of the civil Holi celebration.", "hi": "होली के नागरिक उत्सव की पूर्व संध्या का अग्नि अनुष्ठान।" },
+      "sources": [
+        { "title": "Comptroller and Auditor General Holiday List 2026", "url": "https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf", "verifiedAt": "2026-09-12" },
+        { "title": "Indian Air Force Annual Calendar 2026", "url": "https://careerairforce.gov.in/sites/default/files/pdf/Annual-Calendar-2026.pdf", "verifiedAt": "2026-09-12" }
+      ]
+    },
+    {
+      "code": "HOLI", "canonicalName": "Holi", "type": "FESTIVAL", "date": "2026-03-04",
+      "names": { "en": "Holi", "hi": "होली" }, "importance": 5, "region": "INDIA", "tradition": "CIVIL_CALENDAR",
+      "sourceMethod": "official-and-religious-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12",
+      "descriptions": { "en": "The nationally observed festival of colours.", "hi": "रंगों का राष्ट्रीय रूप से मनाया जाने वाला पर्व।" },
+      "sources": [
+        { "title": "Comptroller and Auditor General Holiday List 2026", "url": "https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf", "verifiedAt": "2026-09-12" },
+        { "title": "Divine Life Society Spiritual Calendar 2026-2027", "url": "https://www.sivanandaonline.org/Calendar/SPIRITUALCALENDAR2026-27.pdf", "verifiedAt": "2026-09-12" }
+      ]
+    },
+    { "code": "MAKAR_SANKRANTI", "canonicalName": "Makar Sankranti", "type": "SOLAR_OBSERVANCE", "date": "2026-01-14", "names": { "en": "Makar Sankranti", "hi": "मकर संक्रांति" }, "importance": 5, "region": "INDIA", "tradition": "COMMON", "sourceMethod": "published-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-12" }, { "title": "Supreme Court of India Calendar 2026", "url": "https://www.sci.gov.in/calendar/", "verifiedAt": "2026-09-12" }] },
+    { "code": "HANUMAN_JAYANTI", "canonicalName": "Hanuman Jayanti", "type": "FESTIVAL", "date": "2026-04-02", "names": { "en": "Hanuman Jayanti", "hi": "हनुमान जयंती" }, "importance": 4, "region": "INDIA", "tradition": "COMMON", "sourceMethod": "religious-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-12" }, { "title": "Divine Life Society Spiritual Calendar 2026-2027", "url": "https://www.sivanandaonline.org/Calendar/SPIRITUALCALENDAR2026-27.pdf", "verifiedAt": "2026-09-12" }] },
+    { "code": "AKSHAYA_TRITIYA", "canonicalName": "Akshaya Tritiya", "type": "FESTIVAL", "date": "2026-04-20", "names": { "en": "Akshaya Tritiya", "hi": "अक्षय तृतीया" }, "importance": 4, "region": "INDIA", "tradition": "SIVANANDA_RISHIKESH", "sourceMethod": "published-ashram-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "Divine Life Society Spiritual Calendar 2026-2027", "url": "https://www.sivanandaonline.org/Calendar/SPIRITUALCALENDAR2026-27.pdf", "verifiedAt": "2026-09-12" }] },
+    { "code": "GURU_PURNIMA", "canonicalName": "Guru Purnima", "type": "FESTIVAL", "date": "2026-07-29", "names": { "en": "Guru Purnima", "hi": "गुरु पूर्णिमा" }, "importance": 4, "region": "INDIA", "tradition": "COMMON", "sourceMethod": "religious-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-12" }, { "title": "Divine Life Society Calendar 2026", "url": "https://www.sivanandaonline.org/Calendar/Calendar2026/Calender2026.pdf", "verifiedAt": "2026-09-12" }] },
+    { "code": "RAKSHA_BANDHAN", "canonicalName": "Raksha Bandhan", "type": "FESTIVAL", "date": "2026-08-28", "names": { "en": "Raksha Bandhan", "hi": "रक्षा बंधन" }, "importance": 4, "region": "INDIA", "tradition": "COMMON", "sourceMethod": "official-and-religious-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-12" }, { "title": "Supreme Court of India Calendar 2026", "url": "https://www.sci.gov.in/calendar/", "verifiedAt": "2026-09-12" }] },
+    { "code": "GANESH_CHATURTHI", "canonicalName": "Ganesh Chaturthi", "type": "FESTIVAL", "date": "2026-09-14", "names": { "en": "Ganesh Chaturthi", "hi": "गणेश चतुर्थी" }, "importance": 4, "region": "INDIA", "tradition": "COMMON", "sourceMethod": "official-and-religious-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS Annual Festival List 2026", "url": "https://www.baps.org/Calendar/2026/FestivalList.aspx", "verifiedAt": "2026-09-12" }, { "title": "Supreme Court of India Calendar 2026", "url": "https://www.sci.gov.in/calendar/", "verifiedAt": "2026-09-12" }] },
+    { "code": "SHARAD_NAVRATRI_START", "canonicalName": "Sharad Navratri Start", "type": "FESTIVAL_PERIOD", "date": "2026-10-11", "names": { "en": "Sharad Navratri begins", "hi": "शारदीय नवरात्रि आरंभ" }, "importance": 5, "region": "INDIA", "tradition": "BAPS_SWAMINARAYAN", "sourceMethod": "published-tradition-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS October 2026 Calendar", "url": "https://www.baps.org/Calendar/2026/October.aspx", "verifiedAt": "2026-09-12" }] },
+    { "code": "DUSSEHRA", "canonicalName": "Dussehra", "type": "FESTIVAL", "date": "2026-10-20", "names": { "en": "Dussehra / Vijayadashami", "hi": "दशहरा / विजयादशमी" }, "importance": 5, "region": "INDIA", "tradition": "BAPS_SWAMINARAYAN", "sourceMethod": "published-tradition-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS October 2026 Calendar", "url": "https://www.baps.org/Calendar/2026/October.aspx", "verifiedAt": "2026-09-12" }] },
+    { "code": "KARWA_CHAUTH", "canonicalName": "Karwa Chauth", "type": "VRATA", "date": "2026-10-29", "names": { "en": "Karwa Chauth", "hi": "करवा चौथ" }, "importance": 4, "region": "INDIA", "tradition": "CIVIL_CALENDAR", "sourceMethod": "official-government-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "Controller of Communication Accounts Assam Holiday List 2026", "url": "https://www.cgca.gov.in/ccaas/list-of-holiday", "verifiedAt": "2026-09-12" }] },
+    { "code": "DHANTERAS", "canonicalName": "Dhanteras", "type": "FESTIVAL", "date": "2026-11-06", "names": { "en": "Dhanteras", "hi": "धनतेरस" }, "importance": 4, "region": "INDIA", "tradition": "BAPS_SWAMINARAYAN", "sourceMethod": "published-tradition-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS November 2026 Calendar", "url": "https://www.baps.org/Calendar/2026/November.aspx", "verifiedAt": "2026-09-12" }] },
+    { "code": "NARAKA_CHATURDASHI", "canonicalName": "Naraka Chaturdashi", "type": "FESTIVAL", "date": "2026-11-07", "names": { "en": "Naraka Chaturdashi / Choti Diwali", "hi": "नरक चतुर्दशी / छोटी दिवाली" }, "importance": 4, "region": "INDIA", "tradition": "BAPS_SWAMINARAYAN", "sourceMethod": "published-tradition-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS November 2026 Calendar", "url": "https://www.baps.org/Calendar/2026/November.aspx", "verifiedAt": "2026-09-12" }] },
+    { "code": "GOVARDHAN_PUJA", "canonicalName": "Govardhan Puja", "type": "FESTIVAL", "date": "2026-11-09", "names": { "en": "Govardhan Puja", "hi": "गोवर्धन पूजा" }, "importance": 4, "region": "INDIA", "tradition": "CIVIL_CALENDAR", "sourceMethod": "official-government-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "Comptroller and Auditor General Holiday List 2026", "url": "https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf", "verifiedAt": "2026-09-12" }] },
+    { "code": "BHAI_DOOJ", "canonicalName": "Bhai Dooj", "type": "FESTIVAL", "date": "2026-11-11", "names": { "en": "Bhai Dooj", "hi": "भाई दूज" }, "importance": 4, "region": "INDIA", "tradition": "COMMON", "sourceMethod": "official-and-religious-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "Comptroller and Auditor General Holiday List 2026", "url": "https://cag.gov.in/uploads/media/Holiday-List-2026-069521fe6f358d0-89936988.pdf", "verifiedAt": "2026-09-12" }, { "title": "BAPS November 2026 Calendar", "url": "https://www.baps.org/Calendar/2026/November.aspx", "verifiedAt": "2026-09-12" }] },
+    { "code": "CHHATH_PUJA", "canonicalName": "Chhath Puja", "type": "FESTIVAL", "date": "2026-11-15", "names": { "en": "Chhath Puja", "hi": "छठ पूजा" }, "importance": 4, "region": "INDIA", "tradition": "CIVIL_CALENDAR", "sourceMethod": "official-government-calendar", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "Controller of Communication Accounts Assam Holiday List 2026", "url": "https://www.cgca.gov.in/ccaas/list-of-holiday", "verifiedAt": "2026-09-12" }] },
+    { "code": "GITA_JAYANTI", "canonicalName": "Gita Jayanti", "type": "FESTIVAL", "date": "2026-12-20", "names": { "en": "Gita Jayanti", "hi": "गीता जयंती" }, "importance": 4, "region": "INDIA", "tradition": "COMMON", "sourceMethod": "religious-calendar-cross-check", "verified": true, "verificationStatus": "verified", "verifiedAt": "2026-09-12", "sources": [{ "title": "BAPS December 2026 Calendar", "url": "https://www.baps.org/Calendar/2026/December.aspx", "verifiedAt": "2026-09-12" }, { "title": "Divine Life Society Spiritual Calendar 2026-2027", "url": "https://www.sivanandaonline.org/Calendar/SPIRITUALCALENDAR2026-27.pdf", "verifiedAt": "2026-09-12" }] }
+  ]
+}

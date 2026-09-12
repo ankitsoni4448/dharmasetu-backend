@@ -8,7 +8,8 @@
     "dev": "nodemon server.js",
     "manifest:drive": "node scripts/generate_drive_manifest.js",
     "ingest:content": "node scripts/ingest_content_manifest.js",
-    "ingest:mantras": "node scripts/ingest_mantra_manifest.js"
+    "ingest:mantras": "node scripts/ingest_mantra_manifest.js",
+    "ingest:panchang-events": "node scripts/ingest_panchang_events.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.104.1",
