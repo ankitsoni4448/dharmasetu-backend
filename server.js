@@ -48,6 +48,7 @@ const {
   CALCULATION_STANDARD,
   normalizeProviderChart,
   compactContext: compactNormalizedJyotishContext,
+  compactStructuralContext,
   validateAuthoritativeBirthProfile,
   validateKundliReadiness,
 } = require('./utils/kundliLifecycle');
@@ -525,12 +526,13 @@ async function getUserAstrologyContext(authUserId, userRecord) {
     return { available: true, preferredName: sanitize(userRecord.name || '', 100) || null,
       ...stored.compact_context, ...compactNormalizedJyotishContext(normalized),
       planets: Array.isArray(normalized.planets) ? normalized.planets
-        .filter(planet => planet?.status === 'AVAILABLE' && planet?.source === 'PROKERALA')
+        .filter(planet => planet?.status === 'AVAILABLE' && planet?.source === 'PROVIDER')
         .slice(0, 12).map(planet => ({
         name: sanitize(planet.name || '', 40), sign: sanitize(planet.sign || '', 40) || null,
         house: Number.isFinite(Number(planet.house)) ? Number(planet.house) : null,
         longitude: Number.isFinite(Number(planet.longitude)) ? Number(planet.longitude) : null,
       })) : [],
+      structuralContext: compactStructuralContext(normalized),
       birthProfileVersion: stored.birth_profile_version, calculationVersion: stored.calculation_version };
   }
   // Personal guidance requires the authenticated user's authoritative READY chart.

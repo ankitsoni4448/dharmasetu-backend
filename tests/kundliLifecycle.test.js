@@ -5,7 +5,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {
   normalizeProviderChart, compactContext, validateAuthoritativeBirthProfile,
-  validateKundliReadiness, circularLongitudeDelta, compareReference,
+  compactStructuralContext, deriveWholeSignHouses, assignPlanetHouses, deriveStructuralConditions,
+  WHOLE_SIGN_METHOD, validateKundliReadiness, circularLongitudeDelta, compareReference,
 } = require('../utils/kundliLifecycle');
 
 const birth = { date_of_birth: '1990-02-28', birth_time: '23:59', birth_time_certainty: 'EXACT',
@@ -93,12 +94,12 @@ test('canonical schema exposes only provider facts and explicit unavailable stat
   const normalized = readyNormalized();
   assert.equal(normalized.schema_version, 'dharmasetu-kundli-v1');
   assert.equal(normalized.provider, 'prokerala');
-  assert.deepEqual(normalized.lagna, { sign: 'Mesha', longitude: 12.5, source: 'PROKERALA', status: 'AVAILABLE' });
+  assert.deepEqual(normalized.lagna, { sign: 'Mesha', longitude: 12.5, source: 'PROVIDER', status: 'AVAILABLE' });
   assert.equal(normalized.moon_sign.sign, 'Mesha');
   assert.equal(normalized.nakshatra.name, 'Ashwini');
   assert.equal(normalized.nakshatra.pada, 2);
   assert.equal(normalized.sun_sign.sign, 'Makara');
-  assert.equal(normalized.planets[0].source, 'PROKERALA');
+  assert.equal(normalized.planets[0].source, 'PROVIDER');
   assert.equal(normalized.transits.status, 'UNAVAILABLE');
   assert.equal(normalized.aspects.status, 'UNAVAILABLE');
   assert.equal(normalized.strengths.status, 'UNAVAILABLE');
@@ -127,6 +128,71 @@ test('current Dasha is retained only when provider supplied it', () => {
   const supplied = normalizeProviderChart({}, { dasha_periods: [{ name: 'Saturn', start: '2020-01-01', end: '2040-01-01' }] }, birth);
   assert.equal(supplied.dasha.status, 'AVAILABLE');
   assert.equal(compactContext(supplied).currentMahadasha, 'Saturn');
+});
+
+test('whole-sign houses require a valid provider Lagna and remain deterministic', () => {
+  const unavailable = deriveWholeSignHouses(null, [], []);
+  assert.equal(unavailable.status, 'UNAVAILABLE');
+  assert.deepEqual(unavailable.items, []);
+  const planets = [{ name: 'Sun', sign: 'Mesha' }, { name: 'Moon', sign: 'Karka' }];
+  const houses = deriveWholeSignHouses('Mesha', planets, []);
+  assert.equal(houses.status, 'AVAILABLE');
+  assert.equal(houses.source, 'DERIVED');
+  assert.equal(houses.method, WHOLE_SIGN_METHOD);
+  assert.equal(houses.items.length, 12);
+  assert.deepEqual(houses.items[0], {
+    number: 1, sign: 'Mesha', lord: 'Mars', occupants: ['Sun'], source: 'DERIVED',
+    method: WHOLE_SIGN_METHOD, calculation_version: 'prokerala-v2-lahiri-k2-structural-v1',
+    required_inputs: ['provider_lagna_sign', 'provider_planet_signs'], status: 'AVAILABLE',
+  });
+  assert.equal(houses.items[3].sign, 'Karka');
+  assert.equal(houses.items[3].lord, 'Moon');
+  assert.deepEqual(houses.items[3].occupants, ['Moon']);
+});
+
+test('planet house assignment follows the explicit whole-sign model only', () => {
+  const houses = deriveWholeSignHouses('Karka', [{ name: 'Sun', sign: 'Simha' }], []);
+  const [sun] = assignPlanetHouses([{ name: 'Sun', sign: 'Simha', source: 'PROVIDER', status: 'AVAILABLE' }], houses);
+  assert.equal(sun.house, 2);
+  assert.equal(sun.house_source, 'DERIVED');
+  assert.equal(sun.house_method, WHOLE_SIGN_METHOD);
+  const [unknown] = assignPlanetHouses([{ name: 'Sun', sign: null }], houses);
+  assert.equal(unknown.house, null);
+  assert.equal(unknown.house_status, 'UNAVAILABLE');
+});
+
+test('transits and aspects remain explicit unavailable boundaries without fabricated positions or Western rules', () => {
+  const normalized = normalizeProviderChart({}, {}, birth);
+  assert.deepEqual(normalized.transits.planets, []);
+  assert.equal(normalized.transits.source, 'UNAVAILABLE');
+  assert.equal(normalized.transits.cache_strategy, 'NO_CACHE_UNTIL_AUTHORITATIVE_SOURCE');
+  assert.deepEqual(normalized.aspects.items, []);
+  assert.equal(normalized.aspects.method, null);
+  assert.doesNotMatch(JSON.stringify(normalized.aspects), /opposition|trine|sextile|square/i);
+});
+
+test('structural conditions use provider flags and sign coincidence without a numeric strength score', () => {
+  const result = deriveStructuralConditions([
+    { name: 'Mercury', sign: 'Makara', retrograde: true },
+    { name: 'Venus', sign: 'Makara', retrograde: false },
+  ]);
+  assert.equal(result.status, 'AVAILABLE');
+  assert.equal(result.items[0].conditions[0].type, 'RETROGRADE');
+  assert.equal(result.items[0].conditions[1].type, 'SIGN_CONJUNCTION');
+  assert.equal(result.items[0].conditions[1].source, 'DERIVED');
+  assert.equal(JSON.stringify(result).includes('score'), false);
+});
+
+test('compact structural context contains validated facts without private birth data', () => {
+  const compact = compactStructuralContext(readyNormalized());
+  assert.equal(compact.natal.lagna.sign, 'Mesha');
+  assert.equal(compact.houses.status, 'AVAILABLE');
+  assert.equal(compact.transits.status, 'UNAVAILABLE');
+  assert.equal(compact.aspects.status, 'UNAVAILABLE');
+  assert.equal(JSON.stringify(compact).includes('dateOfBirth'), false);
+  assert.equal(JSON.stringify(compact).includes('birthTime'), false);
+  assert.equal(JSON.stringify(compact).includes('remed'), false);
+  assert.doesNotMatch(compactStructuralContext.toString(), /fetch|requestModule|Prokerala|\bAI\b|\bLLM\b/i);
 });
 
 test('complete basic and deep primary charts satisfy strict readiness', () => {
@@ -176,7 +242,8 @@ test('DharmaChat boundary accepts only validated canonical provider facts', () =
   const server = fs.readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
   const context = server.slice(server.indexOf('async function getUserAstrologyContext'), server.indexOf('// ─── AUDIT LOGGER'));
   assert.match(context, /planet\?\.status === 'AVAILABLE'/);
-  assert.match(context, /planet\?\.source === 'PROKERALA'/);
+  assert.match(context, /planet\?\.source === 'PROVIDER'/);
+  assert.match(context, /compactStructuralContext\(normalized\)/);
   assert.doesNotMatch(context, /remed|insight|prediction|birth_time|date_of_birth|place_name/i);
 });
 
