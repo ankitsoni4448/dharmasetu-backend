@@ -55,6 +55,7 @@ const {
   fetchBasicKundli,
   fetchPrimaryKundli,
   ProkeralaError,
+  configured: prokeralaConfigured,
 } = require('./utils/prokeralaClient');
 
 require('dotenv').config();
@@ -523,7 +524,9 @@ async function getUserAstrologyContext(authUserId, userRecord) {
     const normalized = stored.chart_data?.normalized || {};
     return { available: true, preferredName: sanitize(userRecord.name || '', 100) || null,
       ...stored.compact_context, ...compactNormalizedJyotishContext(normalized),
-      planets: Array.isArray(normalized.planets) ? normalized.planets.slice(0, 12).map(planet => ({
+      planets: Array.isArray(normalized.planets) ? normalized.planets
+        .filter(planet => planet?.status === 'AVAILABLE' && planet?.source === 'PROKERALA')
+        .slice(0, 12).map(planet => ({
         name: sanitize(planet.name || '', 40), sign: sanitize(planet.sign || '', 40) || null,
         house: Number.isFinite(Number(planet.house)) ? Number(planet.house) : null,
         longitude: Number.isFinite(Number(planet.longitude)) ? Number(planet.longitude) : null,
@@ -880,6 +883,11 @@ app.get('/config', (req, res) => {
     subscriptionPayment: CFG.subscriptionPayment || 'upi',
     donationPayment:     CFG.donationPayment || 'upi',
     hasRazorpay:         !!(CFG.razorpayKeyId && CFG.razorpayKeySecret),
+    providers: {
+      prokeralaConfigured: prokeralaConfigured(),
+      geminiConfigured: !!CFG.geminiKey,
+      groqConfigured: !!CFG.groqKey,
+    },
     featureFlags:        CFG.featureFlags,
   }});
 });
@@ -3702,90 +3710,46 @@ app.post('/kundli/calculate', requireSupabaseUser, async (req, res) => {
     const time    = tob;
     const dtStr   = `${dob}T${time}:00${formatUtcOffset(resolvedPlace.utcOffsetMinutes)}`;
 
-    // Try Prokerala
-    if (latitude && longitude && canCallAPI()) {
-      try {
-        const token  = await getProkeralaToken();
-        const coords = `${latitude},${longitude}`;
-        const [birthChart, kundliBasic] = await Promise.all([
-          fetch(`https://api.prokerala.com/v2/astrology/birth-details?ayanamsa=lahiri&coordinates=${coords}&datetime=${encodeURIComponent(dtStr)}`,
-            { headers: { Authorization: `Bearer ${token}` } }).then(r=>r.json()),
-          fetch(`https://api.prokerala.com/v2/astrology/kundli?ayanamsa=lahiri&coordinates=${coords}&datetime=${encodeURIComponent(dtStr)}`,
-            { headers: { Authorization: `Bearer ${token}` } }).then(r=>r.json()).catch(()=>null),
-        ]);
-        if (birthChart?.data) {
-          const d = birthChart.data;
-          return res.json({
-            success: true, source: 'prokerala',
-            rashi:      d.moon_sign     || d.rasi     || '',
-            nakshatra:  d.nakshatra?.name || '',
-            lagna:      d.ascendant?.name || d.lagna   || '',
-            planet:     d.nakshatra?.lord || '',
-            moonDeg:    d.moon_sign_longitude || null,
-            lagnaSign:  d.ascendant?.name || '',
-            latitude, longitude,
-            kundli:     kundliBasic?.data || null,
-          });
-        }
-      } catch(apiErr) {
-        console.error('[kundli/prokerala]', apiErr.message);
-      }
+    if (!canCallAPI()) return res.status(503).json({ error: 'KUNDLI_PROVIDER_UNAVAILABLE' });
+    try {
+      const providerResult = await fetchBasicKundli({ latitude, longitude, datetime: dtStr });
+      const birthProfile = {
+        date_of_birth: dob, birth_time: tob, birth_time_certainty: 'EXACT',
+        latitude, longitude, timezone: resolvedPlace.timezone,
+        utc_offset_minutes: resolvedPlace.utcOffsetMinutes, profile_version: 1,
+      };
+      birthProfile.input_fingerprint = birthInputFingerprint(birthProfile);
+      const normalized = normalizeProviderChart(
+        providerResult.modules.birthDetails,
+        providerResult.modules.basicKundli,
+        birthProfile,
+        { ...providerResult.modules, moduleStatus: providerResult.moduleStatus, generatedAt: providerResult.generatedAt }
+      );
+      const readiness = validateKundliReadiness(normalized, birthProfile, { deepEnabled: false });
+      if (!readiness.valid) return res.status(502).json({ error: 'KUNDLI_CORE_INCOMPLETE', missing_fields: readiness.missingFields });
+      const grahas = Object.fromEntries(normalized.planets.map((planet, index) => [
+        planet.name || `planet_${index}`,
+        { ...planet, rashi: planet.sign ? { name: planet.sign, nameEn: planet.sign } : null },
+      ]));
+      const sun = normalized.planets.find(planet => planet.name?.toLowerCase() === 'sun');
+      const calculation = {
+        ...normalized,
+        lagna: { rashi: { name: normalized.core.lagna, nameEn: normalized.core.lagna } },
+        moonRashi: { name: normalized.core.rashi, nameEn: normalized.core.rashi },
+        sunRashi: sun?.sign ? { name: sun.sign, nameEn: sun.sign } : null,
+        nakshatra: { name: normalized.core.nakshatra, pada: normalized.core.nakshatraPada },
+        grahas,
+      };
+      return res.json({ success: true, source: 'prokerala', calculation });
+    } catch (apiErr) {
+      console.warn(`[kundli/prokerala] ${apiErr.code || 'PROVIDER_UNAVAILABLE'}`);
+      return res.status(503).json({ error: 'KUNDLI_PROVIDER_UNAVAILABLE' });
     }
-
-    // Fallback: improved static calculation
-    return res.status(503).json({
-      success: false,
-      code: 'KUNDLI_PROVIDER_UNAVAILABLE',
-      error: 'Production Kundli calculation is currently unavailable.',
-    });
   } catch(e) {
     console.error('[kundli/calculate]', e.message);
     res.status(500).json({ error: 'Kundli calculation failed' });
   }
 });
-
-// Improved static kundli fallback (better than original)
-function calculateKundliFallback(dob, tob, city) {
-  const RASHI = [
-    { name:'Mesh',     nameEn:'Aries',       planet:'Mangal',  deity:'Kartik',    nakIds:[0,1,2] },
-    { name:'Vrishabh', nameEn:'Taurus',      planet:'Shukra',  deity:'Lakshmi',   nakIds:[2,3,4] },
-    { name:'Mithun',   nameEn:'Gemini',       planet:'Budh',    deity:'Vishnu',    nakIds:[4,5,6] },
-    { name:'Kark',     nameEn:'Cancer',       planet:'Chandra', deity:'Shiva',     nakIds:[6,7,8] },
-    { name:'Simha',    nameEn:'Leo',          planet:'Surya',   deity:'Surya',     nakIds:[9,10,11]},
-    { name:'Kanya',    nameEn:'Virgo',        planet:'Budh',    deity:'Saraswati', nakIds:[11,12,13]},
-    { name:'Tula',     nameEn:'Libra',        planet:'Shukra',  deity:'Lakshmi',   nakIds:[13,14,15]},
-    { name:'Vrishchik',nameEn:'Scorpio',      planet:'Mangal',  deity:'Kali',      nakIds:[15,16,17]},
-    { name:'Dhanu',    nameEn:'Sagittarius',  planet:'Guru',    deity:'Vishnu',    nakIds:[17,18,19]},
-    { name:'Makar',    nameEn:'Capricorn',    planet:'Shani',   deity:'Shani',     nakIds:[19,20,21]},
-    { name:'Kumbh',    nameEn:'Aquarius',     planet:'Shani',   deity:'Shiva',     nakIds:[21,22,23]},
-    { name:'Meen',     nameEn:'Pisces',       planet:'Guru',    deity:'Vishnu',    nakIds:[23,24,25]},
-  ];
-  const NAKSHATRAS = [
-    'Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra',
-    'Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni',
-    'Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha',
-    'Moola','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha',
-    'Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati',
-  ];
-
-  // Approximate tropical sun longitude → sidereal (Lahiri ayanamsa ~23.85° in 2024)
-  const d = new Date(dob + 'T12:00:00Z');
-  const dayOfYear = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
-  // Approx moon sign from day of year (moon moves ~13°/day, full cycle ~27.3 days)
-  const moonCycle = (dayOfYear * 13.2) % 360;
-  const rashiIdx  = Math.floor(moonCycle / 30) % 12;
-  const nakIdx    = Math.floor(moonCycle / (360/27)) % 27;
-
-  const rashi = RASHI[rashiIdx];
-  return {
-    rashi:     rashi.name,
-    rashiEn:   rashi.nameEn,
-    nakshatra: NAKSHATRAS[nakIdx],
-    planet:    rashi.planet,
-    deity:     rashi.deity,
-    lagna:     RASHI[(rashiIdx + 1) % 12].name, // rough lagna approximation
-  };
-}
 
 // POST /users/update (profile edit from app)
 app.patch('/users/update', requireSupabaseUser, async (req, res) => {
@@ -3877,6 +3841,32 @@ app.post('/notifications/read-all', requireSupabaseUser, async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error('[notifications/read-all]', error.message);
+    res.status(500).json({ error: 'NOTIFICATIONS_UNAVAILABLE' });
+  }
+});
+
+app.post('/notifications/sync-reminder', requireSupabaseUser, async (req, res) => {
+  try {
+    const type = sanitize(req.body?.type || '', 40);
+    const title = sanitize(req.body?.title || '', 200);
+    const body = sanitize(req.body?.body || '', 1000);
+    const eventKey = sanitize(req.body?.event_key || '', 160);
+    const actionRoute = sanitize(req.body?.action_route || '', 100);
+    if (!NOTIFICATION_TYPES.has(type) || !title || !body || !/^[a-z][a-z0-9_-]*:\d{4}-\d{2}-\d{2}$/.test(eventKey)) {
+      return res.status(400).json({ error: 'INVALID_NOTIFICATION_EVENT' });
+    }
+    if (actionRoute && !SAFE_NOTIFICATION_ROUTES.has(actionRoute)) {
+      return res.status(400).json({ error: 'INVALID_NOTIFICATION_EVENT' });
+    }
+    const row = {
+      id: crypto.randomUUID(), user_id: req.authUser.id, type, title, body,
+      event_key: eventKey, action_route: actionRoute || null,
+      priority: 'normal', data: { origin: 'local_reminder' }, created_at: new Date().toISOString(),
+    };
+    await sbUpsert('user_notifications', row, 'user_id,event_key');
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[notifications/sync-reminder]', error.message);
     res.status(500).json({ error: 'NOTIFICATIONS_UNAVAILABLE' });
   }
 });

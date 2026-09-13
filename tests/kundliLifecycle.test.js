@@ -33,7 +33,7 @@ test('birth-time certainty modes preserve truthful precision semantics', () => {
 test('normalization preserves supplied facts without inventing unsupported sections', () => {
   const normalized = normalizeProviderChart({ moon_sign: { name: 'Mesha' }, ascendant: { name: 'Karka' }, nakshatra: { name: 'Ashwini', pada: 2 } }, {}, birth);
   assert.deepEqual(normalized.core, { rashi: 'Mesha', lagna: 'Karka', nakshatra: 'Ashwini', nakshatraPada: 2 });
-  assert.equal(normalized.charts.d9, null);
+  assert.equal(normalized.charts.d9.status, 'UNAVAILABLE');
   assert.deepEqual(normalized.planets, []);
   assert.equal(compactContext(normalized).rashi, 'Mesha');
 });
@@ -49,7 +49,7 @@ test('normalization accepts the documented Prokerala Kundli response nesting', (
   assert.equal(normalized.core.rashi, 'Meena');
   assert.equal(normalized.core.nakshatra, 'Uttara Bhadrapada');
   assert.equal(normalized.core.nakshatraPada, 3);
-  assert.equal(normalized.doshas.mangal.has_dosha, false);
+  assert.equal(normalized.doshas[0].provider_data.has_dosha, false);
   assert.equal(normalized.yogas.length, 1);
   assert.equal(compactContext(normalized).currentMahadasha, 'Saturn');
   assert.equal(compactContext(normalized).currentAntardasha, 'Mercury');
@@ -64,10 +64,10 @@ test('deep provider modules are normalized without fabricating unavailable value
   });
   assert.equal(normalized.planets[0].name, 'Sun');
   assert.equal(normalized.planets[0].sign, 'Kumbha');
-  assert.equal(normalized.charts.d1, svg);
-  assert.equal(normalized.charts.d9, null);
-  assert.equal(normalized.charts.bhava, svg);
-  assert.equal(normalized.doshas.kaalSarp.has_dosha, false);
+  assert.equal(normalized.charts.d1.data, svg);
+  assert.equal(normalized.charts.d9.status, 'UNAVAILABLE');
+  assert.equal(normalized.charts.bhava.data, svg);
+  assert.equal(normalized.doshas[1].provider_data.has_dosha, false);
   assert.equal(normalized.moduleStatus.d9, 'UNAVAILABLE');
 });
 
@@ -87,6 +87,46 @@ test('documented live Planet Position ASCENDANT id 100 supplies Lagna evidence',
   assert.equal(normalized.core.lagna, 'Mesha');
   assert.deepEqual(normalized.providerEvidence.lagna, { module: 'planetPosition', planetId: 100 });
   assert.equal(normalized.planets.some(item => item.name === 'Ascendant'), false);
+});
+
+test('canonical schema exposes only provider facts and explicit unavailable states', () => {
+  const normalized = readyNormalized();
+  assert.equal(normalized.schema_version, 'dharmasetu-kundli-v1');
+  assert.equal(normalized.provider, 'prokerala');
+  assert.deepEqual(normalized.lagna, { sign: 'Mesha', longitude: 12.5, source: 'PROKERALA', status: 'AVAILABLE' });
+  assert.equal(normalized.moon_sign.sign, 'Mesha');
+  assert.equal(normalized.nakshatra.name, 'Ashwini');
+  assert.equal(normalized.nakshatra.pada, 2);
+  assert.equal(normalized.sun_sign.sign, 'Makara');
+  assert.equal(normalized.planets[0].source, 'PROKERALA');
+  assert.equal(normalized.transits.status, 'UNAVAILABLE');
+  assert.equal(normalized.aspects.status, 'UNAVAILABLE');
+  assert.equal(normalized.strengths.status, 'UNAVAILABLE');
+  assert.equal(normalized.life_areas.status, 'UNAVAILABLE');
+  assert.deepEqual(normalized.yogas, []);
+  assert.deepEqual(normalized.doshas, []);
+  assert.equal(Object.hasOwn(normalized, 'remedies'), false);
+});
+
+test('missing canonical facts never receive astrological defaults', () => {
+  const normalized = normalizeProviderChart({}, {}, birth);
+  assert.equal(normalized.lagna.status, 'UNAVAILABLE');
+  assert.equal(normalized.lagna.sign, null);
+  assert.equal(normalized.moon_sign.status, 'UNAVAILABLE');
+  assert.equal(normalized.nakshatra.status, 'UNAVAILABLE');
+  assert.equal(normalized.nakshatra.name, null);
+  assert.equal(normalized.sun_sign.status, 'UNAVAILABLE');
+  assert.deepEqual(normalized.planets, []);
+  assert.equal(compactContext(normalized).lagna, null);
+  assert.equal(compactContext(normalized).currentMahadasha, null);
+});
+
+test('current Dasha is retained only when provider supplied it', () => {
+  const absent = normalizeProviderChart({}, {}, birth);
+  assert.equal(absent.dasha.status, 'UNAVAILABLE');
+  const supplied = normalizeProviderChart({}, { dasha_periods: [{ name: 'Saturn', start: '2020-01-01', end: '2040-01-01' }] }, birth);
+  assert.equal(supplied.dasha.status, 'AVAILABLE');
+  assert.equal(compactContext(supplied).currentMahadasha, 'Saturn');
 });
 
 test('complete basic and deep primary charts satisfy strict readiness', () => {
@@ -130,6 +170,14 @@ test('server cannot persist an incomplete normalized result as KUNDLI_READY', ()
   assert.match(route, /KUNDLI_CORE_INCOMPLETE/);
   assert.match(route, /missing_fields: readiness\.missingFields/);
   assert.doesNotMatch(route, /!context\.rashi && !context\.lagna && !context\.nakshatra/);
+});
+
+test('DharmaChat boundary accepts only validated canonical provider facts', () => {
+  const server = fs.readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
+  const context = server.slice(server.indexOf('async function getUserAstrologyContext'), server.indexOf('// ─── AUDIT LOGGER'));
+  assert.match(context, /planet\?\.status === 'AVAILABLE'/);
+  assert.match(context, /planet\?\.source === 'PROKERALA'/);
+  assert.doesNotMatch(context, /remed|insight|prediction|birth_time|date_of_birth|place_name/i);
 });
 
 test('fingerprint reuse contract is represented in normalized output', () => {

@@ -2,7 +2,7 @@
 
 const CALCULATION_STANDARD = Object.freeze({
   schemaVersion: 'dharmasetu-kundli-v1',
-  calculationVersion: 'prokerala-v2-lahiri-v1',
+  calculationVersion: 'prokerala-v2-lahiri-k1-v1',
   provider: 'prokerala',
   providerApiVersion: 'v2',
   zodiac: 'sidereal',
@@ -38,16 +38,52 @@ function normalizePlanet(item = {}) {
   const name = text(first(item.name, item.planet, item.id));
   if (!name) return null;
   return {
+    id: finite(item.id),
     name,
     sign: text(first(item.rasi, item.rashi, item.sign, item.zodiac)),
     longitude: finite(first(item.longitude, item.degree, item.degrees, item.full_degree)),
+    degree: finite(first(item.degree, item.degrees_in_sign)),
     house: finite(first(item.house, item.house_number, item.bhava)),
     nakshatra: text(item.nakshatra),
     pada: finite(first(item.nakshatra?.pada, item.pada)),
     retrograde: typeof item.retrograde === 'boolean' ? item.retrograde
       : typeof item.is_retrograde === 'boolean' ? item.is_retrograde : null,
     dignity: text(first(item.dignity, item.status)),
+    source: 'PROKERALA',
+    status: 'AVAILABLE',
   };
+}
+
+function availableFact(value, extra = {}) {
+  return value === null || value === undefined || value === ''
+    ? { ...extra, source: 'PROKERALA', status: 'UNAVAILABLE', reason: 'PROVIDER_NOT_SUPPLIED' }
+    : { ...extra, source: 'PROKERALA', status: 'AVAILABLE' };
+}
+
+function normalizeHouses(value) {
+  return list(value).map((house, index) => ({
+    number: finite(first(house?.number, house?.house, house?.house_number, index + 1)),
+    sign: text(first(house?.sign, house?.rasi, house?.rashi, house?.name)),
+    lord: text(first(house?.lord, house?.sign_lord, house?.rasi?.lord, house?.rashi?.lord)),
+    source: 'PROKERALA', status: 'AVAILABLE',
+  })).filter(house => house.number !== null || house.sign !== null);
+}
+
+function providerItems(value) {
+  return list(value).map(item => ({
+    name: text(item), source: 'PROKERALA', verification: 'PROVIDER_SUPPLIED',
+    provenance: 'prokerala-v2', status: 'AVAILABLE', provider_data: item,
+  })).filter(item => item.name);
+}
+
+function providerDoshas(mangal, kaalSarp) {
+  return [
+    mangal ? { name: 'Mangal Dosha', data: mangal } : null,
+    kaalSarp ? { name: 'Kaal Sarp Dosha', data: kaalSarp } : null,
+  ].filter(Boolean).map(item => ({
+    name: item.name, source: 'PROKERALA', verification: 'PROVIDER_SUPPLIED',
+    provenance: 'prokerala-v2', status: 'AVAILABLE', provider_data: item.data,
+  }));
 }
 
 function findPlanetRows(...sources) {
@@ -68,8 +104,13 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
   const providerPositions = findPlanetRows(planetPosition, kundli, details);
   const ascendantPosition = providerPositions.find(row => row.name.toLowerCase() === 'ascendant');
   const planets = providerPositions.filter(row => PLANETS.includes(row.name.toLowerCase()));
+  const sunPosition = providerPositions.find(row => row.name.toLowerCase() === 'sun');
   const charts = kundli.charts || kundli.chart || {};
   const dasha = first(kundli.dasha, kundli.dasha_periods, details.dasha, details.dasha_periods) || null;
+  const timeline = Array.isArray(dasha) ? dasha : list(dasha?.dasha_periods);
+  const now = Date.now();
+  const currentMaha = timeline.find(item => Date.parse(item.start) <= now && Date.parse(item.end) >= now) || null;
+  const currentAntar = list(currentMaha?.antardasha).find(item => Date.parse(item.start) <= now && Date.parse(item.end) >= now) || null;
 
   const core = {
     rashi: text(moonSign),
@@ -78,10 +119,27 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
     nakshatraPada: finite(first(nakshatra?.pada, details.nakshatra_pada, kundli.nakshatra_pada)),
   };
   const mangal = first(kundli.mangal_dosha, kundli.doshas?.mangal, kundli.dosha?.mangal);
+  const houseRows = normalizeHouses(first(kundli.houses, kundli.bhavas, kundli.bhava));
+  const chartFact = value => availableFact(value, { data: value || null });
+  const lagnaFact = availableFact(core.lagna, { sign: core.lagna, longitude: ascendantPosition?.longitude ?? null });
+  const sunSign = text(first(details.soorya_rasi, kundli.soorya_rasi, sunPosition?.sign));
+  const moonFact = availableFact(core.rashi, { sign: core.rashi });
+  const nakshatraFact = availableFact(core.nakshatra, { name: core.nakshatra, pada: core.nakshatraPada });
+  const currentMahadasha = first(dasha?.current_mahadasha, dasha?.mahadasha, dasha?.current?.mahadasha, currentMaha);
+  const currentAntardasha = first(dasha?.current_antardasha, dasha?.antardasha, dasha?.current?.antardasha, currentAntar);
   const precisionWarnings = birthProfile.birth_time_certainty === 'EXACT' ? []
     : ['Birth time is not exact; Lagna, houses, divisional charts and dasha timing may vary.'];
 
   return {
+    schema_version: CALCULATION_STANDARD.schemaVersion,
+    calculation_version: CALCULATION_STANDARD.calculationVersion,
+    provider: CALCULATION_STANDARD.provider,
+    ayanamsha: CALCULATION_STANDARD.ayanamsha,
+    birth_time_certainty: text(birthProfile.birth_time_certainty),
+    lagna: lagnaFact,
+    sun_sign: availableFact(sunSign, { sign: sunSign }),
+    moon_sign: moonFact,
+    nakshatra: nakshatraFact,
     schemaVersion: CALCULATION_STANDARD.schemaVersion,
     calculation: { ...CALCULATION_STANDARD, generatedAt: providerBundle.generatedAt || null },
     birthProfileVersion: finite(birthProfile.profile_version),
@@ -105,14 +163,20 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
     },
     planets,
     charts: {
-      d1: first(providerBundle.d1, charts.d1, charts.rasi, kundli.rasi_chart, kundli.birth_chart),
-      d9: first(providerBundle.d9, charts.d9, charts.navamsa, kundli.navamsa_chart),
-      bhava: first(providerBundle.bhava, charts.bhava, kundli.bhava_chart),
+      d1: chartFact(first(providerBundle.d1, charts.d1, charts.rasi, kundli.rasi_chart, kundli.birth_chart)),
+      d9: chartFact(first(providerBundle.d9, charts.d9, charts.navamsa, kundli.navamsa_chart)),
+      bhava: chartFact(first(providerBundle.bhava, charts.bhava, kundli.bhava_chart)),
     },
-    houses: first(kundli.houses, kundli.bhavas, kundli.bhava),
-    dasha,
-    yogas: list(first(kundli.yogas, kundli.yoga_details)),
-    doshas: { mangal: mangal || null, kaalSarp: providerBundle.kaalSarpDosha || null },
+    houses: houseRows,
+    dasha: dasha ? { mahadasha: currentMahadasha || null, antardasha: currentAntardasha || null,
+      full_timeline: timeline, source: 'PROKERALA', status: 'AVAILABLE' }
+      : { mahadasha: null, antardasha: null, full_timeline: [], source: 'PROKERALA', status: 'UNAVAILABLE', reason: 'PROVIDER_NOT_SUPPLIED' },
+    yogas: providerItems(first(kundli.yogas, kundli.yoga_details)),
+    doshas: providerDoshas(mangal, providerBundle.kaalSarpDosha),
+    transits: { status: 'UNAVAILABLE', reason: 'NOT_IMPLEMENTED' },
+    aspects: { status: 'UNAVAILABLE', reason: 'NOT_IMPLEMENTED' },
+    strengths: { status: 'UNAVAILABLE', reason: 'NOT_IMPLEMENTED' },
+    life_areas: { status: 'UNAVAILABLE', reason: 'NOT_IMPLEMENTED' },
     moduleStatus: providerBundle.moduleStatus || {},
     precisionWarnings,
   };
@@ -124,7 +188,7 @@ function validateKundliReadiness(normalized = {}, birthProfile = {}, { deepEnabl
   if (!text(normalized.core?.rashi)) missingFields.push('rashi');
   if (!text(normalized.core?.nakshatra)) missingFields.push('nakshatra');
   if (!Number.isInteger(Number(normalized.core?.nakshatraPada)) || Number(normalized.core.nakshatraPada) < 1 || Number(normalized.core.nakshatraPada) > 4) missingFields.push('nakshatra_pada');
-  if (normalized.charts?.d1?.format !== 'svg' || !text(normalized.charts.d1.content)) missingFields.push('d1');
+  if (normalized.charts?.d1?.status !== 'AVAILABLE' || normalized.charts.d1.data?.format !== 'svg' || !text(normalized.charts.d1.data.content)) missingFields.push('d1');
   if (!Array.isArray(normalized.planets) || normalized.planets.length === 0) missingFields.push('planets');
   if (normalized.calculation?.provider !== 'prokerala') missingFields.push('calculation.provider');
   if (!text(normalized.calculation?.providerApiVersion)) missingFields.push('calculation.provider_api_version');
@@ -142,23 +206,21 @@ function validateKundliReadiness(normalized = {}, birthProfile = {}, { deepEnabl
 
 function compactContext(normalized = {}) {
   const dasha = normalized.dasha || {};
-  const timeline = Array.isArray(dasha) ? dasha : list(dasha.dasha_periods);
-  const now = Date.now();
-  const currentMaha = timeline.find(item => Date.parse(item.start) <= now && Date.parse(item.end) >= now) || null;
-  const currentAntar = list(currentMaha?.antardasha).find(item => Date.parse(item.start) <= now && Date.parse(item.end) >= now) || null;
+  const available = fact => fact?.status === 'AVAILABLE';
   return {
-    birthTimeCertainty: normalized.birthTimeCertainty || null,
-    rashi: normalized.core?.rashi || null,
-    lagna: normalized.core?.lagna || null,
-    nakshatra: normalized.core?.nakshatra || null,
-    nakshatraPada: normalized.core?.nakshatraPada || null,
-    currentMahadasha: text(first(dasha.current_mahadasha, dasha.mahadasha, dasha.current?.mahadasha, currentMaha)),
-    currentAntardasha: text(first(dasha.current_antardasha, dasha.antardasha, dasha.current?.antardasha, currentAntar)),
-    currentMahadashaStart: text(first(dasha.current_mahadasha?.start, currentMaha?.start)),
-    currentMahadashaEnd: text(first(dasha.current_mahadasha?.end, currentMaha?.end)),
-    currentAntardashaStart: text(first(dasha.current_antardasha?.start, currentAntar?.start)),
-    currentAntardashaEnd: text(first(dasha.current_antardasha?.end, currentAntar?.end)),
-    precisionWarning: normalized.birthTimeCertainty === 'EXACT' ? null
+    birthTimeCertainty: normalized.birth_time_certainty || null,
+    rashi: available(normalized.moon_sign) ? normalized.moon_sign.sign : null,
+    lagna: available(normalized.lagna) ? normalized.lagna.sign : null,
+    sunSign: available(normalized.sun_sign) ? normalized.sun_sign.sign : null,
+    nakshatra: available(normalized.nakshatra) ? normalized.nakshatra.name : null,
+    nakshatraPada: available(normalized.nakshatra) ? normalized.nakshatra.pada : null,
+    currentMahadasha: dasha.status === 'AVAILABLE' ? text(dasha.mahadasha) : null,
+    currentAntardasha: dasha.status === 'AVAILABLE' ? text(dasha.antardasha) : null,
+    currentMahadashaStart: dasha.status === 'AVAILABLE' ? text(dasha.mahadasha?.start) : null,
+    currentMahadashaEnd: dasha.status === 'AVAILABLE' ? text(dasha.mahadasha?.end) : null,
+    currentAntardashaStart: dasha.status === 'AVAILABLE' ? text(dasha.antardasha?.start) : null,
+    currentAntardashaEnd: dasha.status === 'AVAILABLE' ? text(dasha.antardasha?.end) : null,
+    precisionWarning: normalized.birth_time_certainty === 'EXACT' ? null
       : 'Birth time is not exact; time-sensitive chart interpretation may vary.',
   };
 }
