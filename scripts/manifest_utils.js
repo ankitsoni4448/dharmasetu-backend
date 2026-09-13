@@ -23,6 +23,9 @@ const CATEGORY_HINTS = [
 
 const DEITY_HINTS = ['Shiva', 'Vishnu', 'Krishna', 'Rama', 'Hanuman', 'Ganesh', 'Durga', 'Lakshmi', 'Saraswati', 'Surya', 'Devi'];
 const DIFFICULTIES = new Set(['beginner', 'intermediate', 'advanced']);
+const MANTRA_CONTENT_TYPES = new Set(['MANTRA', 'NAMA_JAPA', 'VEDIC_MANTRA', 'SHLOKA', 'PRAYER', 'STOTRA']);
+const MANTRA_VERIFICATION_STATUSES = new Set(['VERIFIED', 'REVIEW_REQUIRED', 'RESTRICTED']);
+const MANTRA_PRACTICE_LEVELS = new Set(['GENERAL_DEVOTIONAL', 'TRADITION_SPECIFIC', 'INITIATION_GUIDANCE']);
 
 function slug(input, fallback = 'item') {
   const clean = String(input || '')
@@ -132,10 +135,17 @@ function normalizeSource(source = {}) {
 }
 
 function normalizeMantra(raw = {}) {
-  const title = raw.title || raw.name || 'Untitled Mantra';
+  const title = raw.canonicalName || raw.canonical_name || raw.title || raw.name || 'Untitled Mantra';
   const deity = raw.deity || DEITY_HINTS.find(d => title.toLowerCase().includes(d.toLowerCase())) || 'Universal';
-  const purpose = raw.purpose || (Array.isArray(raw.tags) && raw.tags[0]) || 'daily_sadhana';
+  const deityIds = raw.deityIds || raw.deity_ids || (raw.deity ? [raw.deity] : []);
+  const purposeIds = raw.purposeIds || raw.purpose_ids || (raw.purpose ? [raw.purpose] : []);
+  const categoryIds = raw.categoryIds || raw.category_ids || [];
+  const purpose = raw.purpose || purposeIds[0] || 'unspecified';
   const difficulty = DIFFICULTIES.has(raw.difficulty) ? raw.difficulty : 'beginner';
+  const verificationStatus = raw.verificationStatus || raw.verification_status || 'REVIEW_REQUIRED';
+  const sourceReferences = raw.sourceReferences || raw.source_references || [];
+  const practice = raw.practice || {};
+  const audio = raw.audio || {};
   return {
     id: raw.id || `mantra_${slug(title)}`,
     title,
@@ -143,7 +153,7 @@ function normalizeMantra(raw = {}) {
     purpose,
     language: raw.language || 'sanskrit',
     difficulty,
-    scripture_source: raw.scriptureSource || raw.scripture_source || 'traditional',
+    scripture_source: raw.scriptureSource || raw.scripture_source || '',
     sanskrit_text: raw.sanskritText || raw.sanskrit_text || raw.text || '',
     transliteration: raw.transliteration || '',
     meaning_hi: raw.meaningHi || raw.meaning_hi || '',
@@ -153,16 +163,58 @@ function normalizeMantra(raw = {}) {
     offline_pack_id: raw.offlinePackId || raw.offline_pack_id || 'core_mantras_v1',
     search_text: compactText([title, deity, purpose, raw.scriptureSource, raw.sanskritText || raw.text, raw.transliteration, raw.meaningHi, raw.meaningEn, ...(raw.tags || [])]),
     is_active: raw.isActive !== false,
+    schema_version: Number(raw.schemaVersion || raw.schema_version || 2),
+    content_version: raw.contentVersion || raw.content_version || '',
+    canonical_name: title,
+    names: raw.names || {},
+    mantra_content_type: raw.contentType || raw.content_type || 'MANTRA',
+    deity_ids: deityIds,
+    category_ids: categoryIds,
+    purpose_ids: purposeIds,
+    transliteration_iast: raw.transliterationIast || raw.transliteration_iast || null,
+    transliteration_simple: raw.transliterationSimple || raw.transliteration_simple || raw.transliteration || null,
+    word_segments: raw.wordSegments || raw.word_segments || [],
+    meanings: raw.meanings || { hi: raw.meaningHi || raw.meaning_hi || null, en: raw.meaningEn || raw.meaning_en || null },
+    source_references: sourceReferences,
+    tradition: raw.tradition || null,
+    sampradaya: raw.sampradaya || null,
+    practice_level: raw.practiceLevel || raw.practice_level || 'GENERAL_DEVOTIONAL',
+    instructions_scope: raw.instructionsScope || raw.instructions_scope || null,
+    requires_initiation: raw.requiresInitiation ?? raw.requires_initiation ?? null,
+    restriction_note: raw.restrictionNote || raw.restriction_note || null,
+    verification_status: verificationStatus,
+    reviewed_by: raw.reviewedBy || raw.reviewed_by || null,
+    reviewed_at: raw.reviewedAt || raw.reviewed_at || null,
+    practice,
+    audio_metadata: audio,
+    tags_v2: Array.isArray(raw.tags) ? raw.tags : [],
     updated_at: new Date().toISOString(),
   };
 }
 
 function validateMantraManifest(manifest = {}) {
   const errors = [];
+  const ids = new Set();
   if (!Array.isArray(manifest.items)) errors.push('items must be an array');
   (manifest.items || []).forEach((item, i) => {
-    if (!item.title && !item.name) errors.push(`items[${i}].title required`);
+    if (!item.id) errors.push(`items[${i}].id required`);
+    else if (ids.has(item.id)) errors.push(`items[${i}].id duplicate: ${item.id}`);
+    else ids.add(item.id);
+    if (!item.canonicalName && !item.canonical_name && !item.title && !item.name) errors.push(`items[${i}].canonicalName required`);
     if (!item.sanskritText && !item.sanskrit_text && !item.text) errors.push(`items[${i}].sanskritText required`);
+    const contentType = item.contentType || item.content_type || 'MANTRA';
+    const status = item.verificationStatus || item.verification_status || 'REVIEW_REQUIRED';
+    const practiceLevel = item.practiceLevel || item.practice_level || 'GENERAL_DEVOTIONAL';
+    if (!MANTRA_CONTENT_TYPES.has(contentType)) errors.push(`items[${i}].contentType unsupported`);
+    if (!MANTRA_VERIFICATION_STATUSES.has(status)) errors.push(`items[${i}].verificationStatus unsupported`);
+    if (!MANTRA_PRACTICE_LEVELS.has(practiceLevel)) errors.push(`items[${i}].practiceLevel unsupported`);
+    const sources = item.sourceReferences || item.source_references || [];
+    if (!Array.isArray(sources)) errors.push(`items[${i}].sourceReferences must be an array`);
+    if (status === 'VERIFIED') {
+      if (!sources.length || sources.some(source => !source || !(source.url || source.document || source.reference))) errors.push(`items[${i}] VERIFIED requires provenance`);
+      if (!(item.reviewedBy || item.reviewed_by) || !(item.reviewedAt || item.reviewed_at)) errors.push(`items[${i}] VERIFIED requires reviewer and review date`);
+    }
+    if (item.practice != null && (typeof item.practice !== 'object' || Array.isArray(item.practice))) errors.push(`items[${i}].practice must be an object or null`);
   });
   return errors;
 }
