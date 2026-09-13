@@ -136,8 +136,8 @@ function normalizeSource(source = {}) {
 
 function normalizeMantra(raw = {}) {
   const title = raw.canonicalName || raw.canonical_name || raw.title || raw.name || 'Untitled Mantra';
-  const deity = raw.deity || DEITY_HINTS.find(d => title.toLowerCase().includes(d.toLowerCase())) || 'Universal';
   const deityIds = raw.deityIds || raw.deity_ids || (raw.deity ? [raw.deity] : []);
+  const deity = raw.deity || deityIds[0] || DEITY_HINTS.find(d => title.toLowerCase().includes(d.toLowerCase())) || 'Universal';
   const purposeIds = raw.purposeIds || raw.purpose_ids || (raw.purpose ? [raw.purpose] : []);
   const categoryIds = raw.categoryIds || raw.category_ids || [];
   const purpose = raw.purpose || purposeIds[0] || 'unspecified';
@@ -155,13 +155,13 @@ function normalizeMantra(raw = {}) {
     difficulty,
     scripture_source: raw.scriptureSource || raw.scripture_source || '',
     sanskrit_text: raw.sanskritText || raw.sanskrit_text || raw.text || '',
-    transliteration: raw.transliteration || '',
-    meaning_hi: raw.meaningHi || raw.meaning_hi || '',
-    meaning_en: raw.meaningEn || raw.meaning_en || '',
-    audio_url: raw.audioUrl || raw.audio_url || '',
-    audio_downloadable: raw.audioDownloadable !== false,
+    transliteration: raw.transliteration || raw.transliterationSimple || raw.transliteration_simple || '',
+    meaning_hi: raw.meaningHi || raw.meaning_hi || raw.meanings?.hi || '',
+    meaning_en: raw.meaningEn || raw.meaning_en || raw.meanings?.en || '',
+    audio_url: raw.audioUrl || raw.audio_url || audio.normal_url || '',
+    audio_downloadable: raw.audioDownloadable ?? audio.downloadable ?? false,
     offline_pack_id: raw.offlinePackId || raw.offline_pack_id || 'core_mantras_v1',
-    search_text: compactText([title, deity, purpose, raw.scriptureSource, raw.sanskritText || raw.text, raw.transliteration, raw.meaningHi, raw.meaningEn, ...(raw.tags || [])]),
+    search_text: raw.searchText || raw.search_text || compactText([title, deity, purpose, raw.scriptureSource, raw.sanskritText || raw.text, raw.transliteration, raw.meaningHi, raw.meaningEn, ...(raw.tags || [])]),
     is_active: raw.isActive !== false,
     schema_version: Number(raw.schemaVersion || raw.schema_version || 2),
     content_version: raw.contentVersion || raw.content_version || '',

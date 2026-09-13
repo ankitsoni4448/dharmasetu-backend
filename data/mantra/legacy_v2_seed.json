@@ -1,0 +1,2098 @@
+{
+  "schemaVersion": 2,
+  "contentVersion": "dharmasetu-mantra-content-v2-review",
+  "source": {
+    "type": "legacy_local_review_migration",
+    "provenanceVerified": false
+  },
+  "items": [
+    {
+      "id": "gayatri",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Gayatri Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Gayatri Mantra"
+      },
+      "contentType": "VEDIC_MANTRA",
+      "deityIds": [
+        "Surya"
+      ],
+      "categoryIds": [
+        "Universal"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Bhur Bhuvah Svah Tat Savitur Varenyam Bhargo Devasya Dhimahi Dhiyo Yo Nah Prachodayat",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे सूर्य देव, हमारी बुद्धि को प्रकाशित करें और हमें सन्मार्ग पर चलाएं।",
+        "en": "O Sun God, illuminate our intellect and lead us on the righteous path."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Surya",
+        "Universal"
+      ],
+      "searchText": "gayatri mantra surya universal ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात् om bhur bhuvah svah tat savitur varenyam bhargo devasya dhimahi dhiyo yo nah prachodayat हे सूर्य देव, हमारी बुद्धि को प्रकाशित करें और हमें सन्मार्ग पर चलाएं। o sun god, illuminate our intellect and lead us on the righteous path.",
+      "isActive": true
+    },
+    {
+      "id": "mahamrityunjaya",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Maha Mrityunjaya",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Maha Mrityunjaya"
+      },
+      "contentType": "VEDIC_MANTRA",
+      "deityIds": [
+        "Shiva"
+      ],
+      "categoryIds": [
+        "Shiva"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम् उर्वारुकमिव बन्धनान् मृत्योर्मुक्षीय मामृतात्",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Tryambakam Yajamahe Sugandhim Pushtivardhanam Urvarukamiva Bandhanan Mrityor Mukshiya Maamritat",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे तीन नेत्रों वाले शिव, हमें मृत्यु के बंधन से मुक्त करें।",
+        "en": "O three-eyed Shiva, liberate us from the bondage of death and grant immortality."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Shiva",
+        "Shiva"
+      ],
+      "searchText": "maha mrityunjaya shiva shiva ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम् उर्वारुकमिव बन्धनान् मृत्योर्मुक्षीय मामृतात् om tryambakam yajamahe sugandhim pushtivardhanam urvarukamiva bandhanan mrityor mukshiya maamritat हे तीन नेत्रों वाले शिव, हमें मृत्यु के बंधन से मुक्त करें। o three-eyed shiva, liberate us from the bondage of death and grant immortality.",
+      "isActive": true
+    },
+    {
+      "id": "om_namah_shivay",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Om Namah Shivaya",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Om Namah Shivaya"
+      },
+      "contentType": "NAMA_JAPA",
+      "deityIds": [
+        "Shiva"
+      ],
+      "categoryIds": [
+        "Shiva"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ नमः शिवाय",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Namah Shivaya",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "मैं शिव को नमस्कार करता हूँ। शिव ही सत्य है, शिव ही कल्याण है।",
+        "en": "I bow to Lord Shiva. Shiva is truth, Shiva is auspiciousness."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Shiva",
+        "Shiva"
+      ],
+      "searchText": "om namah shivaya shiva shiva ॐ नमः शिवाय om namah shivaya मैं शिव को नमस्कार करता हूँ। शिव ही सत्य है, शिव ही कल्याण है। i bow to lord shiva. shiva is truth, shiva is auspiciousness.",
+      "isActive": true
+    },
+    {
+      "id": "shiva_panchakshara",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Shiva Panchakshara",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Shiva Panchakshara"
+      },
+      "contentType": "NAMA_JAPA",
+      "deityIds": [
+        "Shiva"
+      ],
+      "categoryIds": [
+        "Shiva"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "नमः शिवाय",
+      "transliterationIast": null,
+      "transliterationSimple": "Namah Shivaya",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "पञ्चाक्षरी मंत्र — पाँच तत्वों का प्रतीक, शिव की पूर्ण शरण।",
+        "en": "The five-syllable mantra representing the five elements — complete refuge in Shiva."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Shiva",
+        "Shiva"
+      ],
+      "searchText": "shiva panchakshara shiva shiva नमः शिवाय namah shivaya पञ्चाक्षरी मंत्र — पाँच तत्वों का प्रतीक, शिव की पूर्ण शरण। the five-syllable mantra representing the five elements — complete refuge in shiva.",
+      "isActive": true
+    },
+    {
+      "id": "om_namo_narayanaya",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Om Namo Narayanaya",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Om Namo Narayanaya"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Vishnu"
+      ],
+      "categoryIds": [
+        "Vishnu"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ नमो नारायणाय",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Namo Narayanaya",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "मैं भगवान नारायण को प्रणाम करता हूँ जो सर्वव्यापी और संरक्षक हैं।",
+        "en": "I bow to Lord Narayana, the all-pervading protector of the universe."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Vishnu",
+        "Vishnu"
+      ],
+      "searchText": "om namo narayanaya vishnu vishnu ॐ नमो नारायणाय om namo narayanaya मैं भगवान नारायण को प्रणाम करता हूँ जो सर्वव्यापी और संरक्षक हैं। i bow to lord narayana, the all-pervading protector of the universe.",
+      "isActive": true
+    },
+    {
+      "id": "om_namo_bhagavate",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Om Namo Bhagavate Vasudevaya",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Om Namo Bhagavate Vasudevaya"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Vishnu"
+      ],
+      "categoryIds": [
+        "Vishnu"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ नमो भगवते वासुदेवाय",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Namo Bhagavate Vasudevaya",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे वासुदेव (कृष्ण), मैं आपको प्रणाम करता हूँ।",
+        "en": "I bow to Lord Vasudeva (Krishna), the indweller of all beings."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Vishnu",
+        "Vishnu"
+      ],
+      "searchText": "om namo bhagavate vasudevaya vishnu vishnu ॐ नमो भगवते वासुदेवाय om namo bhagavate vasudevaya हे वासुदेव (कृष्ण), मैं आपको प्रणाम करता हूँ। i bow to lord vasudeva (krishna), the indweller of all beings.",
+      "isActive": true
+    },
+    {
+      "id": "vishnu_sahasranama_seed",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Om Vishnave Namah",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Om Vishnave Namah"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Vishnu"
+      ],
+      "categoryIds": [
+        "Vishnu"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ विष्णवे नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Vishnave Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "भगवान विष्णु को नमस्कार — सत्व गुण के स्वामी, संरक्षक।",
+        "en": "Salutation to Lord Vishnu — lord of sattva, the preserver."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Vishnu",
+        "Vishnu"
+      ],
+      "searchText": "vishnu beej mantra vishnu vishnu ॐ विष्णवे नमः om vishnave namah भगवान विष्णु को नमस्कार — सत्व गुण के स्वामी, संरक्षक। salutation to lord vishnu — lord of sattva, the preserver.",
+      "isActive": true
+    },
+    {
+      "id": "hare_krishna",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Hare Krishna Mahamantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Hare Krishna Mahamantra"
+      },
+      "contentType": "NAMA_JAPA",
+      "deityIds": [
+        "Krishna"
+      ],
+      "categoryIds": [
+        "Krishna"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे। हरे राम हरे राम राम राम हरे हरे।",
+      "transliterationIast": null,
+      "transliterationSimple": "Hare Krishna Hare Krishna Krishna Krishna Hare Hare. Hare Rama Hare Rama Rama Rama Hare Hare.",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे कृष्ण, हे राम — मुझे माया के बंधन से मुक्त करें और भक्ति दें।",
+        "en": "O Krishna, O Rama — free me from illusion and grant me pure devotion."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Krishna",
+        "Krishna"
+      ],
+      "searchText": "hare krishna mahamantra krishna krishna हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे। हरे राम हरे राम राम राम हरे हरे। hare krishna hare krishna krishna krishna hare hare. hare rama hare rama rama rama hare hare. हे कृष्ण, हे राम — मुझे माया के बंधन से मुक्त करें और भक्ति दें। o krishna, o rama — free me from illusion and grant me pure devotion.",
+      "isActive": true
+    },
+    {
+      "id": "krishna_beej",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Krishna Beej Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Krishna Beej Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Krishna"
+      ],
+      "categoryIds": [
+        "Krishna"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ क्लीं कृष्णाय नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Kleem Krishnaya Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "भगवान कृष्ण के आकर्षण और प्रेम की शक्ति को जगाने का बीज मंत्र।",
+        "en": "Seed mantra to awaken the power of Lord Krishna's divine love and attraction."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Krishna",
+        "Krishna"
+      ],
+      "searchText": "krishna beej mantra krishna krishna ॐ क्लीं कृष्णाय नमः om kleem krishnaya namah भगवान कृष्ण के आकर्षण और प्रेम की शक्ति को जगाने का बीज मंत्र। seed mantra to awaken the power of lord krishna's divine love and attraction.",
+      "isActive": true
+    },
+    {
+      "id": "hanuman_beej",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Hanuman Beej Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Hanuman Beej Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Hanuman"
+      ],
+      "categoryIds": [
+        "Hanuman"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ ऐं भ्रीं हनुमते रामदूताय नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Aim Bhrim Hanumate Ramdutaya Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे रामदूत हनुमान, मुझे शक्ति, साहस और भय से मुक्ति दें।",
+        "en": "O Hanuman, messenger of Ram — grant me strength, courage and freedom from fear."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Hanuman",
+        "Hanuman"
+      ],
+      "searchText": "hanuman beej mantra hanuman hanuman ॐ ऐं भ्रीं हनुमते रामदूताय नमः om aim bhrim hanumate ramdutaya namah हे रामदूत हनुमान, मुझे शक्ति, साहस और भय से मुक्ति दें। o hanuman, messenger of ram — grant me strength, courage and freedom from fear.",
+      "isActive": true
+    },
+    {
+      "id": "hanuman_moola",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Hanuman Moola Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Hanuman Moola Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Hanuman"
+      ],
+      "categoryIds": [
+        "Hanuman"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ नमो हनुमते रुद्रावताराय",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Namo Hanumate Rudravataraya",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे रुद्रावतार हनुमान, मैं आपको नमस्कार करता हूँ।",
+        "en": "O Hanuman, avatar of Rudra — I bow to you."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Hanuman",
+        "Hanuman"
+      ],
+      "searchText": "hanuman moola mantra hanuman hanuman ॐ नमो हनुमते रुद्रावताराय om namo hanumate rudravataraya हे रुद्रावतार हनुमान, मैं आपको नमस्कार करता हूँ। o hanuman, avatar of rudra — i bow to you.",
+      "isActive": true
+    },
+    {
+      "id": "bajrang_baan_seed",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Om Hanumate Namah",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Om Hanumate Namah"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Hanuman"
+      ],
+      "categoryIds": [
+        "Hanuman"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ हनुमते नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Hanumate Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हनुमान जी को सरल नमस्कार — शक्ति और रक्षा के लिए।",
+        "en": "Simple salutation to Hanuman — for strength and protection."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Hanuman",
+        "Hanuman"
+      ],
+      "searchText": "bajrang beej mantra hanuman hanuman ॐ हनुमते नमः om hanumate namah हनुमान जी को सरल नमस्कार — शक्ति और रक्षा के लिए। simple salutation to hanuman — for strength and protection.",
+      "isActive": true
+    },
+    {
+      "id": "ganesh_moola",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Ganesh Moola Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Ganesh Moola Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Ganesh"
+      ],
+      "categoryIds": [
+        "Ganesh"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ गं गणपतये नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Gam Ganapataye Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे गणपति, समस्त विघ्नों का नाश करें और हमारे मार्ग को शुभ बनाएं।",
+        "en": "O Ganapati, remove all obstacles and make our path auspicious."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Ganesh",
+        "Ganesh"
+      ],
+      "searchText": "ganesh moola mantra ganesh ganesh ॐ गं गणपतये नमः om gam ganapataye namah हे गणपति, समस्त विघ्नों का नाश करें और हमारे मार्ग को शुभ बनाएं। o ganapati, remove all obstacles and make our path auspicious.",
+      "isActive": true
+    },
+    {
+      "id": "ganesh_beej",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Ganesh Beej Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Ganesh Beej Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Ganesh"
+      ],
+      "categoryIds": [
+        "Ganesh"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ गं",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Gam",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "गणेश का बीज मंत्र — सभी विघ्नों का नाश करने की शक्ति।",
+        "en": "Seed mantra of Ganesha — carries the power to remove all obstacles."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Ganesh",
+        "Ganesh"
+      ],
+      "searchText": "ganesh beej mantra ganesh ganesh ॐ गं om gam गणेश का बीज मंत्र — सभी विघ्नों का नाश करने की शक्ति। seed mantra of ganesha — carries the power to remove all obstacles.",
+      "isActive": true
+    },
+    {
+      "id": "vakratunda",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Vakratunda Mahakaya",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Vakratunda Mahakaya"
+      },
+      "contentType": "SHLOKA",
+      "deityIds": [
+        "Ganesh"
+      ],
+      "categoryIds": [
+        "Ganesh"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा।",
+      "transliterationIast": null,
+      "transliterationSimple": "Vakratunda Mahakaya Suryakoti Samaprabha. Nirvighnam Kuru Me Deva Sarvakaryeshu Sarvada.",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे वक्रतुण्ड, करोड़ सूर्यों के समान तेजस्वी — मेरे सभी कार्य निर्विघ्न करें।",
+        "en": "O Vakratunda, radiant as a crore suns — make all my works free of obstacles."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Ganesh",
+        "Ganesh"
+      ],
+      "searchText": "vakratunda mahakaya ganesh ganesh वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा। vakratunda mahakaya suryakoti samaprabha. nirvighnam kuru me deva sarvakaryeshu sarvada. हे वक्रतुण्ड, करोड़ सूर्यों के समान तेजस्वी — मेरे सभी कार्य निर्विघ्न करें। o vakratunda, radiant as a crore suns — make all my works free of obstacles.",
+      "isActive": true
+    },
+    {
+      "id": "saraswati_beej",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Saraswati Beej Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Saraswati Beej Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Devi"
+      ],
+      "categoryIds": [
+        "Devi"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ ऐं सरस्वत्यै नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Aim Saraswatyai Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे सरस्वती माता, मुझे विद्या, बुद्धि और वाणी का वरदान दें।",
+        "en": "O Goddess Saraswati, bless me with knowledge, intellect and eloquence."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Devi",
+        "Devi"
+      ],
+      "searchText": "saraswati beej mantra devi devi ॐ ऐं सरस्वत्यै नमः om aim saraswatyai namah हे सरस्वती माता, मुझे विद्या, बुद्धि और वाणी का वरदान दें। o goddess saraswati, bless me with knowledge, intellect and eloquence.",
+      "isActive": true
+    },
+    {
+      "id": "lakshmi_beej",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Lakshmi Beej Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Lakshmi Beej Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Devi"
+      ],
+      "categoryIds": [
+        "Devi"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ श्रीं महालक्ष्म्यै नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Shreem Mahalakshmyai Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे महालक्ष्मी, धन, समृद्धि और वैभव का आशीर्वाद दें।",
+        "en": "O Mahalakshmi, bless me with wealth, prosperity and abundance."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Devi",
+        "Devi"
+      ],
+      "searchText": "lakshmi beej mantra devi devi ॐ श्रीं महालक्ष्म्यै नमः om shreem mahalakshmyai namah हे महालक्ष्मी, धन, समृद्धि और वैभव का आशीर्वाद दें। o mahalakshmi, bless me with wealth, prosperity and abundance.",
+      "isActive": true
+    },
+    {
+      "id": "durga_moola",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Durga Moola Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Durga Moola Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Devi"
+      ],
+      "categoryIds": [
+        "Devi"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ दुं दुर्गायै नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Dum Durgayai Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे दुर्गा माता, मुझे शक्ति दें और सभी नकारात्मकता से बचाएं।",
+        "en": "O Goddess Durga, grant me power and protect me from all negativity."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Devi",
+        "Devi"
+      ],
+      "searchText": "durga moola mantra devi devi ॐ दुं दुर्गायै नमः om dum durgayai namah हे दुर्गा माता, मुझे शक्ति दें और सभी नकारात्मकता से बचाएं। o goddess durga, grant me power and protect me from all negativity.",
+      "isActive": true
+    },
+    {
+      "id": "kali_mantra",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Kali Beej Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Kali Beej Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Devi"
+      ],
+      "categoryIds": [
+        "Devi"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ क्रीं कालिकायै नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Kreem Kalikayai Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे काली माता, अज्ञान और नकारात्मकता का नाश करें।",
+        "en": "O Kali, destroy ignorance and negativity, grant liberation."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Devi",
+        "Devi"
+      ],
+      "searchText": "kali beej mantra devi devi ॐ क्रीं कालिकायै नमः om kreem kalikayai namah हे काली माता, अज्ञान और नकारात्मकता का नाश करें। o kali, destroy ignorance and negativity, grant liberation.",
+      "isActive": true
+    },
+    {
+      "id": "surya_moola",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Surya Moola Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Surya Moola Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Surya"
+      ],
+      "categoryIds": [
+        "Surya"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ घृणि सूर्याय नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Ghrini Suryaya Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे सूर्य देव, आपको प्रणाम। जीवन, ऊर्जा और स्वास्थ्य दें।",
+        "en": "O Sun God, I bow to you. Grant life force, energy and health."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Surya",
+        "Surya"
+      ],
+      "searchText": "surya moola mantra surya surya ॐ घृणि सूर्याय नमः om ghrini suryaya namah हे सूर्य देव, आपको प्रणाम। जीवन, ऊर्जा और स्वास्थ्य दें। o sun god, i bow to you. grant life force, energy and health.",
+      "isActive": true
+    },
+    {
+      "id": "aditya_hridaya_seed",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Aditya Hridaya Seed",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Aditya Hridaya Seed"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Surya"
+      ],
+      "categoryIds": [
+        "Surya"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ आदित्याय नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Adityaya Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे आदित्य, प्रकाश और ऊर्जा के देव — नमस्कार।",
+        "en": "O Aditya, lord of light and energy — salutations."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Surya",
+        "Surya"
+      ],
+      "searchText": "aditya hridaya seed surya surya ॐ आदित्याय नमः om adityaya namah हे आदित्य, प्रकाश और ऊर्जा के देव — नमस्कार। o aditya, lord of light and energy — salutations.",
+      "isActive": true
+    },
+    {
+      "id": "ram_taraka",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Ram Naam Taraka",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Ram Naam Taraka"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Vishnu"
+      ],
+      "categoryIds": [
+        "Vishnu"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ श्री रामाय नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Shri Ramaya Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हे श्री राम, आपको नमस्कार। मर्यादा और धर्म के आदर्श।",
+        "en": "O Shri Ram — salutations. The ideal of righteousness and dharma."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Vishnu",
+        "Vishnu"
+      ],
+      "searchText": "ram naam taraka vishnu vishnu ॐ श्री रामाय नमः om shri ramaya namah हे श्री राम, आपको नमस्कार। मर्यादा और धर्म के आदर्श। o shri ram — salutations. the ideal of righteousness and dharma.",
+      "isActive": true
+    },
+    {
+      "id": "ram_moola",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Ram Beej Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Ram Beej Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Vishnu"
+      ],
+      "categoryIds": [
+        "Vishnu"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ रां रामाय नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Ram Ramaya Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "राम का शक्तिशाली बीज मंत्र — सभी बाधाओं का नाश करता है।",
+        "en": "Powerful seed mantra of Ram — destroys all obstacles."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Vishnu",
+        "Vishnu"
+      ],
+      "searchText": "ram beej mantra vishnu vishnu ॐ रां रामाय नमः om ram ramaya namah राम का शक्तिशाली बीज मंत्र — सभी बाधाओं का नाश करता है। powerful seed mantra of ram — destroys all obstacles.",
+      "isActive": true
+    },
+    {
+      "id": "shanti_mantra",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Shanti Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Shanti Mantra"
+      },
+      "contentType": "PRAYER",
+      "deityIds": [
+        "Universal"
+      ],
+      "categoryIds": [
+        "Universal"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ शांतिः शांतिः शांतिः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Shantih Shantih Shantih",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "तीनों तापों (आधिदैविक, आधिभौतिक, आध्यात्मिक) की शांति हो।",
+        "en": "Peace in body, mind and soul — peace at all three levels of existence."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Universal",
+        "Universal"
+      ],
+      "searchText": "shanti mantra universal universal ॐ शांतिः शांतिः शांतिः om shantih shantih shantih तीनों तापों (आधिदैविक, आधिभौतिक, आध्यात्मिक) की शांति हो। peace in body, mind and soul — peace at all three levels of existence.",
+      "isActive": true
+    },
+    {
+      "id": "om_namah",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Pranava — Om",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Pranava — Om"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Universal"
+      ],
+      "categoryIds": [
+        "Universal"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ",
+      "transliterationIast": null,
+      "transliterationSimple": "Om",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "ब्रह्मांड का आदि नाद — सृष्टि, स्थिति और संहार का प्रतीक।",
+        "en": "The primordial sound of the universe — creation, preservation and dissolution."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Universal",
+        "Universal"
+      ],
+      "searchText": "pranava — om universal universal ॐ om ब्रह्मांड का आदि नाद — सृष्टि, स्थिति और संहार का प्रतीक। the primordial sound of the universe — creation, preservation and dissolution.",
+      "isActive": true
+    },
+    {
+      "id": "asato_ma",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Asato Ma Sadgamaya",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Asato Ma Sadgamaya"
+      },
+      "contentType": "PRAYER",
+      "deityIds": [
+        "Universal"
+      ],
+      "categoryIds": [
+        "Universal"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "असतो मा सद्गमय। तमसो मा ज्योतिर्गमय। मृत्योर्मा अमृतं गमय। ॐ शांतिः शांतिः शांतिः।",
+      "transliterationIast": null,
+      "transliterationSimple": "Asato Ma Sadgamaya. Tamaso Ma Jyotirgamaya. Mrityorma Amritam Gamaya.",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "हमें असत्य से सत्य की ओर, अंधकार से प्रकाश की ओर, मृत्यु से अमृत की ओर ले जाएं।",
+        "en": "Lead us from untruth to truth, from darkness to light, from death to immortality."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Universal",
+        "Universal"
+      ],
+      "searchText": "asato ma sadgamaya universal universal असतो मा सद्गमय। तमसो मा ज्योतिर्गमय। मृत्योर्मा अमृतं गमय। ॐ शांतिः शांतिः शांतिः। asato ma sadgamaya. tamaso ma jyotirgamaya. mrityorma amritam gamaya. हमें असत्य से सत्य की ओर, अंधकार से प्रकाश की ओर, मृत्यु से अमृत की ओर ले जाएं। lead us from untruth to truth, from darkness to light, from death to immortality.",
+      "isActive": true
+    },
+    {
+      "id": "shiv_beej",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Shiva Beej Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Shiva Beej Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Shiva"
+      ],
+      "categoryIds": [
+        "Shiva"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ नमः शिवाय हुं हं नमः",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Namah Shivaya Hum Ham Namah",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "शिव की परम शक्ति को जागृत करने वाला बीज मंत्र।",
+        "en": "Seed mantra awakening the supreme power of Shiva."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Shiva",
+        "Shiva"
+      ],
+      "searchText": "shiva beej mantra shiva shiva ॐ नमः शिवाय हुं हं नमः om namah shivaya hum ham namah शिव की परम शक्ति को जागृत करने वाला बीज मंत्र। seed mantra awakening the supreme power of shiva.",
+      "isActive": true
+    },
+    {
+      "id": "sudarshana",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Sudarshana Mantra",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Sudarshana Mantra"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Vishnu"
+      ],
+      "categoryIds": [
+        "Vishnu"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ सुदर्शनाय विद्महे महाज्वालाय धीमहि तन्नो चक्रः प्रचोदयात्",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Sudarshanaaya Vidmahe Mahajvalaaya Dhimahi Tanno Chakrah Prachodayat",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "विष्णु के सुदर्शन चक्र की शक्ति — नकारात्मकता और बुराई का नाश।",
+        "en": "The power of Vishnu's Sudarshana Chakra — destroys negativity and evil."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "GENERAL_DEVOTIONAL",
+      "instructionsScope": null,
+      "requiresInitiation": null,
+      "restrictionNote": null,
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Vishnu",
+        "Vishnu"
+      ],
+      "searchText": "sudarshana mantra vishnu vishnu ॐ सुदर्शनाय विद्महे महाज्वालाय धीमहि तन्नो चक्रः प्रचोदयात् om sudarshanaaya vidmahe mahajvalaaya dhimahi tanno chakrah prachodayat विष्णु के सुदर्शन चक्र की शक्ति — नकारात्मकता और बुराई का नाश। the power of vishnu's sudarshana chakra — destroys negativity and evil.",
+      "isActive": true
+    },
+    {
+      "id": "baglamukhi_seed",
+      "schemaVersion": 2,
+      "contentVersion": "dharmasetu-mantra-content-v2-review",
+      "canonicalName": "Baglamukhi Beej",
+      "names": {
+        "sa": null,
+        "hi": null,
+        "en": "Baglamukhi Beej"
+      },
+      "contentType": "MANTRA",
+      "deityIds": [
+        "Devi"
+      ],
+      "categoryIds": [
+        "Devi"
+      ],
+      "purposeIds": [
+        "UNSPECIFIED"
+      ],
+      "sanskritText": "ॐ ह्लीं बगलामुखी सर्वदुष्टानाम् वाचं मुखं पदं स्तम्भय जिह्वां कीलय बुद्धिं विनाशय ह्लीं ॐ स्वाहा",
+      "transliterationIast": null,
+      "transliterationSimple": "Om Hleem Baglamukhi Sarvadushtanam Vacham Mukham Padam Stambhaya Jihvam Kilaya Buddhim Vinashaya Hleem Om Svaha",
+      "wordSegments": [],
+      "meanings": {
+        "hi": "बगलामुखी माता — शत्रुओं को रोकने और वाक्-शक्ति देने वाली।",
+        "en": "Goddess Baglamukhi — stills enemies and grants the power of speech and victory."
+      },
+      "sourceReferences": [],
+      "tradition": null,
+      "sampradaya": null,
+      "practiceLevel": "TRADITION_SPECIFIC",
+      "instructionsScope": "Varies by tradition; qualified review required.",
+      "requiresInitiation": null,
+      "restrictionNote": "Practice guidance is withheld pending tradition-specific review.",
+      "verificationStatus": "REVIEW_REQUIRED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "practice": {
+        "recommended_counts": null,
+        "mala": null,
+        "time": null,
+        "direction": null,
+        "asana": null,
+        "clothing": null,
+        "place": null,
+        "cleanliness": null,
+        "preparation": null,
+        "sankalpa": null,
+        "dhyana": null,
+        "viniyoga": null,
+        "nyasa": null,
+        "opening": null,
+        "japa": null,
+        "completion": null,
+        "precautions": null
+      },
+      "audio": {
+        "normal_url": null,
+        "slow_url": null,
+        "duration": null,
+        "reciter": null,
+        "pronunciation_reviewed_by": null,
+        "downloadable": false
+      },
+      "tags": [
+        "Devi",
+        "Devi"
+      ],
+      "searchText": "baglamukhi beej devi devi ॐ ह्लीं बगलामुखी सर्वदुष्टानाम् वाचं मुखं पदं स्तम्भय जिह्वां कीलय बुद्धिं विनाशय ह्लीं ॐ स्वाहा om hleem baglamukhi sarvadushtanam vacham mukham padam stambhaya jihvam kilaya buddhim vinashaya hleem om svaha बगलामुखी माता — शत्रुओं को रोकने और वाक्-शक्ति देने वाली। goddess baglamukhi — stills enemies and grants the power of speech and victory.",
+      "isActive": true
+    }
+  ]
+}
