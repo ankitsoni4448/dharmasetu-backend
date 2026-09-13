@@ -2,7 +2,7 @@
 
 const CALCULATION_STANDARD = Object.freeze({
   schemaVersion: 'dharmasetu-kundli-v1',
-  calculationVersion: 'prokerala-v2-lahiri-k2-structural-v1',
+  calculationVersion: 'prokerala-v2-lahiri-k2.5-structural-v1',
   provider: 'prokerala',
   providerApiVersion: 'v2',
   zodiac: 'sidereal',
@@ -16,6 +16,8 @@ const CALCULATION_STANDARD = Object.freeze({
 const PLANETS = ['sun', 'moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'rahu', 'ketu'];
 const WHOLE_SIGN_METHOD = 'WHOLE_SIGN_FROM_PROVIDER_SIDEREAL_SIGNS_V1';
 const STRUCTURAL_CONDITION_METHOD = 'PROVIDER_FLAGS_AND_SIGN_COINCIDENCE_V1';
+const DRISHTI_METHOD = 'PARASHARI_GRAHA_DRISHTI_V1';
+const DRISHTI_CALCULATION_VERSION = 'kundli-k2.5-parashari-drishti-v1';
 const SIGN_ORDER = ['mesha', 'vrishabha', 'mithuna', 'karka', 'simha', 'kanya', 'tula', 'vrischika', 'dhanu', 'makara', 'kumbha', 'meena'];
 const SIGN_ALIASES = Object.freeze({
   aries: 'mesha', mesh: 'mesha', taurus: 'vrishabha', vrishabh: 'vrishabha',
@@ -30,6 +32,18 @@ const SIGN_NAMES = Object.freeze({ mesha: 'Mesha', vrishabha: 'Vrishabha', mithu
 const SIGN_LORDS = Object.freeze({ mesha: 'Mars', vrishabha: 'Venus', mithuna: 'Mercury', karka: 'Moon',
   simha: 'Sun', kanya: 'Mercury', tula: 'Venus', vrischika: 'Mars', dhanu: 'Jupiter', makara: 'Saturn',
   kumbha: 'Saturn', meena: 'Jupiter' });
+const DRISHTI_RULES = Object.freeze({
+  sun: [7], moon: [7], mercury: [7], venus: [7], mars: [4, 7, 8], jupiter: [5, 7, 9], saturn: [3, 7, 10],
+});
+const DIGNITY_RULES = Object.freeze({
+  sun: { own: ['simha'], exalted: 'mesha', debilitated: 'tula' },
+  moon: { own: ['karka'], exalted: 'vrishabha', debilitated: 'vrischika' },
+  mars: { own: ['mesha', 'vrischika'], exalted: 'makara', debilitated: 'karka' },
+  mercury: { own: ['mithuna', 'kanya'], exalted: 'kanya', debilitated: 'meena' },
+  jupiter: { own: ['dhanu', 'meena'], exalted: 'karka', debilitated: 'makara' },
+  venus: { own: ['vrishabha', 'tula'], exalted: 'meena', debilitated: 'kanya' },
+  saturn: { own: ['makara', 'kumbha'], exalted: 'tula', debilitated: 'mesha' },
+});
 
 function text(value) {
   if (typeof value === 'string') return value.trim() || null;
@@ -123,20 +137,67 @@ function assignPlanetHouses(planets, houses) {
   });
 }
 
+function deriveParashariAspects(planets, houses) {
+  if (houses?.status !== 'AVAILABLE' || !Array.isArray(houses.items) || houses.items.length !== 12) {
+    return { status: 'UNAVAILABLE', source: 'UNAVAILABLE', method: DRISHTI_METHOD,
+      calculation_version: DRISHTI_CALCULATION_VERSION, required_inputs: ['validated_planet_house', 'validated_whole_sign_houses'],
+      items: [], node_special_drishti: 'UNAVAILABLE', reason: 'VALIDATED_HOUSES_REQUIRED' };
+  }
+  const items = [];
+  for (const planet of planets) {
+    const key = String(planet.name || '').toLowerCase();
+    const rules = DRISHTI_RULES[key];
+    if (!rules || planet.house_status !== 'AVAILABLE' || !Number.isInteger(planet.house)) continue;
+    const sourceHouse = houses.items.find(house => house.number === planet.house);
+    if (!sourceHouse || canonicalSign(sourceHouse.sign) !== canonicalSign(planet.sign)) continue;
+    for (const distance of rules) {
+      const targetHouseNumber = ((planet.house + distance - 2) % 12) + 1;
+      const target = houses.items.find(house => house.number === targetHouseNumber);
+      if (!target) continue;
+      items.push({ source_planet: planet.name, source_house: planet.house, target_house: targetHouseNumber,
+        target_sign: target.sign, target_planets: [...target.occupants], drishti_distance: distance,
+        drishti_type: distance === 7 ? 'GENERAL_7TH' : `SPECIAL_${distance}TH`,
+        rule: `${planet.name}_${distance}TH_HOUSE_DRISHTI`, source: 'DERIVED', method: DRISHTI_METHOD,
+        calculation_version: DRISHTI_CALCULATION_VERSION, status: 'AVAILABLE' });
+    }
+  }
+  return { status: items.length ? 'AVAILABLE' : 'UNAVAILABLE', source: items.length ? 'DERIVED' : 'UNAVAILABLE',
+    method: DRISHTI_METHOD, calculation_version: DRISHTI_CALCULATION_VERSION,
+    required_inputs: ['validated_planet_house', 'validated_whole_sign_houses'], items,
+    node_special_drishti: 'UNAVAILABLE', reason: items.length ? null : 'VALIDATED_CLASSICAL_GRAHA_PLACEMENT_REQUIRED' };
+}
+
+function dignityClassification(planetName, sign) {
+  const rule = DIGNITY_RULES[String(planetName || '').toLowerCase()];
+  const signKey = canonicalSign(sign);
+  if (!rule || !signKey) return 'UNAVAILABLE';
+  if (rule.exalted === signKey) return 'EXALTED';
+  if (rule.debilitated === signKey) return 'DEBILITATED';
+  if (rule.own.includes(signKey)) return 'OWN_SIGN';
+  return 'NONE';
+}
+
 function deriveStructuralConditions(planets) {
   if (!planets.length) return { status: 'UNAVAILABLE', source: 'UNAVAILABLE', method: STRUCTURAL_CONDITION_METHOD,
-    calculation_version: CALCULATION_STANDARD.calculationVersion, required_inputs: ['provider_planet_signs', 'provider_retrograde_flags'], items: [] };
+    calculation_version: CALCULATION_STANDARD.calculationVersion, required_inputs: ['provider_planet_signs', 'provider_retrograde_flags'],
+    combustion: { status: 'UNAVAILABLE', reason: 'APPROVED_COMBUSTION_RULE_REQUIRED' },
+    shadbala: { status: 'UNAVAILABLE', reason: 'NOT_IMPLEMENTED' }, items: [] };
   const items = planets.map(planet => {
     const companions = planets.filter(other => other.name !== planet.name && canonicalSign(other.sign) === canonicalSign(planet.sign)).map(other => other.name);
     const conditions = [];
     if (planet.retrograde === true) conditions.push({ type: 'RETROGRADE', source: 'PROVIDER' });
     if (companions.length) conditions.push({ type: 'SIGN_CONJUNCTION', with: companions, source: 'DERIVED', rule: 'same_sidereal_sign' });
+    const dignity = dignityClassification(planet.name, planet.sign);
+    if (dignity !== 'UNAVAILABLE') conditions.push({ type: 'DIGNITY', classification: dignity, source: 'DERIVED',
+      rule: 'DIGNITY_RULES_V1', calculation_version: 'kundli-k2.5-dignity-v1' });
     return { planet: planet.name, conditions, source: conditions.some(item => item.source === 'DERIVED') ? 'DERIVED' : 'PROVIDER',
       method: STRUCTURAL_CONDITION_METHOD, calculation_version: CALCULATION_STANDARD.calculationVersion,
       required_inputs: ['provider_planet_signs', 'provider_retrograde_flags'], status: 'AVAILABLE' };
   });
   return { status: 'AVAILABLE', source: 'DERIVED', method: STRUCTURAL_CONDITION_METHOD,
-    calculation_version: CALCULATION_STANDARD.calculationVersion, required_inputs: ['provider_planet_signs', 'provider_retrograde_flags'], items };
+    calculation_version: CALCULATION_STANDARD.calculationVersion, required_inputs: ['provider_planet_signs', 'provider_retrograde_flags'],
+    combustion: { status: 'UNAVAILABLE', reason: 'APPROVED_COMBUSTION_RULE_REQUIRED' },
+    shadbala: { status: 'UNAVAILABLE', reason: 'NOT_IMPLEMENTED' }, items };
 }
 
 function providerItems(value) {
@@ -200,6 +261,7 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
   const houseModel = deriveWholeSignHouses(core.lagna, providerPlanets, providerHouseRows);
   const planets = assignPlanetHouses(providerPlanets, houseModel);
   const structuralConditions = deriveStructuralConditions(planets);
+  const aspects = deriveParashariAspects(planets, houseModel);
   const precisionWarnings = birthProfile.birth_time_certainty === 'EXACT' ? []
     : ['Birth time is not exact; Lagna, houses, divisional charts and dasha timing may vary.'];
 
@@ -249,8 +311,7 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
     transits: { status: 'UNAVAILABLE', calculated_at: null, expires_at: null, timezone: null,
       ayanamsha: CALCULATION_STANDARD.ayanamsha, calculation_version: CALCULATION_STANDARD.calculationVersion,
       source: 'UNAVAILABLE', method: null, cache_strategy: 'NO_CACHE_UNTIL_AUTHORITATIVE_SOURCE', planets: [], reason: 'AUTHORITATIVE_TRANSIT_SOURCE_REQUIRED' },
-    aspects: { status: 'UNAVAILABLE', source: 'UNAVAILABLE', method: null, calculation_version: CALCULATION_STANDARD.calculationVersion,
-      items: [], reason: 'APPROVED_JYOTISHA_DRISHTI_RULESET_REQUIRED' },
+    aspects,
     structural_conditions: structuralConditions,
     strengths: { status: 'UNAVAILABLE', source: 'UNAVAILABLE', method: null, calculation_version: CALCULATION_STANDARD.calculationVersion,
       items: [], reason: 'SHADBALA_NOT_IMPLEMENTED' },
@@ -371,8 +432,9 @@ function compareReference(actual, expected, toleranceDegrees = 0.1) {
 }
 
 module.exports = {
-  CALCULATION_STANDARD, WHOLE_SIGN_METHOD, STRUCTURAL_CONDITION_METHOD, canonicalSign,
-  deriveWholeSignHouses, assignPlanetHouses, deriveStructuralConditions,
+  CALCULATION_STANDARD, WHOLE_SIGN_METHOD, STRUCTURAL_CONDITION_METHOD, DRISHTI_METHOD,
+  DRISHTI_CALCULATION_VERSION, DRISHTI_RULES, DIGNITY_RULES, canonicalSign, dignityClassification,
+  deriveWholeSignHouses, assignPlanetHouses, deriveParashariAspects, deriveStructuralConditions,
   normalizeProviderChart, compactContext, compactStructuralContext,
   validateAuthoritativeBirthProfile, validateKundliReadiness, circularLongitudeDelta, compareReference,
 };

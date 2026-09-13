@@ -6,7 +6,8 @@ const path = require('node:path');
 const {
   normalizeProviderChart, compactContext, validateAuthoritativeBirthProfile,
   compactStructuralContext, deriveWholeSignHouses, assignPlanetHouses, deriveStructuralConditions,
-  WHOLE_SIGN_METHOD, validateKundliReadiness, circularLongitudeDelta, compareReference,
+  deriveParashariAspects, dignityClassification, WHOLE_SIGN_METHOD, DRISHTI_METHOD,
+  validateKundliReadiness, circularLongitudeDelta, compareReference,
 } = require('../utils/kundliLifecycle');
 
 const birth = { date_of_birth: '1990-02-28', birth_time: '23:59', birth_time_certainty: 'EXACT',
@@ -101,7 +102,7 @@ test('canonical schema exposes only provider facts and explicit unavailable stat
   assert.equal(normalized.sun_sign.sign, 'Makara');
   assert.equal(normalized.planets[0].source, 'PROVIDER');
   assert.equal(normalized.transits.status, 'UNAVAILABLE');
-  assert.equal(normalized.aspects.status, 'UNAVAILABLE');
+  assert.equal(normalized.aspects.status, 'AVAILABLE');
   assert.equal(normalized.strengths.status, 'UNAVAILABLE');
   assert.equal(normalized.life_areas.status, 'UNAVAILABLE');
   assert.deepEqual(normalized.yogas, []);
@@ -142,7 +143,7 @@ test('whole-sign houses require a valid provider Lagna and remain deterministic'
   assert.equal(houses.items.length, 12);
   assert.deepEqual(houses.items[0], {
     number: 1, sign: 'Mesha', lord: 'Mars', occupants: ['Sun'], source: 'DERIVED',
-    method: WHOLE_SIGN_METHOD, calculation_version: 'prokerala-v2-lahiri-k2-structural-v1',
+    method: WHOLE_SIGN_METHOD, calculation_version: 'prokerala-v2-lahiri-k2.5-structural-v1',
     required_inputs: ['provider_lagna_sign', 'provider_planet_signs'], status: 'AVAILABLE',
   });
   assert.equal(houses.items[3].sign, 'Karka');
@@ -167,7 +168,7 @@ test('transits and aspects remain explicit unavailable boundaries without fabric
   assert.equal(normalized.transits.source, 'UNAVAILABLE');
   assert.equal(normalized.transits.cache_strategy, 'NO_CACHE_UNTIL_AUTHORITATIVE_SOURCE');
   assert.deepEqual(normalized.aspects.items, []);
-  assert.equal(normalized.aspects.method, null);
+  assert.equal(normalized.aspects.method, DRISHTI_METHOD);
   assert.doesNotMatch(JSON.stringify(normalized.aspects), /opposition|trine|sextile|square/i);
 });
 
@@ -188,11 +189,71 @@ test('compact structural context contains validated facts without private birth 
   assert.equal(compact.natal.lagna.sign, 'Mesha');
   assert.equal(compact.houses.status, 'AVAILABLE');
   assert.equal(compact.transits.status, 'UNAVAILABLE');
-  assert.equal(compact.aspects.status, 'UNAVAILABLE');
+  assert.equal(compact.aspects.status, 'AVAILABLE');
   assert.equal(JSON.stringify(compact).includes('dateOfBirth'), false);
   assert.equal(JSON.stringify(compact).includes('birthTime'), false);
   assert.equal(JSON.stringify(compact).includes('remed'), false);
   assert.doesNotMatch(compactStructuralContext.toString(), /fetch|requestModule|Prokerala|\bAI\b|\bLLM\b/i);
+});
+
+test('Parashari Drishti applies only the activated classical Graha rules', () => {
+  const names = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
+  const signs = ['Mesha', 'Vrishabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 'Tula', 'Vrischika', 'Meena'];
+  const housesByPlanet = [1, 2, 3, 4, 5, 6, 7, 8, 12];
+  const planets = names.map((name, index) => ({ name, sign: signs[index], house: housesByPlanet[index],
+    house_status: 'AVAILABLE', source: 'PROVIDER', status: 'AVAILABLE' }));
+  const houses = deriveWholeSignHouses('Mesha', planets, []);
+  const result = deriveParashariAspects(planets, houses);
+  const distances = name => result.items.filter(item => item.source_planet === name).map(item => item.drishti_distance);
+  assert.deepEqual(distances('Sun'), [7]);
+  assert.deepEqual(distances('Moon'), [7]);
+  assert.deepEqual(distances('Mercury'), [7]);
+  assert.deepEqual(distances('Venus'), [7]);
+  assert.deepEqual(distances('Mars'), [4, 7, 8]);
+  assert.deepEqual(distances('Jupiter'), [5, 7, 9]);
+  assert.deepEqual(distances('Saturn'), [3, 7, 10]);
+  assert.deepEqual(distances('Rahu'), []);
+  assert.deepEqual(distances('Ketu'), []);
+  assert.equal(result.node_special_drishti, 'UNAVAILABLE');
+  assert.equal(result.method, DRISHTI_METHOD);
+});
+
+test('Drishti wraps houses and uses validated target signs and occupants', () => {
+  const planets = [{ name: 'Mars', sign: 'Kumbha', house: 11, house_status: 'AVAILABLE', source: 'PROVIDER', status: 'AVAILABLE' },
+    { name: 'Moon', sign: 'Mesha', house: 1, house_status: 'AVAILABLE', source: 'PROVIDER', status: 'AVAILABLE' }];
+  const houses = deriveWholeSignHouses('Mesha', planets, []);
+  const result = deriveParashariAspects(planets, houses);
+  const fourth = result.items.find(item => item.source_planet === 'Mars' && item.drishti_distance === 4);
+  assert.equal(fourth.target_house, 2);
+  assert.equal(fourth.target_sign, 'Vrishabha');
+  const seventh = result.items.find(item => item.source_planet === 'Moon');
+  assert.equal(seventh.target_sign, 'Tula');
+  houses.items[6].occupants = ['Venus'];
+  assert.deepEqual(deriveParashariAspects(planets, houses).items.find(item => item.source_planet === 'Moon').target_planets, ['Venus']);
+});
+
+test('missing planet house creates no aspect and no Western angular rule', () => {
+  const houses = deriveWholeSignHouses('Mesha', [], []);
+  const result = deriveParashariAspects([{ name: 'Sun', house: null, house_status: 'UNAVAILABLE' }], houses);
+  assert.deepEqual(result.items, []);
+  assert.equal(result.status, 'UNAVAILABLE');
+  assert.doesNotMatch(JSON.stringify(result), /degree|orb|opposition|trine|sextile|square/i);
+});
+
+test('central dignity table deterministically classifies own, exalted and debilitated signs', () => {
+  assert.equal(dignityClassification('Sun', 'Simha'), 'OWN_SIGN');
+  assert.equal(dignityClassification('Sun', 'Mesha'), 'EXALTED');
+  assert.equal(dignityClassification('Sun', 'Tula'), 'DEBILITATED');
+  assert.equal(dignityClassification('Jupiter', 'Dhanu'), 'OWN_SIGN');
+  assert.equal(dignityClassification('Rahu', 'Kumbha'), 'UNAVAILABLE');
+});
+
+test('structural conditions preserve unavailable combustion and Shadbala boundaries', () => {
+  const result = deriveStructuralConditions([{ name: 'Sun', sign: 'Mesha', retrograde: false }]);
+  assert.equal(result.items[0].conditions.find(item => item.type === 'DIGNITY').classification, 'EXALTED');
+  assert.equal(result.combustion.status, 'UNAVAILABLE');
+  assert.equal(result.shadbala.status, 'UNAVAILABLE');
+  assert.doesNotMatch(JSON.stringify(result), /strength_score|percentage|percent/i);
 });
 
 test('complete basic and deep primary charts satisfy strict readiness', () => {
