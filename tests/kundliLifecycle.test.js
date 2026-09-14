@@ -104,7 +104,7 @@ test('canonical schema exposes only provider facts and explicit unavailable stat
   assert.equal(normalized.transits.status, 'UNAVAILABLE');
   assert.equal(normalized.aspects.status, 'AVAILABLE');
   assert.equal(normalized.strengths.status, 'UNAVAILABLE');
-  assert.equal(normalized.life_areas.status, 'UNAVAILABLE');
+  assert.equal(normalized.life_areas.status, 'READY');
   assert.deepEqual(normalized.yogas, []);
   assert.deepEqual(normalized.doshas, []);
   assert.equal(Object.hasOwn(normalized, 'remedies'), false);
@@ -143,7 +143,7 @@ test('whole-sign houses require a valid provider Lagna and remain deterministic'
   assert.equal(houses.items.length, 12);
   assert.deepEqual(houses.items[0], {
     number: 1, sign: 'Mesha', lord: 'Mars', occupants: ['Sun'], source: 'DERIVED',
-    method: WHOLE_SIGN_METHOD, calculation_version: 'prokerala-v2-lahiri-k2.5-structural-v1',
+    method: WHOLE_SIGN_METHOD, calculation_version: 'prokerala-v2-lahiri-k3-life-areas-v1',
     required_inputs: ['provider_lagna_sign', 'provider_planet_signs'], status: 'AVAILABLE',
   });
   assert.equal(houses.items[3].sign, 'Karka');
@@ -190,6 +190,7 @@ test('compact structural context contains validated facts without private birth 
   assert.equal(compact.houses.status, 'AVAILABLE');
   assert.equal(compact.transits.status, 'UNAVAILABLE');
   assert.equal(compact.aspects.status, 'AVAILABLE');
+  assert.equal(compact.life_areas.status, 'READY');
   assert.equal(JSON.stringify(compact).includes('dateOfBirth'), false);
   assert.equal(JSON.stringify(compact).includes('birthTime'), false);
   assert.equal(JSON.stringify(compact).includes('remed'), false);

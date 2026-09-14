@@ -1,8 +1,10 @@
 'use strict';
 
+const { buildLifeAreas } = require('./kundliLifeAreas');
+
 const CALCULATION_STANDARD = Object.freeze({
   schemaVersion: 'dharmasetu-kundli-v1',
-  calculationVersion: 'prokerala-v2-lahiri-k2.5-structural-v1',
+  calculationVersion: 'prokerala-v2-lahiri-k3-life-areas-v1',
   provider: 'prokerala',
   providerApiVersion: 'v2',
   zodiac: 'sidereal',
@@ -265,7 +267,7 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
   const precisionWarnings = birthProfile.birth_time_certainty === 'EXACT' ? []
     : ['Birth time is not exact; Lagna, houses, divisional charts and dasha timing may vary.'];
 
-  return {
+  const canonical = {
     schema_version: CALCULATION_STANDARD.schemaVersion,
     calculation_version: CALCULATION_STANDARD.calculationVersion,
     provider: CALCULATION_STANDARD.provider,
@@ -315,10 +317,12 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
     structural_conditions: structuralConditions,
     strengths: { status: 'UNAVAILABLE', source: 'UNAVAILABLE', method: null, calculation_version: CALCULATION_STANDARD.calculationVersion,
       items: [], reason: 'SHADBALA_NOT_IMPLEMENTED' },
-    life_areas: { status: 'UNAVAILABLE', reason: 'NOT_IMPLEMENTED' },
+    life_areas: null,
     moduleStatus: providerBundle.moduleStatus || {},
     precisionWarnings,
   };
+  canonical.life_areas = buildLifeAreas(canonical);
+  return canonical;
 }
 
 function validateKundliReadiness(normalized = {}, birthProfile = {}, { deepEnabled = false } = {}) {
@@ -386,6 +390,8 @@ function compactStructuralContext(normalized = {}) {
     aspects: normalized.aspects?.status === 'AVAILABLE' ? normalized.aspects : { status: 'UNAVAILABLE', items: [] },
     structural_conditions: normalized.structural_conditions?.status === 'AVAILABLE'
       ? normalized.structural_conditions : { status: 'UNAVAILABLE', items: [] },
+    life_areas: normalized.life_areas?.status === 'READY'
+      ? normalized.life_areas : { status: 'UNAVAILABLE', items: [] },
   };
 }
 
