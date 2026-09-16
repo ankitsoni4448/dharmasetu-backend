@@ -33,7 +33,7 @@ function validateOnboarding(input, now = new Date()) {
 }
 
 function birthInputFingerprint(profile) {
-  const canonical = [profile.date_of_birth, profile.birth_time || '', profile.birth_time_certainty,
+  const canonical = [profile.date_of_birth, String(profile.birth_time || '').slice(0, 5), profile.birth_time_certainty,
     Number(profile.latitude).toFixed(6), Number(profile.longitude).toFixed(6), profile.timezone].join('|');
   return crypto.createHash('sha256').update(canonical).digest('hex');
 }
@@ -47,4 +47,3 @@ function formatUtcOffset(minutes) {
 }
 
 module.exports = { GENDERS, TIME_CERTAINTY, LANGUAGES, isValidIsoDate, isValidTime, validateOnboarding, birthInputFingerprint, formatUtcOffset };
-

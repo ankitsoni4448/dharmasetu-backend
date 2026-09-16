@@ -2147,6 +2147,7 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
     if (place.timezoneUnresolved) return res.status(422).json({ error: 'BIRTHPLACE_TIMEZONE_UNRESOLVED' });
 
     const existingBirth = (await sbSelect('birth_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
+    const existingJyotish = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
     const candidate = {
       date_of_birth: input.dateOfBirth,
       birth_time: input.birthTimeCertainty === 'UNKNOWN' ? null : input.birthTime,
@@ -2154,6 +2155,7 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
       latitude: place.latitude, longitude: place.longitude, timezone: place.timezone,
     };
     const fingerprint = birthInputFingerprint(candidate);
+    const birthChanged = !existingBirth || existingBirth.input_fingerprint !== fingerprint;
     if (existingBirth && existingBirth.input_fingerprint !== fingerprint && req.body?.confirmBirthProfileChange !== true) {
       return res.status(409).json({ error: 'BIRTH_PROFILE_CHANGE_CONFIRMATION_REQUIRED' });
     }
@@ -2161,7 +2163,10 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
       ? existingBirth.input_fingerprint === fingerprint ? existingBirth.profile_version : Number(existingBirth.profile_version || 1) + 1
       : 1;
     const now = new Date().toISOString();
-    const status = input.birthTimeCertainty === 'UNKNOWN' ? 'BIRTHPLACE_PENDING' : 'KUNDLI_PENDING';
+    const savedReady = existingJyotish?.status === 'KUNDLI_READY' && existingJyotish.input_fingerprint === fingerprint
+      && existingBirth && validateKundliReadiness(existingJyotish.chart_data?.normalized, existingBirth,
+        { deepEnabled: process.env.PROKERALA_DEEP_KUNDLI_ENABLED === 'true' }).valid;
+    const status = savedReady ? 'KUNDLI_READY' : input.birthTimeCertainty === 'UNKNOWN' ? 'BIRTHPLACE_PENDING' : 'KUNDLI_PENDING';
     const profileRow = { user_id: req.authUser.id, name: input.name, gender: input.gender, language: input.language,
       interests: input.interests, onboarding_status: status, birth_data_consent_at: now,
       birth_data_consent_version: '2026-08-22', updated_at: now };
@@ -2172,19 +2177,20 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
 
     await sbUpsert('user_profiles', profileRow, 'user_id');
     await sbUpsert('birth_profiles', birthRow, 'user_id');
-    await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birthVersion,
+    // A changed input must not erase the last validated chart before replacement succeeds.
+    if (!existingJyotish) await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birthVersion,
       input_fingerprint: fingerprint, status: input.birthTimeCertainty === 'UNKNOWN' ? 'INPUT_CORRECTION_REQUIRED' : 'KUNDLI_PENDING',
       chart_data: null, compact_context: null, failure_code: input.birthTimeCertainty === 'UNKNOWN' ? 'BIRTH_TIME_UNKNOWN' : null,
       updated_at: now }, 'user_id');
 
     const legacyUser = { phone: req.authPhone, name: input.name, language: input.language,
-      birth_city: place.city || place.placeName, dob: input.dateOfBirth, firebase_uid: req.authUser.id, last_active: now };
+      birth_city: place.city || place.placeName, dob: input.dateOfBirth, last_active: now };
     const existingLegacy = await getAuthenticatedUserRecord(req);
     if (existingLegacy) await sbUpdate('users', `?id=eq.${encodeURIComponent(existingLegacy.id)}`, legacyUser);
     else await sbInsert('users', { id: req.authUser.id, ...legacyUser, created_at: now, plan: 'free', streak: 0, questions: 0, pts: 0 });
 
     res.json({ success: true, onboardingStatus: status, birthProfileVersion: birthVersion,
-      requiresKundliGeneration: input.birthTimeCertainty !== 'UNKNOWN' });
+      birthChanged, requiresKundliGeneration: input.birthTimeCertainty !== 'UNKNOWN' && !savedReady });
   } catch (error) {
     console.error('[account/onboarding]', error.message);
     res.status(500).json({ error: 'ONBOARDING_SAVE_FAILED' });
@@ -2200,9 +2206,9 @@ app.post('/account/kundli/generate', requireSupabaseUser, async (req, res) => {
     const birthValidation = validateAuthoritativeBirthProfile(birth);
     if (!birthValidation.valid) {
       const unknownTime = birthValidation.errors.includes('BIRTH_TIME_REQUIRED');
-      await sbUpdate('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, {
-        status: 'INPUT_CORRECTION_REQUIRED',
-        failure_code: unknownTime ? 'BIRTH_TIME_UNKNOWN' : birthValidation.errors[0],
+      const previous = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
+      if (previous?.status !== 'KUNDLI_READY') await sbUpdate('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, {
+        status: 'INPUT_CORRECTION_REQUIRED', failure_code: unknownTime ? 'BIRTH_TIME_UNKNOWN' : birthValidation.errors[0],
         updated_at: new Date().toISOString(),
       }).catch(() => {});
       return res.status(422).json({
@@ -2237,7 +2243,7 @@ app.post('/account/kundli/generate', requireSupabaseUser, async (req, res) => {
     });
     const readiness = validateKundliReadiness(normalized, birth, { deepEnabled });
     if (!readiness.valid) {
-      await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birth.profile_version,
+      if (existing?.status !== 'KUNDLI_READY') await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birth.profile_version,
         input_fingerprint: birth.input_fingerprint, status: 'PROVIDER_UNAVAILABLE', provider: 'prokerala',
         calculation_version: calculationVersion, ayanamsha: CALCULATION_STANDARD.ayanamsha,
         chart_data: null, compact_context: null, failure_code: 'KUNDLI_CORE_INCOMPLETE',
@@ -2252,7 +2258,7 @@ app.post('/account/kundli/generate', requireSupabaseUser, async (req, res) => {
       chart_data: { providerModules: providerResult.modules, moduleStatus: providerResult.moduleStatus, normalized },
       compact_context: context, failure_code: null, generated_at: now, updated_at: now }, 'user_id');
     await sbUpdate('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, { onboarding_status: 'KUNDLI_READY', updated_at: now });
-    await sbUpdate('users', `?id=eq.${encodeURIComponent(req.authUser.id)}`, { rashi: context.rashi, nakshatra: context.nakshatra, lagna: context.lagna, updated_at: now });
+    await sbUpdate('users', `?id=eq.${encodeURIComponent(req.authUser.id)}`, { rashi: context.rashi, nakshatra: context.nakshatra, lagna: context.lagna });
     console.log(`[Kundli Timing] provider=${Date.now() - providerStartedAt}ms total=${Date.now() - generationStartedAt}ms reused=false`);
     res.json({ success: true, reused: false, status: 'KUNDLI_READY', context,
       calculationVersion, moduleStatus: providerResult.moduleStatus });
@@ -2263,7 +2269,8 @@ app.post('/account/kundli/generate', requireSupabaseUser, async (req, res) => {
       : error.message === 'KUNDLI_PROVIDER_INVALID_RESPONSE' ? 'KUNDLI_PROVIDER_INVALID_RESPONSE'
       : 'KUNDLI_PROVIDER_UNAVAILABLE';
     console.warn(`[Kundli] generation failed code=${failureCode} totalMs=${Date.now() - generationStartedAt}`);
-    await sbUpdate('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, { status: 'PROVIDER_UNAVAILABLE', failure_code: failureCode, updated_at: new Date().toISOString() }).catch(() => {});
+    const previous = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`).catch(() => [])).at(0);
+    if (previous?.status !== 'KUNDLI_READY') await sbUpdate('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, { status: 'PROVIDER_UNAVAILABLE', failure_code: failureCode, updated_at: new Date().toISOString() }).catch(() => {});
     res.status(503).json({ error: 'KUNDLI_PROVIDER_UNAVAILABLE' });
   }
 });
