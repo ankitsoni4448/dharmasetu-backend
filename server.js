@@ -44,6 +44,8 @@ const { normalizeFestivalEvents, unavailableFestivalResult } = require('./utils/
 const { getDailyPanchang, getMonthlyPanchang, getYearOverview, configurePanchangStore } = require('./utils/authoritativePanchangService');
 const { createPanchangStore } = require('./utils/panchangStore');
 const { validateOnboarding, birthInputFingerprint, formatUtcOffset } = require('./utils/accountLifecycle');
+const { resolveBirthplace, contextualPlace, BirthplaceError } = require('./utils/birthplaceResolver');
+const { legacyAccountBirth } = require('./utils/legacyAccountBirth');
 const {
   CALCULATION_STANDARD,
   normalizeProviderChart,
@@ -365,20 +367,20 @@ async function sbRest(method, table, body = null, query = '', { mergeDuplicates 
         try {
           const parsed = JSON.parse(raw || '[]');
           if (res.statusCode >= 400) {
-            console.error(`[Supabase ERROR] ${method} ${table}: HTTP ${res.statusCode}`, parsed);
-            return reject(new Error(`Supabase error ${res.statusCode}: ${JSON.stringify(parsed)}`));
+            const dbCode = /^(?:[0-9A-Z]{5}|PGRST[0-9]{3})$/.test(parsed?.code || '') ? parsed.code : 'DB_ERROR';
+            return reject(Object.assign(new Error('DATABASE_REQUEST_FAILED'), { dbCode }));
           }
           resolve({ status: res.statusCode, data: parsed });
         } catch(e) {
           if (res.statusCode >= 400) {
-            console.error(`[Supabase ERROR] ${method} ${table}: HTTP ${res.statusCode}`, raw);
-            return reject(new Error(`Supabase error ${res.statusCode}`));
+            return reject(Object.assign(new Error('DATABASE_REQUEST_FAILED'), { dbCode: 'DB_ERROR' }));
           }
-          resolve({ status: res.statusCode, data: [] });
+          reject(Object.assign(new Error('DATABASE_RESPONSE_INVALID'), { dbCode: 'DB_RESPONSE_INVALID' }));
         }
       });
     });
-    req.on('error', e => { console.error('[Supabase]', method, table, e.message); reject(e); });
+    req.on('error', () => reject(Object.assign(new Error('DATABASE_TRANSPORT_FAILED'), { dbCode: 'DB_TRANSPORT_FAILED' })));
+    req.setTimeout(10000, () => req.destroy(new Error('DATABASE_TIMEOUT')));
     if (data) req.write(data);
     req.end();
   });
@@ -408,7 +410,7 @@ async function sbUpsert(table, row, matchCols = 'id') {
       return await sbRest('POST', table, row, '', { mergeDuplicates: true });
     }
   } catch(e) {
-    console.error(`[sbUpsert] Failed for table ${table}:`, e.message);
+    // The account handler records a safe stage and database code.
     throw e;
   }
 }
@@ -458,51 +460,6 @@ async function getAuthenticatedUserRecord(req) {
   if (byId[0]) return byId[0];
   const byPhone = await sbSelect('users', `?phone=eq.${encodeURIComponent(req.authPhone)}&limit=1`);
   return byPhone[0] || null;
-}
-
-async function resolveBirthplace(placeInput, dateOfBirth) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
-  try {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(placeInput)}`;
-    const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'DharmaSetu/1.0 (birthplace resolution)' } });
-    if (!response.ok) throw new Error('GEOCODING_UNAVAILABLE');
-    const result = (await response.json())?.[0];
-    if (!result) return null;
-    const latitude = Number(result.lat);
-    const longitude = Number(result.lon);
-    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
-    const address = result.address || {};
-    const countryCode = String(address.country_code || '').toUpperCase();
-    let timezone = '';
-    let utcOffsetMinutes = null;
-    if (process.env.TIMEZONEDB_API_KEY) {
-      const timestamp = Math.floor(new Date(`${dateOfBirth}T12:00:00Z`).getTime() / 1000);
-      const tzUrl = `https://api.timezonedb.com/v2.1/get-time-zone?key=${encodeURIComponent(process.env.TIMEZONEDB_API_KEY)}&format=json&by=position&lat=${latitude}&lng=${longitude}&time=${timestamp}`;
-      const tzResponse = await fetch(tzUrl, { signal: controller.signal });
-      const tz = tzResponse.ok ? await tzResponse.json() : null;
-      if (tz?.status === 'OK' && tz.zoneName && Number.isFinite(Number(tz.gmtOffset))) {
-        timezone = tz.zoneName;
-        utcOffsetMinutes = Number(tz.gmtOffset) / 60;
-      }
-    }
-    // Modern India has a stable UTC+05:30 civil offset. Historical Indian
-    // offsets/DST must come from the configured historical timezone provider.
-    if (!timezone && countryCode === 'IN' && dateOfBirth >= '1946-01-01') {
-      timezone = 'Asia/Kolkata';
-      utcOffsetMinutes = 330;
-    }
-    if (!timezone || !Number.isInteger(utcOffsetMinutes)) return { timezoneUnresolved: true, countryCode };
-    return {
-      placeName: sanitize(result.display_name, 300),
-      city: sanitize(address.city || address.town || address.village || address.county || '', 100),
-      region: sanitize(address.state || address.region || '', 100),
-      country: sanitize(address.country || '', 100), countryCode,
-      latitude, longitude, timezone, utcOffsetMinutes,
-    };
-  } finally {
-    clearTimeout(timer);
-  }
 }
 
 function compactJyotishContext(data, birthProfile) {
@@ -2111,6 +2068,11 @@ app.post('/admin/config', adminAuth, async (req, res) => {
   res.json({ success: true, config: safe, saved: saves.length });
 });
 
+function safeAccountDbCode(error) {
+  const code = error?.dbCode;
+  return /^(?:[0-9A-Z]{5}|PGRST[0-9]{3}|DB_ERROR|DB_RESPONSE_INVALID|DB_TRANSPORT_FAILED)$/.test(code || '') ? code : 'UNEXPECTED';
+}
+
 app.get('/account/me', requireSupabaseUser, async (req, res) => {
   try {
     const [legacyUser, profiles, births, jyotish] = await Promise.all([
@@ -2120,34 +2082,49 @@ app.get('/account/me', requireSupabaseUser, async (req, res) => {
       sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`),
     ]);
     res.json({ success: true, account: { authUserId: req.authUser.id, phone: req.authPhone },
-      profile: profiles[0] || legacyUser || null, birthProfile: births[0] || null,
+      profile: profiles[0] || (legacyUser ? { name: legacyUser.name, gender: legacyUser.gender, language: legacyUser.language, onboarding_status: 'PROFILE_PENDING' } : null), birthProfile: births[0] || null,
+      legacyBirthInput: births[0] ? null : legacyAccountBirth(legacyUser, profiles[0], req.authUser.id),
       jyotishProfile: jyotish[0] || null,
       onboardingStatus: profiles[0]?.onboarding_status || (legacyUser ? 'PROFILE_PENDING' : 'PROFILE_PENDING') });
   } catch (error) {
-    console.error('[account/me]', error.message);
+    console.error('[account/me] failed code=ACCOUNT_RESTORE_FAILED');
     res.status(500).json({ error: 'ACCOUNT_RESTORE_FAILED' });
   }
 });
 
 app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
   if (!checkRateLimit(`onboarding_${req.authUser.id}`, 8)) return res.status(429).json({ error: 'RATE_LIMIT' });
+  let stage = 'AUTHENTICATED';
+  const mark = value => { stage = value; console.log(`[account/onboarding] stage=${value}`); };
+  mark('AUTHENTICATED');
   try {
     const input = {
       name: sanitize(req.body?.name || '', 100), gender: req.body?.gender,
       dateOfBirth: req.body?.dateOfBirth, birthTime: req.body?.birthTime || null,
       birthTimeCertainty: req.body?.birthTimeCertainty,
-      birthplace: sanitize(req.body?.birthplace || '', 200), language: req.body?.language,
+      birthplace: sanitize(contextualPlace(req.body?.birthplaceDetails || req.body?.birthplace || ''), 500), language: req.body?.language,
       interests: Array.isArray(req.body?.interests) ? req.body.interests.slice(0, 20).map(v => sanitize(v, 60)).filter(Boolean) : [],
       birthDataConsent: req.body?.birthDataConsent === true,
     };
     const validation = validateOnboarding(input);
+    if (req.body?.birthplaceDetails && ['villageCity', 'state', 'country'].some(key =>
+      typeof req.body.birthplaceDetails[key] !== 'string' || !req.body.birthplaceDetails[key].trim())) {
+      validation.valid = false;
+      validation.errors.push('INVALID_BIRTHPLACE');
+    }
     if (!validation.valid) return res.status(400).json({ error: 'INVALID_ONBOARDING_DATA', fields: validation.errors });
-    const place = await resolveBirthplace(input.birthplace, input.dateOfBirth);
-    if (!place) return res.status(422).json({ error: 'BIRTHPLACE_UNRESOLVED' });
-    if (place.timezoneUnresolved) return res.status(422).json({ error: 'BIRTHPLACE_TIMEZONE_UNRESOLVED' });
+    mark('VALIDATED');
+    mark('PLACE_RESOLUTION_STARTED');
+    const place = await resolveBirthplace(req.body?.birthplaceDetails || input.birthplace, input.dateOfBirth, { onStage: mark });
+    if (!place) throw new BirthplaceError('BIRTHPLACE_UNRESOLVED');
 
+    stage = 'EXISTING_PROFILE_READ';
     const existingBirth = (await sbSelect('birth_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
     const existingJyotish = (await sbSelect('jyotish_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
+    mark('EXISTING_PROFILE_READ');
+    if (req.body?.reconcileLegacy === true && existingBirth) {
+      return res.json({ success: true, requiresKundliGeneration: false, alreadyReconciled: true });
+    }
     const candidate = {
       date_of_birth: input.dateOfBirth,
       birth_time: input.birthTimeCertainty === 'UNKNOWN' ? null : input.birthTime,
@@ -2175,24 +2152,42 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
       country_code: place.countryCode, utc_offset_minutes: place.utcOffsetMinutes,
       profile_version: birthVersion, input_fingerprint: fingerprint, updated_at: now };
 
+    stage = 'USER_PROFILE_SAVED';
     await sbUpsert('user_profiles', profileRow, 'user_id');
+    mark('USER_PROFILE_SAVED');
+    stage = 'BIRTH_PROFILE_SAVED';
     await sbUpsert('birth_profiles', birthRow, 'user_id');
+    mark('BIRTH_PROFILE_SAVED');
     // A changed input must not erase the last validated chart before replacement succeeds.
+    stage = 'JYOTISH_TRANSITION_SAVED';
     if (!existingJyotish) await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birthVersion,
       input_fingerprint: fingerprint, status: input.birthTimeCertainty === 'UNKNOWN' ? 'INPUT_CORRECTION_REQUIRED' : 'KUNDLI_PENDING',
       chart_data: null, compact_context: null, failure_code: input.birthTimeCertainty === 'UNKNOWN' ? 'BIRTH_TIME_UNKNOWN' : null,
       updated_at: now }, 'user_id');
 
-    const legacyUser = { phone: req.authPhone, name: input.name, language: input.language,
-      birth_city: place.city || place.placeName, dob: input.dateOfBirth, last_active: now };
-    const existingLegacy = await getAuthenticatedUserRecord(req);
-    if (existingLegacy) await sbUpdate('users', `?id=eq.${encodeURIComponent(existingLegacy.id)}`, legacyUser);
-    else await sbInsert('users', { id: req.authUser.id, ...legacyUser, created_at: now, plan: 'free', streak: 0, questions: 0, pts: 0 });
-
-    res.json({ success: true, onboardingStatus: status, birthProfileVersion: birthVersion,
+    mark('JYOTISH_TRANSITION_SAVED');
+    stage = 'LEGACY_COMPATIBILITY_SAVED';
+    let compatibilityPending = false;
+    try {
+      const legacyUser = { phone: req.authPhone, name: input.name, language: input.language,
+        birth_city: place.city || place.placeName, dob: input.dateOfBirth, last_active: now };
+      const existingLegacy = await getAuthenticatedUserRecord(req);
+      if (existingLegacy) await sbUpdate('users', `?id=eq.${encodeURIComponent(existingLegacy.id)}`, legacyUser);
+      else await sbInsert('users', { id: req.authUser.id, ...legacyUser, created_at: now, plan: 'free', streak: 0, questions: 0, pts: 0 });
+      mark('LEGACY_COMPATIBILITY_SAVED');
+    } catch (error) {
+      compatibilityPending = true;
+      console.warn(`[account/onboarding] failed stage=LEGACY_COMPATIBILITY_SAVED db_code=${safeAccountDbCode(error)}`);
+    }
+    mark('RESPONSE_READY');
+    res.json({ success: true, compatibilityPending, onboardingStatus: status, birthProfileVersion: birthVersion,
       birthChanged, requiresKundliGeneration: input.birthTimeCertainty !== 'UNKNOWN' && !savedReady });
   } catch (error) {
-    console.error('[account/onboarding]', error.message);
+    if (error instanceof BirthplaceError) {
+      console.warn(`[account/onboarding] failed stage=${error.stage} code=${error.code}`);
+      return res.status(error.status).json({ error: error.code });
+    }
+    console.error(`[account/onboarding] failed stage=${stage} db_code=${safeAccountDbCode(error)}`);
     res.status(500).json({ error: 'ONBOARDING_SAVE_FAILED' });
   }
 });
@@ -3765,15 +3760,17 @@ app.patch('/users/update', requireSupabaseUser, async (req, res) => {
   try {
     const { name, currentLocation, language } = req.body;
     const cleanPhone = req.authPhone;
-    const patch = { updated_at: new Date().toISOString() };
+    const patch = { last_active: new Date().toISOString() };
     if (name)      patch.name      = sanitize(name, 100);
     if (language)  patch.language  = sanitize(language, 20);
-    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, patch);
     const profilePatch = { updated_at: new Date().toISOString() };
     if (name) profilePatch.name = sanitize(name, 100);
     if (language) profilePatch.language = sanitize(language, 20);
     if (currentLocation !== undefined) profilePatch.current_place_name = sanitize(currentLocation, 200);
-    await sbUpdate('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, profilePatch).catch(() => {});
+    const existingProfile = (await sbSelect('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
+    if (!existingProfile) return res.status(409).json({ error: 'BIRTH_PROFILE_REQUIRED' });
+    await sbUpdate('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, profilePatch);
+    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, patch).catch(() => {});
     res.json({ success: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
