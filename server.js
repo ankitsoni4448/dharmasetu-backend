@@ -803,6 +803,10 @@ function sseDone(jobId, msg) {
 // PUBLIC ENDPOINTS
 // ════════════════════════════════════════════════════════════════
 
+app.get('/status', (req, res) => {
+  res.json({ success: true, service: 'dharmasetu-backend', status: 'ok' });
+});
+
 app.get('/health', async (req, res) => {
   let dbOk = false, tables = {};
   try {

@@ -16,6 +16,18 @@ const response = value => ({ ok: true, json: async () => value });
 const resolved = { placeName: input.birthplace, city: 'Test Village', region: 'Test State', country: 'India',
   countryCode: 'IN', latitude: 25.1, longitude: 78.1, timezone: 'Asia/Kolkata', utcOffsetMinutes: 330 };
 
+test('public status route is dependency-free and exposes only safe service health', () => {
+  let handler;
+  const context = { app: { get: (path, fn) => { if (path === '/status') handler = fn; } } };
+  vm.createContext(context);
+  vm.runInContext(source.slice(source.indexOf("app.get('/status'"), source.indexOf("app.get('/health'")), context);
+  let body;
+  handler({}, { json: value => { body = value; } });
+  assert.deepEqual(JSON.parse(JSON.stringify(body)), {
+    success: true, service: 'dharmasetu-backend', status: 'ok',
+  });
+});
+
 function harness({ resolve = async () => resolved, failTable, births = [], charts = [] } = {}) {
   let handler; const logs = []; const tables = { birth_profiles: births, jyotish_profiles: charts, user_profiles: [], users: [] };
   const write = async (table, row) => {
