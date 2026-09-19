@@ -398,8 +398,8 @@ function compactStructuralContext(normalized = {}) {
 function validateAuthoritativeBirthProfile(profile = {}) {
   const errors = [];
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(profile.date_of_birth || ''))) errors.push('INVALID_DATE_OF_BIRTH');
-  if (!['EXACT', 'APPROXIMATE', 'UNCERTAIN', 'UNKNOWN'].includes(profile.birth_time_certainty)) errors.push('INVALID_BIRTH_TIME_CERTAINTY');
-  if (profile.birth_time_certainty === 'UNKNOWN' || !profile.birth_time) errors.push('BIRTH_TIME_REQUIRED');
+  if (!['EXACT', 'APPROXIMATE', 'UNCERTAIN', 'PERIOD_ONLY', 'UNKNOWN'].includes(profile.birth_time_certainty)) errors.push('INVALID_BIRTH_TIME_CERTAINTY');
+  if (['UNKNOWN', 'PERIOD_ONLY'].includes(profile.birth_time_certainty) || !profile.birth_time) errors.push('BIRTH_TIME_REQUIRED');
   const latitude = finite(profile.latitude);
   const longitude = finite(profile.longitude);
   if (latitude === null || latitude < -90 || latitude > 90) errors.push('INVALID_LATITUDE');

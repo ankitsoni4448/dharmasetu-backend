@@ -2,7 +2,9 @@
 const crypto = require('crypto');
 
 const GENDERS = new Set(['male', 'female', 'other', 'prefer_not_to_say']);
-const TIME_CERTAINTY = new Set(['EXACT', 'APPROXIMATE', 'UNCERTAIN', 'UNKNOWN']);
+const TIME_CERTAINTY = new Set(['EXACT', 'APPROXIMATE', 'UNCERTAIN', 'PERIOD_ONLY', 'UNKNOWN']);
+const TIME_PERIODS = new Set(['BEFORE_SUNRISE', 'EARLY_MORNING', 'MORNING', 'AROUND_NOON',
+  'AFTERNOON', 'EVENING', 'NIGHT', 'LATE_NIGHT']);
 const LANGUAGES = new Set(['hindi', 'english']);
 
 function isValidIsoDate(value, now = new Date()) {
@@ -25,7 +27,11 @@ function validateOnboarding(input, now = new Date()) {
   if (!GENDERS.has(input.gender)) errors.push('INVALID_GENDER');
   if (!isValidIsoDate(input.dateOfBirth, now)) errors.push('INVALID_DATE_OF_BIRTH');
   if (!TIME_CERTAINTY.has(input.birthTimeCertainty)) errors.push('INVALID_BIRTH_TIME_CERTAINTY');
-  if (input.birthTimeCertainty !== 'UNKNOWN' && !isValidTime(input.birthTime)) errors.push('INVALID_BIRTH_TIME');
+  if (['UNKNOWN', 'PERIOD_ONLY'].includes(input.birthTimeCertainty)) {
+    if (input.birthTime) errors.push('INVALID_BIRTH_TIME');
+  } else if (!isValidTime(input.birthTime)) errors.push('INVALID_BIRTH_TIME');
+  if (input.birthTimeCertainty === 'PERIOD_ONLY' && !TIME_PERIODS.has(input.birthTimePeriod)) errors.push('INVALID_BIRTH_TIME_PERIOD');
+  if (input.birthTimeCertainty !== 'PERIOD_ONLY' && input.birthTimePeriod) errors.push('INVALID_BIRTH_TIME_PERIOD');
   if (!String(input.birthplace || '').trim()) errors.push('INVALID_BIRTHPLACE');
   if (!LANGUAGES.has(input.language)) errors.push('INVALID_LANGUAGE');
   if (input.birthDataConsent !== true) errors.push('BIRTH_DATA_CONSENT_REQUIRED');
@@ -34,6 +40,7 @@ function validateOnboarding(input, now = new Date()) {
 
 function birthInputFingerprint(profile) {
   const canonical = [profile.date_of_birth, String(profile.birth_time || '').slice(0, 5), profile.birth_time_certainty,
+    profile.birth_time_period || '',
     Number(profile.latitude).toFixed(6), Number(profile.longitude).toFixed(6), profile.timezone].join('|');
   return crypto.createHash('sha256').update(canonical).digest('hex');
 }
@@ -46,4 +53,4 @@ function formatUtcOffset(minutes) {
   return `${sign}${String(Math.floor(absolute / 60)).padStart(2, '0')}:${String(absolute % 60).padStart(2, '0')}`;
 }
 
-module.exports = { GENDERS, TIME_CERTAINTY, LANGUAGES, isValidIsoDate, isValidTime, validateOnboarding, birthInputFingerprint, formatUtcOffset };
+module.exports = { GENDERS, TIME_CERTAINTY, TIME_PERIODS, LANGUAGES, isValidIsoDate, isValidTime, validateOnboarding, birthInputFingerprint, formatUtcOffset };

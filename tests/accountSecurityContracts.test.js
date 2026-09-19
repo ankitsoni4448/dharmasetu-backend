@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const server = fs.readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
 const migration = fs.readFileSync(path.join(__dirname, '..', 'migrations', '20260822_account_birth_jyotish_lifecycle.sql'), 'utf8');
+const optionalMigration = fs.readFileSync(path.join(__dirname, '..', 'migrations', '20260919_optional_kundli_period_only.sql'), 'utf8');
 
 assert.match(server, /app\.get\('\/account\/me', requireSupabaseUser/);
 assert.match(server, /app\.post\('\/account\/onboarding', requireSupabaseUser/);
@@ -27,4 +28,8 @@ assert.doesNotMatch(server.match(/app\.delete\('\/users\/delete'[\s\S]*?\n\}\);/
 assert.match(migration, /revoke all on function public\.delete_dharmasetu_account_data/);
 assert.match(migration, /grant execute on function public\.delete_dharmasetu_account_data[^;]+to service_role/);
 assert.match(migration, /birth_time_certainty in \('EXACT','APPROXIMATE','UNCERTAIN','UNKNOWN'\)/);
+assert.match(optionalMigration, /add column if not exists birth_time_period text/);
+assert.match(optionalMigration, /'EXACT','APPROXIMATE','UNCERTAIN','PERIOD_ONLY','UNKNOWN'/);
+assert.match(optionalMigration, /birth_time_certainty in \('UNKNOWN','PERIOD_ONLY'\)/);
+assert.match(optionalMigration, /'BEFORE_SUNRISE','EARLY_MORNING','MORNING','AROUND_NOON',[\s\S]*'AFTERNOON','EVENING','NIGHT','LATE_NIGHT'/);
 console.log('account security contract tests: PASS');

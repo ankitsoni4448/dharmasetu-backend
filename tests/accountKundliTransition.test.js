@@ -25,7 +25,7 @@ test('onboarding keeps the previous authoritative chart while birth input change
   assert.match(onboarding, /savedReady \? 'KUNDLI_READY'/);
   assert.match(onboarding, /if \(!existingJyotish\) await sbUpsert\('jyotish_profiles'/);
   assert.doesNotMatch(onboarding, /if \(existingJyotish\)[\s\S]{0,300}chart_data: null/);
-  assert.match(onboarding, /requiresKundliGeneration: input\.birthTimeCertainty !== 'UNKNOWN' && !savedReady/);
+  assert.match(onboarding, /requiresKundliGeneration: !timeInsufficient && !savedReady/);
 });
 
 test('generation validates before activation and does not overwrite a valid chart on failure', () => {

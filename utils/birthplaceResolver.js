@@ -89,4 +89,39 @@ async function resolveBirthplace(input, dateOfBirth, { fetchImpl = fetch,
     throw new BirthplaceError('BIRTHPLACE_SERVICE_UNAVAILABLE', 503, stage);
   } finally { clearTimeout(timer); }
 }
-module.exports = { BirthplaceError, contextualPlace, normalizePlaceText, resolveBirthplace };
+
+async function resolveMapSelection(selection, dateOfBirth, { fetchImpl = fetch,
+  timezoneKey = process.env.TIMEZONEDB_API_KEY, onStage = () => {} } = {}) {
+  const latitude = Number(selection?.latitude); const longitude = Number(selection?.longitude);
+  const villageCity = normalizePlaceText(selection?.villageCity);
+  const district = normalizePlaceText(selection?.district);
+  const region = normalizePlaceText(selection?.state);
+  const country = normalizePlaceText(selection?.country);
+  if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90
+    || !Number.isFinite(longitude) || longitude < -180 || longitude > 180
+    || !villageCity || !region || !country) throw new BirthplaceError('BIRTHPLACE_UNRESOLVED');
+  onStage('PLACE_RESOLUTION_SUCCEEDED');
+  let timezone; let utcOffsetMinutes; let countryCode = '';
+  if (country.toLocaleLowerCase() === 'india' && dateOfBirth >= '1946-01-01') {
+    timezone = 'Asia/Kolkata'; utcOffsetMinutes = 330; countryCode = 'IN';
+  } else {
+    if (!timezoneKey) throw new BirthplaceError('BIRTHPLACE_TIMEZONE_UNRESOLVED', 422, 'TIMEZONE_RESOLUTION');
+    try {
+      const timestamp = Math.floor(new Date(`${dateOfBirth}T12:00:00Z`).getTime() / 1000);
+      const url = `https://api.timezonedb.com/v2.1/get-time-zone?key=${encodeURIComponent(timezoneKey)}&format=json&by=position&lat=${latitude}&lng=${longitude}&time=${timestamp}`;
+      const response = await fetchImpl(url, { headers: { 'User-Agent': 'DharmaSetu/1.0 (timezone resolution)' } });
+      if (!response.ok) throw new Error('SERVICE');
+      const tz = await response.json();
+      if (tz?.status !== 'OK') throw new Error('SERVICE');
+      timezone = tz.zoneName; utcOffsetMinutes = Number(tz.gmtOffset) / 60;
+      countryCode = String(tz.countryCode || '').toUpperCase();
+    } catch { throw new BirthplaceError('BIRTHPLACE_SERVICE_UNAVAILABLE', 503, 'TIMEZONE_RESOLUTION'); }
+  }
+  let validZone = false;
+  try { new Intl.DateTimeFormat('en', { timeZone: timezone }); validZone = true; } catch {}
+  if (!validZone || !Number.isInteger(utcOffsetMinutes)) throw new BirthplaceError('BIRTHPLACE_TIMEZONE_UNRESOLVED', 422, 'TIMEZONE_RESOLUTION');
+  onStage('TIMEZONE_RESOLUTION_SUCCEEDED');
+  return { placeName: [villageCity, district, region, country].filter(Boolean).join(', '),
+    city: villageCity, region, country, countryCode, latitude, longitude, timezone, utcOffsetMinutes };
+}
+module.exports = { BirthplaceError, contextualPlace, normalizePlaceText, resolveBirthplace, resolveMapSelection };

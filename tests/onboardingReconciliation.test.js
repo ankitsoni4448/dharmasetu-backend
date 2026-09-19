@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const { resolveBirthplace, contextualPlace, BirthplaceError } = require('../utils/birthplaceResolver');
+const { resolveBirthplace, resolveMapSelection, contextualPlace, BirthplaceError } = require('../utils/birthplaceResolver');
 const lifecycle = require('../utils/accountLifecycle');
 const { legacyAccountBirth } = require('../utils/legacyAccountBirth');
 const source = fs.readFileSync(require('node:path').join(__dirname, '../server.js'), 'utf8');
@@ -34,7 +34,7 @@ function harness({ resolve = async () => resolved, failTable, births = [], chart
     if (table === failTable) throw Object.assign(new Error('PRIVATE ROW CONTENT'), { dbCode: '23502' });
     tables[table] = [structuredClone(row)];
   };
-  const context = { ...lifecycle, contextualPlace, BirthplaceError, resolveBirthplace: resolve,
+  const context = { ...lifecycle, contextualPlace, BirthplaceError, resolveBirthplace: resolve, resolveMapSelection,
     app: { post: (_path, _auth, fn) => { handler = fn; } }, requireSupabaseUser: () => {},
     checkRateLimit: () => true, sanitize: (v, n) => String(v).slice(0, n),
     sbSelect: async table => tables[table], sbUpsert: write, sbInsert: write, sbUpdate: write,
@@ -77,6 +77,28 @@ test('compatibility failure cannot undo canonical success', async () => {
 test('unknown time stays null and never requests generation', async () => {
   const h = harness(); const r = await h.request({ ...input, birthTimeCertainty: 'UNKNOWN', birthTime: null });
   assert.equal(r.data.requiresKundliGeneration, false); assert.equal(h.tables.birth_profiles[0].birth_time, null);
+});
+test('period-only time is stored truthfully and never requests generation', async () => {
+  const h = harness(); const r = await h.request({ ...input, birthTimeCertainty: 'PERIOD_ONLY', birthTime: null, birthTimePeriod: 'MORNING' });
+  assert.equal(r.status, 200); assert.equal(r.data.requiresKundliGeneration, false);
+  assert.equal(h.tables.birth_profiles[0].birth_time, null);
+  assert.equal(h.tables.birth_profiles[0].birth_time_period, 'MORNING');
+  assert.equal(h.tables.jyotish_profiles[0].status, 'INPUT_CORRECTION_REQUIRED');
+});
+test('map-confirmed India selection preserves the user coordinates', async () => {
+  const h = harness({ resolve: async () => { throw new Error('search resolver must not run'); } });
+  const r = await h.request({ ...input, birthplaceDetails: { villageCity: 'Test Village', district: 'Test District', state: 'Test State', country: 'India' },
+    locationSelection: { source: 'MAP_CONFIRMED', latitude: 24.123456, longitude: 77.654321 } });
+  assert.equal(r.status, 200);
+  assert.equal(h.tables.birth_profiles[0].latitude, 24.123456);
+  assert.equal(h.tables.birth_profiles[0].longitude, 77.654321);
+});
+test('invalid map coordinates are rejected without persistence', async () => {
+  const h = harness();
+  const r = await h.request({ ...input, birthplaceDetails: { villageCity: 'Test Village', district: '', state: 'Test State', country: 'India' },
+    locationSelection: { source: 'MAP_CONFIRMED', latitude: 95, longitude: 77 } });
+  assert.equal(r.status, 422); assert.equal(r.data.error, 'BIRTHPLACE_UNRESOLVED');
+  assert.equal(h.tables.birth_profiles.length, 0);
 });
 test('changed birth profile preserves previous validated chart', async () => {
   const old = { status: 'KUNDLI_READY', input_fingerprint: 'old', chart_data: { normalized: { saved: true } } };

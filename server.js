@@ -44,7 +44,7 @@ const { normalizeFestivalEvents, unavailableFestivalResult } = require('./utils/
 const { getDailyPanchang, getMonthlyPanchang, getYearOverview, configurePanchangStore } = require('./utils/authoritativePanchangService');
 const { createPanchangStore } = require('./utils/panchangStore');
 const { validateOnboarding, birthInputFingerprint, formatUtcOffset } = require('./utils/accountLifecycle');
-const { resolveBirthplace, contextualPlace, BirthplaceError } = require('./utils/birthplaceResolver');
+const { resolveBirthplace, resolveMapSelection, contextualPlace, BirthplaceError } = require('./utils/birthplaceResolver');
 const { legacyAccountBirth } = require('./utils/legacyAccountBirth');
 const {
   CALCULATION_STANDARD,
@@ -2106,6 +2106,7 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
       name: sanitize(req.body?.name || '', 100), gender: req.body?.gender,
       dateOfBirth: req.body?.dateOfBirth, birthTime: req.body?.birthTime || null,
       birthTimeCertainty: req.body?.birthTimeCertainty,
+      birthTimePeriod: req.body?.birthTimePeriod || null,
       birthplace: sanitize(contextualPlace(req.body?.birthplaceDetails || req.body?.birthplace || ''), 500), language: req.body?.language,
       interests: Array.isArray(req.body?.interests) ? req.body.interests.slice(0, 20).map(v => sanitize(v, 60)).filter(Boolean) : [],
       birthDataConsent: req.body?.birthDataConsent === true,
@@ -2119,7 +2120,9 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
     if (!validation.valid) return res.status(400).json({ error: 'INVALID_ONBOARDING_DATA', fields: validation.errors });
     mark('VALIDATED');
     mark('PLACE_RESOLUTION_STARTED');
-    const place = await resolveBirthplace(req.body?.birthplaceDetails || input.birthplace, input.dateOfBirth, { onStage: mark });
+    const place = req.body?.locationSelection?.source === 'MAP_CONFIRMED'
+      ? await resolveMapSelection({ ...req.body.birthplaceDetails, ...req.body.locationSelection }, input.dateOfBirth, { onStage: mark })
+      : await resolveBirthplace(req.body?.birthplaceDetails || input.birthplace, input.dateOfBirth, { onStage: mark });
     if (!place) throw new BirthplaceError('BIRTHPLACE_UNRESOLVED');
 
     stage = 'EXISTING_PROFILE_READ';
@@ -2131,8 +2134,9 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
     }
     const candidate = {
       date_of_birth: input.dateOfBirth,
-      birth_time: input.birthTimeCertainty === 'UNKNOWN' ? null : input.birthTime,
+      birth_time: ['UNKNOWN', 'PERIOD_ONLY'].includes(input.birthTimeCertainty) ? null : input.birthTime,
       birth_time_certainty: input.birthTimeCertainty,
+      birth_time_period: input.birthTimeCertainty === 'PERIOD_ONLY' ? input.birthTimePeriod : null,
       latitude: place.latitude, longitude: place.longitude, timezone: place.timezone,
     };
     const fingerprint = birthInputFingerprint(candidate);
@@ -2147,7 +2151,8 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
     const savedReady = existingJyotish?.status === 'KUNDLI_READY' && existingJyotish.input_fingerprint === fingerprint
       && existingBirth && validateKundliReadiness(existingJyotish.chart_data?.normalized, existingBirth,
         { deepEnabled: process.env.PROKERALA_DEEP_KUNDLI_ENABLED === 'true' }).valid;
-    const status = savedReady ? 'KUNDLI_READY' : input.birthTimeCertainty === 'UNKNOWN' ? 'BIRTHPLACE_PENDING' : 'KUNDLI_PENDING';
+    const timeInsufficient = ['UNKNOWN', 'PERIOD_ONLY'].includes(input.birthTimeCertainty);
+    const status = savedReady ? 'KUNDLI_READY' : timeInsufficient ? 'BIRTHPLACE_PENDING' : 'KUNDLI_PENDING';
     const profileRow = { user_id: req.authUser.id, name: input.name, gender: input.gender, language: input.language,
       interests: input.interests, onboarding_status: status, birth_data_consent_at: now,
       birth_data_consent_version: '2026-08-22', updated_at: now };
@@ -2165,8 +2170,8 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
     // A changed input must not erase the last validated chart before replacement succeeds.
     stage = 'JYOTISH_TRANSITION_SAVED';
     if (!existingJyotish) await sbUpsert('jyotish_profiles', { user_id: req.authUser.id, birth_profile_version: birthVersion,
-      input_fingerprint: fingerprint, status: input.birthTimeCertainty === 'UNKNOWN' ? 'INPUT_CORRECTION_REQUIRED' : 'KUNDLI_PENDING',
-      chart_data: null, compact_context: null, failure_code: input.birthTimeCertainty === 'UNKNOWN' ? 'BIRTH_TIME_UNKNOWN' : null,
+      input_fingerprint: fingerprint, status: timeInsufficient ? 'INPUT_CORRECTION_REQUIRED' : 'KUNDLI_PENDING',
+      chart_data: null, compact_context: null, failure_code: timeInsufficient ? 'BIRTH_TIME_REQUIRED' : null,
       updated_at: now }, 'user_id');
 
     mark('JYOTISH_TRANSITION_SAVED');
@@ -2185,7 +2190,7 @@ app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
     }
     mark('RESPONSE_READY');
     res.json({ success: true, compatibilityPending, onboardingStatus: status, birthProfileVersion: birthVersion,
-      birthChanged, requiresKundliGeneration: input.birthTimeCertainty !== 'UNKNOWN' && !savedReady });
+      birthChanged, requiresKundliGeneration: !timeInsufficient && !savedReady });
   } catch (error) {
     if (error instanceof BirthplaceError) {
       console.warn(`[account/onboarding] failed stage=${error.stage} code=${error.code}`);
@@ -3772,9 +3777,10 @@ app.patch('/users/update', requireSupabaseUser, async (req, res) => {
     if (language) profilePatch.language = sanitize(language, 20);
     if (currentLocation !== undefined) profilePatch.current_place_name = sanitize(currentLocation, 200);
     const existingProfile = (await sbSelect('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}&limit=1`))[0];
-    if (!existingProfile) return res.status(409).json({ error: 'BIRTH_PROFILE_REQUIRED' });
-    await sbUpdate('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, profilePatch);
-    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, patch).catch(() => {});
+    if (existingProfile) {
+      await sbUpdate('user_profiles', `?user_id=eq.${encodeURIComponent(req.authUser.id)}`, profilePatch);
+    }
+    await sbUpdate('users', `?phone=eq.${encodeURIComponent(cleanPhone)}`, patch);
     res.json({ success: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
