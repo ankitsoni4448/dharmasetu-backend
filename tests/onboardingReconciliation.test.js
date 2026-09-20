@@ -100,6 +100,18 @@ test('invalid map coordinates are rejected without persistence', async () => {
   assert.equal(r.status, 422); assert.equal(r.data.error, 'BIRTHPLACE_UNRESOLVED');
   assert.equal(h.tables.birth_profiles.length, 0);
 });
+test('invalid map longitude and missing required place context are rejected', async () => {
+  const badLongitude = harness();
+  const longitudeResult = await badLongitude.request({ ...input,
+    birthplaceDetails: { villageCity: 'Test Village', district: '', state: 'Test State', country: 'India' },
+    locationSelection: { source: 'MAP_CONFIRMED', latitude: 24, longitude: -181 } });
+  assert.equal(longitudeResult.status, 422); assert.equal(badLongitude.tables.birth_profiles.length, 0);
+  const missingContext = harness();
+  const contextResult = await missingContext.request({ ...input,
+    birthplaceDetails: { villageCity: '', district: '', state: 'Test State', country: 'India' },
+    locationSelection: { source: 'MAP_CONFIRMED', latitude: 24, longitude: 77 } });
+  assert.equal(contextResult.status, 400); assert.equal(contextResult.data.error, 'INVALID_ONBOARDING_DATA');
+});
 test('changed birth profile preserves previous validated chart', async () => {
   const old = { status: 'KUNDLI_READY', input_fingerprint: 'old', chart_data: { normalized: { saved: true } } };
   const h = harness({ births: [{ input_fingerprint: 'old', profile_version: 1 }], charts: [old] });

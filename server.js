@@ -2096,6 +2096,25 @@ app.get('/account/me', requireSupabaseUser, async (req, res) => {
   }
 });
 
+app.post('/account/birthplace/resolve', requireSupabaseUser, async (req, res) => {
+  if (!checkRateLimit(`birthplace_resolve_${req.authUser.id}`, 12)) return res.status(429).json({ error: 'RATE_LIMIT' });
+  try {
+    const rawDetails = req.body?.birthplaceDetails;
+    const dateOfBirth = req.body?.dateOfBirth;
+    if (!rawDetails || ['villageCity', 'state', 'country'].some(key => typeof rawDetails[key] !== 'string' || !rawDetails[key].trim())
+      || (rawDetails.district != null && typeof rawDetails.district !== 'string')
+      || !isValidIsoDate(dateOfBirth)) return res.status(400).json({ error: 'INVALID_BIRTHPLACE_SEARCH' });
+    const details = { villageCity: sanitize(rawDetails.villageCity, 120), district: sanitize(rawDetails.district || '', 120),
+      state: sanitize(rawDetails.state, 120), country: sanitize(rawDetails.country, 120) };
+    const place = await resolveBirthplace(details, dateOfBirth);
+    return res.json({ success: true, location: { placeName: place.placeName, city: place.city,
+      region: place.region, country: place.country, latitude: place.latitude, longitude: place.longitude } });
+  } catch (error) {
+    if (error instanceof BirthplaceError) return res.status(error.status).json({ error: error.code });
+    return res.status(500).json({ error: 'BIRTHPLACE_SEARCH_FAILED' });
+  }
+});
+
 app.post('/account/onboarding', requireSupabaseUser, async (req, res) => {
   if (!checkRateLimit(`onboarding_${req.authUser.id}`, 8)) return res.status(429).json({ error: 'RATE_LIMIT' });
   let stage = 'AUTHENTICATED';
