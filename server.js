@@ -54,6 +54,7 @@ const {
   validateAuthoritativeBirthProfile,
   validateKundliReadiness,
 } = require('./utils/kundliLifecycle');
+const { withKundliInterpretation } = require('./utils/kundliInterpretation');
 const {
   fetchBasicKundli,
   fetchPrimaryKundli,
@@ -2077,6 +2078,13 @@ function safeAccountDbCode(error) {
   return /^(?:[0-9A-Z]{5}|PGRST[0-9]{3}|DB_ERROR|DB_RESPONSE_INVALID|DB_TRANSPORT_FAILED)$/.test(code || '') ? code : 'UNEXPECTED';
 }
 
+function accountJyotishView(profile, birthProfile) {
+  const normalized = profile?.chart_data?.normalized;
+  if (!profile || !normalized) return profile || null;
+  return { ...profile, chart_data: { ...profile.chart_data,
+    normalized: withKundliInterpretation(normalized, birthProfile || {}) } };
+}
+
 app.get('/account/me', requireSupabaseUser, async (req, res) => {
   try {
     const [legacyUser, profiles, births, jyotish] = await Promise.all([
@@ -2088,7 +2096,7 @@ app.get('/account/me', requireSupabaseUser, async (req, res) => {
     res.json({ success: true, account: { authUserId: req.authUser.id, phone: req.authPhone },
       profile: profiles[0] || (legacyUser ? { name: legacyUser.name, gender: legacyUser.gender, language: legacyUser.language, onboarding_status: 'PROFILE_PENDING' } : null), birthProfile: births[0] || null,
       legacyBirthInput: births[0] ? null : legacyAccountBirth(legacyUser, profiles[0], req.authUser.id),
-      jyotishProfile: jyotish[0] || null,
+      jyotishProfile: accountJyotishView(jyotish[0], births[0]),
       onboardingStatus: profiles[0]?.onboarding_status || (legacyUser ? 'PROFILE_PENDING' : 'PROFILE_PENDING') });
   } catch (error) {
     console.error('[account/me] failed code=ACCOUNT_RESTORE_FAILED');

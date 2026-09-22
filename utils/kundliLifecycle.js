@@ -1,6 +1,7 @@
 'use strict';
 
 const { buildLifeAreas } = require('./kundliLifeAreas');
+const { buildKundliInterpretation } = require('./kundliInterpretation');
 
 const CALCULATION_STANDARD = Object.freeze({
   schemaVersion: 'dharmasetu-kundli-v1',
@@ -322,6 +323,7 @@ function normalizeProviderChart(details = {}, kundli = {}, birthProfile = {}, pr
     precisionWarnings,
   };
   canonical.life_areas = buildLifeAreas(canonical);
+  canonical.interpretation = buildKundliInterpretation(canonical, birthProfile);
   return canonical;
 }
 
