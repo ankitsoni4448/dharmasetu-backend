@@ -1104,6 +1104,7 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
       personalKundli: personalKundliContext, jyotish: astrologyContext, panchang: panchangContext,
       evidence: verifiedEvidence, curatedEvidence, language: lang });
 
+    const personalAnswerWordLimit = queryIntent === QUERY_INTENTS.PERSONAL_JYOTISH ? 1200 : 420;
     const fullSystemPrompt = `You are DharmaSetu, a careful guide to Sanatan Dharma.
 
 LANGUAGE: ${langRule}
@@ -1127,7 +1128,7 @@ VERDICT: <status>
 विश्वसनीयता: Low/Medium/High
 Why confidence: <one short reason>. Never use percentage confidence.` : ''}
 
-FORMAT: Maximum ${isFC ? 240 : 420} words. Use light Markdown only for helpful headings, emphasis, or short lists. Be warm, specific, and practical.`;
+FORMAT: Maximum ${isFC ? 240 : personalAnswerWordLimit} words. Use light Markdown only for helpful headings, emphasis, or short lists. Be warm, specific, and practical.`;
 
     const systemPrompt = fastPath
       ? `You are DharmaSetu, a warm Sanatan Dharma assistant. ${langRule} Reply naturally and briefly. Do not invent scripture citations, personal facts, or current religious-calendar values.`
