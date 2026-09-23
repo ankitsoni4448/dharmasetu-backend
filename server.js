@@ -30,7 +30,7 @@ const { completeProviderAnswer, chooseOutputBudget, needsContinuation } = requir
 const { estimatePromptTokens, isFastConversationalQuery, providerGenerationLimit,
   runProviderFallback } = require('./utils/providerReliability');
 const { NOTIFICATION_TYPES, SAFE_NOTIFICATION_ROUTES } = require('./utils/notificationSafety');
-const { QUERY_INTENTS, classifyDharmaQuery } = require('./utils/queryRouter');
+const { QUERY_INTENTS, resolveDharmaQueryIntent } = require('./utils/queryRouter');
 const { buildEvidencePack, buildCuratedEvidencePack } = require('./utils/sourcePolicy');
 const { enforceCitationPolicy } = require('./utils/scriptureCitationValidator');
 const { buildOrchestration } = require('./utils/dharmaOrchestrator');
@@ -55,6 +55,7 @@ const {
   validateKundliReadiness,
 } = require('./utils/kundliLifecycle');
 const { withKundliInterpretation } = require('./utils/kundliInterpretation');
+const { normalizePersonalKundliArea, projectPersonalKundliContext } = require('./utils/personalKundliContext');
 const {
   fetchBasicKundli,
   fetchPrimaryKundli,
@@ -490,7 +491,7 @@ async function getUserAstrologyContext(authUserId, userRecord) {
         house: Number.isFinite(Number(planet.house)) ? Number(planet.house) : null,
         longitude: Number.isFinite(Number(planet.longitude)) ? Number(planet.longitude) : null,
       })) : [],
-      structuralContext: compactStructuralContext(normalized),
+      structuralContext: compactStructuralContext(normalized), normalized,
       birthProfileVersion: stored.birth_profile_version, calculationVersion: stored.calculation_version };
   }
   // Personal guidance requires the authenticated user's authoritative READY chart.
@@ -900,7 +901,7 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     `validation=${timing.validation}ms total=${Date.now() - totalStartedAt}ms outcome=${outcome}`
   );
   try {
-    const { messages, mode, panchangLocation } = req.body;
+    const { messages, mode, panchangLocation, conversationContext } = req.body;
     const rateKey = req.authUser.id;
     if (!checkRateLimit(`chat_${rateKey}`, 15)) {
       return res.status(429).json({ error: 'RATE_LIMIT' });
@@ -917,6 +918,16 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     if (isPromptInjection(lastMsg)) {
       return res.status(400).json({ error: 'Invalid request' });
     }
+    let personalArea = null;
+    if (conversationContext !== undefined && conversationContext !== null) {
+      if (conversationContext?.type !== 'PERSONAL_KUNDLI'
+        || Object.prototype.hasOwnProperty.call(conversationContext, 'chart')
+        || Object.prototype.hasOwnProperty.call(conversationContext, 'facts')) {
+        return res.status(400).json({ error: 'INVALID_CONVERSATION_CONTEXT' });
+      }
+      personalArea = normalizePersonalKundliArea(conversationContext.area);
+      if (!personalArea) return res.status(400).json({ error: 'INVALID_KUNDLI_AREA' });
+    }
 
     const profileStartedAt = Date.now();
     const userRecord = await getAuthenticatedUserRecord(req);
@@ -926,9 +937,12 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
     const entitlement = resolveEffectiveEntitlement(userRecord);
     timing.entitlement = Date.now() - entitlementStartedAt;
     const isFC = mode === 'factcheck';
-    const fastPath = isFastConversationalQuery(lastMsg, isFC ? 'factcheck' : 'dharma');
+    const fastPath = !personalArea && isFastConversationalQuery(lastMsg, isFC ? 'factcheck' : 'dharma');
     const intentStartedAt = Date.now();
-    const queryIntent = isFC ? QUERY_INTENTS.FACT_CHECK : classifyDharmaQuery(lastMsg, cleanMessages.slice(0, -1));
+    const queryIntent = resolveDharmaQueryIntent(lastMsg, cleanMessages.slice(0, -1), {
+      mode: isFC ? 'factcheck' : 'dharma', conversationType: personalArea ? 'PERSONAL_KUNDLI' : null,
+    });
+    const retainPersonalContext = Boolean(personalArea) && queryIntent === QUERY_INTENTS.PERSONAL_JYOTISH;
     timing.intent = Date.now() - intentStartedAt;
     const needsPanchang = [QUERY_INTENTS.PANCHANG, QUERY_INTENTS.FESTIVAL_CALENDAR].includes(queryIntent);
     if (needsPanchang && (!Number.isFinite(Number(panchangLocation?.latitude)) || !Number.isFinite(Number(panchangLocation?.longitude)) || !panchangLocation?.timezone)) {
@@ -986,6 +1000,18 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
       ? await getUserAstrologyContext(req.authUser.id, userRecord) : { available: false };
     timing.jyotishContext = Date.now() - jyotishStartedAt;
     if (queryIntent === QUERY_INTENTS.PERSONAL_JYOTISH && !astrologyContext.available) {
+      await sbRest('POST', 'rpc/release_ai_usage', { p_user_id: req.authUser.id, p_reservation_id: reservationId }).catch(() => {});
+      return res.status(409).json({ error: 'KUNDLI_CONTEXT_NOT_READY' });
+    }
+    const personalKundliContext = queryIntent === QUERY_INTENTS.PERSONAL_JYOTISH && personalArea
+      ? projectPersonalKundliContext({
+        normalized: astrologyContext.normalized,
+        selectedArea: personalArea,
+        preferredName: astrologyContext.preferredName,
+        calculationVersion: astrologyContext.calculationVersion,
+        language: userRecord.language,
+      }) : null;
+    if (queryIntent === QUERY_INTENTS.PERSONAL_JYOTISH && personalArea && !personalKundliContext) {
       await sbRest('POST', 'rpc/release_ai_usage', { p_user_id: req.authUser.id, p_reservation_id: reservationId }).catch(() => {});
       return res.status(409).json({ error: 'KUNDLI_CONTEXT_NOT_READY' });
     }
@@ -1074,7 +1100,8 @@ app.post('/ai/dharma-chat', requireSupabaseUser, async (req, res) => {
       : 'DHARMACHAT CONTRACT: Answer and explain normally. Never prefix the answer with VERDICT. Use scripture quotations or exact verse numbers only when supplied as verified context; otherwise qualify the limitation.';
 
     const orchestration = buildOrchestration({ question: lastMsg, recentMessages: cleanMessages.slice(0, -1),
-      mode: isFC ? 'factcheck' : 'dharma', jyotish: astrologyContext, panchang: panchangContext,
+      mode: isFC ? 'factcheck' : 'dharma', forcedIntent: retainPersonalContext ? QUERY_INTENTS.PERSONAL_JYOTISH : null,
+      personalKundli: personalKundliContext, jyotish: astrologyContext, panchang: panchangContext,
       evidence: verifiedEvidence, curatedEvidence, language: lang });
 
     const fullSystemPrompt = `You are DharmaSetu, a careful guide to Sanatan Dharma.

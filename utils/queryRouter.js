@@ -44,11 +44,21 @@ function classifyDharmaQuery(question, recentMessages = []) {
   return QUERY_INTENTS.AMBIGUOUS;
 }
 
+function resolveDharmaQueryIntent(question, recentMessages = [], { mode = 'dharma', conversationType = null } = {}) {
+  if (mode === 'factcheck') return QUERY_INTENTS.FACT_CHECK;
+  const inferred = classifyDharmaQuery(question, recentMessages);
+  if (conversationType === 'PERSONAL_KUNDLI'
+    && [QUERY_INTENTS.AMBIGUOUS, QUERY_INTENTS.PERSONAL_JYOTISH].includes(inferred)) {
+    return QUERY_INTENTS.PERSONAL_JYOTISH;
+  }
+  return inferred;
+}
+
 function intentInstructions(intent, context = {}) {
   switch (intent) {
     case QUERY_INTENTS.PERSONAL_JYOTISH:
-      return context.jyotish?.available
-        ? 'Begin directly with the relevant CALCULATED JYOTISH FACTS supplied as evidence. Use the saved name naturally when helpful, do not ask again for birth details, and relate the current dasha dates and relevant placements to the question. Separate facts from traditional interpretation; calibrate uncertainty and never guarantee outcomes.'
+      return context.jyotish
+        ? 'Use only the authenticated bounded Personal Kundli context. Answer the question directly, explain how its supplied evidence works together, separate calculated facts from traditional interpretation, respect every availability flag and limitation, and never calculate or invent missing chart facts.'
         : 'No verified saved Jyotish context is available. Do not infer or invent chart facts.';
     case QUERY_INTENTS.PANCHANG:
     case QUERY_INTENTS.FESTIVAL_CALENDAR:
@@ -68,4 +78,4 @@ function intentInstructions(intent, context = {}) {
   }
 }
 
-module.exports = { QUERY_INTENTS, PATTERNS, classifyDharmaQuery, intentInstructions };
+module.exports = { QUERY_INTENTS, PATTERNS, classifyDharmaQuery, resolveDharmaQueryIntent, intentInstructions };

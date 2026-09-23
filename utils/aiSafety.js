@@ -40,7 +40,10 @@ function enforceUnverifiedCitationSafety(text, verifiedCitations = []) {
   const allowed = new Set(verifiedCitations.map(value => String(value).toLocaleLowerCase('en-IN')));
   const unverified = findScriptureCitations(text).filter(ref => !allowed.has(ref.toLocaleLowerCase('en-IN')));
   if (!unverified.length) return { text: normalizeMarkdown(text), unverified };
-  const cleaned = normalizeMarkdown(String(text).replace(CITATION_PATTERN, '[unverified scripture reference]'));
+  const cleaned = normalizeMarkdown(String(text).replace(CITATION_PATTERN, ref => {
+    if (allowed.has(ref.toLocaleLowerCase('en-IN'))) return ref;
+    return /[\u0900-\u097F]/u.test(ref) ? 'उल्लेखित शास्त्रीय संदर्भ' : 'the cited scripture reference';
+  }));
   return { text: `${cleaned}\n\nइस संदर्भ की पुष्टि उपलब्ध विश्वसनीय स्रोत से नहीं हो सकी।`, unverified };
 }
 
