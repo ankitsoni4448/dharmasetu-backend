@@ -51,6 +51,28 @@ test('career orchestration requests synthesis rather than placement or occupatio
   assert.match(result.promptContext, /practical meaning/i);
   assert.match(result.promptContext, /qualifyingEvidence/);
   assert.match(result.promptContext, /never print the plan/i);
+  assert.ok(result.personalReasoningPlan.evidenceChains.length >= 2);
+  assert.ok(result.personalReasoningPlan.evidenceChains.some(chain => /Modify the relevant conclusion/.test(chain.purpose)));
+});
+
+test('empty-house evidence is descriptive only and cannot authorize negative inference', () => {
+  const empty = context();
+  empty.structuralEvidence.houses[0].occupants = [];
+  empty.structuralEvidence.relevantPlanets = [];
+  const result = buildOrchestration({ question: 'Explain my career', forcedIntent: QUERY_INTENTS.PERSONAL_JYOTISH, personalKundli: empty });
+  const house = result.personalReasoningPlan.primaryEvidence.find(item => item.kind === 'HOUSE_STRUCTURE');
+  assert.equal(house.emptyHouse, true);
+  assert.equal(house.inferencePolicy, 'DESCRIPTIVE_ONLY');
+  assert.match(result.promptContext, /never infer weakness, delay, unclear public identity, promotion difficulty/);
+  assert.match(result.promptContext, /Empty houses may be described only/);
+});
+
+test('profession discipline requires characteristics and illustrative examples, never planet-to-profession leaps', () => {
+  const result = buildOrchestration({ question: 'Which career fields suit me?', forcedIntent: QUERY_INTENTS.PERSONAL_JYOTISH, personalKundli: context() });
+  assert.match(result.promptContext, /Never jump from planet symbolism to a specific profession/);
+  assert.match(result.promptContext, /derive work characteristics/);
+  assert.match(result.promptContext, /illustrative examples/);
+  assert.match(result.promptContext, /evidence-to-characteristic-to-example link/);
 });
 
 test('Job vs Business plan preserves Career context and requires an evidence comparison without timing', () => {

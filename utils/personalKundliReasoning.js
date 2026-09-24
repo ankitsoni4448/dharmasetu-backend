@@ -38,6 +38,7 @@ function structuralEvidence(context) {
     source: 'K3_STRUCTURAL_EVIDENCE', kind: 'HOUSE_STRUCTURE',
     house: house.number, sign: house.sign || null, lord: house.lord || null,
     occupants: Array.isArray(house.occupants) ? house.occupants : [],
+    ...(Array.isArray(house.occupants) && house.occupants.length === 0 ? { emptyHouse: true, inferencePolicy: 'DESCRIPTIVE_ONLY' } : {}),
   });
   for (const aspect of structural.aspects || []) items.push({
     source: 'K3_STRUCTURAL_EVIDENCE', kind: 'VERIFIED_ASPECT',
@@ -65,6 +66,10 @@ function requirementsFor(questionType, context) {
     'Trace every major personal conclusion to supplied canonical, K3, or K4.1 evidence.',
     'Translate the connected evidence into practical meaning without turning synthesis into a calculated fact.',
     'Mention genuine tension or uncertainty from supplied challenges and limitations; do not manufacture contradiction.',
+    'Absence of evidence is not positive evidence. An empty house or missing planet is descriptive only and cannot imply weakness, delay, unclear identity, promotion difficulty, or any positive outcome unless K3/K4.1 explicitly says so.',
+    'Never map a planet directly to a profession. Derive supported work characteristics first; any small set of role families must be explicitly illustrative and must explain the supplied evidence-to-characteristic-to-example link.',
+    'For a deep answer, form two to four meaningful evidence chains when enough evidence exists: connect facts into a supported interpretation, connect that interpretation to practical meaning, then integrate qualifiers so the conclusion is not absolute.',
+    'Integrate challenges and limitations into the conclusion they modify; do not turn them into a generic standalone Challenges list.',
     'Use few adaptive headings and one precise limitation statement where needed.',
   ];
   const specific = {
@@ -118,6 +123,17 @@ function buildPersonalKundliReasoningPlan({ question, recentMessages = [], conte
     context.precisionWarning ? { source: 'CANONICAL_LIMITATION', kind: 'BIRTH_TIME_PRECISION', value: context.precisionWarning } : null,
   ], 8);
   const jupiter = [...primary, ...supporting].filter(item => /jupiter|गुरु|बृहस्पति/iu.test(JSON.stringify(item)));
+  const evidenceChains = [];
+  if (primary.length && supporting.length) evidenceChains.push({
+    inputs: [primary[0], supporting[0]], purpose: 'Connect supplied factors into one supported interpretation.',
+  });
+  if ((primary.length > 1 || supporting.length > 1) && context.area?.summary) evidenceChains.push({
+    inputs: [primary[1] || primary[0], supporting[1] || supporting[0], { source: 'K4.1_DETERMINISTIC_INTERPRETATION', kind: 'AREA_SUMMARY', value: context.area.summary }],
+    purpose: 'Explain the practical implication supported by the combined evidence.',
+  });
+  if (qualifying.length) evidenceChains.push({
+    inputs: [qualifying[0]], purpose: 'Modify the relevant conclusion and prevent an absolute claim; do not present a generic challenge list.',
+  });
   return {
     schemaVersion: 'personal-kundli-reasoning-plan-v1',
     target: context.selectedArea || 'GENERAL', questionType,
@@ -125,6 +141,7 @@ function buildPersonalKundliReasoningPlan({ question, recentMessages = [], conte
     primaryEvidence: questionType === 'JUPITER_ROLE' ? jupiter.slice(0, 4) : primary,
     supportingEvidence: questionType === 'JUPITER_ROLE' ? jupiter.slice(4, 8) : supporting,
     qualifyingEvidence: qualifying,
+    evidenceChains: evidenceChains.slice(0, 4),
     unavailableEvidence: unavailableEvidence(context),
     responseRequirements: requirementsFor(questionType, context),
   };

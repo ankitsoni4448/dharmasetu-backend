@@ -34,7 +34,46 @@ function normalizeMarkdown(input) {
     .replace(/\n[ \t]+\n/g, '\n\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 
-const CITATION_PATTERN = /(?:\b(?:Bhagavad\s+Gita|Gita|Rigveda|Rig\s+Veda|Manusmriti|Chandogya\s+Upanishad|Ramayana)|(?:भगवद्गीता|गीता|ऋग्वेद|मनुस्मृति|छान्दोग्य उपनिषद|रामायण))\s+\d+(?:\.\d+){1,2}\b/giu;
+function tableCells(line) {
+  return String(line || '').trim().replace(/^\||\|$/g, '').split('|').map(cell => cell.trim());
+}
+
+function sanitizeMarkdownTables(input) {
+  const lines = String(input || '').split('\n');
+  const output = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const header = lines[index];
+    const divider = lines[index + 1];
+    const isDivider = divider && /^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/u.test(divider);
+    if (!header.includes('|') || !isDivider) {
+      output.push(header); continue;
+    }
+    const headings = tableCells(header);
+    index += 1;
+    let rowCount = 0;
+    while (index + 1 < lines.length && lines[index + 1].includes('|') && lines[index + 1].trim()) {
+      const cells = tableCells(lines[index + 1]);
+      const parts = cells.map((cell, cellIndex) => headings[cellIndex]
+        ? `${headings[cellIndex]}: ${cell}` : cell).filter(Boolean);
+      if (parts.length) output.push(`- ${parts.join(' · ')}`);
+      rowCount += 1; index += 1;
+    }
+    if (!rowCount) output.push(headings.filter(Boolean).join(' · '));
+  }
+  return output.join('\n');
+}
+
+function sanitizeDharmaChatOutput(input) {
+  const withoutPresentationHtml = String(input || '').normalize('NFC')
+    .replace(/<br\s*\/?>/giu, '\n')
+    .replace(/<(?:p|div|section|article|h[1-6])(?:\s[^>]*)?>/giu, '\n')
+    .replace(/<\/(?:p|div|section|article|h[1-6]|li)>/giu, '\n')
+    .replace(/<li(?:\s[^>]*)?>/giu, '- ')
+    .replace(/<\/?(?:span|strong|b|em|i|u|ul|ol)(?:\s[^>]*)?>/giu, '');
+  return normalizeMarkdown(sanitizeMarkdownTables(withoutPresentationHtml));
+}
+
+const CITATION_PATTERN = /(?:(?:\b(?:Bhagavad\s+Gita|Gita|Rigveda|Rig\s+Veda|Manusmriti|Chandogya\s+Upanishad|Ramayana)|(?:भगवद्गीता|गीता|ऋग्वेद|मनुस्मृति|छान्दोग्य उपनिषद|रामायण))\s+\d+(?:\.\d+){1,2}\b|\bChapter\s+(?:\d+|[IVXLCDM]+)\s*(?:,|:|-)?\s*Verse\s+(?:\d+|[IVXLCDM]+)\b|अध्याय\s+\d+\s*(?:,|:|-)?\s*(?:श्लोक|मंत्र)\s+\d+)/giu;
 const findScriptureCitations = text => [...new Set(String(text || '').match(CITATION_PATTERN) || [])];
 function enforceUnverifiedCitationSafety(text, verifiedCitations = []) {
   const allowed = new Set(verifiedCitations.map(value => String(value).toLocaleLowerCase('en-IN')));
@@ -47,4 +86,4 @@ function enforceUnverifiedCitationSafety(text, verifiedCitations = []) {
   return { text: `${cleaned}\n\nइस संदर्भ की पुष्टि उपलब्ध विश्वसनीय स्रोत से नहीं हो सकी।`, unverified };
 }
 
-module.exports = { INTENT, classifyFactCheckIntent, classifyClaimType, normalizeMarkdown, findScriptureCitations, enforceUnverifiedCitationSafety };
+module.exports = { INTENT, classifyFactCheckIntent, classifyClaimType, normalizeMarkdown, sanitizeDharmaChatOutput, findScriptureCitations, enforceUnverifiedCitationSafety };

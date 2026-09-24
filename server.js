@@ -24,7 +24,7 @@ const { getSupabaseServiceRoleKey } = require('./scripts/supabase_service_role')
 const { normalizeIndianAuthPhone } = require('./utils/phone');
 const {
   INTENT, classifyFactCheckIntent, classifyClaimType,
-  normalizeMarkdown, enforceUnverifiedCitationSafety,
+  normalizeMarkdown, sanitizeDharmaChatOutput, enforceUnverifiedCitationSafety,
 } = require('./utils/aiSafety');
 const { completeProviderAnswer, chooseOutputBudget, needsContinuation } = require('./utils/answerCompletion');
 const { estimatePromptTokens, isFastConversationalQuery, providerGenerationLimit,
@@ -1178,7 +1178,7 @@ FORMAT: Maximum ${isFC ? 240 : personalAnswerWordLimit} words. Use light Markdow
         .map(item => `${item.title} ${item.chapter}.${item.verse}`);
       const genericGuard = enforceUnverifiedCitationSafety(result.text, verifiedCitationStrings);
       const citationGuard = enforceCitationPolicy(genericGuard.text, verifiedEvidence);
-      result.text = normalizeMarkdown(citationGuard.text);
+      result.text = sanitizeDharmaChatOutput(citationGuard.text);
       timing.validation = Date.now() - validationStartedAt;
       try {
         const quotaConsumeStartedAt = Date.now();
