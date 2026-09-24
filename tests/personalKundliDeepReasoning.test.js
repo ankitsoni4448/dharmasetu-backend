@@ -61,10 +61,23 @@ test('empty-house evidence is descriptive only and cannot authorize negative inf
   empty.structuralEvidence.relevantPlanets = [];
   const result = buildOrchestration({ question: 'Explain my career', forcedIntent: QUERY_INTENTS.PERSONAL_JYOTISH, personalKundli: empty });
   const house = result.personalReasoningPlan.primaryEvidence.find(item => item.kind === 'HOUSE_STRUCTURE');
-  assert.equal(house.emptyHouse, true);
-  assert.equal(house.inferencePolicy, 'DESCRIPTIVE_ONLY');
+  assert.equal(house.house, 10);
+  assert.equal(house.sign, 'Karka');
+  assert.equal(house.lord, 'Moon');
+  const serialized = JSON.stringify(result.personalReasoningPlan);
+  assert.doesNotMatch(serialized, /"emptyHouse":true|"occupants":\[\]|noOccupants|noPlanets/);
   assert.match(result.promptContext, /never infer weakness, delay, unclear public identity, promotion difficulty/);
   assert.match(result.promptContext, /Empty houses may be described only/);
+});
+
+test('positive house occupants remain available to the serialized reasoning plan', () => {
+  const positive = context();
+  positive.structuralEvidence.houses[0].occupants = ['Mars'];
+  positive.structuralEvidence.relevantPlanets = [{ name: 'Mars', sign: 'Karka', house: 10 }];
+  const plan = buildPersonalKundliReasoningPlan({ question: 'Explain my career', context: positive });
+  const house = plan.primaryEvidence.find(item => item.kind === 'HOUSE_STRUCTURE');
+  assert.deepEqual(house.occupants, ['Mars']);
+  assert.match(JSON.stringify(plan), /"occupants":\["Mars"\]/);
 });
 
 test('profession discipline requires characteristics and illustrative examples, never planet-to-profession leaps', () => {

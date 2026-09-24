@@ -34,12 +34,14 @@ function uniqueEvidence(items, limit) {
 function structuralEvidence(context) {
   const structural = context?.structuralEvidence || {};
   const items = [];
-  for (const house of structural.houses || []) items.push({
-    source: 'K3_STRUCTURAL_EVIDENCE', kind: 'HOUSE_STRUCTURE',
-    house: house.number, sign: house.sign || null, lord: house.lord || null,
-    occupants: Array.isArray(house.occupants) ? house.occupants : [],
-    ...(Array.isArray(house.occupants) && house.occupants.length === 0 ? { emptyHouse: true, inferencePolicy: 'DESCRIPTIVE_ONLY' } : {}),
-  });
+  for (const house of structural.houses || []) {
+    const occupants = Array.isArray(house.occupants) ? house.occupants.filter(Boolean) : [];
+    items.push({
+      source: 'K3_STRUCTURAL_EVIDENCE', kind: 'HOUSE_STRUCTURE',
+      house: house.number, sign: house.sign || null, lord: house.lord || null,
+      ...(occupants.length ? { occupants } : {}),
+    });
+  }
   for (const aspect of structural.aspects || []) items.push({
     source: 'K3_STRUCTURAL_EVIDENCE', kind: 'VERIFIED_ASPECT',
     planet: aspect.sourcePlanet, targetHouse: aspect.targetHouse,
