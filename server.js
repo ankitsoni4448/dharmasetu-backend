@@ -39,7 +39,7 @@ const { validateUpload: validateGranthUpload, inspectExtractedText, structuredCh
 const { chunksFromPages, requestExternalExtraction } = require('./utils/granthProcessor');
 const { verdictForEvidence } = require('./utils/factSourcePolicy');
 const { retrieveAuthoritativeEvidence } = require('./utils/authoritativeSourceRegistry');
-const { localDateInTimezone, localDateTimeWithOffset, cacheKey: panchangCacheKey, normalizeAuthoritativePanchang } = require('./utils/panchangService');
+const { localDateInTimezone, localDateTimeWithOffset, canonicalLocation, cacheKey: panchangCacheKey, normalizeAuthoritativePanchang } = require('./utils/panchangService');
 const { normalizeFestivalEvents, unavailableFestivalResult } = require('./utils/festivalService');
 const { getDailyPanchang, getMonthlyPanchang, getYearOverview, configurePanchangStore } = require('./utils/authoritativePanchangService');
 const { createPanchangStore } = require('./utils/panchangStore');
@@ -3188,6 +3188,15 @@ function panchangHttpError(res, error) {
   return res.status(invalid ? 400 : 503).json({ success: false, error: invalid ? (error.code || error.message) : 'PANCHANG_TEMPORARILY_UNAVAILABLE' });
 }
 
+function panchangTraceId(req) {
+  const supplied = String(req.get('X-DharmaSetu-Trace-Id') || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 64);
+  return supplied || `panchang-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function panchangTrace(event, traceId, date, extra = {}) {
+  console.log('[PanchangTrace]', { traceId, event, date: sanitize(date || '', 10) || null, ...extra });
+}
+
 app.get('/api/panchang/today', async (req, res) => {
   try {
     const location = await panchangLocationFromRequest(req);
@@ -3197,8 +3206,21 @@ app.get('/api/panchang/today', async (req, res) => {
 });
 
 app.get('/api/panchang/day', async (req, res) => {
-  try { const data = await getDailyPanchang({ ...(await panchangLocationFromRequest(req)), date: req.query.date }); res.json({ success: true, data }); }
-  catch (error) { panchangHttpError(res, error); }
+  const traceId = panchangTraceId(req); const date = sanitize(req.query.date || '', 10);
+  res.set('X-DharmaSetu-Trace-Id', traceId);
+  try {
+    const location = await panchangLocationFromRequest(req);
+    const canonical = canonicalLocation(location.latitude, location.longitude);
+    panchangTrace('REQUEST_RECEIVED', traceId, date, { locationKey: canonical.locationKey, timezone: location.timezone });
+    const data = await getDailyPanchang({ ...location, date: req.query.date, traceId });
+    panchangTrace('BACKEND_RESPONSE', traceId, date, { status: 200, outcome: 'SUCCESS' });
+    res.json({ success: true, data });
+  } catch (error) {
+    const invalid = /^PANCHANG_(?:LOCATION|DATE|MONTH|YEAR|TIMEZONE|RANGE)/.test(error.code || error.message || '');
+    panchangTrace('BACKEND_RESPONSE', traceId, date, { status: invalid ? 400 : 503,
+      outcome: invalid ? 'VALIDATION_ERROR' : 'TEMPORARILY_UNAVAILABLE' });
+    panchangHttpError(res, error);
+  }
 });
 
 app.get('/api/panchang/month', async (req, res) => {

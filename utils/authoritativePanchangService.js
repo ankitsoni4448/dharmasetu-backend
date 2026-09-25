@@ -52,6 +52,12 @@ function cacheValue(cacheKey, value) { dailyCache.set(cacheKey, { value, storedA
 function storedValue(value) { return { ...value, metadata: { ...value.metadata, cached: true, cacheLayer: 'shared' } }; }
 function warnCache(action, error, options) { (options.logger || console).warn(`[Panchang] shared cache ${action} failed: ${error?.message || 'unknown error'}`); }
 
+function trace(options, event, context, extra = {}) {
+  const logger = typeof options.logger?.log === 'function' ? options.logger : console;
+  logger.log('[PanchangTrace]', { traceId: context.traceId, event, date: context.date,
+    locationKey: context.locationKey, ...extra });
+}
+
 function cacheGet(store, cacheKey, ttl) {
   const row = store.get(cacheKey);
   if (!row || Date.now() - row.storedAt > ttl) { store.delete(cacheKey); return null; }
@@ -195,31 +201,70 @@ function sanitizedFailure(error) {
 async function getDailyPanchang(input, options = {}) {
   const location = validateLocation(input);
   const date = validateDate(input.date || localDateInTimezone(new Date(), location.timezone));
+  const traceContext = { traceId: String(input.traceId || 'missing').slice(0, 64), date, locationKey: location.locationKey };
   const detail = 'basic';
   const cacheKey = key('day', date, location, detail);
   const cached = cacheGet(dailyCache, cacheKey, DAILY_TTL_MS);
   const store = storeFor(options);
-  if (cached) return mergeEvents(cached, await eventsFor(store, date, date, options));
+  if (cached) {
+    trace(options, 'MEMORY_CACHE_HIT', traceContext);
+    return mergeEvents(cached, await eventsFor(store, date, date, options));
+  }
+  trace(options, 'MEMORY_CACHE_MISS', traceContext);
   if (inFlight.has(cacheKey)) return inFlight.get(cacheKey);
   const task = (async () => {
     const identity = calculationIdentity(date, location);
     if (store) {
       try { const found = await store.getDay(identity); if (found) {
+        trace(options, 'SHARED_CACHE_HIT', traceContext);
         const enriched = enrichDerivedPeriods(found);
-        if (enriched.changed) try { await store.saveDay(identity, enriched.value); } catch (error) { warnCache('enrichment write', error, options); }
+        if (enriched.changed) try {
+          await store.saveDay(identity, enriched.value);
+          trace(options, 'STORE_WRITE_SUCCESS', traceContext);
+        } catch (error) {
+          trace(options, 'STORE_WRITE_ERROR', traceContext, { code: error?.code || 'STORE_WRITE_ERROR' });
+          warnCache('enrichment write', error, options);
+        }
         const value = storedValue(enriched.value); cacheValue(cacheKey, value);
         return mergeEvents(value, await eventsFor(store, date, date, options));
-      } }
-      catch (error) { warnCache('read', error, options); }
+      }
+      trace(options, 'SHARED_CACHE_MISS', traceContext); }
+      catch (error) {
+        trace(options, 'SHARED_CACHE_READ_ERROR', traceContext, { code: error?.code || 'SHARED_CACHE_READ_ERROR' });
+        warnCache('read', error, options);
+      }
+    } else {
+      trace(options, 'SHARED_CACHE_MISS', traceContext, { reason: 'STORE_UNAVAILABLE' });
     }
     const datetime = localDateTimeWithOffset(date, '06:00:00', location.timezone);
+    let raw;
     try {
-      const raw = await requestModule('panchang', { ...location, datetime }, options);
-      const value = normalizeProviderPanchang(raw, { date, datetime, location, detail });
-      if (store) try { await store.saveDay(identity, value); } catch (error) { warnCache('write', error, options); }
-      cacheValue(cacheKey, value);
-      return mergeEvents(value, await eventsFor(store, date, date, options));
-    } catch (error) { throw sanitizedFailure(error); }
+      trace(options, 'PROVIDER_REQUEST', traceContext);
+      raw = await requestModule('panchang', { ...location, datetime }, options);
+      trace(options, 'PROVIDER_SUCCESS', traceContext);
+    } catch (error) {
+      const safe = sanitizedFailure(error);
+      trace(options, 'PROVIDER_ERROR', traceContext, { code: safe?.code || 'PROVIDER_ERROR' });
+      throw safe;
+    }
+    let value;
+    try {
+      value = normalizeProviderPanchang(raw, { date, datetime, location, detail });
+      trace(options, 'NORMALIZATION_SUCCESS', traceContext);
+    } catch (error) {
+      const safe = sanitizedFailure(error);
+      trace(options, 'NORMALIZATION_ERROR', traceContext, { code: safe?.code || 'PANCHANG_NORMALIZATION_FAILED' });
+      throw safe;
+    }
+    if (store) try {
+      await store.saveDay(identity, value);
+      trace(options, 'STORE_WRITE_SUCCESS', traceContext);
+    } catch (error) {
+      trace(options, 'STORE_WRITE_ERROR', traceContext, { code: error?.code || 'STORE_WRITE_ERROR' });
+      warnCache('write', error, options);
+    }
+    cacheValue(cacheKey, value);
+    return mergeEvents(value, await eventsFor(store, date, date, options));
   })();
   inFlight.set(cacheKey, task);
   try { return await task; } finally { if (inFlight.get(cacheKey) === task) inFlight.delete(cacheKey); }
