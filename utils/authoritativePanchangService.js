@@ -9,9 +9,19 @@ const CALCULATION_VERSION = 'prokerala-v2-lahiri-20260827';
 const DAILY_TTL_MS = 6 * 60 * 60 * 1000;
 const RANGE_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_MONTH_DAYS = 31;
+const MAX_PROVIDER_BACKOFFS = 256;
+const PROVIDER_BACKOFF_MS = Object.freeze({
+  PROVIDER_RATE_LIMITED: 2 * 60 * 1000,
+  PROVIDER_AUTH_ERROR: 5 * 60 * 1000,
+  PROVIDER_PLAN_OR_QUOTA: 5 * 60 * 1000,
+  PANCHANG_NORMALIZATION_FAILED: 60 * 1000,
+  PANCHANG_CORE_INCOMPLETE: 60 * 1000,
+  DEFAULT: 30 * 1000,
+});
 const dailyCache = new Map();
 const monthCache = new Map();
 const inFlight = new Map();
+const providerBackoffs = new Map();
 let sharedStore = null;
 const CALENDAR_CONVENTION = 'nirayana-sidereal';
 
@@ -56,6 +66,37 @@ function trace(options, event, context, extra = {}) {
   const logger = typeof options.logger?.log === 'function' ? options.logger : console;
   logger.log('[PanchangTrace]', { traceId: context.traceId, event, date: context.date,
     locationKey: context.locationKey, ...extra });
+}
+
+function serviceError(code) { return Object.assign(new Error(code), { code }); }
+function nowMs(options) {
+  const value = typeof options.now === 'function' ? options.now() : options.now;
+  return Number.isFinite(value) ? value : Date.now();
+}
+function isValidNormalizedPanchang(value, identity) {
+  if (!value || typeof value !== 'object' || value.available !== true) return false;
+  if (!value.modernDate?.formattedLocalDate || value.modernDate.isoDate !== identity.date || value.modernDate.timezone !== identity.timezone) return false;
+  if (!value.traditionalDate || !value.panchang?.vara || !value.panchang?.tithi?.name || !value.panchang?.nakshatra?.name ||
+      !value.panchang?.yoga?.name || !value.panchang?.karana?.name) return false;
+  if (!value.sunMoon || !value.muhurta || !value.avoidPeriods || !Array.isArray(value.events)) return false;
+  if (value.metadata?.provider !== identity.provider || String(value.metadata?.ayanamsa?.id) !== identity.ayanamsa ||
+      value.metadata?.calculationVersion !== identity.calculationVersion) return false;
+  try {
+    return canonicalLocation(value.modernDate.location?.latitude, value.modernDate.location?.longitude).locationKey === identity.locationKey;
+  } catch { return false; }
+}
+function rememberProviderFailure(canonicalKey, code, options) {
+  const now = nowMs(options); const duration = PROVIDER_BACKOFF_MS[code] || PROVIDER_BACKOFF_MS.DEFAULT;
+  providerBackoffs.delete(canonicalKey);
+  providerBackoffs.set(canonicalKey, { code, expiresAt: now + duration });
+  while (providerBackoffs.size > MAX_PROVIDER_BACKOFFS) providerBackoffs.delete(providerBackoffs.keys().next().value);
+}
+function activeProviderBackoff(canonicalKey, options) {
+  const entry = providerBackoffs.get(canonicalKey);
+  if (!entry) return null;
+  const remainingMs = entry.expiresAt - nowMs(options);
+  if (remainingMs <= 0) { providerBackoffs.delete(canonicalKey); return null; }
+  return { ...entry, remainingMs };
 }
 
 function cacheGet(store, cacheKey, ttl) {
@@ -202,20 +243,39 @@ async function getDailyPanchang(input, options = {}) {
   const location = validateLocation(input);
   const date = validateDate(input.date || localDateInTimezone(new Date(), location.timezone));
   const traceContext = { traceId: String(input.traceId || 'missing').slice(0, 64), date, locationKey: location.locationKey };
+  const identity = calculationIdentity(date, location);
   const detail = 'basic';
   const cacheKey = key('day', date, location, detail);
   const cached = cacheGet(dailyCache, cacheKey, DAILY_TTL_MS);
   const store = storeFor(options);
   if (cached) {
+    if (!isValidNormalizedPanchang(cached, identity)) {
+      dailyCache.delete(cacheKey);
+      trace(options, 'SHARED_CACHE_INVALID', traceContext, { layer: 'memory' });
+      throw serviceError('PANCHANG_CACHE_INVALID');
+    }
     trace(options, 'MEMORY_CACHE_HIT', traceContext);
     return mergeEvents(cached, await eventsFor(store, date, date, options));
   }
   trace(options, 'MEMORY_CACHE_MISS', traceContext);
   if (inFlight.has(cacheKey)) return inFlight.get(cacheKey);
   const task = (async () => {
-    const identity = calculationIdentity(date, location);
-    if (store) {
-      try { const found = await store.getDay(identity); if (found) {
+    if (!store) {
+      trace(options, 'SHARED_CACHE_READ_ERROR', traceContext, { code: 'SHARED_STORE_UNAVAILABLE' });
+      throw serviceError('PANCHANG_SHARED_CACHE_UNAVAILABLE');
+    }
+    let found;
+    try { found = await store.getDay(identity); }
+    catch (error) {
+      trace(options, 'SHARED_CACHE_READ_ERROR', traceContext, { code: error?.code || 'SHARED_CACHE_READ_ERROR' });
+      warnCache('read', error, options);
+      throw serviceError('PANCHANG_SHARED_CACHE_UNAVAILABLE');
+    }
+    if (found) {
+      if (!isValidNormalizedPanchang(found, identity)) {
+        trace(options, 'SHARED_CACHE_INVALID', traceContext);
+        throw serviceError('PANCHANG_SHARED_CACHE_INVALID');
+      }
         trace(options, 'SHARED_CACHE_HIT', traceContext);
         const enriched = enrichDerivedPeriods(found);
         if (enriched.changed) try {
@@ -227,14 +287,12 @@ async function getDailyPanchang(input, options = {}) {
         }
         const value = storedValue(enriched.value); cacheValue(cacheKey, value);
         return mergeEvents(value, await eventsFor(store, date, date, options));
-      }
-      trace(options, 'SHARED_CACHE_MISS', traceContext); }
-      catch (error) {
-        trace(options, 'SHARED_CACHE_READ_ERROR', traceContext, { code: error?.code || 'SHARED_CACHE_READ_ERROR' });
-        warnCache('read', error, options);
-      }
-    } else {
-      trace(options, 'SHARED_CACHE_MISS', traceContext, { reason: 'STORE_UNAVAILABLE' });
+    }
+    trace(options, 'SHARED_CACHE_MISS', traceContext);
+    const backoff = activeProviderBackoff(identity.canonicalKey, options);
+    if (backoff) {
+      trace(options, 'PROVIDER_BACKOFF_ACTIVE', traceContext, { code: backoff.code, retryAfterMs: backoff.remainingMs });
+      throw serviceError(backoff.code);
     }
     const datetime = localDateTimeWithOffset(date, '06:00:00', location.timezone);
     let raw;
@@ -245,15 +303,18 @@ async function getDailyPanchang(input, options = {}) {
     } catch (error) {
       const safe = sanitizedFailure(error);
       trace(options, 'PROVIDER_ERROR', traceContext, { code: safe?.code || 'PROVIDER_ERROR' });
+      rememberProviderFailure(identity.canonicalKey, safe?.code || 'PROVIDER_ERROR', options);
       throw safe;
     }
     let value;
     try {
       value = normalizeProviderPanchang(raw, { date, datetime, location, detail });
+      if (!isValidNormalizedPanchang(value, identity)) throw serviceError('PANCHANG_NORMALIZATION_FAILED');
       trace(options, 'NORMALIZATION_SUCCESS', traceContext);
     } catch (error) {
       const safe = sanitizedFailure(error);
       trace(options, 'NORMALIZATION_ERROR', traceContext, { code: safe?.code || 'PANCHANG_NORMALIZATION_FAILED' });
+      rememberProviderFailure(identity.canonicalKey, safe?.code || 'PANCHANG_NORMALIZATION_FAILED', options);
       throw safe;
     }
     if (store) try {
@@ -288,8 +349,13 @@ async function getMonthlyPanchang(input, options = {}) {
     [shared, storedEvents] = results;
   }
   for (const original of shared) {
+    const identity = original?.date && validDate(original.date) ? calculationIdentity(original.date, location) : null;
+    if (!identity || !isValidNormalizedPanchang(original, identity)) {
+      trace(options, 'SHARED_CACHE_INVALID', { traceId: 'missing', date: original?.date || null, locationKey: location.locationKey }, { layer: 'month' });
+      continue;
+    }
     const value = enrichDerivedPeriods(original).value;
-    if (value?.date) cacheValue(key('day', value.date, location, 'basic'), storedValue(value));
+    cacheValue(key('day', value.date, location, 'basic'), storedValue(value));
   }
   const days = dates.flatMap(date => {
     const cached = cacheGet(dailyCache, key('day', date, location, 'basic'), DAILY_TTL_MS);
@@ -316,6 +382,6 @@ function getYearOverview(input) {
       strategy: 'year-index-from-authoritative-month-cache; no 365-call fan-out' } };
 }
 
-module.exports = { PROVIDER, CALCULATION_VERSION, CALENDAR_CONVENTION, MAX_MONTH_DAYS, validDate, validateLocation, calculationIdentity,
+module.exports = { PROVIDER, CALCULATION_VERSION, CALENDAR_CONVENTION, MAX_MONTH_DAYS, validDate, validateLocation, calculationIdentity, isValidNormalizedPanchang,
   normalizeProviderPanchang, enrichDerivedPeriods, mergeEvents, sanitizedFailure, configurePanchangStore, getDailyPanchang, getMonthlyPanchang, getYearOverview,
-  _dailyCache: dailyCache, _monthCache: monthCache, _inFlight: inFlight };
+  _dailyCache: dailyCache, _monthCache: monthCache, _inFlight: inFlight, _providerBackoffs: providerBackoffs };

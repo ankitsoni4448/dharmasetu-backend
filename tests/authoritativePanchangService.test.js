@@ -2,7 +2,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { normalizeProviderPanchang, validDate, validateLocation, getDailyPanchang, getMonthlyPanchang, getYearOverview,
-  calculationIdentity, MAX_MONTH_DAYS, _dailyCache, _monthCache, _inFlight } = require('../utils/authoritativePanchangService');
+  calculationIdentity, MAX_MONTH_DAYS, _dailyCache, _monthCache, _inFlight, _providerBackoffs } = require('../utils/authoritativePanchangService');
 const { resetTokenCacheForTests } = require('../utils/prokeralaClient');
 
 const raw = {
@@ -57,17 +57,18 @@ function providerHarness(providerData = raw, providerStatus = 200) {
   return { calls, fetchImpl, providerCalls: () => calls.filter(url => url.includes('/v2/astrology/')) };
 }
 
-function resetPanchangCaches() { _dailyCache.clear(); _monthCache.clear(); _inFlight.clear(); resetTokenCacheForTests(); }
+function resetPanchangCaches() { _dailyCache.clear(); _monthCache.clear(); _inFlight.clear(); _providerBackoffs.clear(); resetTokenCacheForTests(); }
+function missStore(overrides = {}) { return { getDay: async () => null, saveDay: async () => {}, getMonth: async () => [], ...overrides }; }
 const location = { latitude: 25.9147883, longitude: 78.5662626, timezone: 'Asia/Kolkata', locationLabel: 'Test' };
 
 test('Daily defaults to one Basic request on cache miss and zero provider calls on cache hit', async () => {
   resetPanchangCaches(); const harness = providerHarness();
-  const first = await getDailyPanchang({ ...location, date: '2026-08-29' }, { fetchImpl: harness.fetchImpl, env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } });
+  const first = await getDailyPanchang({ ...location, date: '2026-08-29' }, { store: missStore(), fetchImpl: harness.fetchImpl, env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } });
   assert.equal(first.metadata.detail, 'basic');
   assert.equal(harness.providerCalls().length, 1);
   assert.match(harness.providerCalls()[0], /\/astrology\/panchang\?/);
   assert.doesNotMatch(harness.providerCalls()[0], /\/advanced/);
-  const second = await getDailyPanchang({ ...location, date: '2026-08-29' }, { fetchImpl: harness.fetchImpl, env: {} });
+  const second = await getDailyPanchang({ ...location, date: '2026-08-29' }, { store: missStore(), fetchImpl: harness.fetchImpl, env: {} });
   assert.equal(second.metadata.cached, true); assert.equal(harness.providerCalls().length, 1);
 });
 
@@ -83,17 +84,46 @@ test('shared DB hit skips provider and a true miss is saved then reused', async 
   assert.equal(second.date, first.date); assert.equal(second.metadata.cacheLayer, 'shared'); assert.equal(harness.providerCalls().length, 1);
 });
 
+test('shared cache read error fails closed without a provider request', async () => {
+  resetPanchangCaches(); let providerCalls = 0;
+  await assert.rejects(getDailyPanchang({ ...location, date: '2026-09-20' }, {
+    store: missStore({ getDay: async () => { throw Object.assign(new Error('database unavailable'), { code: 'DB_UNAVAILABLE' }); } }),
+    fetchImpl: async () => { providerCalls += 1; throw new Error('provider must not run'); },
+    logger: { warn: () => {}, log: () => {} },
+  }), error => error.code === 'PANCHANG_SHARED_CACHE_UNAVAILABLE');
+  assert.equal(providerCalls, 0);
+});
+
+test('malformed shared row is rejected distinctly and never reaches provider', async () => {
+  resetPanchangCaches(); let providerCalls = 0; let saves = 0;
+  const malformed = normalizeProviderPanchang(raw, { ...context, date: '2026-09-21', datetime: '2026-09-21T06:00:00+05:30', detail: 'basic' });
+  delete malformed.panchang.tithi;
+  await assert.rejects(getDailyPanchang({ ...location, date: '2026-09-21' }, {
+    store: missStore({ getDay: async () => malformed, saveDay: async () => { saves += 1; } }),
+    fetchImpl: async () => { providerCalls += 1; throw new Error('provider must not run'); }, logger: { log: () => {}, warn: () => {} },
+  }), error => error.code === 'PANCHANG_SHARED_CACHE_INVALID');
+  assert.equal(providerCalls, 0); assert.equal(saves, 0);
+});
+
+test('missing shared store is an availability error and not a paid-provider-eligible miss', async () => {
+  resetPanchangCaches(); let providerCalls = 0;
+  await assert.rejects(getDailyPanchang({ ...location, date: '2026-09-23' }, {
+    store: null, fetchImpl: async () => { providerCalls += 1; throw new Error('provider must not run'); }, logger: { log: () => {} },
+  }), error => error.code === 'PANCHANG_SHARED_CACHE_UNAVAILABLE');
+  assert.equal(providerCalls, 0);
+});
+
 test('concurrent same-key misses coalesce to one Basic provider request', async () => {
   resetPanchangCaches(); const harness = providerHarness();
   const store = { getDay: async () => null, saveDay: async () => {}, getMonth: async () => [] };
   const input = { ...location, date: '2026-09-02' }; const options = { store, fetchImpl: harness.fetchImpl,
     env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } };
-  const results = await Promise.all(Array.from({ length: 8 }, () => getDailyPanchang(input, options)));
+  const results = await Promise.all(Array.from({ length: 10 }, () => getDailyPanchang(input, options)));
   assert.equal(harness.providerCalls().length, 1); assert.ok(results.every(result => result.date === input.date)); assert.equal(_inFlight.size, 0);
 });
 
 test('different canonical keys calculate independently and GPS jitter shares one key', async () => {
-  resetPanchangCaches(); const harness = providerHarness(); const options = { store: null, fetchImpl: harness.fetchImpl,
+  resetPanchangCaches(); const harness = providerHarness(); const options = { store: missStore(), fetchImpl: harness.fetchImpl,
     env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } };
   await Promise.all([
     getDailyPanchang({ ...location, latitude: 25.91461, date: '2026-09-03' }, options),
@@ -122,7 +152,7 @@ test('historical dates and nearby GPS preserve exact requested context through m
   ];
   resetPanchangCaches(); const harness = providerHarness();
   for (const [date, latitude, longitude] of cases) {
-    const result = await getDailyPanchang({ ...location, date, latitude, longitude }, { fetchImpl: harness.fetchImpl,
+    const result = await getDailyPanchang({ ...location, date, latitude, longitude }, { store: missStore(), fetchImpl: harness.fetchImpl,
       env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } });
     assert.equal(result.modernDate.isoDate, date); assert.equal(result.metadata.detail, 'basic');
   }
@@ -139,7 +169,7 @@ test('missing optional Basic fields never destroy valid core Panchang', () => {
 
 test('old shared rows are enriched and upserted without any provider call', async () => {
   resetPanchangCaches();
-  const old = normalizeProviderPanchang({ ...raw, auspicious_period: [], inauspicious_period: [] }, { ...context, date: '2026-09-10', datetime: '2026-09-10T06:00:00+05:30', detail: 'basic' });
+  const old = normalizeProviderPanchang({ ...raw, auspicious_period: [], inauspicious_period: [] }, { ...context, location: validateLocation(location), date: '2026-09-10', datetime: '2026-09-10T06:00:00+05:30', detail: 'basic' });
   old.muhurta.abhijit = null; old.avoidPeriods.rahuKalam = null; old.avoidPeriods.yamaganda = null; old.avoidPeriods.gulika = null;
   delete old.metadata.derivedCalculationVersion; delete old.derivedCalculationVersion;
   let saves = 0; let providerCalls = 0;
@@ -151,7 +181,7 @@ test('old shared rows are enriched and upserted without any provider call', asyn
 });
 
 test('daily API merges stored localized event content and invents none when DB is empty', async () => {
-  resetPanchangCaches(); const base = normalizeProviderPanchang({ ...raw, events: [], festivals: [] }, { ...context, date: '2026-09-11', datetime: '2026-09-11T06:00:00+05:30', detail: 'basic' });
+  resetPanchangCaches(); const base = normalizeProviderPanchang({ ...raw, events: [], festivals: [] }, { ...context, location: validateLocation(location), date: '2026-09-11', datetime: '2026-09-11T06:00:00+05:30', detail: 'basic' });
   base.events = []; base.festivals = [];
   const stored = { eventId: 'verified-event', code: 'VERIFIED_EVENT', eventType: 'VRAT', date: '2026-09-11', name: 'Verified Event', names: { hi: 'सत्यापित पर्व' } };
   const withEvent = await getDailyPanchang({ ...location, date: '2026-09-11' }, { store: { getDay: async () => base, saveDay: async () => {}, getEvents: async () => [stored] } });
@@ -173,7 +203,7 @@ test('month uses one event-range lookup and zero provider fanout', async () => {
 test('Month returns cached summaries only and makes zero provider calls', async () => {
   resetPanchangCaches(); const harness = providerHarness(); const options = { fetchImpl: harness.fetchImpl,
     env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } };
-  await getDailyPanchang({ ...location, date: '2026-08-19' }, options);
+  await getDailyPanchang({ ...location, date: '2026-08-19' }, { ...options, store: missStore() });
   const before = harness.providerCalls().length;
   const month = await getMonthlyPanchang({ ...location, year: 2026, month: 8 }, { fetchImpl: async () => { throw new Error('provider must not run'); } });
   assert.equal(harness.providerCalls().length, before); assert.equal(month.days.length, 1);
@@ -182,7 +212,7 @@ test('Month returns cached summaries only and makes zero provider calls', async 
 });
 
 test('Month reuses one shared-store range query and never expands missing days', async () => {
-  resetPanchangCaches(); const normalized = normalizeProviderPanchang(raw, { ...context, date: '2026-08-27', detail: 'basic' });
+  resetPanchangCaches(); const normalized = normalizeProviderPanchang(raw, { ...context, location: validateLocation(location), date: '2026-08-27', detail: 'basic' });
   let monthReads = 0; const month = await getMonthlyPanchang({ ...location, year: 2026, month: 8 }, { store: {
     getMonth: async (_identity, start, end) => { monthReads += 1; assert.equal(start, '2026-08-01'); assert.equal(end, '2026-08-31'); return [normalized]; }
   }, fetchImpl: async () => { throw new Error('provider must not run'); } });
@@ -192,10 +222,35 @@ test('Month reuses one shared-store range query and never expands missing days',
 test('provider failures are sanitized and never cached as successful Panchang', async () => {
   for (const [status, code] of [[429, 'PROVIDER_RATE_LIMITED'], [401, 'PROVIDER_AUTH_ERROR'], [403, 'PROVIDER_PLAN_OR_QUOTA'], [503, 'PROVIDER_TEMPORARILY_UNAVAILABLE']]) {
     resetPanchangCaches(); const harness = providerHarness(raw, status);
-    await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-07' }, { fetchImpl: harness.fetchImpl,
+    await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-07' }, { store: missStore(), fetchImpl: harness.fetchImpl,
       env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } }), error => error.code === code);
     assert.equal(_dailyCache.size, 0); assert.equal(harness.providerCalls().length, 1);
   }
+});
+
+test('provider failure backoff blocks immediate retry and expires without sleeping', async () => {
+  resetPanchangCaches(); let now = 1_000_000; const harness = providerHarness(raw, 503);
+  const options = { store: missStore(), fetchImpl: harness.fetchImpl, now: () => now,
+    env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' }, logger: { log: () => {}, warn: () => {} } };
+  const input = { ...location, date: '2026-09-24' };
+  await assert.rejects(getDailyPanchang(input, options), error => error.code === 'PROVIDER_TEMPORARILY_UNAVAILABLE');
+  assert.equal(harness.providerCalls().length, 1);
+  await assert.rejects(getDailyPanchang(input, options), error => error.code === 'PROVIDER_TEMPORARILY_UNAVAILABLE');
+  assert.equal(harness.providerCalls().length, 1);
+  now += 31_000;
+  await assert.rejects(getDailyPanchang(input, options), error => error.code === 'PROVIDER_TEMPORARILY_UNAVAILABLE');
+  assert.equal(harness.providerCalls().length, 2);
+});
+
+test('normalization failure enters backoff and never writes or caches invalid data', async () => {
+  resetPanchangCaches(); let now = 2_000_000; let saves = 0;
+  const harness = providerHarness({ ...raw, tithi: [] });
+  const options = { store: missStore({ saveDay: async () => { saves += 1; } }), fetchImpl: harness.fetchImpl, now: () => now,
+    env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' }, logger: { log: () => {}, warn: () => {} } };
+  const input = { ...location, date: '2026-09-25' };
+  await assert.rejects(getDailyPanchang(input, options), error => error.code === 'PANCHANG_CORE_INCOMPLETE');
+  await assert.rejects(getDailyPanchang(input, options), error => error.code === 'PANCHANG_CORE_INCOMPLETE');
+  assert.equal(harness.providerCalls().length, 1); assert.equal(saves, 0); assert.equal(_dailyCache.size, 0);
 });
 
 test('timeout and malformed provider payload retain diagnostic categories while missing sun times remain safe', async () => {
@@ -204,18 +259,18 @@ test('timeout and malformed provider payload retain diagnostic categories while 
     if (String(url).endsWith('/token')) return jsonResponse({ access_token: 'test-token', expires_in: 3600 });
     const error = new Error('aborted'); error.name = 'AbortError'; throw error;
   };
-  await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-19' }, { fetchImpl: timeoutFetch,
+  await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-19' }, { store: missStore(), fetchImpl: timeoutFetch,
     env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } }), error => error.code === 'PROVIDER_TIMEOUT');
   assert.equal(_dailyCache.size, 0);
 
   resetPanchangCaches();
   const malformedFetch = async url => String(url).endsWith('/token')
     ? jsonResponse({ access_token: 'test-token', expires_in: 3600 }) : jsonResponse({ status: 'ok', data: null });
-  await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-19' }, { fetchImpl: malformedFetch,
+  await assert.rejects(getDailyPanchang({ ...location, date: '2026-08-19' }, { store: missStore(), fetchImpl: malformedFetch,
     env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } }), error => error.code === 'PROVIDER_BAD_RESPONSE');
 
   resetPanchangCaches(); const incomplete = providerHarness({ ...raw, sunrise: null, sunset: null, auspicious_period: [], inauspicious_period: [] });
-  const safe = await getDailyPanchang({ ...location, date: '2026-08-19' }, { fetchImpl: incomplete.fetchImpl,
+  const safe = await getDailyPanchang({ ...location, date: '2026-08-19' }, { store: missStore(), fetchImpl: incomplete.fetchImpl,
     env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } });
   assert.equal(safe.sunMoon.sunrise, null); assert.equal(safe.muhurta.abhijit, null);
   assert.equal(safe.avoidPeriods.yamaganda, null);
@@ -223,7 +278,7 @@ test('timeout and malformed provider payload retain diagnostic categories while 
 
 test('daily Panchang remains Basic even if an advanced detail option is supplied', async () => {
   resetPanchangCaches(); const harness = providerHarness();
-  const value = await getDailyPanchang({ ...location, date: '2026-08-29' }, { detail: 'advanced', fetchImpl: harness.fetchImpl,
+  const value = await getDailyPanchang({ ...location, date: '2026-08-29' }, { detail: 'advanced', store: missStore(), fetchImpl: harness.fetchImpl,
     env: { PROKERALA_CLIENT_ID: 'id', PROKERALA_CLIENT_SECRET: 'secret' } });
   assert.equal(value.metadata.detail, 'basic'); assert.equal(harness.providerCalls().length, 1);
   assert.match(harness.providerCalls()[0], /\/astrology\/panchang\?/); assert.doesNotMatch(harness.providerCalls()[0], /advanced/);
