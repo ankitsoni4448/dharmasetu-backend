@@ -3471,12 +3471,13 @@ app.get('/katha/catalog', async (req, res) => {
 app.get('/mantras', async (req, res) => {
   try {
     const {
-      deity = '', purpose = '', language = '', difficulty = '',
+      id = '', deity = '', purpose = '', language = '', difficulty = '',
       scriptureSource = '', search = '', page = 1, limit = 50,
     } = req.query;
     const safeLimit = Math.min(100, Math.max(1, +limit || 50));
     const offset = (Math.max(1, +page || 1) - 1) * safeLimit;
     let q = `?is_active=eq.true&order=title.asc&limit=${safeLimit}&offset=${offset}`;
+    if (id) q += `&id=eq.${encodeURIComponent(sanitize(id, 120))}`;
     if (deity) q += `&deity=eq.${encodeURIComponent(sanitize(deity, 80))}`;
     if (purpose) q += `&purpose=eq.${encodeURIComponent(sanitize(purpose, 80))}`;
     if (language) q += `&language=eq.${encodeURIComponent(sanitize(language, 40))}`;
@@ -3484,6 +3485,7 @@ app.get('/mantras', async (req, res) => {
     if (scriptureSource) q += `&scripture_source=eq.${encodeURIComponent(sanitize(scriptureSource, 120))}`;
 
     let mantras = await sbSelect('mantra_catalog', q);
+    const fetchedCount = mantras.length;
     if (search) {
       const needle = sanitize(search, 120).toLowerCase();
       mantras = mantras.filter(m => [
@@ -3491,9 +3493,10 @@ app.get('/mantras', async (req, res) => {
         m.transliteration, m.meaning_hi, m.meaning_en, m.search_text,
       ].filter(Boolean).join(' ').toLowerCase().includes(needle));
     }
-    res.json({ success: true, mantras, page: +page || 1, count: mantras.length, source: 'supabase' });
+    res.json({ success: true, mantras, page: +page || 1, count: mantras.length, has_more: fetchedCount === safeLimit, source: 'supabase' });
   } catch(e) {
-    res.json({ success: true, mantras: [], page: +(req.query.page || 1), count: 0, source: 'not_configured' });
+    console.warn('[Mantras] catalog read failed:', e?.message || 'unknown error');
+    res.status(503).json({ success: false, error: 'MANTRA_CATALOG_UNAVAILABLE' });
   }
 });
 

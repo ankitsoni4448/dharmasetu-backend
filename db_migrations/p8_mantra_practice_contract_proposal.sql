@@ -1,0 +1,20 @@
+-- PROPOSAL ONLY: additive Mantra practice contract. Do not auto-apply.
+ALTER TABLE mantra_catalog
+  ADD COLUMN IF NOT EXISTS alternate_names TEXT[] NOT NULL DEFAULT '{}'::text[],
+  ADD COLUMN IF NOT EXISTS primary_classification TEXT,
+  ADD COLUMN IF NOT EXISTS classifications TEXT[] NOT NULL DEFAULT '{}'::text[],
+  ADD COLUMN IF NOT EXISTS traditional_context TEXT,
+  ADD COLUMN IF NOT EXISTS preparation JSONB NOT NULL DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS posture JSONB NOT NULL DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS requires_guru_guidance BOOLEAN,
+  ADD COLUMN IF NOT EXISTS advanced_practice_available BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS text_sources JSONB NOT NULL DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS meaning_sources JSONB NOT NULL DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS practice_sources JSONB NOT NULL DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS pronunciation_sources JSONB NOT NULL DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS audio_sources JSONB NOT NULL DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS text_verification TEXT NOT NULL DEFAULT 'UNVERIFIED',
+  ADD COLUMN IF NOT EXISTS meaning_verification TEXT NOT NULL DEFAULT 'UNVERIFIED',
+  ADD COLUMN IF NOT EXISTS practice_verification TEXT NOT NULL DEFAULT 'UNVERIFIED',
+  ADD COLUMN IF NOT EXISTS pronunciation_verification TEXT NOT NULL DEFAULT 'UNVERIFIED',
+  ADD COLUMN IF NOT EXISTS audio_verification TEXT NOT NULL DEFAULT 'UNVERIFIED';
