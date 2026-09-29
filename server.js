@@ -3529,6 +3529,8 @@ app.post('/admin/mantras/ingest/manifest', adminAuth, async (req, res) => {
     const errors = validateMantraManifest(manifest);
     if (errors.length) return res.status(400).json({ success: false, errors });
 
+    const publicationErrors = (manifest.items || []).flatMap(item => require('./scripts/mantra_publication').publicationIssues(item).map(issue => `${item.id}: ${issue}`));
+    if (publicationErrors.length) return res.status(400).json({ success:false, errors:publicationErrors });
     const rows = (manifest.items || []).map(normalizeMantra);
     for (const row of rows) await sbUpsert('mantra_catalog', row, 'id');
     res.json({ success: true, ingested: rows.length });

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dharmasetu:mantra-experience-m3",
+  "title": "Mantra M3 review metadata contract (not a database migration)",
+  "type": "object",
+  "properties": {
+    "taxonomy_nodes": { "type": "array", "items": { "$ref": "#/$defs/taxonomy" } },
+    "reviewed_purpose_mappings": { "type": "array", "items": { "$ref": "#/$defs/purposeMapping" } },
+    "audio_artifacts": { "type": "array", "items": { "$ref": "#/$defs/audioArtifact" } },
+    "artwork": { "$ref": "#/$defs/artwork" },
+    "completion_recitation": { "$ref": "#/$defs/completion" }
+  },
+  "$defs": {
+    "review": {
+      "type": "object",
+      "required": ["review_status", "reviewed_by", "reviewed_at", "source"],
+      "properties": {
+        "review_status": { "enum": ["REVIEW_REQUIRED", "APPROVED", "REJECTED"] },
+        "reviewed_by": { "type": ["string", "null"] },
+        "reviewed_at": { "type": ["string", "null"] },
+        "source": { "type": ["string", "object", "null"] }
+      }
+    },
+    "taxonomy": {
+      "allOf": [{ "$ref": "#/$defs/review" }],
+      "type": "object",
+      "required": ["id", "kind", "label", "parent_id"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "enum": ["DEITY", "PURPOSE", "CONTENT_TYPE"] },
+        "label": { "type": "string" },
+        "parent_id": { "type": ["string", "null"] }
+      }
+    },
+    "purposeMapping": {
+      "allOf": [{ "$ref": "#/$defs/review" }],
+      "type": "object",
+      "required": ["intention", "purpose_id"],
+      "properties": { "intention": { "type": "string" }, "purpose_id": { "type": "string" } }
+    },
+    "audioArtifact": {
+      "type": "object",
+      "required": ["mantra_id", "source_type", "voice_identity", "generation_method", "provider", "model", "synthetic", "audio_version", "pronunciation_review_status", "audio_verification", "reviewed_by", "reviewed_at", "duration", "normal_url", "learning_slow_url", "downloadable", "publication_status"],
+      "properties": {
+        "mantra_id": { "type": "string" },
+        "source_type": { "enum": ["VERIFIED_HUMAN_RECITATION", "REVIEWED_FOUNDER_VOICE", "REVIEWED_SYNTHETIC_VOICE", "DEVICE_TTS_FALLBACK"] },
+        "voice_identity": { "type": "string" },
+        "generation_method": { "type": "string" },
+        "provider": { "type": ["string", "null"] },
+        "model": { "type": ["string", "null"] },
+        "synthetic": { "type": "boolean" },
+        "audio_version": { "type": "string" },
+        "pronunciation_review_status": { "enum": ["UNVERIFIED", "REVIEW_REQUIRED", "VERIFIED"] },
+        "audio_verification": { "enum": ["UNVERIFIED", "REVIEW_REQUIRED", "VERIFIED"] },
+        "reviewed_by": { "type": ["string", "null"] },
+        "reviewed_at": { "type": ["string", "null"] },
+        "duration": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "normal_url": { "type": ["string", "null"] },
+        "learning_slow_url": { "type": ["string", "null"] },
+        "downloadable": { "type": "boolean" },
+        "publication_status": { "enum": ["DRAFT", "REVIEW_REQUIRED", "APPROVED", "REJECTED"] },
+        "consent_id": { "type": ["string", "null"] },
+        "voice_model_approval_id": { "type": ["string", "null"] },
+        "reference_recording_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "artwork": {
+      "allOf": [{ "$ref": "#/$defs/review" }],
+      "type": "object",
+      "required": ["artwork_id", "deity_id", "image_url", "thumbnail_url", "artist_or_generation_source", "generation_method", "version"],
+      "properties": {
+        "artwork_id": { "type": "string" },
+        "deity_id": { "type": ["string", "null"] },
+        "mantra_id": { "type": ["string", "null"] },
+        "image_url": { "type": "string" },
+        "thumbnail_url": { "type": ["string", "null"] },
+        "artist_or_generation_source": { "type": "string" },
+        "generation_method": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "completion": {
+      "allOf": [{ "$ref": "#/$defs/review" }],
+      "type": "object",
+      "required": ["text", "text_verification", "pronunciation_verification", "practice_verification"],
+      "properties": {
+        "text": { "type": "string" },
+        "text_verification": { "enum": ["UNVERIFIED", "REVIEW_REQUIRED", "VERIFIED"] },
+        "pronunciation_verification": { "enum": ["UNVERIFIED", "REVIEW_REQUIRED", "VERIFIED"] },
+        "practice_verification": { "enum": ["UNVERIFIED", "REVIEW_REQUIRED", "VERIFIED"] }
+      }
+    }
+  }
+}

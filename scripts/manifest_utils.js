@@ -23,9 +23,9 @@ const CATEGORY_HINTS = [
 
 const DEITY_HINTS = ['Shiva', 'Vishnu', 'Krishna', 'Rama', 'Hanuman', 'Ganesh', 'Durga', 'Lakshmi', 'Saraswati', 'Surya', 'Devi'];
 const DIFFICULTIES = new Set(['beginner', 'intermediate', 'advanced']);
-const MANTRA_CONTENT_TYPES = new Set(['MANTRA', 'NAMA_JAPA', 'VEDIC_MANTRA', 'SHLOKA', 'PRAYER', 'STOTRA']);
+const MANTRA_CONTENT_TYPES = new Set(['MANTRA', 'NAMA_JAPA', 'VEDIC_MANTRA', 'SHLOKA', 'PRAYER', 'STOTRA', 'GAYATRI_MANTRA', 'DHYANA_MANTRA', 'SHANTI_MANTRA']);
 const MANTRA_VERIFICATION_STATUSES = new Set(['VERIFIED', 'REVIEW_REQUIRED', 'RESTRICTED']);
-const MANTRA_PRACTICE_LEVELS = new Set(['GENERAL_DEVOTIONAL', 'TRADITION_SPECIFIC', 'INITIATION_GUIDANCE']);
+const MANTRA_PRACTICE_LEVELS = new Set(['GENERAL_DEVOTIONAL', 'SOURCE_SPECIFIC', 'TRADITION_SPECIFIC', 'INITIATION_GUIDANCE', 'RESTRICTED']);
 
 function slug(input, fallback = 'item') {
   const clean = String(input || '')
@@ -137,7 +137,7 @@ function normalizeSource(source = {}) {
 function normalizeMantra(raw = {}) {
   const title = raw.canonicalName || raw.canonical_name || raw.title || raw.name || 'Untitled Mantra';
   const deityIds = raw.deityIds || raw.deity_ids || (raw.deity ? [raw.deity] : []);
-  const deity = raw.deity || deityIds[0] || DEITY_HINTS.find(d => title.toLowerCase().includes(d.toLowerCase())) || 'Universal';
+  const deity = raw.deity || deityIds[0] || 'Unspecified';
   const purposeIds = raw.purposeIds || raw.purpose_ids || (raw.purpose ? [raw.purpose] : []);
   const categoryIds = raw.categoryIds || raw.category_ids || [];
   const purpose = raw.purpose || purposeIds[0] || 'unspecified';
@@ -162,12 +162,12 @@ function normalizeMantra(raw = {}) {
     audio_downloadable: raw.audioDownloadable ?? audio.downloadable ?? false,
     offline_pack_id: raw.offlinePackId || raw.offline_pack_id || 'core_mantras_v1',
     search_text: raw.searchText || raw.search_text || compactText([title, deity, purpose, raw.scriptureSource, raw.sanskritText || raw.text, raw.transliteration, raw.meaningHi, raw.meaningEn, ...(raw.tags || [])]),
-    is_active: raw.isActive !== false,
+    is_active: (raw.is_active ?? raw.isActive) !== false,
     schema_version: Number(raw.schemaVersion || raw.schema_version || 2),
     content_version: raw.contentVersion || raw.content_version || '',
     canonical_name: title,
     names: raw.names || {},
-    mantra_content_type: raw.contentType || raw.content_type || 'MANTRA',
+    mantra_content_type: raw.mantra_content_type || raw.contentType || raw.content_type || 'MANTRA',
     deity_ids: deityIds,
     category_ids: categoryIds,
     purpose_ids: purposeIds,
@@ -185,6 +185,13 @@ function normalizeMantra(raw = {}) {
     verification_status: verificationStatus,
     reviewed_by: raw.reviewedBy || raw.reviewed_by || null,
     reviewed_at: raw.reviewedAt || raw.reviewed_at || null,
+    ...Object.fromEntries(['text','meaning','practice','pronunciation','audio'].flatMap(key => [
+      [`${key}_sources`, raw[`${key}_sources`] || raw.provenance?.[key] || []],
+      [`${key}_verification`, raw[`${key}_verification`] || raw.verification_dimensions?.[key] || 'REVIEW_REQUIRED'],
+    ])),
+    requires_guru_guidance: raw.requires_guru_guidance ?? null,
+    advanced_practice_available: raw.advanced_practice_available === true,
+    preparation: raw.preparation || {},
     practice,
     audio_metadata: audio,
     tags_v2: Array.isArray(raw.tags) ? raw.tags : [],
@@ -202,7 +209,7 @@ function validateMantraManifest(manifest = {}) {
     else ids.add(item.id);
     if (!item.canonicalName && !item.canonical_name && !item.title && !item.name) errors.push(`items[${i}].canonicalName required`);
     if (!item.sanskritText && !item.sanskrit_text && !item.text) errors.push(`items[${i}].sanskritText required`);
-    const contentType = item.contentType || item.content_type || 'MANTRA';
+    const contentType = item.mantra_content_type || item.contentType || item.content_type || 'MANTRA';
     const status = item.verificationStatus || item.verification_status || 'REVIEW_REQUIRED';
     const practiceLevel = item.practiceLevel || item.practice_level || 'GENERAL_DEVOTIONAL';
     if (!MANTRA_CONTENT_TYPES.has(contentType)) errors.push(`items[${i}].contentType unsupported`);

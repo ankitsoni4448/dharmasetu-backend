@@ -109,6 +109,7 @@ async function main() {
   const manifest = JSON.parse(fs.readFileSync(path.resolve(manifestPath), 'utf8'));
   const errors = validateMantraManifest(manifest);
   if (errors.length) throw new Error(errors.join('\n'));
+  require('./mantra_publication').assertPublishable(manifest.items);
 
   const rows = manifest.items.map(normalizeMantra);
   const existingRows = await sbRequest({ method:'GET', pathSuffix:'?select=*' }) || [];

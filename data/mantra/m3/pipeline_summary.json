@@ -1,0 +1,22 @@
+{
+  "current_production": 29,
+  "candidate_total": 118,
+  "unique_candidate_total": 118,
+  "discovery_candidates": 89,
+  "records_with_text_source": 0,
+  "corrupted_production_records": 0,
+  "corrupted_candidate_records": 0,
+  "text_source_ready": 0,
+  "text_review_required": 118,
+  "meaning_review_required": 118,
+  "practice_review_required": 118,
+  "pronunciation_review_required": 118,
+  "audio_review_required": 118,
+  "eligible_for_safe_production_import": 0,
+  "still_requiring_review": 118,
+  "remaining_needed_to_reach_108_safely": 108,
+  "numerical_gap_from_current_production": 79,
+  "duplicate_relationships": 0,
+  "automatic_verification": false,
+  "existing_approved_manifest_count": 0
+}
