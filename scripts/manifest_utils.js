@@ -23,7 +23,7 @@ const CATEGORY_HINTS = [
 
 const DEITY_HINTS = ['Shiva', 'Vishnu', 'Krishna', 'Rama', 'Hanuman', 'Ganesh', 'Durga', 'Lakshmi', 'Saraswati', 'Surya', 'Devi'];
 const DIFFICULTIES = new Set(['beginner', 'intermediate', 'advanced']);
-const MANTRA_CONTENT_TYPES = new Set(['MANTRA', 'NAMA_JAPA', 'VEDIC_MANTRA', 'SHLOKA', 'PRAYER', 'STOTRA', 'GAYATRI_MANTRA', 'DHYANA_MANTRA', 'SHANTI_MANTRA']);
+const MANTRA_CONTENT_TYPES = new Set(['MANTRA', 'NAMA_JAPA', 'VEDIC_MANTRA', 'SHLOKA', 'PRAYER', 'PRARTHANA', 'STOTRA', 'ASHTAKAM', 'KAVACHA', 'CHALISA', 'NAMAVALI', 'SAHASRANAMA', 'BIJA_MANTRA', 'GAYATRI_MANTRA', 'DHYANA_MANTRA', 'SHANTI_MANTRA']);
 const MANTRA_VERIFICATION_STATUSES = new Set(['VERIFIED', 'REVIEW_REQUIRED', 'RESTRICTED']);
 const MANTRA_PRACTICE_LEVELS = new Set(['GENERAL_DEVOTIONAL', 'SOURCE_SPECIFIC', 'TRADITION_SPECIFIC', 'INITIATION_GUIDANCE', 'RESTRICTED']);
 
@@ -185,6 +185,8 @@ function normalizeMantra(raw = {}) {
     verification_status: verificationStatus,
     reviewed_by: raw.reviewedBy || raw.reviewed_by || null,
     reviewed_at: raw.reviewedAt || raw.reviewed_at || null,
+    rights_status: raw.rightsStatus || raw.rights_status || 'REVIEW_REQUIRED',
+    rights_reference: raw.rightsReference || raw.rights_reference || null,
     ...Object.fromEntries(['text','meaning','practice','pronunciation','audio'].flatMap(key => [
       [`${key}_sources`, raw[`${key}_sources`] || raw.provenance?.[key] || []],
       [`${key}_verification`, raw[`${key}_verification`] || raw.verification_dimensions?.[key] || 'REVIEW_REQUIRED'],

@@ -19,6 +19,7 @@ function canonicalCandidate(row) {
     source_references:row.source_references||row.sourceReferences||[],practice:row.practice||{},
     reviewed_by:row.reviewed_by||row.reviewedBy||null,reviewed_at:row.reviewed_at||row.reviewedAt||null,
     publication_status:row.publication_status||'REVIEW_REQUIRED',is_active:row.is_active??row.isActive??false,
+    rights_status:row.rights_status||'REVIEW_REQUIRED',rights_reference:row.rights_reference||null,
     review_notes:row.review_notes||'Independent human/source review required. Existing classifications are unreviewed suggestions.',
     source_stage:row.source_stage||'LEGACY_REVIEW',audio_artifacts:row.audio_artifacts||[],artwork:row.artwork||null};
   DIMENSIONS.forEach(key=>{candidate[`${key}_sources`]=sourcesFor(row,key);candidate[`${key}_verification`]=statusFor(row,key);});

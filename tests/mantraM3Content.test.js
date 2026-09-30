@@ -5,11 +5,12 @@ const {prepare}=require('../scripts/prepare_mantra_m3_review');
 const {normalizeMantra}=require('../scripts/manifest_utils');
 const {decodeResponseChunks}=require('../scripts/ingest_mantra_manifest');
 const {qualityFindings}=require('../scripts/mantra_quality');
-const ready=()=>({id:'fixture',canonical_name:'Fixture',sanskrit_text:'ॐ',is_active:true,publication_status:'APPROVED',text_verification:'VERIFIED',text_sources:[{reference:'fixture only'}],reviewed_by:'fixture',reviewed_at:'2026-09-28'});
+const ready=()=>({id:'fixture',canonical_name:'Fixture',sanskrit_text:'ॐ',is_active:true,publication_status:'APPROVED',rights_status:'PROJECT_OWNED',rights_reference:'fixture rights record',text_verification:'VERIFIED',text_sources:[{reference:'fixture only'}],reviewed_by:'fixture',reviewed_at:'2026-09-28'});
 test('publication gate requires explicit approval, source, active and verified text independently',()=>{
   assert.deepEqual(publicationIssues(ready()),[]);
   for(const key of ['is_active','publication_status','text_verification','text_sources','reviewed_by','sanskrit_text']){const row=ready();delete row[key];assert.ok(publicationIssues(row).length,key);assert.throws(()=>assertPublishable([row]),/blocked/);}
   assert.ok(publicationIssues({...ready(),sanskrit_text:'bad\uFFFD'}).includes('SACRED_TEXT_CORRUPTED'));
+  assert.ok(publicationIssues({...ready(),rights_status:'REVIEW_REQUIRED'}).includes('RIGHTS_CLEARANCE_REQUIRED'));
 });
 test('discovery-only evidence cannot publish despite claimed approval; each verified dimension needs sources',()=>{
   assert.ok(publicationIssues({...ready(),source_stage:'DISCOVERY_ONLY'}).includes('DISCOVERY_IS_NOT_TEXT_EVIDENCE'));

@@ -1,0 +1,1535 @@
+{
+  "generated_at": "2026-10-01",
+  "production_active": 29,
+  "candidates_inspected": 89,
+  "project_source_pdfs_found": 0,
+  "source_host_counts": {
+    "sanskritdocuments.org": 89
+  },
+  "policy_findings": {
+    "sanskritdocuments.org": {
+      "decision": "REFERENCE_ONLY_PERMISSION_REQUIRED",
+      "policy_url": "https://sanskritdocuments.org/FAQ",
+      "checked_at": "2026-10-01",
+      "reason": "The repository permits personal study/teaching but restricts copying or reposting for website promotion or commercial use without permission. Discovery links are not publication rights or text verification."
+    }
+  },
+  "exact_duplicate_ids": 0,
+  "publication_eligible": 0,
+  "records": [
+    {
+      "id": "candidate_ganesha_ashtavinayakastotram_ashtavinayakastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_ganesha/aShTavinAyakastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_akhilandadevijambukeshvarastutih_akhilandadevijambukeshvarastutih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/akhilANDadevIjambukeshvarastutiH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_trimurtistutih_trimurtistutih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/trimUrtistutiH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_ramayanatatparyasangrahastotram_ramayanatatparyasangrahastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_major_works/rAmAyaNatAtparyasangrahastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_achyutashtakam_1_achyuta8",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/achyuta8.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneya_dvadashanama_stotram_anjaneya12",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_hanumaana/Anjaneya12.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_aparajita_stotram_aparajitastotra",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/aparAjitAstotra.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshmanakrritam_ramanathastotram_lakshmanakrritamramanathastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/lakShmaNakRRitaMrAmanAthastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_gayatrisarasvatikrritam_shivastotram_gayatrisarasvatikrritamshivastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/gAyatrIsarasvatIkRRitaMshivastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityadvadashanamastotram_adityadvadashanamastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/AdityadvAdashanAmastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_skandalakshmidurgasuprabhatastutih_skandalakshmidurgasuprabhatastutih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_subrahmanya/skandalakShmIdurgAsuprabhAtastutiH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_stutisangraha_short_hymns_of_various_deities_devadevatastutisangrahah",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_deities_misc/devadevatAstutisangrahaH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_rinamochanamahaganapatistotram_rrinamochanamahaganapatistotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_ganesha/RRiNamochanamahAgaNapatistotraM.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_agastyeshalingashtakam_agastyeshalingashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/agastyeshalingAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_parameshvarastotram_1_parameshvarastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_deities_misc/parameshvarastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_shivaramashtakam_shivaramashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/shivarAmAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_achyutashtakam_achyuta81",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/achyuta81.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_shrimadanjaneya_bhujangaprayata_stotram_version_1_hanumatbhujangaprayatastotra",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_hanumaana/hanUmatbhujangaprayAtastotra.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_aparadhakshamapanastotram_aparaadhakshamaa",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/aparaadhakshamaa.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshmivishnukrita_shivadhyanastutih_lakshmivishnukrritashivadhyanastutih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/lakShmIviShNUkRRitashivadhyAnastutiH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_vishvarupasarasvatikrritam_krrishnanarayanastotram_vishvarupasarasvatikrritamkrrishnanarayanastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/vishvarUpAsarasvatIkRRitaMkRRiShNanArAyaNastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityastotram_mahamahimanvitam_adityastotraappayadixit",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/AdityastotraAppayaDixit.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyakaravalambastotram_kartikeyakaravalambastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_subrahmanya/kArtikeyakarAvalambastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_angarakastotram_angaarakastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/angaarakastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_rinaharaganeshastotram_rinamochanamahaganapatistotram_rinaharaganeshastotra",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_ganesha/RiNaharagaNeshastotra.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_aghoramurtistotram_aghoramurtistotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/aghoramUrtistotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_mrityunjaya_stotra_1_from_narasimhapurana_mrityunjayastotram1np",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/mRityunjayastotram1NP.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_vaishnavamangalam_vaishnavamangalampurnavirathidevacharya",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_raama/vaiShNavamangalaMpUrNavirAThIdevAchArya.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_achyutashtakam_3_achyutashtakam3",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/achyutAShTakam3.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneya_bhujangaprayata_stotram_anjaneyabhujangam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_hanumaana/Anjaneyabhujangam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_argalastotram_argalaastotra",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/argalaastotra.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshmikrritam_1_narayanastotram_lakshmikrritam1narayanastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/lakShmIkRRitaM1nArAyaNastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_aryambikashankarasharadastotram_aryambikashankarasharadastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/AryAmbikAshankarashAradAstotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityaharshanastotram_sartham_adityaharshanastotramsartham",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/AdityaharShaNastotraMsArtham.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyashatashtanamastotram_kartikeyashatashtanamastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_subrahmanya/kArtikeyashatAShTanAmastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_angaraka_ashtottara_shatanama_stotram_angaraka108namastotra",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/angAraka108nAmastotra.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekada_ntaganeshastotram_ekadantaganeshastotra",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_ganesha/ekadantagaNeshastotra.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_aghorashtakam_aghorashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/aghorAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_harishankarastotrampapashamanaagastya_harishankarastotrampapashamanaagastya",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/harishaNkarastotrampApashamanaagastya.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_aprameyastotram_aprameyastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_raama/aprameyastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_anantakrishnavaradarajashtakam_anantakrrishnavaradarajashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/anantakRRiShNavaradarAjAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneyamangalashtakam_anjaneyamangalashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_hanumaana/AnjaneyamangalAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_aryadurgashtakam_aryadurgashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/AryAdurgAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshmikrritam_2_narayanastotram_lakshmikrritam2narayanastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/lakShmIkRRitaM2nArAyaNastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_kashyapakrritam_gayatrisarasvatistotram_kashyapakrritamgayatrisarasvatistotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/kAshyapakRRitaMgAyatrIsarasvatIstotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityahridayastotram_from_padmapurana_adityahrridayapadmapurana",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/AdityahRRidayapadmapurANa.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyastotrakadambam_kartikeyastotrakadambam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_subrahmanya/kArtikeyastotrakadambam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_rinamochakamangalastotram_mangalastotra",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/mangalastotra.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekadantasharanagatistotram_ekadantasharanaagatistotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_ganesha/ekadantasharaNaagatistotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_attalasundarashtakam_attalasundarashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/aTTAlasundarAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_hariharastutih_hariharastutih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/hariharastutiH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_ayodhyapanchakam_ayodhyapanchakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_general/ayodhyApanchakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_ashtamahishiyuktakrishnastotram_ashtamahishiyuktakrrishnastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/aShTamahiShIyuktakRRiShNastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_shrimadanjaneyasuprabhatam_anjaneyasuprabhatam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_hanumaana/AnjaneyasuprabhAtam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_katyayanistutih_r_ishikrrita_katyayanistutihrrishikrrita",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/kAtyAyanIstutiHRRiShikRRitA.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_nimbadrilakshminrisimhasuprabhatam_nimbadrilakshminrrisimhasuprabhatam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/nimbAdrIlakShmInRRisiMhasuprabhAtam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_girlalitambikastutih_girlalitambikastutih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/gIrlalitAmbikAstutiH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityashtakam_adityashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/AdityAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyastotranamavali_prajnavivardhanam_prajnavivardhanamkartikeyanamavalih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_subrahmanya/prajnAvivardhanamkArtikeyanAmAvaliH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_angarakastotram_angarakastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/angArakastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekadantastutih_naradamunikrrita_1_ekadantastutihnaradamunikrrita1",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_ganesha/ekadantastutiHnAradamunikRRitA1.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_anadikalpeshvarastotram_anadikalpeshvarastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/anAdikalpeshvarastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_markandeyaproktamhariharabhinnatavarnanastotram_markandeyaproktamhariharabhinnatavarnanastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/mArkaNDeyaproktaMhariharAbhinnatAvarNanastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_ayodhyamangalam_ayodhyamangalamyoganandacharya",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_raama/ayodhyAmangalaMyogAnandAchArya.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_anandastotram_anandastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/Anandastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneyastotram_1_nilakrita_anjaneyastotramnilakrita",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_hanumaana/AnjaneyastotramnIlakRita.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_katyayanistutih_pandavahkrrita_katyayanistutihpandavahkrrita",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/kAtyAyanIstutiHpANDavAHkRRitA.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_nimbadrilakshminrisimhastotram_nimbadrilakshminrrisimhastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/nimbAdrIlakShmInRRisiMhastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_jinavakstutih_jinavakstutih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/jinavAkstutiH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityastotram_bhavishyapuranantargatam_adityashtottaranamastotram_adityastotrambhavishyapurana",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/AdityastotrambhaviShyapurANa.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyastottram_1_skandastotram_hymn_skanda",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_subrahmanya/skanda.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_ekashlokinavagrahastotram_1_ekashlokinavagrahastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/ekashlokInavagrahastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekadantastutih_naradamunikrrita_2_ekadantastutihnaradamunikrrita2",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_ganesha/ekadantastutiHnAradamunikRRitA2.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_aparadhashtakam_1_shivashtakam_aparadhastotrashtakam_aparadhashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/aparAdhAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_hariharashtakam_hariharashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/hariharAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_arthapanchakam_arthapanchakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_raama/arthapanchakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_udupi_shri_krishna_suprabhatam_udupikrishnasupra",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/uDupikRishNasupra.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneyastotram_2_anjaneyastotram2",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_hanumaana/Anjaneyastotram2.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_katyayanistutih_katyayanistutih",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_devii/kAtyAyanIstutiH.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshminrisimhastavanastotram_lakshminrrisimhastavanastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/lakShmInRRisiMhastavanastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_nrisimhasarasvatistotram_nrrisimhasarasvatistotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_deities_misc/nRRisiMhasarasvatistotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_jayadityastotramskandapurana_jayadityastotramskandapurana",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/jayAdityastotramskandapurANa.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyastotram_2_kartikeyastotram2",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_subrahmanya/kArtikeyastotram2.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_ekashlokinavagrahastotram_2_ekashlokinavagrahastotram2",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_z_misc_navagraha/ekashlokInavagrahastotram2.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekadantastutih_naradamunikrrita_3_ekadantastutihnaradamunikrrita3",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_ganesha/ekadantastutiHnAradamunikRRitA3.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_amaranathashtakam_amaranathashtakam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/amaranAthAShTakam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_hariharashtottarashatanamastotram_hariharashtottarashatanamastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_shiva/hariharAShTottarashatanAmastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_kodandapanisuprabhatam_kodandapanisuprabhatam",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_raama/kodaNDapANisuprabhAtam.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_kaliyugemartyaihkriyamanamshrikrrishnastotram_kaliyugemartyaihkriyamanamshrikrrishnastotram",
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_vishhnu/kaliyugemartyaiHkriyamANaMshrIkRRiShNastotram.html"
+      ],
+      "source_hosts": [
+        "sanskritdocuments.org"
+      ],
+      "text_present": false,
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    }
+  ],
+  "conclusion": "No candidate may be promoted by this audit. The available 89 discovery links contain no approved edition-level text in the project, require human Sanskrit review, and do not establish reusable publication rights."
+}

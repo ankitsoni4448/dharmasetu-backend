@@ -1,0 +1,894 @@
+{
+  "items": [
+    {
+      "id": "candidate_ganesha_ashtavinayakastotram_ashtavinayakastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_akhilandadevijambukeshvarastutih_akhilandadevijambukeshvarastutih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_trimurtistutih_trimurtistutih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_ramayanatatparyasangrahastotram_ramayanatatparyasangrahastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_achyutashtakam_1_achyuta8",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneya_dvadashanama_stotram_anjaneya12",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_aparajita_stotram_aparajitastotra",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshmanakrritam_ramanathastotram_lakshmanakrritamramanathastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_gayatrisarasvatikrritam_shivastotram_gayatrisarasvatikrritamshivastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityadvadashanamastotram_adityadvadashanamastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_skandalakshmidurgasuprabhatastutih_skandalakshmidurgasuprabhatastutih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_stutisangraha_short_hymns_of_various_deities_devadevatastutisangrahah",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_rinamochanamahaganapatistotram_rrinamochanamahaganapatistotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_agastyeshalingashtakam_agastyeshalingashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_parameshvarastotram_1_parameshvarastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_shivaramashtakam_shivaramashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_achyutashtakam_achyuta81",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_shrimadanjaneya_bhujangaprayata_stotram_version_1_hanumatbhujangaprayatastotra",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_aparadhakshamapanastotram_aparaadhakshamaa",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshmivishnukrita_shivadhyanastutih_lakshmivishnukrritashivadhyanastutih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_vishvarupasarasvatikrritam_krrishnanarayanastotram_vishvarupasarasvatikrritamkrrishnanarayanastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityastotram_mahamahimanvitam_adityastotraappayadixit",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyakaravalambastotram_kartikeyakaravalambastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_angarakastotram_angaarakastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_rinaharaganeshastotram_rinamochanamahaganapatistotram_rinaharaganeshastotra",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_aghoramurtistotram_aghoramurtistotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_mrityunjaya_stotra_1_from_narasimhapurana_mrityunjayastotram1np",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_vaishnavamangalam_vaishnavamangalampurnavirathidevacharya",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_achyutashtakam_3_achyutashtakam3",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneya_bhujangaprayata_stotram_anjaneyabhujangam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_argalastotram_argalaastotra",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshmikrritam_1_narayanastotram_lakshmikrritam1narayanastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_aryambikashankarasharadastotram_aryambikashankarasharadastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityaharshanastotram_sartham_adityaharshanastotramsartham",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyashatashtanamastotram_kartikeyashatashtanamastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_angaraka_ashtottara_shatanama_stotram_angaraka108namastotra",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekada_ntaganeshastotram_ekadantaganeshastotra",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_aghorashtakam_aghorashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_harishankarastotrampapashamanaagastya_harishankarastotrampapashamanaagastya",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_aprameyastotram_aprameyastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_anantakrishnavaradarajashtakam_anantakrrishnavaradarajashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneyamangalashtakam_anjaneyamangalashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_aryadurgashtakam_aryadurgashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshmikrritam_2_narayanastotram_lakshmikrritam2narayanastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_kashyapakrritam_gayatrisarasvatistotram_kashyapakrritamgayatrisarasvatistotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityahridayastotram_from_padmapurana_adityahrridayapadmapurana",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyastotrakadambam_kartikeyastotrakadambam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_rinamochakamangalastotram_mangalastotra",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekadantasharanagatistotram_ekadantasharanaagatistotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_attalasundarashtakam_attalasundarashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_hariharastutih_hariharastutih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_ayodhyapanchakam_ayodhyapanchakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_ashtamahishiyuktakrishnastotram_ashtamahishiyuktakrrishnastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_shrimadanjaneyasuprabhatam_anjaneyasuprabhatam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_katyayanistutih_r_ishikrrita_katyayanistutihrrishikrrita",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_nimbadrilakshminrisimhasuprabhatam_nimbadrilakshminrrisimhasuprabhatam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_girlalitambikastutih_girlalitambikastutih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityashtakam_adityashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyastotranamavali_prajnavivardhanam_prajnavivardhanamkartikeyanamavalih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_angarakastotram_angarakastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekadantastutih_naradamunikrrita_1_ekadantastutihnaradamunikrrita1",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_anadikalpeshvarastotram_anadikalpeshvarastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_markandeyaproktamhariharabhinnatavarnanastotram_markandeyaproktamhariharabhinnatavarnanastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_ayodhyamangalam_ayodhyamangalamyoganandacharya",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_anandastotram_anandastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneyastotram_1_nilakrita_anjaneyastotramnilakrita",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_katyayanistutih_pandavahkrrita_katyayanistutihpandavahkrrita",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_nimbadrilakshminrisimhastotram_nimbadrilakshminrrisimhastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_jinavakstutih_jinavakstutih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_adityastotram_bhavishyapuranantargatam_adityashtottaranamastotram_adityastotrambhavishyapurana",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyastottram_1_skandastotram_hymn_skanda",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_ekashlokinavagrahastotram_1_ekashlokinavagrahastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekadantastutih_naradamunikrrita_2_ekadantastutihnaradamunikrrita2",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_aparadhashtakam_1_shivashtakam_aparadhastotrashtakam_aparadhashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_hariharashtakam_hariharashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_arthapanchakam_arthapanchakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_udupi_shri_krishna_suprabhatam_udupikrishnasupra",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_hanuman_anjaneyastotram_2_anjaneyastotram2",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_durga_katyayanistutih_katyayanistutih",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_lakshmi_lakshminrisimhastavanastotram_lakshminrrisimhastavanastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_saraswati_nrisimhasarasvatistotram_nrrisimhasarasvatistotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_surya_jayadityastotramskandapurana_jayadityastotramskandapurana",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_kartikeya_kartikeyastotram_2_kartikeyastotram2",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_navagraha_ekashlokinavagrahastotram_2_ekashlokinavagrahastotram2",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_ganesha_ekadantastutih_naradamunikrrita_3_ekadantastutihnaradamunikrrita3",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_shiva_amaranathashtakam_amaranathashtakam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_vishnu_hariharashtottarashatanamastotram_hariharashtottarashatanamastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_rama_kodandapanisuprabhatam_kodandapanisuprabhatam",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    },
+    {
+      "id": "candidate_krishna_kaliyugemartyaihkriyamanamshrikrrishnastotram_kaliyugemartyaihkriyamanamshrikrrishnastotram",
+      "blockers": [
+        "HUMAN_SANSKRIT_TEXT_REVIEW_REQUIRED",
+        "EDITION_LEVEL_PROVENANCE_REQUIRED",
+        "TRANSLITERATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REFERENCE_ONLY_PERMISSION_REQUIRED"
+      ]
+    }
+  ]
+}
