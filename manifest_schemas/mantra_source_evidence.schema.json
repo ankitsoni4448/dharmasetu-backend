@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dharmasetu:mantra-source-evidence-m5",
+  "title": "Mantra source evidence registration",
+  "type": "object",
+  "required": ["source_id", "source_title", "rights_status", "review_state", "evidence"],
+  "properties": {
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_title": { "type": "string", "minLength": 1 },
+    "work": { "type": ["string", "null"] },
+    "edition": { "type": ["string", "null"] },
+    "publisher": { "type": ["string", "null"] },
+    "url": { "type": ["string", "null"] },
+    "project_reference": { "type": ["string", "null"] },
+    "rights_status": { "enum": ["PUBLIC_DOMAIN", "LICENSED", "PROJECT_OWNED", "PERMISSION_GRANTED", "REVIEW_REQUIRED"] },
+    "rights_reference": { "type": ["string", "null"] },
+    "review_state": { "enum": ["REGISTERED", "EXTRACTION_CANDIDATE", "REVIEW_REQUIRED", "APPROVED", "REJECTED"] },
+    "reviewer": { "type": ["string", "null"] },
+    "reviewed_at": { "type": ["string", "null"] },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["candidate_id", "field_supported", "exact_evidence", "review_state"],
+        "properties": {
+          "candidate_id": { "type": "string" },
+          "page": { "type": ["integer", "string", "null"] },
+          "section": { "type": ["string", "null"] },
+          "verse_or_mantra_id": { "type": ["string", "null"] },
+          "field_supported": { "enum": ["text", "transliteration", "meaning", "practice", "pronunciation", "audio"] },
+          "exact_evidence": { "type": "string", "minLength": 1 },
+          "review_state": { "enum": ["EXTRACTION_CANDIDATE", "REVIEW_REQUIRED", "APPROVED", "REJECTED"] },
+          "reviewer": { "type": ["string", "null"] },
+          "reviewed_at": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

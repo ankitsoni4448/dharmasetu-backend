@@ -1,0 +1,2132 @@
+{
+  "items": [
+    {
+      "canonical_id": "aditya_hridaya_seed",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "asato_ma",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "baglamukhi_seed",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "bajrang_baan_seed",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "durga_moola",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "ganesh_beej",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "ganesh_moola",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "gayatri",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "hanuman_beej",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "hanuman_moola",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "hare_krishna",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "kali_mantra",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "krishna_beej",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "lakshmi_beej",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "mahamrityunjaya",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "om_namah",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "om_namah_shivay",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "om_namo_bhagavate",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "om_namo_narayanaya",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "ram_moola",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "ram_taraka",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "saraswati_beej",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "shanti_mantra",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "shiv_beej",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "shiva_panchakshara",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "sudarshana",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "surya_moola",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "vakratunda",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "vishnu_sahasranama_seed",
+      "blockers": [
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ashtavinayakastotram_ashtavinayakastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_akhilandadevijambukeshvarastutih_akhilandadevijambukeshvarastutih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_trimurtistutih_trimurtistutih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_ramayanatatparyasangrahastotram_ramayanatatparyasangrahastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_1_achyuta8",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneya_dvadashanama_stotram_anjaneya12",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_aparajita_stotram_aparajitastotra",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmanakrritam_ramanathastotram_lakshmanakrritamramanathastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_gayatrisarasvatikrritam_shivastotram_gayatrisarasvatikrritamshivastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityadvadashanamastotram_adityadvadashanamastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_skandalakshmidurgasuprabhatastutih_skandalakshmidurgasuprabhatastutih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_stutisangraha_short_hymns_of_various_deities_devadevatastutisangrahah",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_rinamochanamahaganapatistotram_rrinamochanamahaganapatistotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_agastyeshalingashtakam_agastyeshalingashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_parameshvarastotram_1_parameshvarastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_shivaramashtakam_shivaramashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_achyuta81",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_shrimadanjaneya_bhujangaprayata_stotram_version_1_hanumatbhujangaprayatastotra",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_aparadhakshamapanastotram_aparaadhakshamaa",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmivishnukrita_shivadhyanastutih_lakshmivishnukrritashivadhyanastutih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_vishvarupasarasvatikrritam_krrishnanarayanastotram_vishvarupasarasvatikrritamkrrishnanarayanastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityastotram_mahamahimanvitam_adityastotraappayadixit",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyakaravalambastotram_kartikeyakaravalambastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_angarakastotram_angaarakastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE",
+        "POTENTIAL_CANONICAL_DUPLICATE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_rinaharaganeshastotram_rinamochanamahaganapatistotram_rinaharaganeshastotra",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_aghoramurtistotram_aghoramurtistotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_mrityunjaya_stotra_1_from_narasimhapurana_mrityunjayastotram1np",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_vaishnavamangalam_vaishnavamangalampurnavirathidevacharya",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_3_achyutashtakam3",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneya_bhujangaprayata_stotram_anjaneyabhujangam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_argalastotram_argalaastotra",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmikrritam_1_narayanastotram_lakshmikrritam1narayanastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_aryambikashankarasharadastotram_aryambikashankarasharadastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityaharshanastotram_sartham_adityaharshanastotramsartham",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyashatashtanamastotram_kartikeyashatashtanamastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_angaraka_ashtottara_shatanama_stotram_angaraka108namastotra",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekada_ntaganeshastotram_ekadantaganeshastotra",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_aghorashtakam_aghorashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_harishankarastotrampapashamanaagastya_harishankarastotrampapashamanaagastya",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_aprameyastotram_aprameyastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_anantakrishnavaradarajashtakam_anantakrrishnavaradarajashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyamangalashtakam_anjaneyamangalashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_aryadurgashtakam_aryadurgashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmikrritam_2_narayanastotram_lakshmikrritam2narayanastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_kashyapakrritam_gayatrisarasvatistotram_kashyapakrritamgayatrisarasvatistotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityahridayastotram_from_padmapurana_adityahrridayapadmapurana",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotrakadambam_kartikeyastotrakadambam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_rinamochakamangalastotram_mangalastotra",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantasharanagatistotram_ekadantasharanaagatistotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_attalasundarashtakam_attalasundarashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharastutih_hariharastutih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_ayodhyapanchakam_ayodhyapanchakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_ashtamahishiyuktakrishnastotram_ashtamahishiyuktakrrishnastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_shrimadanjaneyasuprabhatam_anjaneyasuprabhatam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_r_ishikrrita_katyayanistutihrrishikrrita",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_nimbadrilakshminrisimhasuprabhatam_nimbadrilakshminrrisimhasuprabhatam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_girlalitambikastutih_girlalitambikastutih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityashtakam_adityashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotranamavali_prajnavivardhanam_prajnavivardhanamkartikeyanamavalih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_angarakastotram_angarakastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE",
+        "POTENTIAL_CANONICAL_DUPLICATE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_1_ekadantastutihnaradamunikrrita1",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_anadikalpeshvarastotram_anadikalpeshvarastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_markandeyaproktamhariharabhinnatavarnanastotram_markandeyaproktamhariharabhinnatavarnanastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_ayodhyamangalam_ayodhyamangalamyoganandacharya",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_anandastotram_anandastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyastotram_1_nilakrita_anjaneyastotramnilakrita",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_pandavahkrrita_katyayanistutihpandavahkrrita",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_nimbadrilakshminrisimhastotram_nimbadrilakshminrrisimhastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_jinavakstutih_jinavakstutih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityastotram_bhavishyapuranantargatam_adityashtottaranamastotram_adityastotrambhavishyapurana",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastottram_1_skandastotram_hymn_skanda",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_ekashlokinavagrahastotram_1_ekashlokinavagrahastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_2_ekadantastutihnaradamunikrrita2",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_aparadhashtakam_1_shivashtakam_aparadhastotrashtakam_aparadhashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharashtakam_hariharashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_arthapanchakam_arthapanchakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_udupi_shri_krishna_suprabhatam_udupikrishnasupra",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyastotram_2_anjaneyastotram2",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_katyayanistutih",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshminrisimhastavanastotram_lakshminrrisimhastavanastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_nrisimhasarasvatistotram_nrrisimhasarasvatistotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_jayadityastotramskandapurana_jayadityastotramskandapurana",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotram_2_kartikeyastotram2",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_ekashlokinavagrahastotram_2_ekashlokinavagrahastotram2",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_3_ekadantastutihnaradamunikrrita3",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_amaranathashtakam_amaranathashtakam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharashtottarashatanamastotram_hariharashtottarashatanamastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_kodandapanisuprabhatam_kodandapanisuprabhatam",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_kaliyugemartyaihkriyamanamshrikrrishnastotram_kaliyugemartyaihkriyamanamshrikrrishnastotram",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "TRANSLITERATION_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "TRANSLITERATION_SOURCE_REQUIRED",
+        "MEANING_SOURCE_REQUIRED",
+        "PRACTICE_SOURCE_REQUIRED",
+        "PRONUNCIATION_SOURCE_REQUIRED",
+        "AUDIO_SOURCE_REQUIRED",
+        "ACTIVE_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "DISCOVERY_IS_NOT_TEXT_EVIDENCE"
+      ]
+    }
+  ]
+}

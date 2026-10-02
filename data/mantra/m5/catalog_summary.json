@@ -1,0 +1,63 @@
+{
+  "production_snapshot_count": 29,
+  "total_candidates": 118,
+  "distinct_candidates": 117,
+  "duplicate_ids": 0,
+  "alias_conflicts": 1,
+  "with_sanskrit_text": 29,
+  "fully_text_sourced": 0,
+  "transliteration_present": 29,
+  "transliteration_ready": 0,
+  "meaning_ready": 0,
+  "practice_ready": 0,
+  "pronunciation_ready": 0,
+  "audio_ready": 0,
+  "rights_cleared": 0,
+  "publication_ready": 0,
+  "blocked": 118,
+  "by_deity": {
+    "Surya": 10,
+    "Universal": 3,
+    "Devi": 5,
+    "Hanuman": 10,
+    "Ganesh": 3,
+    "Krishna": 10,
+    "Shiva": 12,
+    "Vishnu": 14,
+    "Ganesha": 8,
+    "Rama": 8,
+    "Durga": 7,
+    "Lakshmi": 7,
+    "Saraswati": 7,
+    "Kartikeya": 7,
+    "Navagraha": 7
+  },
+  "by_content_type": {
+    "MANTRA": 12,
+    "PRAYER": 2,
+    "BIJA_MANTRA": 9,
+    "GAYATRI_MANTRA": 1,
+    "NAMA_JAPA": 3,
+    "VEDIC_MANTRA": 1,
+    "SHLOKA": 1,
+    "STOTRA": 70,
+    "ASHTAKAM": 14,
+    "NAMAVALI": 5
+  },
+  "by_japa_eligibility": {
+    "ELIGIBLE_BY_CONTENT_TYPE": 26,
+    "NOT_JAPA_CONTENT": 92
+  },
+  "duplicate_relationships": [],
+  "alias_conflict_records": [
+    {
+      "normalized_alias": "angarakastotram",
+      "canonical_ids": [
+        "candidate_navagraha_angarakastotram_angaarakastotram",
+        "candidate_navagraha_angarakastotram_angarakastotram"
+      ]
+    }
+  ],
+  "generated_at": "2026-10-03",
+  "production_modified": false
+}
