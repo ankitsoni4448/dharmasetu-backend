@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "canonical_id": "asato_ma",
+      "source_id": "brihadaranyaka-1-3-28-ignca",
+      "source_title": "The Bṛhadāraṇyaka Upaniṣad with commentary",
+      "work": "Bṛhadāraṇyaka Upaniṣad",
+      "edition_publisher": "IGNCA digitized edition",
+      "section": "1.3.28",
+      "url": "https://ignca.gov.in/Asi_data/8283.pdf",
+      "field_supported": "text",
+      "match_state": "PARTIAL_MATCH_REVIEW_REQUIRED",
+      "rights_status": "REVIEW_REQUIRED",
+      "rights_reference": null,
+      "note": "The three core lines are attested. The production record additionally includes Om and a threefold shanti ending, which this passage does not establish."
+    },
+    {
+      "canonical_id": "gayatri",
+      "source_id": "rigveda-3-62-10-wikisource",
+      "source_title": "Ṛgveda Sūkta 3.62",
+      "work": "Ṛgveda",
+      "edition_publisher": "Sanskrit Wikisource transcription",
+      "section": "3.62.10",
+      "url": "https://sa.wikisource.org/wiki/ऋग्वेदः_सूक्तं_३.६२",
+      "field_supported": "text",
+      "match_state": "PARTIAL_MATCH_REVIEW_REQUIRED",
+      "rights_status": "LICENSED",
+      "rights_reference": "Wikisource copyright policy: public domain or CC BY-SA; page-specific attribution and license review required",
+      "note": "The Savitṛ verse is present; production also prefixes Om and the vyāhṛtis. Vedic accents and orthography require expert review."
+    },
+    {
+      "canonical_id": "mahamrityunjaya",
+      "source_id": "rigveda-7-59-12-witness",
+      "source_title": "Ṛgveda 7.59.12",
+      "work": "Ṛgveda",
+      "edition_publisher": "Vedic verse witness",
+      "section": "7.59.12",
+      "url": "https://vedapath.app/en/rig-veda/mandala-7/59/12",
+      "field_supported": "text",
+      "match_state": "PARTIAL_MATCH_REVIEW_REQUIRED",
+      "rights_status": "REVIEW_REQUIRED",
+      "rights_reference": null,
+      "note": "The core verse matches in normalized form; production adds Om and omits Vedic accents. Edition and reuse terms need confirmation."
+    },
+    {
+      "canonical_id": "hare_krishna",
+      "source_id": "kali-santarana-ignca-index",
+      "source_title": "Kali-santaraṇa Upaniṣad",
+      "work": "Kali-santaraṇa Upaniṣad",
+      "edition_publisher": "Gaudiya Grantha Mandira indexed by IGNCA",
+      "section": null,
+      "url": "https://ignca.gov.in/online-digital-resources/gaudiya-grantha-mandira-sanskrit-text-repository/",
+      "field_supported": "text",
+      "match_state": "VARIANT_REVIEW_REQUIRED",
+      "rights_status": "REVIEW_REQUIRED",
+      "rights_reference": null,
+      "note": "The work is an authoritative lead, but mantra order and edition must be checked against the PDF; no text or rights approval is inferred from the index."
+    }
+  ]
+}

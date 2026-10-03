@@ -1,0 +1,18 @@
+{
+  "existing_records_audited": 29,
+  "source_matched_exact": 0,
+  "source_leads_registered": 4,
+  "text_review_ready": 4,
+  "rights_cleared": 0,
+  "transliteration_ready": 0,
+  "meaning_ready": 0,
+  "core_launch_ready": 0,
+  "japa_ready": 0,
+  "text_only_launch_ready": 0,
+  "human_sanskrit_review_required": 29,
+  "rights_work_required": 29,
+  "withheld_records": 29,
+  "blocked": 29,
+  "generated_at": "2026-10-03",
+  "production_modified": false
+}

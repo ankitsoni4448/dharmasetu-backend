@@ -1,0 +1,381 @@
+{
+  "items": [
+    {
+      "canonical_id": "aditya_hridaya_seed",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "asato_ma",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "SOURCE_MATCH_HUMAN_REVIEW_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "baglamukhi_seed",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "bajrang_baan_seed",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "durga_moola",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "ganesh_beej",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "ganesh_moola",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "gayatri",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "SOURCE_MATCH_HUMAN_REVIEW_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "hanuman_beej",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "hanuman_moola",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "hare_krishna",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "SOURCE_MATCH_HUMAN_REVIEW_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "kali_mantra",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "krishna_beej",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "lakshmi_beej",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "mahamrityunjaya",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "SOURCE_MATCH_HUMAN_REVIEW_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "om_namah",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "om_namah_shivay",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "om_namo_bhagavate",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "om_namo_narayanaya",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "ram_moola",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "ram_taraka",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "saraswati_beej",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "shanti_mantra",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "shiv_beej",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "shiva_panchakshara",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "sudarshana",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "surya_moola",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "vakratunda",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "vishnu_sahasranama_seed",
+      "blockers": [
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "TEXT_SOURCE_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "CANONICAL_IDENTITY_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    }
+  ]
+}

@@ -21,8 +21,21 @@ function publicationIssues(item) {
   if(qualityFindings([item]).some(f=>/sanskrit|sanskritText|^text$/.test(f.field)))issues.push('SACRED_TEXT_CORRUPTED');
   return issues;
 }
+function corePublicationIssues(item) {
+  const issues=publicationIssues(item);
+  if(!nonempty(item?.canonical_name||item?.canonicalName||item?.title))issues.push('CANONICAL_IDENTITY_REQUIRED');
+  if(!nonempty(item?.content_type||item?.mantra_content_type||item?.contentType))issues.push('CONTENT_CLASSIFICATION_REQUIRED');
+  return [...new Set(issues)];
+}
+function fieldPublicationState(item,field) {
+  const value=field==='transliteration'?(item.transliteration||item.transliteration_iast||item.transliteration_simple):field==='meaning'?(item.meaning||item.meanings):item[field];
+  const present=typeof value==='string'?nonempty(value):value&&typeof value==='object'&&Object.values(value).some(nonempty);
+  const sources=field==='transliteration'?(item.transliteration_sources||[]):sourcesFor(item,field);
+  const verification=item[`${field}_verification`]||item.verification_dimensions?.[field]||'UNVERIFIED';
+  return {present:!!present,displayable:!!present&&verification==='VERIFIED'&&validSources(sources),verification,withhold:!!present&&!(verification==='VERIFIED'&&validSources(sources))};
+}
 function assertPublishable(items) {
-  const errors=items.flatMap(item=>publicationIssues(item).map(issue=>`${item.id}: ${issue}`));
+  const errors=items.flatMap(item=>corePublicationIssues(item).map(issue=>`${item.id}: ${issue}`));
   if(errors.length)throw new Error(`Mantra publication blocked: ${errors.join('; ')}`);
 }
-module.exports={DIMENSIONS,PUBLISHABLE_RIGHTS,sourcesFor,statusFor,validSources,publicationIssues,assertPublishable};
+module.exports={DIMENSIONS,PUBLISHABLE_RIGHTS,sourcesFor,statusFor,validSources,publicationIssues,corePublicationIssues,fieldPublicationState,assertPublishable};
