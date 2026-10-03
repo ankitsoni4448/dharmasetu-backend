@@ -1,0 +1,333 @@
+{
+  "items": [
+    {
+      "record_id": "aditya_hridaya_seed",
+      "current_dharmasetu_text": "ॐ आदित्याय नमः",
+      "source_text": "ॐ आदित्याय नमः",
+      "status": "STRONG_EXACT_TEXT_MATCH",
+      "differences": [
+        "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+      ],
+      "source_location": {
+        "work": "Institutional ritual textbook",
+        "location": "Surya invocations"
+      }
+    },
+    {
+      "record_id": "asato_ma",
+      "current_dharmasetu_text": "असतो मा सद्गमय। तमसो मा ज्योतिर्गमय। मृत्योर्मा अमृतं गमय। ॐ शांतिः शांतिः शांतिः।",
+      "source_text": null,
+      "status": "PARTIAL_MATCH_REVIEW_REQUIRED",
+      "differences": [
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+        "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+      ],
+      "source_location": {
+        "work": "Bṛhadāraṇyaka Upaniṣad",
+        "location": "1.3.28"
+      }
+    },
+    {
+      "record_id": "baglamukhi_seed",
+      "current_dharmasetu_text": "ॐ ह्लीं बगलामुखी सर्वदुष्टानाम् वाचं मुखं पदं स्तम्भय जिह्वां कीलय बुद्धिं विनाशय ह्लीं ॐ स्वाहा",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "bajrang_baan_seed",
+      "current_dharmasetu_text": "ॐ हनुमते नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "durga_moola",
+      "current_dharmasetu_text": "ॐ दुं दुर्गायै नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "ganesh_beej",
+      "current_dharmasetu_text": "ॐ गं",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "ganesh_moola",
+      "current_dharmasetu_text": "ॐ गं गणपतये नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "gayatri",
+      "current_dharmasetu_text": "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्",
+      "source_text": null,
+      "status": "PARTIAL_MATCH_REVIEW_REQUIRED",
+      "differences": [
+        "PRODUCTION_OM_PREFIX",
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+        "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+      ],
+      "source_location": {
+        "work": "Ṛgveda",
+        "location": "3.62.10"
+      }
+    },
+    {
+      "record_id": "hanuman_beej",
+      "current_dharmasetu_text": "ॐ ऐं भ्रीं हनुमते रामदूताय नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "hanuman_moola",
+      "current_dharmasetu_text": "ॐ नमो हनुमते रुद्रावताराय",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "hare_krishna",
+      "current_dharmasetu_text": "हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे। हरे राम हरे राम राम राम हरे हरे।",
+      "source_text": null,
+      "status": "VARIANT_REVIEW_REQUIRED",
+      "differences": [
+        "TEXT_DIFFERS_HUMAN_COLLATION_REQUIRED"
+      ],
+      "source_location": {
+        "work": "Kali-santaraṇa Upaniṣad",
+        "location": null
+      }
+    },
+    {
+      "record_id": "kali_mantra",
+      "current_dharmasetu_text": "ॐ क्रीं कालिकायै नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "krishna_beej",
+      "current_dharmasetu_text": "ॐ क्लीं कृष्णाय नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "lakshmi_beej",
+      "current_dharmasetu_text": "ॐ श्रीं महालक्ष्म्यै नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "mahamrityunjaya",
+      "current_dharmasetu_text": "ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम् उर्वारुकमिव बन्धनान् मृत्योर्मुक्षीय मामृतात्",
+      "source_text": null,
+      "status": "PARTIAL_MATCH_REVIEW_REQUIRED",
+      "differences": [
+        "PRODUCTION_OM_PREFIX",
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+        "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+      ],
+      "source_location": {
+        "work": "Ṛgveda",
+        "location": "7.59.12"
+      }
+    },
+    {
+      "record_id": "om_namah",
+      "current_dharmasetu_text": "ॐ",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "om_namah_shivay",
+      "current_dharmasetu_text": "ॐ नमः शिवाय",
+      "source_text": "नमः शिवाय च शिवतराय च",
+      "status": "PARTIAL_PASSAGE_MATCH",
+      "differences": [
+        "PRODUCTION_OM_PREFIX",
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE"
+      ],
+      "source_location": {
+        "work": "Taittirīya Saṃhitā",
+        "location": "4.5.8.1"
+      }
+    },
+    {
+      "record_id": "om_namo_bhagavate",
+      "current_dharmasetu_text": "ॐ नमो भगवते वासुदेवाय",
+      "source_text": "ॐ नमो भगवते वासुदेवाय",
+      "status": "STRONG_EXACT_TEXT_MATCH",
+      "differences": [
+        "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+      ],
+      "source_location": {
+        "work": "Bhāgavata Purāṇa",
+        "location": "4.8.54"
+      }
+    },
+    {
+      "record_id": "om_namo_narayanaya",
+      "current_dharmasetu_text": "ॐ नमो नारायणाय",
+      "source_text": "ॐ नमो नारायणाय",
+      "status": "STRONG_EXACT_TEXT_MATCH",
+      "differences": [
+        "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+      ],
+      "source_location": {
+        "work": "Nārāyaṇa Upaniṣad",
+        "location": "3"
+      }
+    },
+    {
+      "record_id": "ram_moola",
+      "current_dharmasetu_text": "ॐ रां रामाय नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "ram_taraka",
+      "current_dharmasetu_text": "ॐ श्री रामाय नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "saraswati_beej",
+      "current_dharmasetu_text": "ॐ ऐं सरस्वत्यै नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "shanti_mantra",
+      "current_dharmasetu_text": "ॐ शांतिः शांतिः शांतिः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "shiv_beej",
+      "current_dharmasetu_text": "ॐ नमः शिवाय हुं हं नमः",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "shiva_panchakshara",
+      "current_dharmasetu_text": "नमः शिवाय",
+      "source_text": "नमः शिवाय च शिवतराय च",
+      "status": "PARTIAL_PASSAGE_MATCH",
+      "differences": [
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE"
+      ],
+      "source_location": {
+        "work": "Taittirīya Saṃhitā",
+        "location": "4.5.8.1"
+      }
+    },
+    {
+      "record_id": "sudarshana",
+      "current_dharmasetu_text": "ॐ सुदर्शनाय विद्महे महाज्वालाय धीमहि तन्नो चक्रः प्रचोदयात्",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "surya_moola",
+      "current_dharmasetu_text": "ॐ घृणि सूर्याय नमः",
+      "source_text": "ॐ ह्रीं घृणि सूर्य आदित्य श्री ॐ",
+      "status": "TEXTUAL_VARIANT",
+      "differences": [
+        "FORMULA_OR_ORTHOGRAPHIC_VARIANT"
+      ],
+      "source_location": {
+        "work": "Institutional ritual textbook",
+        "location": "Surya invocations"
+      }
+    },
+    {
+      "record_id": "vakratunda",
+      "current_dharmasetu_text": "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा।",
+      "source_text": null,
+      "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "source_location": null
+    },
+    {
+      "record_id": "vishnu_sahasranama_seed",
+      "current_dharmasetu_text": "ॐ विष्णवे नमः",
+      "source_text": "ॐ नमो विष्णव",
+      "status": "DISCOVERY_ONLY",
+      "differences": [
+        "TEXT_DIFFERS_HUMAN_COLLATION_REQUIRED"
+      ],
+      "source_location": {
+        "work": "Nārāyaṇapūrvatāpinīya Upaniṣad",
+        "location": "third section"
+      }
+    }
+  ]
+}

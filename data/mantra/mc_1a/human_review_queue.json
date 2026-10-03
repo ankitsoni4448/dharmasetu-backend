@@ -1,0 +1,931 @@
+{
+  "items": [
+    {
+      "record_id": "aditya_hridaya_seed",
+      "current_dharmasetu_text": "ॐ आदित्याय नमः",
+      "source_text_or_evidence": "ॐ आदित्याय नमः",
+      "source_location": {
+        "work": "Institutional ritual textbook",
+        "location": "Surya invocations"
+      },
+      "source_urls": [
+        "https://msrvvp.ac.in/skill_course/textbook/Vedic_Sanskar_Kanishtha_Sahayak_27_06_24.pdf"
+      ],
+      "differences": [
+        "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "asato_ma",
+      "current_dharmasetu_text": "असतो मा सद्गमय। तमसो मा ज्योतिर्गमय। मृत्योर्मा अमृतं गमय। ॐ शांतिः शांतिः शांतिः।",
+      "source_text_or_evidence": null,
+      "source_location": {
+        "work": "Bṛhadāraṇyaka Upaniṣad",
+        "location": "1.3.28"
+      },
+      "source_urls": [
+        "https://ignca.gov.in/Asi_data/8283.pdf"
+      ],
+      "differences": [
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+        "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "PRAYER",
+      "japa_eligibility": "NOT_JAPA_CONTENT",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "baglamukhi_seed",
+      "current_dharmasetu_text": "ॐ ह्लीं बगलामुखी सर्वदुष्टानाम् वाचं मुखं पदं स्तम्भय जिह्वां कीलय बुद्धिं विनाशय ह्लीं ॐ स्वाहा",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "bajrang_baan_seed",
+      "current_dharmasetu_text": "ॐ हनुमते नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "durga_moola",
+      "current_dharmasetu_text": "ॐ दुं दुर्गायै नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "ganesh_beej",
+      "current_dharmasetu_text": "ॐ गं",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "ganesh_moola",
+      "current_dharmasetu_text": "ॐ गं गणपतये नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "gayatri",
+      "current_dharmasetu_text": "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्",
+      "source_text_or_evidence": null,
+      "source_location": {
+        "work": "Ṛgveda",
+        "location": "3.62.10"
+      },
+      "source_urls": [
+        "https://sa.wikisource.org/wiki/ऋग्वेदः_सूक्तं_३.६२"
+      ],
+      "differences": [
+        "PRODUCTION_OM_PREFIX",
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+        "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "LICENSED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": "Wikisource copyright policy: public domain or CC BY-SA; page-specific attribution and license review required"
+      },
+      "proposed_classification": "GAYATRI_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "hanuman_beej",
+      "current_dharmasetu_text": "ॐ ऐं भ्रीं हनुमते रामदूताय नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "hanuman_moola",
+      "current_dharmasetu_text": "ॐ नमो हनुमते रुद्रावताराय",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "hare_krishna",
+      "current_dharmasetu_text": "हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे। हरे राम हरे राम राम राम हरे हरे।",
+      "source_text_or_evidence": null,
+      "source_location": {
+        "work": "Kali-santaraṇa Upaniṣad",
+        "location": null
+      },
+      "source_urls": [
+        "https://ignca.gov.in/online-digital-resources/gaudiya-grantha-mandira-sanskrit-text-repository/"
+      ],
+      "differences": [
+        "TEXT_DIFFERS_HUMAN_COLLATION_REQUIRED"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "NAMA_JAPA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "kali_mantra",
+      "current_dharmasetu_text": "ॐ क्रीं कालिकायै नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "krishna_beej",
+      "current_dharmasetu_text": "ॐ क्लीं कृष्णाय नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "lakshmi_beej",
+      "current_dharmasetu_text": "ॐ श्रीं महालक्ष्म्यै नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "mahamrityunjaya",
+      "current_dharmasetu_text": "ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम् उर्वारुकमिव बन्धनान् मृत्योर्मुक्षीय मामृतात्",
+      "source_text_or_evidence": null,
+      "source_location": {
+        "work": "Ṛgveda",
+        "location": "7.59.12"
+      },
+      "source_urls": [
+        "https://vedapath.app/en/rig-veda/mandala-7/59/12"
+      ],
+      "differences": [
+        "PRODUCTION_OM_PREFIX",
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+        "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "VEDIC_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "om_namah",
+      "current_dharmasetu_text": "ॐ",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "om_namah_shivay",
+      "current_dharmasetu_text": "ॐ नमः शिवाय",
+      "source_text_or_evidence": "नमः शिवाय च शिवतराय च",
+      "source_location": {
+        "work": "Taittirīya Saṃhitā",
+        "location": "4.5.8.1"
+      },
+      "source_urls": [],
+      "differences": [
+        "PRODUCTION_OM_PREFIX",
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "NAMA_JAPA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "om_namo_bhagavate",
+      "current_dharmasetu_text": "ॐ नमो भगवते वासुदेवाय",
+      "source_text_or_evidence": "ॐ नमो भगवते वासुदेवाय",
+      "source_location": {
+        "work": "Bhāgavata Purāṇa",
+        "location": "4.8.54"
+      },
+      "source_urls": [
+        "https://vedabase.cc/hi/sb/4/8/54/"
+      ],
+      "differences": [
+        "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "om_namo_narayanaya",
+      "current_dharmasetu_text": "ॐ नमो नारायणाय",
+      "source_text_or_evidence": "ॐ नमो नारायणाय",
+      "source_location": {
+        "work": "Nārāyaṇa Upaniṣad",
+        "location": "3"
+      },
+      "source_urls": [
+        "https://vedapath.app/en/upanishads/narayana/3"
+      ],
+      "differences": [
+        "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "ram_moola",
+      "current_dharmasetu_text": "ॐ रां रामाय नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "ram_taraka",
+      "current_dharmasetu_text": "ॐ श्री रामाय नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "saraswati_beej",
+      "current_dharmasetu_text": "ॐ ऐं सरस्वत्यै नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "shanti_mantra",
+      "current_dharmasetu_text": "ॐ शांतिः शांतिः शांतिः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "PRAYER",
+      "japa_eligibility": "NOT_JAPA_CONTENT",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "shiv_beej",
+      "current_dharmasetu_text": "ॐ नमः शिवाय हुं हं नमः",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "BIJA_MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "shiva_panchakshara",
+      "current_dharmasetu_text": "नमः शिवाय",
+      "source_text_or_evidence": "नमः शिवाय च शिवतराय च",
+      "source_location": {
+        "work": "Taittirīya Saṃhitā",
+        "location": "4.5.8.1"
+      },
+      "source_urls": [],
+      "differences": [
+        "PRODUCTION_EXTRACTS_SOURCE_PASSAGE"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "NAMA_JAPA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "sudarshana",
+      "current_dharmasetu_text": "ॐ सुदर्शनाय विद्महे महाज्वालाय धीमहि तन्नो चक्रः प्रचोदयात्",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "surya_moola",
+      "current_dharmasetu_text": "ॐ घृणि सूर्याय नमः",
+      "source_text_or_evidence": "ॐ ह्रीं घृणि सूर्य आदित्य श्री ॐ",
+      "source_location": {
+        "work": "Institutional ritual textbook",
+        "location": "Surya invocations"
+      },
+      "source_urls": [
+        "https://msrvvp.ac.in/skill_course/textbook/Vedic_Sanskar_Kanishtha_Sahayak_27_06_24.pdf"
+      ],
+      "differences": [
+        "FORMULA_OR_ORTHOGRAPHIC_VARIANT"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "vakratunda",
+      "current_dharmasetu_text": "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा।",
+      "source_text_or_evidence": null,
+      "source_location": null,
+      "source_urls": [],
+      "differences": [
+        "NO_SOURCE_TEXT_FOR_COMPARISON"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "SHLOKA",
+      "japa_eligibility": "NOT_JAPA_CONTENT",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    },
+    {
+      "record_id": "vishnu_sahasranama_seed",
+      "current_dharmasetu_text": "ॐ विष्णवे नमः",
+      "source_text_or_evidence": "ॐ नमो विष्णव",
+      "source_location": {
+        "work": "Nārāyaṇapūrvatāpinīya Upaniṣad",
+        "location": "third section"
+      },
+      "source_urls": [
+        "https://sanskritdocuments.org/doc_upanishhat/nArAyaNapUrvatApinIyopaniShat.html"
+      ],
+      "differences": [
+        "TEXT_DIFFERS_HUMAN_COLLATION_REQUIRED"
+      ],
+      "rights_status": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "proposed_classification": "MANTRA",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "decisions_required": [
+        "Confirm canonical identity and title",
+        "Collate Sanskrit against selected edition",
+        "Accept or reject textual variant/additions",
+        "Approve content classification and Japa eligibility",
+        "Record reusable rights basis",
+        "Review transliteration or withhold",
+        "Review meaning and rights or withhold"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1970 @@
+{
+  "items": [
+    {
+      "record_id": "aditya_hridaya_seed",
+      "current_title": "Aditya Hridaya Seed",
+      "canonical_title_candidate": "Aditya Hridaya Seed",
+      "aliases": [],
+      "deity_form": "Surya",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ आदित्याय नमः",
+      "text_quality": [],
+      "transliteration": "Om Adityaya Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Aditya, lord of light and energy — salutations.",
+        "hi": "हे आदित्य, प्रकाश और ऊर्जा के देव — नमस्कार।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Institutional ritual textbook",
+        "location": "Surya invocations"
+      },
+      "source_evidence": [
+        {
+          "source_id": "msrvvp-vedic-sanskar-textbook",
+          "source_title": "Vedic Sanskar Kanishtha Sahayak",
+          "work": "Institutional ritual textbook",
+          "location": "Surya invocations",
+          "url": "https://msrvvp.ac.in/skill_course/textbook/Vedic_Sanskar_Kanishtha_Sahayak_27_06_24.pdf",
+          "rights_status": "REVIEW_REQUIRED",
+          "match_state": "STRONG_EXACT_TEXT_MATCH",
+          "source_text": "ॐ आदित्याय नमः",
+          "note": "Institutional witness contains the exact short salutation; it does not establish the current title “Aditya Hridaya Seed”."
+        }
+      ],
+      "text_comparison": {
+        "status": "STRONG_EXACT_TEXT_MATCH",
+        "source_text": "ॐ आदित्याय नमः",
+        "differences": [
+          "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+        ],
+        "textual_variants": "Institutional witness contains the exact short salutation; it does not establish the current title “Aditya Hridaya Seed”.",
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "asato_ma",
+      "current_title": "Asato Ma Sadgamaya",
+      "canonical_title_candidate": "Asato Ma Sadgamaya",
+      "aliases": [],
+      "deity_form": "Universal",
+      "current_content_type": "PRAYER",
+      "proposed_content_type": "PRAYER",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "असतो मा सद्गमय। तमसो मा ज्योतिर्गमय। मृत्योर्मा अमृतं गमय। ॐ शांतिः शांतिः शांतिः।",
+      "text_quality": [],
+      "transliteration": "Asato Ma Sadgamaya. Tamaso Ma Jyotirgamaya. Mrityorma Amritam Gamaya.",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Lead us from untruth to truth, from darkness to light, from death to immortality.",
+        "hi": "हमें असत्य से सत्य की ओर, अंधकार से प्रकाश की ओर, मृत्यु से अमृत की ओर ले जाएं।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "NOT_JAPA_CONTENT",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Bṛhadāraṇyaka Upaniṣad",
+        "location": "1.3.28"
+      },
+      "source_evidence": [
+        {
+          "source_id": "brihadaranyaka-1-3-28-ignca",
+          "source_title": "The Bṛhadāraṇyaka Upaniṣad with commentary",
+          "work": "Bṛhadāraṇyaka Upaniṣad",
+          "edition_publisher": "IGNCA digitized edition",
+          "section": "1.3.28",
+          "url": "https://ignca.gov.in/Asi_data/8283.pdf",
+          "field_supported": "text",
+          "match_state": "PARTIAL_MATCH_REVIEW_REQUIRED",
+          "rights_status": "REVIEW_REQUIRED",
+          "rights_reference": null,
+          "note": "The three core lines are attested. The production record additionally includes Om and a threefold shanti ending, which this passage does not establish."
+        }
+      ],
+      "text_comparison": {
+        "status": "PARTIAL_MATCH_REVIEW_REQUIRED",
+        "source_text": null,
+        "differences": [
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+          "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+        ],
+        "textual_variants": "The three core lines are attested. The production record additionally includes Om and a threefold shanti ending, which this passage does not establish.",
+        "production_additions": [
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+          "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+        ]
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "baglamukhi_seed",
+      "current_title": "Baglamukhi Beej",
+      "canonical_title_candidate": "Baglamukhi Beej",
+      "aliases": [],
+      "deity_form": "Devi",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ ह्लीं बगलामुखी सर्वदुष्टानाम् वाचं मुखं पदं स्तम्भय जिह्वां कीलय बुद्धिं विनाशय ह्लीं ॐ स्वाहा",
+      "text_quality": [],
+      "transliteration": "Om Hleem Baglamukhi Sarvadushtanam Vacham Mukham Padam Stambhaya Jihvam Kilaya Buddhim Vinashaya Hleem Om Svaha",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Goddess Baglamukhi — stills enemies and grants the power of speech and victory.",
+        "hi": "बगलामुखी माता — शत्रुओं को रोकने और वाक्-शक्ति देने वाली।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "bajrang_baan_seed",
+      "current_title": "Om Hanumate Namah",
+      "canonical_title_candidate": "Om Hanumate Namah",
+      "aliases": [],
+      "deity_form": "Hanuman",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ हनुमते नमः",
+      "text_quality": [],
+      "transliteration": "Om Hanumate Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Simple salutation to Hanuman — for strength and protection.",
+        "hi": "हनुमान जी को सरल नमस्कार — शक्ति और रक्षा के लिए।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "durga_moola",
+      "current_title": "Durga Moola Mantra",
+      "canonical_title_candidate": "Durga Moola Mantra",
+      "aliases": [],
+      "deity_form": "Devi",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ दुं दुर्गायै नमः",
+      "text_quality": [],
+      "transliteration": "Om Dum Durgayai Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Goddess Durga, grant me power and protect me from all negativity.",
+        "hi": "हे दुर्गा माता, मुझे शक्ति दें और सभी नकारात्मकता से बचाएं।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "ganesh_beej",
+      "current_title": "Ganesh Beej Mantra",
+      "canonical_title_candidate": "Ganesh Beej Mantra",
+      "aliases": [],
+      "deity_form": "Ganesh",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ गं",
+      "text_quality": [],
+      "transliteration": "Om Gam",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Seed mantra of Ganesha — carries the power to remove all obstacles.",
+        "hi": "गणेश का बीज मंत्र — सभी विघ्नों का नाश करने की शक्ति।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "ganesh_moola",
+      "current_title": "Ganesh Moola Mantra",
+      "canonical_title_candidate": "Ganesh Moola Mantra",
+      "aliases": [],
+      "deity_form": "Ganesh",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ गं गणपतये नमः",
+      "text_quality": [],
+      "transliteration": "Om Gam Ganapataye Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Ganapati, remove all obstacles and make our path auspicious.",
+        "hi": "हे गणपति, समस्त विघ्नों का नाश करें और हमारे मार्ग को शुभ बनाएं।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "gayatri",
+      "current_title": "Gayatri Mantra",
+      "canonical_title_candidate": "Gayatri Mantra",
+      "aliases": [],
+      "deity_form": "Surya",
+      "current_content_type": "VEDIC_MANTRA",
+      "proposed_content_type": "GAYATRI_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्",
+      "text_quality": [],
+      "transliteration": "Om Bhur Bhuvah Svah Tat Savitur Varenyam Bhargo Devasya Dhimahi Dhiyo Yo Nah Prachodayat",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Sun God, illuminate our intellect and lead us on the righteous path.",
+        "hi": "हे सूर्य देव, हमारी बुद्धि को प्रकाशित करें और हमें सन्मार्ग पर चलाएं।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Ṛgveda",
+        "location": "3.62.10"
+      },
+      "source_evidence": [
+        {
+          "source_id": "rigveda-3-62-10-wikisource",
+          "source_title": "Ṛgveda Sūkta 3.62",
+          "work": "Ṛgveda",
+          "edition_publisher": "Sanskrit Wikisource transcription",
+          "section": "3.62.10",
+          "url": "https://sa.wikisource.org/wiki/ऋग्वेदः_सूक्तं_३.६२",
+          "field_supported": "text",
+          "match_state": "PARTIAL_MATCH_REVIEW_REQUIRED",
+          "rights_status": "LICENSED",
+          "rights_reference": "Wikisource copyright policy: public domain or CC BY-SA; page-specific attribution and license review required",
+          "note": "The Savitṛ verse is present; production also prefixes Om and the vyāhṛtis. Vedic accents and orthography require expert review."
+        }
+      ],
+      "text_comparison": {
+        "status": "PARTIAL_MATCH_REVIEW_REQUIRED",
+        "source_text": null,
+        "differences": [
+          "PRODUCTION_OM_PREFIX",
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+          "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+        ],
+        "textual_variants": "The Savitṛ verse is present; production also prefixes Om and the vyāhṛtis. Vedic accents and orthography require expert review.",
+        "production_additions": [
+          "PRODUCTION_OM_PREFIX",
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+          "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+        ]
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "LICENSED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": "Wikisource copyright policy: public domain or CC BY-SA; page-specific attribution and license review required"
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "hanuman_beej",
+      "current_title": "Hanuman Beej Mantra",
+      "canonical_title_candidate": "Hanuman Beej Mantra",
+      "aliases": [],
+      "deity_form": "Hanuman",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ ऐं भ्रीं हनुमते रामदूताय नमः",
+      "text_quality": [],
+      "transliteration": "Om Aim Bhrim Hanumate Ramdutaya Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Hanuman, messenger of Ram — grant me strength, courage and freedom from fear.",
+        "hi": "हे रामदूत हनुमान, मुझे शक्ति, साहस और भय से मुक्ति दें।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "hanuman_moola",
+      "current_title": "Hanuman Moola Mantra",
+      "canonical_title_candidate": "Hanuman Moola Mantra",
+      "aliases": [],
+      "deity_form": "Hanuman",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ नमो हनुमते रुद्रावताराय",
+      "text_quality": [],
+      "transliteration": "Om Namo Hanumate Rudravataraya",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Hanuman, avatar of Rudra — I bow to you.",
+        "hi": "हे रुद्रावतार हनुमान, मैं आपको नमस्कार करता हूँ।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "hare_krishna",
+      "current_title": "Hare Krishna Mahamantra",
+      "canonical_title_candidate": "Hare Krishna Mahamantra",
+      "aliases": [],
+      "deity_form": "Krishna",
+      "current_content_type": "NAMA_JAPA",
+      "proposed_content_type": "NAMA_JAPA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे। हरे राम हरे राम राम राम हरे हरे।",
+      "text_quality": [],
+      "transliteration": "Hare Krishna Hare Krishna Krishna Krishna Hare Hare. Hare Rama Hare Rama Rama Rama Hare Hare.",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Krishna, O Rama — free me from illusion and grant me pure devotion.",
+        "hi": "हे कृष्ण, हे राम — मुझे माया के बंधन से मुक्त करें और भक्ति दें।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Kali-santaraṇa Upaniṣad",
+        "location": null
+      },
+      "source_evidence": [
+        {
+          "source_id": "kali-santarana-ignca-index",
+          "source_title": "Kali-santaraṇa Upaniṣad",
+          "work": "Kali-santaraṇa Upaniṣad",
+          "edition_publisher": "Gaudiya Grantha Mandira indexed by IGNCA",
+          "section": null,
+          "url": "https://ignca.gov.in/online-digital-resources/gaudiya-grantha-mandira-sanskrit-text-repository/",
+          "field_supported": "text",
+          "match_state": "VARIANT_REVIEW_REQUIRED",
+          "rights_status": "REVIEW_REQUIRED",
+          "rights_reference": null,
+          "note": "The work is an authoritative lead, but mantra order and edition must be checked against the PDF; no text or rights approval is inferred from the index."
+        }
+      ],
+      "text_comparison": {
+        "status": "VARIANT_REVIEW_REQUIRED",
+        "source_text": null,
+        "differences": [
+          "TEXT_DIFFERS_HUMAN_COLLATION_REQUIRED"
+        ],
+        "textual_variants": "The work is an authoritative lead, but mantra order and edition must be checked against the PDF; no text or rights approval is inferred from the index.",
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "kali_mantra",
+      "current_title": "Kali Beej Mantra",
+      "canonical_title_candidate": "Kali Beej Mantra",
+      "aliases": [],
+      "deity_form": "Devi",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ क्रीं कालिकायै नमः",
+      "text_quality": [],
+      "transliteration": "Om Kreem Kalikayai Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Kali, destroy ignorance and negativity, grant liberation.",
+        "hi": "हे काली माता, अज्ञान और नकारात्मकता का नाश करें।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "krishna_beej",
+      "current_title": "Krishna Beej Mantra",
+      "canonical_title_candidate": "Krishna Beej Mantra",
+      "aliases": [],
+      "deity_form": "Krishna",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ क्लीं कृष्णाय नमः",
+      "text_quality": [],
+      "transliteration": "Om Kleem Krishnaya Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Seed mantra to awaken the power of Lord Krishna's divine love and attraction.",
+        "hi": "भगवान कृष्ण के आकर्षण और प्रेम की शक्ति को जगाने का बीज मंत्र।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "lakshmi_beej",
+      "current_title": "Lakshmi Beej Mantra",
+      "canonical_title_candidate": "Lakshmi Beej Mantra",
+      "aliases": [],
+      "deity_form": "Devi",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ श्रीं महालक्ष्म्यै नमः",
+      "text_quality": [],
+      "transliteration": "Om Shreem Mahalakshmyai Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Mahalakshmi, bless me with wealth, prosperity and abundance.",
+        "hi": "हे महालक्ष्मी, धन, समृद्धि और वैभव का आशीर्वाद दें।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "mahamrityunjaya",
+      "current_title": "Maha Mrityunjaya",
+      "canonical_title_candidate": "Maha Mrityunjaya",
+      "aliases": [],
+      "deity_form": "Shiva",
+      "current_content_type": "VEDIC_MANTRA",
+      "proposed_content_type": "VEDIC_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम् उर्वारुकमिव बन्धनान् मृत्योर्मुक्षीय मामृतात्",
+      "text_quality": [],
+      "transliteration": "Om Tryambakam Yajamahe Sugandhim Pushtivardhanam Urvarukamiva Bandhanan Mrityor Mukshiya Maamritat",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O three-eyed Shiva, liberate us from the bondage of death and grant immortality.",
+        "hi": "हे तीन नेत्रों वाले शिव, हमें मृत्यु के बंधन से मुक्त करें।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Ṛgveda",
+        "location": "7.59.12"
+      },
+      "source_evidence": [
+        {
+          "source_id": "rigveda-7-59-12-witness",
+          "source_title": "Ṛgveda 7.59.12",
+          "work": "Ṛgveda",
+          "edition_publisher": "Vedic verse witness",
+          "section": "7.59.12",
+          "url": "https://vedapath.app/en/rig-veda/mandala-7/59/12",
+          "field_supported": "text",
+          "match_state": "PARTIAL_MATCH_REVIEW_REQUIRED",
+          "rights_status": "REVIEW_REQUIRED",
+          "rights_reference": null,
+          "note": "The core verse matches in normalized form; production adds Om and omits Vedic accents. Edition and reuse terms need confirmation."
+        }
+      ],
+      "text_comparison": {
+        "status": "PARTIAL_MATCH_REVIEW_REQUIRED",
+        "source_text": null,
+        "differences": [
+          "PRODUCTION_OM_PREFIX",
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+          "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+        ],
+        "textual_variants": "The core verse matches in normalized form; production adds Om and omits Vedic accents. Edition and reuse terms need confirmation.",
+        "production_additions": [
+          "PRODUCTION_OM_PREFIX",
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE",
+          "PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW"
+        ]
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "om_namah",
+      "current_title": "Pranava — Om",
+      "canonical_title_candidate": "Pranava — Om",
+      "aliases": [],
+      "deity_form": "Universal",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ",
+      "text_quality": [],
+      "transliteration": "Om",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "The primordial sound of the universe — creation, preservation and dissolution.",
+        "hi": "ब्रह्मांड का आदि नाद — सृष्टि, स्थिति और संहार का प्रतीक।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "om_namah_shivay",
+      "current_title": "Om Namah Shivaya",
+      "canonical_title_candidate": "Om Namah Shivaya",
+      "aliases": [],
+      "deity_form": "Shiva",
+      "current_content_type": "NAMA_JAPA",
+      "proposed_content_type": "NAMA_JAPA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ नमः शिवाय",
+      "text_quality": [],
+      "transliteration": "Om Namah Shivaya",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "I bow to Lord Shiva. Shiva is truth, Shiva is auspiciousness.",
+        "hi": "मैं शिव को नमस्कार करता हूँ। शिव ही सत्य है, शिव ही कल्याण है।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Taittirīya Saṃhitā",
+        "location": "4.5.8.1"
+      },
+      "source_evidence": [
+        {
+          "source_id": "taittiriya-samhita-4-5-8-1",
+          "source_title": "Śrī Rudram, Namakam",
+          "work": "Taittirīya Saṃhitā",
+          "location": "4.5.8.1",
+          "url": null,
+          "project_reference": "Primary passage lead: namaḥ śivāya ca śivatarāya ca",
+          "rights_status": "REVIEW_REQUIRED",
+          "match_state": "PARTIAL_PASSAGE_MATCH",
+          "source_text": "नमः शिवाय च शिवतराय च",
+          "note": "Production prefixes Om and extracts a segment from the longer Vedic formula."
+        }
+      ],
+      "text_comparison": {
+        "status": "PARTIAL_PASSAGE_MATCH",
+        "source_text": "नमः शिवाय च शिवतराय च",
+        "differences": [
+          "PRODUCTION_OM_PREFIX",
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE"
+        ],
+        "textual_variants": "Production prefixes Om and extracts a segment from the longer Vedic formula.",
+        "production_additions": [
+          "PRODUCTION_OM_PREFIX",
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE"
+        ]
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "om_namo_bhagavate",
+      "current_title": "Om Namo Bhagavate Vasudevaya",
+      "canonical_title_candidate": "Om Namo Bhagavate Vasudevaya",
+      "aliases": [],
+      "deity_form": "Vishnu",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ नमो भगवते वासुदेवाय",
+      "text_quality": [],
+      "transliteration": "Om Namo Bhagavate Vasudevaya",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "I bow to Lord Vasudeva (Krishna), the indweller of all beings.",
+        "hi": "हे वासुदेव (कृष्ण), मैं आपको प्रणाम करता हूँ।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Bhāgavata Purāṇa",
+        "location": "4.8.54"
+      },
+      "source_evidence": [
+        {
+          "source_id": "bhagavata-4-8-54",
+          "source_title": "Śrīmad-Bhāgavatam",
+          "work": "Bhāgavata Purāṇa",
+          "location": "4.8.54",
+          "url": "https://vedabase.cc/hi/sb/4/8/54/",
+          "rights_status": "REVIEW_REQUIRED",
+          "match_state": "STRONG_EXACT_TEXT_MATCH",
+          "source_text": "ॐ नमो भगवते वासुदेवाय",
+          "note": "The mantra is printed at the opening of verse 4.8.54. Modern translation and editorial material are excluded."
+        }
+      ],
+      "text_comparison": {
+        "status": "STRONG_EXACT_TEXT_MATCH",
+        "source_text": "ॐ नमो भगवते वासुदेवाय",
+        "differences": [
+          "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+        ],
+        "textual_variants": "The mantra is printed at the opening of verse 4.8.54. Modern translation and editorial material are excluded.",
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "om_namo_narayanaya",
+      "current_title": "Om Namo Narayanaya",
+      "canonical_title_candidate": "Om Namo Narayanaya",
+      "aliases": [],
+      "deity_form": "Vishnu",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ नमो नारायणाय",
+      "text_quality": [],
+      "transliteration": "Om Namo Narayanaya",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "I bow to Lord Narayana, the all-pervading protector of the universe.",
+        "hi": "मैं भगवान नारायण को प्रणाम करता हूँ जो सर्वव्यापी और संरक्षक हैं।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Nārāyaṇa Upaniṣad",
+        "location": "3"
+      },
+      "source_evidence": [
+        {
+          "source_id": "narayana-upanishad-3",
+          "source_title": "Nārāyaṇa Upaniṣad",
+          "work": "Nārāyaṇa Upaniṣad",
+          "location": "3",
+          "url": "https://vedapath.app/en/upanishads/narayana/3",
+          "rights_status": "REVIEW_REQUIRED",
+          "match_state": "STRONG_EXACT_TEXT_MATCH",
+          "source_text": "ॐ नमो नारायणाय",
+          "note": "The passage constructs and states the eight-syllable formula. Reuse terms still require review."
+        }
+      ],
+      "text_comparison": {
+        "status": "STRONG_EXACT_TEXT_MATCH",
+        "source_text": "ॐ नमो नारायणाय",
+        "differences": [
+          "PUNCTUATION_OR_SPACING_ONLY_IF_ANY"
+        ],
+        "textual_variants": "The passage constructs and states the eight-syllable formula. Reuse terms still require review.",
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "ram_moola",
+      "current_title": "Ram Beej Mantra",
+      "canonical_title_candidate": "Ram Beej Mantra",
+      "aliases": [],
+      "deity_form": "Vishnu",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ रां रामाय नमः",
+      "text_quality": [],
+      "transliteration": "Om Ram Ramaya Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Powerful seed mantra of Ram — destroys all obstacles.",
+        "hi": "राम का शक्तिशाली बीज मंत्र — सभी बाधाओं का नाश करता है।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "ram_taraka",
+      "current_title": "Ram Naam Taraka",
+      "canonical_title_candidate": "Ram Naam Taraka",
+      "aliases": [],
+      "deity_form": "Vishnu",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ श्री रामाय नमः",
+      "text_quality": [],
+      "transliteration": "Om Shri Ramaya Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Shri Ram — salutations. The ideal of righteousness and dharma.",
+        "hi": "हे श्री राम, आपको नमस्कार। मर्यादा और धर्म के आदर्श।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "saraswati_beej",
+      "current_title": "Saraswati Beej Mantra",
+      "canonical_title_candidate": "Saraswati Beej Mantra",
+      "aliases": [],
+      "deity_form": "Devi",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ ऐं सरस्वत्यै नमः",
+      "text_quality": [],
+      "transliteration": "Om Aim Saraswatyai Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Goddess Saraswati, bless me with knowledge, intellect and eloquence.",
+        "hi": "हे सरस्वती माता, मुझे विद्या, बुद्धि और वाणी का वरदान दें।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "shanti_mantra",
+      "current_title": "Shanti Mantra",
+      "canonical_title_candidate": "Shanti Mantra",
+      "aliases": [],
+      "deity_form": "Universal",
+      "current_content_type": "PRAYER",
+      "proposed_content_type": "PRAYER",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ शांतिः शांतिः शांतिः",
+      "text_quality": [],
+      "transliteration": "Om Shantih Shantih Shantih",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Peace in body, mind and soul — peace at all three levels of existence.",
+        "hi": "तीनों तापों (आधिदैविक, आधिभौतिक, आध्यात्मिक) की शांति हो।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "NOT_JAPA_CONTENT",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "shiv_beej",
+      "current_title": "Shiva Beej Mantra",
+      "canonical_title_candidate": "Shiva Beej Mantra",
+      "aliases": [],
+      "deity_form": "Shiva",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "BIJA_MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ नमः शिवाय हुं हं नमः",
+      "text_quality": [],
+      "transliteration": "Om Namah Shivaya Hum Ham Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Seed mantra awakening the supreme power of Shiva.",
+        "hi": "शिव की परम शक्ति को जागृत करने वाला बीज मंत्र।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "TRADITION_SPECIFIC",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "shiva_panchakshara",
+      "current_title": "Shiva Panchakshara",
+      "canonical_title_candidate": "Shiva Panchakshara",
+      "aliases": [],
+      "deity_form": "Shiva",
+      "current_content_type": "NAMA_JAPA",
+      "proposed_content_type": "NAMA_JAPA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "नमः शिवाय",
+      "text_quality": [],
+      "transliteration": "Namah Shivaya",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "The five-syllable mantra representing the five elements — complete refuge in Shiva.",
+        "hi": "पञ्चाक्षरी मंत्र — पाँच तत्वों का प्रतीक, शिव की पूर्ण शरण।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Taittirīya Saṃhitā",
+        "location": "4.5.8.1"
+      },
+      "source_evidence": [
+        {
+          "source_id": "taittiriya-samhita-4-5-8-1",
+          "source_title": "Śrī Rudram, Namakam",
+          "work": "Taittirīya Saṃhitā",
+          "location": "4.5.8.1",
+          "url": null,
+          "project_reference": "Primary passage lead: namaḥ śivāya ca śivatarāya ca",
+          "rights_status": "REVIEW_REQUIRED",
+          "match_state": "PARTIAL_PASSAGE_MATCH",
+          "source_text": "नमः शिवाय च शिवतराय च",
+          "note": "Production contains the five-syllable segment without the rest of the source formula."
+        }
+      ],
+      "text_comparison": {
+        "status": "PARTIAL_PASSAGE_MATCH",
+        "source_text": "नमः शिवाय च शिवतराय च",
+        "differences": [
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE"
+        ],
+        "textual_variants": "Production contains the five-syllable segment without the rest of the source formula.",
+        "production_additions": [
+          "PRODUCTION_EXTRACTS_SOURCE_PASSAGE"
+        ]
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "sudarshana",
+      "current_title": "Sudarshana Mantra",
+      "canonical_title_candidate": "Sudarshana Mantra",
+      "aliases": [],
+      "deity_form": "Vishnu",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ सुदर्शनाय विद्महे महाज्वालाय धीमहि तन्नो चक्रः प्रचोदयात्",
+      "text_quality": [],
+      "transliteration": "Om Sudarshanaaya Vidmahe Mahajvalaaya Dhimahi Tanno Chakrah Prachodayat",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "The power of Vishnu's Sudarshana Chakra — destroys negativity and evil.",
+        "hi": "विष्णु के सुदर्शन चक्र की शक्ति — नकारात्मकता और बुराई का नाश।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "surya_moola",
+      "current_title": "Surya Moola Mantra",
+      "canonical_title_candidate": "Surya Moola Mantra",
+      "aliases": [],
+      "deity_form": "Surya",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ घृणि सूर्याय नमः",
+      "text_quality": [],
+      "transliteration": "Om Ghrini Suryaya Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Sun God, I bow to you. Grant life force, energy and health.",
+        "hi": "हे सूर्य देव, आपको प्रणाम। जीवन, ऊर्जा और स्वास्थ्य दें।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Institutional ritual textbook",
+        "location": "Surya invocations"
+      },
+      "source_evidence": [
+        {
+          "source_id": "msrvvp-vedic-sanskar-textbook",
+          "source_title": "Vedic Sanskar Kanishtha Sahayak",
+          "work": "Institutional ritual textbook",
+          "location": "Surya invocations",
+          "url": "https://msrvvp.ac.in/skill_course/textbook/Vedic_Sanskar_Kanishtha_Sahayak_27_06_24.pdf",
+          "rights_status": "REVIEW_REQUIRED",
+          "match_state": "TEXTUAL_VARIANT",
+          "source_text": "ॐ ह्रीं घृणि सूर्य आदित्य श्री ॐ",
+          "note": "The institutional witness gives a different Surya formula; it does not verify the production text."
+        }
+      ],
+      "text_comparison": {
+        "status": "TEXTUAL_VARIANT",
+        "source_text": "ॐ ह्रीं घृणि सूर्य आदित्य श्री ॐ",
+        "differences": [
+          "FORMULA_OR_ORTHOGRAPHIC_VARIANT"
+        ],
+        "textual_variants": "The institutional witness gives a different Surya formula; it does not verify the production text.",
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "vakratunda",
+      "current_title": "Vakratunda Mahakaya",
+      "canonical_title_candidate": "Vakratunda Mahakaya",
+      "aliases": [],
+      "deity_form": "Ganesh",
+      "current_content_type": "SHLOKA",
+      "proposed_content_type": "SHLOKA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा।",
+      "text_quality": [],
+      "transliteration": "Vakratunda Mahakaya Suryakoti Samaprabha. Nirvighnam Kuru Me Deva Sarvakaryeshu Sarvada.",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "O Vakratunda, radiant as a crore suns — make all my works free of obstacles.",
+        "hi": "हे वक्रतुण्ड, करोड़ सूर्यों के समान तेजस्वी — मेरे सभी कार्य निर्विघ्न करें।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "NOT_JAPA_CONTENT",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": null,
+      "source_evidence": [],
+      "text_comparison": {
+        "status": "NO_ACCEPTABLE_SOURCE_FOUND",
+        "source_text": null,
+        "differences": [
+          "NO_SOURCE_TEXT_FOR_COMPARISON"
+        ],
+        "textual_variants": null,
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "UNRESOLVED",
+        "modern_edition": "UNRESOLVED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED"
+      ]
+    },
+    {
+      "record_id": "vishnu_sahasranama_seed",
+      "current_title": "Om Vishnave Namah",
+      "canonical_title_candidate": "Om Vishnave Namah",
+      "aliases": [],
+      "deity_form": "Vishnu",
+      "current_content_type": "MANTRA",
+      "proposed_content_type": "MANTRA",
+      "classification_state": "HUMAN_REVIEW_REQUIRED",
+      "current_sanskrit": "ॐ विष्णवे नमः",
+      "text_quality": [],
+      "transliteration": "Om Vishnave Namah",
+      "transliteration_state": "GENERATED_OR_LEGACY_HUMAN_REVIEW_REQUIRED",
+      "meaning": {
+        "en": "Salutation to Lord Vishnu — lord of sattva, the preserver.",
+        "hi": "भगवान विष्णु को नमस्कार — सत्व गुण के स्वामी, संरक्षक।"
+      },
+      "meaning_state": "WITHHELD_PENDING_EVIDENCE",
+      "japa_eligibility": "ELIGIBLE_BY_CONTENT_TYPE",
+      "practice_level": "GENERAL_DEVOTIONAL",
+      "restrictions": {
+        "requires_guru_guidance": null,
+        "requires_initiation": null,
+        "evidence_state": "REVIEW_REQUIRED"
+      },
+      "primary_source_identity": {
+        "work": "Nārāyaṇapūrvatāpinīya Upaniṣad",
+        "location": "third section"
+      },
+      "source_evidence": [
+        {
+          "source_id": "narayana-purvatapiniya-3",
+          "source_title": "Nārāyaṇapūrvatāpinīya Upaniṣad",
+          "work": "Nārāyaṇapūrvatāpinīya Upaniṣad",
+          "location": "third section",
+          "url": "https://sanskritdocuments.org/doc_upanishhat/nArAyaNapUrvatApinIyopaniShat.html",
+          "rights_status": "REVIEW_REQUIRED",
+          "match_state": "DISCOVERY_ONLY",
+          "source_text": "ॐ नमो विष्णव",
+          "note": "The located reading differs grammatically from production ॐ विष्णवे नमः and SanskritDocuments reuse permission remains unresolved."
+        }
+      ],
+      "text_comparison": {
+        "status": "DISCOVERY_ONLY",
+        "source_text": "ॐ नमो विष्णव",
+        "differences": [
+          "TEXT_DIFFERS_HUMAN_COLLATION_REQUIRED"
+        ],
+        "textual_variants": "The located reading differs grammatically from production ॐ विष्णवे नमः and SanskritDocuments reuse permission remains unresolved.",
+        "production_additions": []
+      },
+      "rights": {
+        "underlying_ancient_text": "LIKELY_PUBLIC_DOMAIN_HUMAN_CONFIRMATION_REQUIRED",
+        "modern_edition": "REVIEW_REQUIRED",
+        "transliteration": "UNRESOLVED",
+        "translation_meaning": "UNRESOLVED",
+        "practice_commentary": "UNRESOLVED",
+        "audio": "UNRESOLVED",
+        "rights_reference": null
+      },
+      "review_requirements": {
+        "sanskrit": "HUMAN_REVIEW_REQUIRED",
+        "transliteration": "HUMAN_REVIEW_REQUIRED",
+        "meaning": "HUMAN_REVIEW_REQUIRED_OR_WITHHOLD",
+        "classification": "HUMAN_REVIEW_REQUIRED",
+        "rights": "HUMAN_DECISION_REQUIRED"
+      },
+      "publication_blockers": [
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED",
+        "SOURCE_COLLATION_REQUIRED"
+      ]
+    }
+  ]
+}

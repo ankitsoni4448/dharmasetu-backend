@@ -1,0 +1,13 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),crypto=require('node:crypto');
+const snapshot=require('../data/mantra/m3/production_snapshot.json').items,{build,record}=require('../scripts/build_mantra_mc_1a_review');
+const result=build(snapshot),byId=new Map(result.records.map(x=>[x.record_id,x]));
+test('all 29 stable production IDs appear exactly once',()=>{assert.equal(result.records.length,29);assert.equal(new Set(result.records.map(x=>x.record_id)).size,29);assert.deepEqual(result.records.map(x=>x.record_id),snapshot.map(x=>x.id));});
+test('sacred text is never mutated by review preparation',()=>{for(const row of snapshot)assert.equal(byId.get(row.id).current_sanskrit,row.sanskrit_text);});
+test('evidence and rights dimensions are structured and separate',()=>{for(const item of result.evidence)assert.ok(item.record_id&&item.source_id&&item.source_title&&item.match_state);for(const item of result.rights)for(const key of ['underlying_ancient_text','modern_edition','transliteration','translation_meaning','practice_commentary','audio'])assert.ok(key in item);});
+test('variants and production additions become human decisions',()=>{assert.ok(byId.get('asato_ma').text_comparison.differences.includes('PREFIX_SUFFIX_ACCENT_OR_ORDER_REVIEW'));assert.match(byId.get('om_namah_shivay').text_comparison.status,/PARTIAL/);});
+test('Unicode quality and classification remain review states',()=>{assert.deepEqual(byId.get('asato_ma').text_quality,[]);assert.ok(result.records.every(x=>x.classification_state==='HUMAN_REVIEW_REQUIRED'));});
+test('Japa guard and long-form exclusion use M5 content rules',()=>{assert.equal(record({...snapshot[0],id:'long',mantra_content_type:'STOTRA'}).japa_eligibility,'NOT_JAPA_CONTENT');assert.equal(byId.get('vakratunda').japa_eligibility,'NOT_JAPA_CONTENT');});
+test('review queue is complete and practical',()=>{assert.equal(result.queue.length,29);for(const q of result.queue){assert.ok(q.current_dharmasetu_text);assert.equal(q.decisions_required.length,7);assert.ok(q.rights_status&&q.proposed_classification&&q.japa_eligibility);}});
+test('M5 and M5.1 tracked artifacts are unchanged inputs',()=>{const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');const before=[hash('data/mantra/m5/catalog_summary.json'),hash('data/mantra/m5_1/launch_summary.json')];build(snapshot);assert.deepEqual([hash('data/mantra/m5/catalog_summary.json'),hash('data/mantra/m5_1/launch_summary.json')],before);});
+test('no automated item is marked human verified',()=>{assert.doesNotMatch(JSON.stringify(result),/HUMAN_VERIFIED/);});

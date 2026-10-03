@@ -1,0 +1,17 @@
+{
+  "records_audited": 29,
+  "strong_exact_source_matches": 3,
+  "partial_source_matches": 7,
+  "discovery_only_source_leads": 1,
+  "records_lacking_source": 18,
+  "records_with_textual_variants": 7,
+  "rights_clear_candidates": 0,
+  "rights_decision_required": 29,
+  "proposed_japa_eligible": 26,
+  "proposed_non_japa": 3,
+  "transliteration_review_ready": 29,
+  "meaning_review_ready": 29,
+  "human_sanskrit_review_queue": 29,
+  "generated_at": "2026-10-03",
+  "production_modified": false
+}
