@@ -1,0 +1,1250 @@
+{
+  "items": [
+    {
+      "canonical_id": "candidate_ganesha_ashtavinayakastotram_ashtavinayakastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_shiva_akhilandadevijambukeshvarastutih_akhilandadevijambukeshvarastutih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_vishnu_trimurtistutih_trimurtistutih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_rama_ramayanatatparyasangrahastotram_ramayanatatparyasangrahastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_1_achyuta8",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneya_dvadashanama_stotram_anjaneya12",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_durga_aparajita_stotram_aparajitastotra",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmanakrritam_ramanathastotram_lakshmanakrritamramanathastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_saraswati_gayatrisarasvatikrritam_shivastotram_gayatrisarasvatikrritamshivastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_surya_adityadvadashanamastotram_adityadvadashanamastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_skandalakshmidurgasuprabhatastutih_skandalakshmidurgasuprabhatastutih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_navagraha_stutisangraha_short_hymns_of_various_deities_devadevatastutisangrahah",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_ganesha_rinamochanamahaganapatistotram_rrinamochanamahaganapatistotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_shiva_agastyeshalingashtakam_agastyeshalingashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_vishnu_parameshvarastotram_1_parameshvarastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_rama_shivaramashtakam_shivaramashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_achyuta81",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_hanuman_shrimadanjaneya_bhujangaprayata_stotram_version_1_hanumatbhujangaprayatastotra",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_durga_aparadhakshamapanastotram_aparaadhakshamaa",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmivishnukrita_shivadhyanastutih_lakshmivishnukrritashivadhyanastutih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_saraswati_vishvarupasarasvatikrritam_krrishnanarayanastotram_vishvarupasarasvatikrritamkrrishnanarayanastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_surya_adityastotram_mahamahimanvitam_adityastotraappayadixit",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyakaravalambastotram_kartikeyakaravalambastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_navagraha_angarakastotram_angaarakastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_ganesha_rinaharaganeshastotram_rinamochanamahaganapatistotram_rinaharaganeshastotra",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_shiva_aghoramurtistotram_aghoramurtistotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_vishnu_mrityunjaya_stotra_1_from_narasimhapurana_mrityunjayastotram1np",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_rama_vaishnavamangalam_vaishnavamangalampurnavirathidevacharya",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_3_achyutashtakam3",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneya_bhujangaprayata_stotram_anjaneyabhujangam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_durga_argalastotram_argalaastotra",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmikrritam_1_narayanastotram_lakshmikrritam1narayanastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_saraswati_aryambikashankarasharadastotram_aryambikashankarasharadastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_surya_adityaharshanastotram_sartham_adityaharshanastotramsartham",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyashatashtanamastotram_kartikeyashatashtanamastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_navagraha_angaraka_ashtottara_shatanama_stotram_angaraka108namastotra",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekada_ntaganeshastotram_ekadantaganeshastotra",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_shiva_aghorashtakam_aghorashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_vishnu_harishankarastotrampapashamanaagastya_harishankarastotrampapashamanaagastya",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_rama_aprameyastotram_aprameyastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_krishna_anantakrishnavaradarajashtakam_anantakrrishnavaradarajashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyamangalashtakam_anjaneyamangalashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_durga_aryadurgashtakam_aryadurgashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmikrritam_2_narayanastotram_lakshmikrritam2narayanastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_saraswati_kashyapakrritam_gayatrisarasvatistotram_kashyapakrritamgayatrisarasvatistotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_surya_adityahridayastotram_from_padmapurana_adityahrridayapadmapurana",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotrakadambam_kartikeyastotrakadambam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_navagraha_rinamochakamangalastotram_mangalastotra",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantasharanagatistotram_ekadantasharanaagatistotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_shiva_attalasundarashtakam_attalasundarashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharastutih_hariharastutih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_rama_ayodhyapanchakam_ayodhyapanchakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_krishna_ashtamahishiyuktakrishnastotram_ashtamahishiyuktakrrishnastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_hanuman_shrimadanjaneyasuprabhatam_anjaneyasuprabhatam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_r_ishikrrita_katyayanistutihrrishikrrita",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_nimbadrilakshminrisimhasuprabhatam_nimbadrilakshminrrisimhasuprabhatam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_saraswati_girlalitambikastutih_girlalitambikastutih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_surya_adityashtakam_adityashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotranamavali_prajnavivardhanam_prajnavivardhanamkartikeyanamavalih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_navagraha_angarakastotram_angarakastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_1_ekadantastutihnaradamunikrrita1",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_shiva_anadikalpeshvarastotram_anadikalpeshvarastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_vishnu_markandeyaproktamhariharabhinnatavarnanastotram_markandeyaproktamhariharabhinnatavarnanastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_rama_ayodhyamangalam_ayodhyamangalamyoganandacharya",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_krishna_anandastotram_anandastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyastotram_1_nilakrita_anjaneyastotramnilakrita",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_pandavahkrrita_katyayanistutihpandavahkrrita",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_nimbadrilakshminrisimhastotram_nimbadrilakshminrrisimhastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_saraswati_jinavakstutih_jinavakstutih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_surya_adityastotram_bhavishyapuranantargatam_adityashtottaranamastotram_adityastotrambhavishyapurana",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastottram_1_skandastotram_hymn_skanda",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_navagraha_ekashlokinavagrahastotram_1_ekashlokinavagrahastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_2_ekadantastutihnaradamunikrrita2",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_shiva_aparadhashtakam_1_shivashtakam_aparadhastotrashtakam_aparadhashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharashtakam_hariharashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_rama_arthapanchakam_arthapanchakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_krishna_udupi_shri_krishna_suprabhatam_udupikrishnasupra",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyastotram_2_anjaneyastotram2",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_katyayanistutih",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshminrisimhastavanastotram_lakshminrrisimhastavanastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_saraswati_nrisimhasarasvatistotram_nrrisimhasarasvatistotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_surya_jayadityastotramskandapurana_jayadityastotramskandapurana",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotram_2_kartikeyastotram2",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_navagraha_ekashlokinavagrahastotram_2_ekashlokinavagrahastotram2",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_3_ekadantastutihnaradamunikrrita3",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_shiva_amaranathashtakam_amaranathashtakam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharashtottarashatanamastotram_hariharashtottarashatanamastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_rama_kodandapanisuprabhatam_kodandapanisuprabhatam",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    },
+    {
+      "canonical_id": "candidate_krishna_kaliyugemartyaihkriyamanamshrikrrishnastotram_kaliyugemartyaihkriyamanamshrikrrishnastotram",
+      "queue": "C",
+      "blockers": [
+        "SACRED_TEXT_REQUIRED",
+        "AUTHORITATIVE_TEXT_SOURCE_REQUIRED",
+        "TEXT_REVIEW_REQUIRED",
+        "CLASSIFICATION_REVIEW_REQUIRED",
+        "RIGHTS_CLEARANCE_REQUIRED",
+        "REVIEW_ATTRIBUTION_REQUIRED",
+        "PUBLICATION_APPROVAL_REQUIRED"
+      ],
+      "next_action": "Select an edition-level or project-owned text witness"
+    }
+  ]
+}

@@ -1,0 +1,538 @@
+{
+  "items": [
+    {
+      "canonical_id": "candidate_ganesha_ashtavinayakastotram_ashtavinayakastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_shiva_akhilandadevijambukeshvarastutih_akhilandadevijambukeshvarastutih",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_vishnu_trimurtistutih_trimurtistutih",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_rama_ramayanatatparyasangrahastotram_ramayanatatparyasangrahastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_1_achyuta8",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneya_dvadashanama_stotram_anjaneya12",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_durga_aparajita_stotram_aparajitastotra",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmanakrritam_ramanathastotram_lakshmanakrritamramanathastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_saraswati_gayatrisarasvatikrritam_shivastotram_gayatrisarasvatikrritamshivastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_surya_adityadvadashanamastotram_adityadvadashanamastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_skandalakshmidurgasuprabhatastutih_skandalakshmidurgasuprabhatastutih",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_navagraha_stutisangraha_short_hymns_of_various_deities_devadevatastutisangrahah",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_ganesha_rinamochanamahaganapatistotram_rrinamochanamahaganapatistotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_shiva_agastyeshalingashtakam_agastyeshalingashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_vishnu_parameshvarastotram_1_parameshvarastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_rama_shivaramashtakam_shivaramashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_achyuta81",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_hanuman_shrimadanjaneya_bhujangaprayata_stotram_version_1_hanumatbhujangaprayatastotra",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_durga_aparadhakshamapanastotram_aparaadhakshamaa",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmivishnukrita_shivadhyanastutih_lakshmivishnukrritashivadhyanastutih",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_saraswati_vishvarupasarasvatikrritam_krrishnanarayanastotram_vishvarupasarasvatikrritamkrrishnanarayanastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_surya_adityastotram_mahamahimanvitam_adityastotraappayadixit",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyakaravalambastotram_kartikeyakaravalambastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_navagraha_angarakastotram_angaarakastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_ganesha_rinaharaganeshastotram_rinamochanamahaganapatistotram_rinaharaganeshastotra",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_shiva_aghoramurtistotram_aghoramurtistotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_vishnu_mrityunjaya_stotra_1_from_narasimhapurana_mrityunjayastotram1np",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_rama_vaishnavamangalam_vaishnavamangalampurnavirathidevacharya",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_3_achyutashtakam3",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneya_bhujangaprayata_stotram_anjaneyabhujangam",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_durga_argalastotram_argalaastotra",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmikrritam_1_narayanastotram_lakshmikrritam1narayanastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_saraswati_aryambikashankarasharadastotram_aryambikashankarasharadastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_surya_adityaharshanastotram_sartham_adityaharshanastotramsartham",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyashatashtanamastotram_kartikeyashatashtanamastotram",
+      "content_type": "NAMAVALI",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_navagraha_angaraka_ashtottara_shatanama_stotram_angaraka108namastotra",
+      "content_type": "NAMAVALI",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekada_ntaganeshastotram_ekadantaganeshastotra",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_shiva_aghorashtakam_aghorashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_vishnu_harishankarastotrampapashamanaagastya_harishankarastotrampapashamanaagastya",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_rama_aprameyastotram_aprameyastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_krishna_anantakrishnavaradarajashtakam_anantakrrishnavaradarajashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyamangalashtakam_anjaneyamangalashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_durga_aryadurgashtakam_aryadurgashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmikrritam_2_narayanastotram_lakshmikrritam2narayanastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_saraswati_kashyapakrritam_gayatrisarasvatistotram_kashyapakrritamgayatrisarasvatistotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_surya_adityahridayastotram_from_padmapurana_adityahrridayapadmapurana",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotrakadambam_kartikeyastotrakadambam",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_navagraha_rinamochakamangalastotram_mangalastotra",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantasharanagatistotram_ekadantasharanaagatistotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_shiva_attalasundarashtakam_attalasundarashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharastutih_hariharastutih",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_rama_ayodhyapanchakam_ayodhyapanchakam",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_krishna_ashtamahishiyuktakrishnastotram_ashtamahishiyuktakrrishnastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_hanuman_shrimadanjaneyasuprabhatam_anjaneyasuprabhatam",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_r_ishikrrita_katyayanistutihrrishikrrita",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_nimbadrilakshminrisimhasuprabhatam_nimbadrilakshminrrisimhasuprabhatam",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_saraswati_girlalitambikastutih_girlalitambikastutih",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_surya_adityashtakam_adityashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotranamavali_prajnavivardhanam_prajnavivardhanamkartikeyanamavalih",
+      "content_type": "NAMAVALI",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_navagraha_angarakastotram_angarakastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_1_ekadantastutihnaradamunikrrita1",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_shiva_anadikalpeshvarastotram_anadikalpeshvarastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_vishnu_markandeyaproktamhariharabhinnatavarnanastotram_markandeyaproktamhariharabhinnatavarnanastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_rama_ayodhyamangalam_ayodhyamangalamyoganandacharya",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_krishna_anandastotram_anandastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyastotram_1_nilakrita_anjaneyastotramnilakrita",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_pandavahkrrita_katyayanistutihpandavahkrrita",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_nimbadrilakshminrisimhastotram_nimbadrilakshminrrisimhastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_saraswati_jinavakstutih_jinavakstutih",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_surya_adityastotram_bhavishyapuranantargatam_adityashtottaranamastotram_adityastotrambhavishyapurana",
+      "content_type": "NAMAVALI",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastottram_1_skandastotram_hymn_skanda",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_navagraha_ekashlokinavagrahastotram_1_ekashlokinavagrahastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_2_ekadantastutihnaradamunikrrita2",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_shiva_aparadhashtakam_1_shivashtakam_aparadhastotrashtakam_aparadhashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharashtakam_hariharashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_rama_arthapanchakam_arthapanchakam",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_krishna_udupi_shri_krishna_suprabhatam_udupikrishnasupra",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyastotram_2_anjaneyastotram2",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_katyayanistutih",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshminrisimhastavanastotram_lakshminrrisimhastavanastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_saraswati_nrisimhasarasvatistotram_nrrisimhasarasvatistotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_surya_jayadityastotramskandapurana_jayadityastotramskandapurana",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotram_2_kartikeyastotram2",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_navagraha_ekashlokinavagrahastotram_2_ekashlokinavagrahastotram2",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_3_ekadantastutihnaradamunikrrita3",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_shiva_amaranathashtakam_amaranathashtakam",
+      "content_type": "ASHTAKAM",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharashtottarashatanamastotram_hariharashtottarashatanamastotram",
+      "content_type": "NAMAVALI",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_rama_kodandapanisuprabhatam_kodandapanisuprabhatam",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    },
+    {
+      "canonical_id": "candidate_krishna_kaliyugemartyaihkriyamanamshrikrrishnastotram_kaliyugemartyaihkriyamanamshrikrrishnastotram",
+      "content_type": "STOTRA",
+      "eligibility": "NON_JAPA_RECITATION",
+      "restriction_status": "REVIEW_REQUIRED"
+    }
+  ]
+}

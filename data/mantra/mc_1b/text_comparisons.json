@@ -1,0 +1,894 @@
+{
+  "items": [
+    {
+      "canonical_id": "candidate_ganesha_ashtavinayakastotram_ashtavinayakastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_akhilandadevijambukeshvarastutih_akhilandadevijambukeshvarastutih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_trimurtistutih_trimurtistutih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_ramayanatatparyasangrahastotram_ramayanatatparyasangrahastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_1_achyuta8",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneya_dvadashanama_stotram_anjaneya12",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_aparajita_stotram_aparajitastotra",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmanakrritam_ramanathastotram_lakshmanakrritamramanathastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_gayatrisarasvatikrritam_shivastotram_gayatrisarasvatikrritamshivastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityadvadashanamastotram_adityadvadashanamastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_skandalakshmidurgasuprabhatastutih_skandalakshmidurgasuprabhatastutih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_stutisangraha_short_hymns_of_various_deities_devadevatastutisangrahah",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_rinamochanamahaganapatistotram_rrinamochanamahaganapatistotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_agastyeshalingashtakam_agastyeshalingashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_parameshvarastotram_1_parameshvarastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_shivaramashtakam_shivaramashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_achyuta81",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_shrimadanjaneya_bhujangaprayata_stotram_version_1_hanumatbhujangaprayatastotra",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_aparadhakshamapanastotram_aparaadhakshamaa",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmivishnukrita_shivadhyanastutih_lakshmivishnukrritashivadhyanastutih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_vishvarupasarasvatikrritam_krrishnanarayanastotram_vishvarupasarasvatikrritamkrrishnanarayanastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityastotram_mahamahimanvitam_adityastotraappayadixit",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyakaravalambastotram_kartikeyakaravalambastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_angarakastotram_angaarakastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_rinaharaganeshastotram_rinamochanamahaganapatistotram_rinaharaganeshastotra",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_aghoramurtistotram_aghoramurtistotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_mrityunjaya_stotra_1_from_narasimhapurana_mrityunjayastotram1np",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_vaishnavamangalam_vaishnavamangalampurnavirathidevacharya",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_achyutashtakam_3_achyutashtakam3",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneya_bhujangaprayata_stotram_anjaneyabhujangam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_argalastotram_argalaastotra",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmikrritam_1_narayanastotram_lakshmikrritam1narayanastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_aryambikashankarasharadastotram_aryambikashankarasharadastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityaharshanastotram_sartham_adityaharshanastotramsartham",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyashatashtanamastotram_kartikeyashatashtanamastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_angaraka_ashtottara_shatanama_stotram_angaraka108namastotra",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekada_ntaganeshastotram_ekadantaganeshastotra",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_aghorashtakam_aghorashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_harishankarastotrampapashamanaagastya_harishankarastotrampapashamanaagastya",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_aprameyastotram_aprameyastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_anantakrishnavaradarajashtakam_anantakrrishnavaradarajashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyamangalashtakam_anjaneyamangalashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_aryadurgashtakam_aryadurgashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshmikrritam_2_narayanastotram_lakshmikrritam2narayanastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_kashyapakrritam_gayatrisarasvatistotram_kashyapakrritamgayatrisarasvatistotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityahridayastotram_from_padmapurana_adityahrridayapadmapurana",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotrakadambam_kartikeyastotrakadambam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_rinamochakamangalastotram_mangalastotra",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantasharanagatistotram_ekadantasharanaagatistotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_attalasundarashtakam_attalasundarashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharastutih_hariharastutih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_ayodhyapanchakam_ayodhyapanchakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_ashtamahishiyuktakrishnastotram_ashtamahishiyuktakrrishnastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_shrimadanjaneyasuprabhatam_anjaneyasuprabhatam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_r_ishikrrita_katyayanistutihrrishikrrita",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_nimbadrilakshminrisimhasuprabhatam_nimbadrilakshminrrisimhasuprabhatam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_girlalitambikastutih_girlalitambikastutih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityashtakam_adityashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotranamavali_prajnavivardhanam_prajnavivardhanamkartikeyanamavalih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_angarakastotram_angarakastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_1_ekadantastutihnaradamunikrrita1",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_anadikalpeshvarastotram_anadikalpeshvarastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_markandeyaproktamhariharabhinnatavarnanastotram_markandeyaproktamhariharabhinnatavarnanastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_ayodhyamangalam_ayodhyamangalamyoganandacharya",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_anandastotram_anandastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyastotram_1_nilakrita_anjaneyastotramnilakrita",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_pandavahkrrita_katyayanistutihpandavahkrrita",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_nimbadrilakshminrisimhastotram_nimbadrilakshminrrisimhastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_jinavakstutih_jinavakstutih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_adityastotram_bhavishyapuranantargatam_adityashtottaranamastotram_adityastotrambhavishyapurana",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastottram_1_skandastotram_hymn_skanda",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_ekashlokinavagrahastotram_1_ekashlokinavagrahastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_2_ekadantastutihnaradamunikrrita2",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_aparadhashtakam_1_shivashtakam_aparadhastotrashtakam_aparadhashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharashtakam_hariharashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_arthapanchakam_arthapanchakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_udupi_shri_krishna_suprabhatam_udupikrishnasupra",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_hanuman_anjaneyastotram_2_anjaneyastotram2",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_durga_katyayanistutih_katyayanistutih",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_lakshmi_lakshminrisimhastavanastotram_lakshminrrisimhastavanastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_saraswati_nrisimhasarasvatistotram_nrrisimhasarasvatistotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_surya_jayadityastotramskandapurana_jayadityastotramskandapurana",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_kartikeya_kartikeyastotram_2_kartikeyastotram2",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_navagraha_ekashlokinavagrahastotram_2_ekashlokinavagrahastotram2",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_ganesha_ekadantastutih_naradamunikrrita_3_ekadantastutihnaradamunikrrita3",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_shiva_amaranathashtakam_amaranathashtakam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_vishnu_hariharashtottarashatanamastotram_hariharashtottarashatanamastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_rama_kodandapanisuprabhatam_kodandapanisuprabhatam",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    },
+    {
+      "canonical_id": "candidate_krishna_kaliyugemartyaihkriyamanamshrikrrishnastotram_kaliyugemartyaihkriyamanamshrikrrishnastotram",
+      "candidate_sanskrit": null,
+      "source_text": null,
+      "status": "NOT_POSSIBLE_CANDIDATE_TEXT_MISSING",
+      "differences": [
+        "CANDIDATE_SANSKRIT_REQUIRED",
+        "EDITION_COLLATION_REQUIRED"
+      ]
+    }
+  ]
+}

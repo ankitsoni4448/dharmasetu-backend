@@ -1,0 +1,31 @@
+{
+  "existing_production_records": 29,
+  "existing_total_candidates": 118,
+  "distinct_candidate_works": 117,
+  "additional_candidates_processed": 89,
+  "total_corpus_represented": 118,
+  "additional_with_actual_sanskrit": 0,
+  "total_corpus_with_actual_sanskrit": 29,
+  "strong_source_matches": 0,
+  "partial_variant_source_matches": 0,
+  "discovery_only_leads": 89,
+  "no_acceptable_source": 89,
+  "rights_clear_candidates": 0,
+  "human_comparison_ready": 0,
+  "publication_ready": 0,
+  "japa_eligible": 0,
+  "non_japa": 89,
+  "restricted_or_review_required": 89,
+  "content_type_breakdown": {
+    "STOTRA": 70,
+    "ASHTAKAM": 14,
+    "NAMAVALI": 5
+  },
+  "queue_a": 0,
+  "queue_b": 0,
+  "queue_c": 89,
+  "project_pdf_used": false,
+  "project_pdf_reason": "No PDF file was present under the workspace or local conversation attachments.",
+  "generated_at": "2026-10-03",
+  "production_modified": false
+}
